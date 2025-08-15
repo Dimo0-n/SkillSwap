@@ -1,37 +1,3 @@
-/******************************************************************
-  Template Name: Amin
-  Description:  Amin magazine HTML Template
-  Author: Colorlib
-  Author URI: https://colorlib.com
-  Version: 1.0
-  Created: Colorlib
-******************************************************************/
-
-/*------------------------------------------------------------------
-[Table of contents]
-
-1.  Template default CSS
-	1.1	Variables
-	1.2	Mixins
-	1.3	Flexbox
-	1.4	Reset
-2.  Helper Css
-3.  Header Section
-4.  Hero Section
-5.  Latest Preview Slider Section
-6.  Update News Slider Section
-7.  Video Guide Slider Section
-8.  Instagram Post Slider Section
-9.  Contact
-10.  Footer Style
-
--------------------------------------------------------------------*/
-
-/*----------------------------------------*/
-
-/* Template default CSS
-/*----------------------------------------*/
-
 html,
 body {
 	height: 100%;
@@ -134,7 +100,7 @@ ol {
 	top: 3px;
 	height: 15px;
 	width: 11px;
-	background: #c20000;
+	background: #812acf;
 	content: "";
 	-webkit-transform: skewX(-15deg);
 	-ms-transform: skewX(-15deg);
@@ -177,7 +143,7 @@ ol {
 	font-size: 14px;
 	padding: 17px 30px 16px;
 	color: #ffffff;
-	background: #c20000;
+	background: #812acf;
 	line-height: normal;
 	letter-spacing: 1px;
 	text-transform: uppercase;
@@ -191,8 +157,8 @@ ol {
 }
 
 .primary-btn.btn-normal:hover {
-	background: #c20000;
-	border-color: #c20000;
+	background: #812acf;
+	border-color: #812acf;
 }
 
 /* Preloder */
@@ -224,7 +190,7 @@ ol {
 	0% {
 		-webkit-transform: rotate(0deg);
 		transform: rotate(0deg);
-		border: 4px solid #f44336;
+		border: 4px solid #812acf;
 		border-left-color: transparent;
 	}
 	50% {
@@ -236,7 +202,7 @@ ol {
 	100% {
 		-webkit-transform: rotate(360deg);
 		transform: rotate(360deg);
-		border: 4px solid #f44336;
+		border: 4px solid #812acf;
 		border-left-color: transparent;
 	}
 }
@@ -244,7 +210,7 @@ ol {
 @-webkit-keyframes loader {
 	0% {
 		-webkit-transform: rotate(0deg);
-		border: 4px solid #f44336;
+		border: 4px solid #812acf;
 		border-left-color: transparent;
 	}
 	50% {
@@ -254,7 +220,7 @@ ol {
 	}
 	100% {
 		-webkit-transform: rotate(360deg);
-		border: 4px solid #f44336;
+		border: 4px solid #812acf;
 		border-left-color: transparent;
 	}
 }
@@ -328,10 +294,10 @@ ol {
 .signup-section .signup-close {
 	height: 50px;
 	width: 50px;
-	border: 2px solid #e10000;
+	border: 2px solid #9b4dd8;
 	border-radius: 50%;
 	font-size: 18px;
-	color: #e10000;
+	color: #9b4dd8;
 	line-height: 46px;
 	text-align: center;
 	position: absolute;
@@ -424,7 +390,7 @@ ol {
 }
 
 .signup-text .signup-form .sf-input-list input:focus {
-	border-color: #c20000;
+	border-color: #812acf;
 }
 
 .signup-text .signup-form .radio-check {
@@ -463,7 +429,7 @@ ol {
 	color: #ffffff;
 	font-weight: 600;
 	text-transform: uppercase;
-	background: #c20000;
+	background: #812acf;
 	border: none;
 	display: inline-block;
 	padding: 12px 32px;
@@ -556,7 +522,7 @@ ol {
 }
 
 .humberger-menu-wrapper .hw-menu ul li:hover>a {
-	color: #e10000;
+	color: #9b4dd8;
 }
 
 .humberger-menu-wrapper .hw-menu ul li a {
@@ -633,19 +599,19 @@ ol {
 }
 
 .humberger-menu-wrapper .slicknav_nav li .dropdown li a:hover {
-	color: #e10000;
+	color: #9b4dd8;
 }
 
 .humberger-menu-wrapper .slicknav_nav .slicknav_row:hover {
 	border-radius: 0;
 	background: transparent;
-	color: #e10000;
+	color: #9b4dd8;
 }
 
 .humberger-menu-wrapper .slicknav_nav a:hover {
 	border-radius: 0;
 	background: transparent;
-	color: #e10000;
+	color: #9b4dd8;
 }
 
 .humberger-menu-wrapper .slicknav_btn {
@@ -785,30 +751,30 @@ ol {
 }
 
 .nav-options {
-	background: #9e0303;
+	background: #6a2ba8;
 	padding: 10px 0;
 }
 
 .nav-options.humberger-change {
-	background: #310a0a;
+	background: #6c2b96;
 	-webkit-transition: all 0.3s;
 	-o-transition: all 0.3s;
 	transition: all 0.3s;
 }
 
 .nav-options.humberger-change .humberger-menu {
-	background: #4e0808;
+	background: #6c2b96;
 	-webkit-transition: all 0.3s;
 	-o-transition: all 0.3s;
 	transition: all 0.3s;
 }
 
 .nav-options.humberger-change .nav-menu ul li a {
-	background: #4e0808;
+	background: #6c2b96;
 }
 
 .nav-options.humberger-change .nav-search {
-	background: #4e0808;
+	background: #6c2b96;
 	-webkit-transition: all 0.3s;
 	-o-transition: all 0.3s;
 	transition: all 0.3s;
@@ -817,7 +783,7 @@ ol {
 .nav-options .humberger-menu {
 	font-size: 15px;
 	color: #ffffff;
-	background: #a81d1d;
+	background: #9b4dd8;
 	float: left;
 	padding: 15px 28px;
 	-webkit-transform: skewX(-15deg);
@@ -879,7 +845,7 @@ ol {
 	top: 6px;
 	height: 13px;
 	width: 7px;
-	background: #c20000;
+	background: #812acf;
 	content: "";
 	-webkit-transform: skewX(-15deg);
 	-ms-transform: skewX(-15deg);
@@ -915,7 +881,7 @@ ol {
 }
 
 .nav-options .nav-menu ul li .megamenu-wrapper .mw-nav li a:hover {
-	color: #c20000;
+	color: #812acf;
 	text-shadow: none;
 }
 
@@ -1023,11 +989,11 @@ ol {
 }
 
 .nav-options .nav-menu ul li.active a {
-	background: #c20000;
+	background: #812acf;
 }
 
 .nav-options .nav-menu ul li:hover>a {
-	background: #c20000;
+	background: #812acf;
 	text-shadow: 1px 0px 0px #ffffff;
 }
 
@@ -1049,7 +1015,7 @@ ol {
 	text-transform: uppercase;
 	padding: 17px 15px 13px 30px;
 	display: inline-block;
-	background: #a81d1d;
+	background: #9b4dd8;
 	-webkit-transform: skewX(-15deg);
 	-ms-transform: skewX(-15deg);
 	transform: skewX(-15deg);
@@ -1076,7 +1042,7 @@ ol {
 	-webkit-transform: skewX(-15deg);
 	-ms-transform: skewX(-15deg);
 	transform: skewX(-15deg);
-	background: #a81d1d;
+	background: #9b4dd8;
 	padding: 15px 25px;
 	display: inline-block;
 	float: right;
@@ -1111,7 +1077,7 @@ ol {
 .hs-text .label {
 	display: inline-block;
 	padding: 4px 7px 4px 12px;
-	background: rgba(194, 0, 0, 0.3);
+	background: #7a3bb7;
 	-webkit-transform: skewX(-15deg);
 	-ms-transform: skewX(-15deg);
 	transform: skewX(-15deg);
@@ -1234,7 +1200,7 @@ ol {
 }
 
 .trending-item .ti-text h6 a:hover {
-	color: #c20000;
+	color: #812acf;
 }
 
 .trending-item .ti-text ul li {
@@ -1291,7 +1257,7 @@ ol {
 }
 
 .hero-slider.owl-carousel .owl-dots button.active {
-	background: #c20000;
+	background: #812acf;
 }
 
 .hero-slider .owl-stage-outer,
@@ -1330,7 +1296,7 @@ ol {
 }
 
 .lp-slider.owl-carousel .owl-dots button.active {
-	background: #c20000;
+	background: #812acf;
 }
 
 .lp-slider.owl-carousel .owl-nav {
@@ -1458,7 +1424,7 @@ ol {
 }
 
 .tab-elem .nav-item .nav-link.active {
-	color: #c20000;
+	color: #812acf;
 	background-color: transparent;
 	border-color: transparent;
 }
@@ -1499,7 +1465,7 @@ ol {
 .un-slider .un-big-item .ub-text .label {
 	display: inline-block;
 	padding: 2px 7px 2px 12px;
-	background: rgba(194, 0, 0, 0.5);
+	background: #782bb7;
 	-webkit-transform: skewX(-15deg);
 	-ms-transform: skewX(-15deg);
 	transform: skewX(-15deg);
@@ -1545,7 +1511,7 @@ ol {
 }
 
 .un-slider .un-big-item .ub-text ul li span {
-	color: #c20000;
+	color: #812acf;
 }
 
 .un-slider .un-big-item .ub-text ul li:last-child {
@@ -1576,7 +1542,7 @@ ol {
 .un-slider .un-item .un_pic .label {
 	display: inline-block;
 	padding: 2px 7px 2px 12px;
-	background: rgba(194, 0, 0, 0.5);
+	background: #7a2bb9;
 	-webkit-transform: skewX(-15deg);
 	-ms-transform: skewX(-15deg);
 	transform: skewX(-15deg);
@@ -1813,7 +1779,7 @@ ol {
 
 .vg-item .play-btn {
 	font-size: 25px;
-	color: #c20000;
+	color: #812acf;
 	position: relative;
 	z-index: 99;
 }
@@ -1861,7 +1827,7 @@ ol {
 .ip-item .ip-text .label {
 	display: inline-block;
 	padding: 2px 10px 2px 12px;
-	background: rgba(194, 0, 0, 0.3);
+	background: #7b2bb7;
 	-webkit-transform: skewX(-15deg);
 	-ms-transform: skewX(-15deg);
 	transform: skewX(-15deg);
@@ -1913,7 +1879,7 @@ ol {
 }
 
 .ip-item .ip-text ul li span {
-	color: #c20000;
+	color: #812acf;
 }
 
 .ip-item .ip-text ul li:last-child {
@@ -2125,7 +2091,7 @@ ol {
 	color: #eaeaea;
 	text-transform: uppercase;
 	letter-spacing: 0.5px;
-	background: #680606;
+	background: #7b2bb7;
 	border: none;
 	width: 100%;
 	padding: 12px 0;
@@ -2277,7 +2243,7 @@ ol {
 }
 
 .copyright-area .ca-text i {
-	color: #c20000;
+	color: #812acf;
 }
 
 .copyright-area .ca-text a {
@@ -2285,7 +2251,7 @@ ol {
 }
 
 .copyright-area .ca-text a:hover {
-	color: #c20000;
+	color: #812acf;
 }
 
 .copyright-area .ca-links {
@@ -2317,7 +2283,7 @@ ol {
 }
 
 .breadcrumb-text h3 span {
-	color: #c20000;
+	color: #812acf;
 }
 
 .breadcrumb-text .bt-option a {
@@ -2338,7 +2304,7 @@ ol {
 
 .breadcrumb-text .bt-option span {
 	font-size: 15px;
-	color: #c20000;
+	color: #812acf;
 	display: inline-block;
 }
 
@@ -2363,7 +2329,7 @@ ol {
 .cg-item .cg-pic .label {
 	display: inline-block;
 	padding: 2px 12px 2px 12px;
-	background: rgba(194, 0, 0, 0.5);
+	background: #7f2bc0;
 	-webkit-transform: skewX(-15deg);
 	-ms-transform: skewX(-15deg);
 	transform: skewX(-15deg);
@@ -2419,7 +2385,7 @@ ol {
 }
 
 .cg-item .cg-text ul li span {
-	color: #c20000;
+	color: #812acf;
 }
 
 .cg-item .cg-text ul li:last-child {
@@ -2469,7 +2435,7 @@ ol {
 .cl-item .cl-text .label {
 	display: inline-block;
 	padding: 2px 12px 2px 12px;
-	background: rgba(194, 0, 0, 0.3);
+	background: #862bcd;
 	-webkit-transform: skewX(-15deg);
 	-ms-transform: skewX(-15deg);
 	transform: skewX(-15deg);
@@ -2520,7 +2486,7 @@ ol {
 }
 
 .cl-item .cl-text ul li span {
-	color: #c20000;
+	color: #812acf;
 }
 
 .cl-item .cl-text ul li:last-child {
@@ -2565,7 +2531,7 @@ ol {
 .contact-form .dt-title-gallery .label {
 	display: inline-block;
 	padding: 2px 12px 2px 12px;
-	background: rgba(194, 0, 0, 0.3);
+	background: rgb(129, 42, 207);
 	-webkit-transform: skewX(-15deg);
 	-ms-transform: skewX(-15deg);
 	transform: skewX(-15deg);
@@ -2618,7 +2584,7 @@ ol {
 .details-hero-text ul li span,
 .details-text .dt-title-gallery ul li span,
 .contact-form .dt-title-gallery ul li span {
-	color: #c20000;
+	color: #812acf;
 }
 
 .details-hero-text ul li:last-child,
@@ -2669,7 +2635,7 @@ ol {
 
 .details-text .dt-quote,
 .contact-form .dt-quote {
-	background: #680606;
+	background: #7f2bc0;
 	padding: 26px 25px 24px 30px;
 	position: relative;
 	z-index: 1;
@@ -2700,7 +2666,7 @@ ol {
 
 .details-text .dt-quote p span,
 .contact-form .dt-quote p span {
-	color: #c20000;
+	color: #812acf;
 }
 
 .details-text .dt-item,
@@ -3404,7 +3370,7 @@ ol {
 
 .details-text .dt-overall-rating .or-qualities .qualities-item.bad-item i,
 .contact-form .dt-overall-rating .or-qualities .qualities-item.bad-item i {
-	color: #c20000;
+	color: #641ca5;
 }
 
 .details-text .dt-overall-rating .or-qualities .qualities-item p,
@@ -3572,7 +3538,7 @@ ol {
 }
 
 .contact-form .dt-leave-comment form button {
-	background: #680606;
+	background: #812acf;
 	font-size: 14px;
 }
 
@@ -3620,7 +3586,7 @@ ol {
 .text-404 .search-404 input {
 	width: 100%;
 	height: 46px;
-	background: #c20000;
+	background: #812acf;
 	font-size: 14px;
 	color: #ffffff;
 	border: none;
@@ -3653,7 +3619,7 @@ ol {
 	position: absolute;
 	right: 0;
 	top: 0;
-	background: #c20000;
+	background: #812acf;
 	border: none;
 	height: 46px;
 	padding: 0 20px;
@@ -3698,7 +3664,7 @@ ol {
 .details-text .dt-breadcrumb .dt-bread-option span,
 .contact-form .dt-breadcrumb .dt-bread-option span {
 	font-size: 12px;
-	color: #c20000;
+	color: #812acf;
 	display: inline-block;
 }
 
@@ -4182,4 +4148,17 @@ ol {
 	.search-model-form input {
 		font-size: 28px;
 	}
+
+    .nav-options {
+        background: linear-gradient(to bottom, #7b2cbf, #5a189a) !important;
+    }
+
+    .nav-menu ul li a {
+        background: linear-gradient(to bottom, #9d4edd, #7b2cbf) !important;
+    }
+
+    .nav-menu ul li.active a {
+        background: linear-gradient(to bottom, #c77dff, #9d4edd) !important;
+    }
+
 }
