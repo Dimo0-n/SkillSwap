@@ -31,13 +31,24 @@
                 <div class="col-lg-6 col-md-8">
                     <div class="ht-widget">
                         <ul>
-                            <li><i class="fa fa-sun-o"></i> <span>20<sup>c</sup></span> London</li>
-                            <li><i class="fa fa-clock-o"></i> Aug 01, 2019</li>
-                            <li class="signup-switch signup-open"><i class="fa fa-sign-out"></i> Login / Sign up
-                            </li>
+                            <li><i class="fa fa-clock-o"></i> <span id="current-date"></span></li>
+                            <li class="signup-switch signup-open"><i class="fa fa-sign-out"></i> Login / Sign up</li>
                         </ul>
                     </div>
                 </div>
+
+                <script>
+                    // Obține data actuală
+                    const today = new Date();
+
+                    // Formatează data (ex: Aug 16, 2025)
+                    const options = { month: 'short', day: '2-digit', year: 'numeric' };
+                    const formattedDate = today.toLocaleDateString('en-US', options);
+
+                    // Afișează în span
+                    document.getElementById('current-date').textContent = formattedDate;
+                </script>
+
                 <div class="col-lg-6 col-md-4">
                     <div class="ht-social">
                         <a href="#"><i class="fa fa-facebook"></i></a>
@@ -69,7 +80,7 @@
             </div>
             <div class="nav-menu">
                 <ul>
-                    <li class="active"><a href="/index"><span>Home</span></a></li>
+                    <li class="active"><a href="/index"><span>Acasă</span></a></li>
                     <li class="mega-menu"><a href="#"><span>Platform <i class="fa fa-angle-down"></i></span></a>
                         <div class="megamenu-wrapper">
                             <ul class="mw-nav">
