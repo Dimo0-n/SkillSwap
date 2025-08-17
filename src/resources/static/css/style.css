@@ -1177,7 +1177,7 @@ ol {
 
 .trending-item .ti-pic {
 	float: left;
-	margin-right: 20px;
+    padding-left: 17px;
 }
 
 .trending-item .ti-text {
