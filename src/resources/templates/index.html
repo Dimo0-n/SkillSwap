@@ -49,6 +49,14 @@
             margin-right: 10px !important; /* spatiu intre img si txt */
         }
 
+        /*Pentru imaginile de la anunturi*/
+        .ip-pic img {
+            width: 370px !important;       /* lățimea dorită */
+            height: 247px !important;      /* înălțimea dorită */
+            object-fit: cover !important;  /* taie marginile dacă imaginea nu e exact proporțională */
+        }
+
+
     </style>
 </head>
 
@@ -175,10 +183,10 @@
 <!--                img 370 x 247-->
                 <div class="ip-item">
                     <div class="ip-pic">
-                        <img src="/img/instagram/insta-1.jpg" alt="programming">
+                        <img src="img/skill/skill-programming.png" alt="programming">
                     </div>
                     <div class="ip-text">
-                        <div class="label"><span>Skill Swap</span></div>
+                        <div class="label"><span>NOU</span></div>
                         <h5><a href="#">Ofer lecții de programare Java în schimb de design grafic</a></h5>
                         <ul>
                             <li><span>Andrei</span></li>
@@ -192,10 +200,10 @@
 
                 <div class="ip-item">
                     <div class="ip-pic">
-                        <img src="/img/instagram/insta-2.jpg" alt="fotografie">
+                        <img src="/img/skill/skill-photography.png" alt="fotografie">
                     </div>
                     <div class="ip-text">
-                        <div class="label"><span>Skill Swap</span></div>
+                        <div class="label"><span>NOU</span></div>
                         <h5><a href="#">Ofer cursuri de fotografie în schimb de lecții de engleză</a></h5>
                         <ul>
                             <li><span>Maria</span></li>
@@ -208,10 +216,10 @@
 
                 <div class="ip-item">
                     <div class="ip-pic">
-                        <img src="/img/instagram/insta-3.jpg" alt="muzica">
+                        <img src="/img/skill/skill-guitar.png" alt="muzica">
                     </div>
                     <div class="ip-text">
-                        <div class="label"><span>Skill Swap</span></div>
+                        <div class="label"><span>NOU</span></div>
                         <h5><a href="#">Predau chitară acustică în schimb de ajutor la programare</a></h5>
                         <ul>
                             <li><span>Alex</span></li>
@@ -224,10 +232,10 @@
 
                 <div class="ip-item">
                     <div class="ip-pic">
-                        <img src="/img/instagram/insta-4.jpg" alt="design grafic">
+                        <img src="/img/skill/skill-photoshop.png" alt="design grafic">
                     </div>
                     <div class="ip-text">
-                        <div class="label"><span>Skill Swap</span></div>
+                        <div class="label"><span>NOU</span></div>
                         <h5><a href="#">Ofer lecții de design grafic în schimb de cursuri de marketing</a></h5>
                         <ul>
                             <li><span>Ioana</span></li>
@@ -247,17 +255,7 @@
             </div>
             <div class="col-lg-4 col-md-7">
                 <div class="sidebar-option">
-                    <div class="insta-media">
-                        <div class="section-title">
-                            <h5>Publicitate</h5>
-                        </div>
-                        <div class="insta-pic">
-                            <img src="/img/instagram/ip-1.jpg" alt="">
-                            <img src="/img/instagram/ip-2.jpg" alt="">
-                            <img src="/img/instagram/ip-3.jpg" alt="">
-                            <img src="/img/instagram/ip-4.jpg" alt="">
-                        </div>
-                    </div>
+                    <div th:replace="~{/fragments/adds :: adds}"></div>
                     <div class="best-of-post">
                         <div class="section-title">
                             <h5>Cei mai buni</h5>
@@ -335,16 +333,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="subscribe-option">
-                        <div class="section-title">
-                            <h5>Abonează-te</h5>
-                        </div>
-                        <p>Așteaptă cele mai noi actualizări direct pe emailul tău</p>
-                        <form action="#">
-                            <input type="text" placeholder="Name">
-                            <input type="text" placeholder="Email">
-                            <button type="submit"><span>Abonează-te</span></button>
-                        </form>
+
+                    <div th:replace="~{/fragments/subscribe :: subscribe}">
+
                     </div>
                 </div>
             </div>

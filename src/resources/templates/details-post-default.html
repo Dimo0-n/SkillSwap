@@ -421,17 +421,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="subscribe-option">
-                            <div class="section-title">
-                                <h5>Subscribe</h5>
-                            </div>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, eiusmod tempor.</p>
-                            <form action="#">
-                                <input type="text" placeholder="Name">
-                                <input type="text" placeholder="Email">
-                                <button type="submit"><span>Subscribe</span></button>
-                            </form>
-                        </div>
+                        <div th:replace="~{/fragments/subscribe :: subscribe}">
                     </div>
                 </div>
             </div>
