@@ -23,7 +23,7 @@ public class HomeController {
 
     @GetMapping("/categories-grid")
     public String categoryGrid(){
-        return "categories-grid";
+        return "announces-list";
     }
 
     @GetMapping("/contact")
@@ -33,17 +33,17 @@ public class HomeController {
 
     @GetMapping("/details-post-default")
     public String detailsPostDefault(){
-        return "details-post-default";
+        return "chat";
     }
 
     @GetMapping("/details-post-gallery")
     public String detailsPostGallery(){
-        return "details-post-gallery";
+        return "post-details";
     }
 
     @GetMapping("/details-post-review")
     public String detailsPostReview(){
-        return "details-post-review";
+        return "profil";
     }
 
     @GetMapping("/typography")
