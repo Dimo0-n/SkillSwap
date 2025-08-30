@@ -21,7 +21,7 @@ public class HomeController {
         return "categories-list";
     }
 
-    @GetMapping("/categories-grid")
+    @GetMapping("/announces-list")
     public String categoryGrid(){
         return "announces-list";
     }
@@ -31,17 +31,17 @@ public class HomeController {
         return "contact";
     }
 
-    @GetMapping("/details-post-default")
+    @GetMapping("/chat")
     public String detailsPostDefault(){
         return "chat";
     }
 
-    @GetMapping("/details-post-gallery")
+    @GetMapping("/post-details")
     public String detailsPostGallery(){
         return "post-details";
     }
 
-    @GetMapping("/details-post-review")
+    @GetMapping("/profil")
     public String detailsPostReview(){
         return "profil";
     }
