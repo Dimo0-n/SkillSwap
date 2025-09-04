@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HomeController {
 
+    //TODO de adaugat o validare de schiluri
+
     @GetMapping("/index")
     public String home(){
         return "index";
@@ -49,6 +51,11 @@ public class HomeController {
     @GetMapping("/typography")
     public String typography(){
         return "typography";
+    }
+
+    @GetMapping("/meeting")
+    public String meeting(){
+        return "jitsi-meet";
     }
 
 }

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src='https://8x8.vc/vpaas-magic-cookie-4c75d926ffff4d7fa566a2ca0cf70e65/external_api.js' async></script>
+    <style>html, body, #jaas-container { height: 100%; }</style>
+    <script type="text/javascript">
+        window.onload = () => {
+            const userId = Math.floor(Math.random() * 10000); // exemplu, îl iei din backend
+            const room = "vpaas-magic-cookie-4c75d926ffff4d7fa566a2ca0cf70e65/UserRoom_" + userId;
+
+            const api = new JitsiMeetExternalAPI("8x8.vc", {
+                roomName: room,
+                parentNode: document.querySelector('#jaas-container'),
+                configOverwrite: {
+                    prejoinPageEnabled: false
+                },
+                interfaceConfigOverwrite: {
+                    FILM_STRIP_ONLY: false
+                }
+            });
+        };
+
+    </script>
+</head>
+<body><div id="jaas-container" /></body>
+</html>
+  
