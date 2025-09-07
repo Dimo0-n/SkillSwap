@@ -4162,3 +4162,47 @@ ol {
     }
 
 }
+
+/*---------------------
+  GO TO LOGIN/REGISTER Buttons
+------------------------*/
+
+/* Stiluri pentru butoanele GO TO LOGIN și GO TO REGISTER */
+.signup-text .signup-form .button {
+    font-size: 14px;
+    color: #ffffff;
+    font-weight: 600;
+    text-transform: uppercase;
+    background: #812acf;
+    border: none;
+    display: inline-block;
+    padding: 12px 32px;
+    -webkit-transform: skewX(-15deg);
+    -ms-transform: skewX(-15deg);
+    transform: skewX(-15deg);
+    margin-top: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    opacity: 0.6; /* Transparent la început */
+}
+
+.signup-text .signup-form .button span {
+    display: inline-block;
+    -webkit-transform: skewX(15deg);
+    -ms-transform: skewX(15deg);
+    transform: skewX(15deg);
+}
+
+/* Efect hover - devine opac */
+.signup-text .signup-form .button:hover {
+    opacity: 1; /* Opac la hover */
+    background: #9b4dd8;
+    transform: skewX(-15deg) translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Efect activ */
+.signup-text .signup-form .button:active {
+    transform: skewX(-15deg) translateY(0px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
