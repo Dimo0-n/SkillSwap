@@ -60,6 +60,69 @@
         $('.signup-section').fadeOut(400);
     });
 
+
+    function switchToLogin() {
+        console.log('Switching to login form');
+        // Hide register form and show login form
+        $('.signup-section').find('h2').text('Sign in');
+        $('.signup-section').find('p').text('Fill out the form below to recieve a free and confidential');
+        $('.signup-section').find('form').attr('action', '/login');
+        
+        // Update form fields for login
+        var formHtml = `
+            <div class="sf-input-list">
+                <input type="text" class="input-value" placeholder="User Name*" name="username" required>
+                <input type="password" class="input-value" placeholder="Password" name="password" required>
+            </div>
+            <button type="submit"><span>LOGIN</span></button>
+            <button type="button" class="button" id="go-to-register">
+                <span>GO TO REGISTER</span>
+            </button>
+        `;
+        $('.signup-section').find('form').html(formHtml);
+    }
+
+    function switchToRegister() {
+        // Hide login form and show register form
+        $('.signup-section').find('h2').text('Sign up');
+        $('.signup-section').find('p').text('Fill out the form below to recieve a free and confidential');
+        $('.signup-section').find('form').attr('action', '/register');
+        
+        // Update form fields for register
+        var formHtml = `
+            <div class="sf-input-list">
+                <input type="text" class="input-value" placeholder="User Name*" name="username" required>
+                <input type="password" class="input-value" placeholder="Password" name="password" required>
+                <input type="password" class="input-value" placeholder="Confirm Password" name="confirmPassword" required>
+                <input type="email" class="input-value" placeholder="Email Address" name="email" required>
+                <input type="text" class="input-value" placeholder="Full Name" name="fullName" required>
+            </div>
+            <div class="radio-check">
+                <label for="rc-agree">I agree with the term & conditions
+                    <input type="checkbox" id="rc-agree">
+                    <span class="checkbox"></span>
+                </label>
+            </div>
+            <button type="submit"><span>REGISTER NOW</span></button>
+            <button type="button" class="button" id="go-to-login">
+                <span>GO TO LOGIN</span>
+            </button>
+        `;
+        $('.signup-section').find('form').html(formHtml);
+    }
+
+    // Initial binding for go-to-login button (if it exists on page load)
+    $(document).on('click', '#go-to-login', function() {
+        console.log('Go to login clicked');
+        switchToLogin();
+    });
+
+    // Initial binding for go-to-register button (if it exists on page load)
+    $(document).on('click', '#go-to-register', function() {
+        console.log('Go to register clicked');
+        switchToRegister();
+    });
+
     /*------------------
 		Navigation
 	--------------------*/

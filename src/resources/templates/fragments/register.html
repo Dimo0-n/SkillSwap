@@ -16,13 +16,13 @@
                     <h2>Sign up</h2>
                     <p>Fill out the form below to recieve a free and confidential</p>
                 </div>
-                <form action="#" class="signup-form">
+                <form th:action="@{/register}" method="post" class="signup-form">
                     <div class="sf-input-list">
-                        <input type="text" class="input-value" placeholder="User Name*">
-                        <input type="password" class="input-value" placeholder="Password">
-                        <input type="password" class="input-value" placeholder="Confirm Password">
-                        <input type="email" class="input-value" placeholder="Email Address">
-                        <input type="text" class="input-value" placeholder="Full Name">
+                        <input type="text" class="input-value" placeholder="User Name*" name="username" required>
+                        <input type="password" class="input-value" placeholder="Password" name="password" required>
+                        <input type="password" class="input-value" placeholder="Confirm Password" name="confirmPassword" required>
+                        <input type="email" class="input-value" placeholder="Email Address" name="email" required>
+                        <input type="text" class="input-value" placeholder="Full Name" name="fullName" required>
                     </div>
                     <div class="radio-check">
                         <label for="rc-agree">I agree with the term & conditions
@@ -31,7 +31,9 @@
                         </label>
                     </div>
                     <button type="submit"><span>REGISTER NOW</span></button>
-                    <button type="submit"><span>GO TO LOGIN</span></button>
+                    <button type="button" class="button" id="go-to-login">
+                        <span>GO TO LOGIN</span>
+                    </button>
                 </form>
             </div>
         </div>
