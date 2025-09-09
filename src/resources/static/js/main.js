@@ -155,7 +155,7 @@
                         );
                     } else {
                         $(".signup-section").prepend(
-                            `<div class="error-message">A apărut o eroare la autentificare!</div>`
+                            `<div class="error-message">Datele introduse sunt greșite!</div>`
                         );
                     }
                 }
@@ -230,6 +230,26 @@
 
         // Trigger change event for form validation
         $checkbox.trigger('change');
+    });
+
+    //logout
+    $(document).on('click', '#logout-btn', function(e) {
+        e.preventDefault(); // nu facem redirect automat
+
+        fetch('/logout', {
+            method: 'POST',
+            headers: {
+                // Dacă ai CSRF activ, altfel poți scoate această linie
+                'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content')
+            }
+        }).then(res => {
+            if(res.ok) {
+                // redirecționează direct la index
+                window.location.href = '/index';
+            } else {
+                console.error('Ceva a crăpat la logout!');
+            }
+        }).catch(err => console.error(err));
     });
 
     // Also make the label clickable for better UX

@@ -46,13 +46,14 @@ public class SecurityConfig {
                                 .defaultSuccessUrl("/index", true)
                                 .failureUrl("/login?error=true")
                                 .permitAll()
-                ).logout(
-                        logout -> logout
-                                .logoutUrl("/logout")
-                                .invalidateHttpSession(true)  // Închide sesiunea curentă
-                                .deleteCookies("JSESSIONID")  // Șterge cookie-ul sesiunii
-                                .logoutSuccessUrl("/login?logout=true")
-                                .permitAll()
+                ).logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            response.setStatus(200);
+                        })
+                        .permitAll()
                 );
         return http.build();
     }

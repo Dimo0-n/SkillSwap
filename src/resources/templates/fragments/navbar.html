@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>NavBar</title>
@@ -32,7 +33,12 @@
                     <div class="ht-widget">
                         <ul>
                             <li><i class="fa fa-clock-o"></i> <span id="current-date"></span></li>
-                            <li class="signup-switch signup-open"><i class="fa fa-sign-out"></i> Login / Sign up</li>
+                            <li sec:authorize="!isAuthenticated()" class="signup-switch signup-open">
+                                <i class="fa fa-sign-out"></i> Login / Sign up
+                            </li>
+                            <li sec:authorize="isAuthenticated()" id="logout-btn" class="signup-switch signup-open">
+                                <i class="fa fa-sign-out"></i> Logout
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -85,7 +91,7 @@
 <!--                    <li><a href="/post-details"><span>Pages</i></span></a></li>-->
                     <li><a href="/chat"><span>Chat</i></span></a></li>
                     <li><a href="/contact">Contact</a></li>
-                    <li><a href="/profil">Profil</a></li>
+                    <li><a sec:authorize="isAuthenticated()" href="/profil">Profil</a></li>
                 </ul>
             </div>
         </div>
