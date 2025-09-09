@@ -20,12 +20,21 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-    @PostMapping("/login")
+    // Endpoint pentru SUCCESS după login (apelat de AJAX)
+    @PostMapping("/login-success")
     @ResponseBody
     public Map<String, String> loginSuccess() {
         return Map.of("success", "Login realizat cu succes!");
     }
 
+    // Endpoint pentru EROARE de login (apelat de AJAX)
+    @PostMapping("/login-error")
+    @ResponseBody
+    public ResponseEntity<?> loginError() {
+        return ResponseEntity
+                .badRequest()
+                .body(Map.of("error", "Datele introduse sunt greșite!"));
+    }
 
     @PostMapping("/register")
     @ResponseBody
@@ -34,24 +43,23 @@ public class UserController {
                                       @RequestParam String email,
                                       @RequestParam String fullName) {
 
-            if (!password.equals(confirmPassword)) {
-                return ResponseEntity
-                        .badRequest()
-                        .body(Map.of("error", "Parolele nu coincid, boss!"));
-            }
+        if (!password.equals(confirmPassword)) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(Map.of("error", "Parolele nu coincid, boss!"));
+        }
 
-            Optional<User> existingUser = userRepository.findByEmail(email);
+        Optional<User> existingUser = userRepository.findByEmail(email);
 
-            if (existingUser.isPresent()) {
-                return ResponseEntity
-                        .badRequest()
-                        .body(Map.of("error", "Email-ul e deja folosit, baga altul!"));
-            }
+        if (existingUser.isPresent()) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(Map.of("error", "Email-ul e deja folosit, baga altul!"));
+        }
 
-            userService.saveUser(email, password, fullName);
+        userService.saveUser(email, password, fullName);
 
-            return ResponseEntity.ok(Map.of("success", "Te-ai înregistrat cu succes!"));
+        return ResponseEntity.ok(Map.of("success", "Te-ai înregistrat cu succes!"));
 
     }
-
 }

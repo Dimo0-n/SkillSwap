@@ -60,13 +60,16 @@
         $('.signup-section').fadeOut(400);
     });
 
-
     function switchToLogin() {
         console.log('Switching to login form');
         // Hide register form and show login form
         $('.signup-section').find('h2').text('Sign in');
         $('.signup-section').find('p').text('Fill out the form below to recieve a free and confidential');
         $('.signup-section').find('form').attr('action', '/login');
+
+        // Clear any existing error messages
+        $(".error-message").remove();
+        $(".success-message").remove();
 
         // Update form fields for login
         var formHtml = `
@@ -87,6 +90,10 @@
         $('.signup-section').find('h2').text('Sign up');
         $('.signup-section').find('p').text('Fill out the form below to recieve a free and confidential');
         $('.signup-section').find('form').attr('action', '/register');
+
+        // Clear any existing error messages
+        $(".error-message").remove();
+        $(".success-message").remove();
 
         // Update form fields for register
         var formHtml = `
@@ -111,60 +118,86 @@
         $('.signup-section').find('form').html(formHtml);
     }
 
-    // interceptăm submitul pentru orice form din .signup-section
+    // Interceptăm submit-ul pentru orice form din .signup-section
     $(document).on("submit", ".signup-section form", function (e) {
+        e.preventDefault(); // Prevenim submit-ul normal
+
         var $form = $(this);
         var actionUrl = $form.attr("action"); // /register sau /login
-
-        if (actionUrl === '/login') {
-            // Pentru login, lasă submit-ul să meargă normal
-            // Spring Security va face redirect-ul la /index
-            return;
-        }
-
-        // Dacă ajunge aici, e /register -> AJAX
-        e.preventDefault(); // nu mai face reload
-
-        // Check terms checkbox
-        var $termsCheckbox = $form.find('input[name="termsAndConditions"]');
-        if (!$termsCheckbox.prop('checked')) {
-            $(".error-message").remove();
-            $(".success-message").remove();
-            $(".signup-section").prepend(
-                `<div class="error-message">Acceptă termenii și condițiile, boss!</div>`
-            );
-            return;
-        }
-
         var formData = $form.serialize();
 
-        $.ajax({
-            url: actionUrl,
-            type: "POST",
-            data: formData,
-            success: function (response) {
-                if (response.success) {
-                    $(".error-message").remove();
-                    $(".success-message").remove();
+        // Clear previous messages
+        $(".error-message").remove();
+        $(".success-message").remove();
 
+        if (actionUrl === '/login') {
+            // Pentru login, facem AJAX request pentru autentificare
+            $.ajax({
+                url: '/login',
+                type: 'POST',
+                data: formData,
+                success: function() {
+                    // Login reușit - Spring Security va face redirect
+                    // Dar pentru UX, afișăm mesaj și redirectăm manual
                     $(".signup-section").prepend(
-                        `<div class="success-message">${response.success}</div>`
+                        `<div class="success-message">Login realizat cu succes!</div>`
                     );
 
-                    // Închide formularul după 1 secundă
-                    setTimeout(function () {
-                        $('.signup-section').fadeOut(400);
+                    setTimeout(function() {
+                        window.location.href = '/index';
                     }, 1000);
+                },
+                error: function(xhr) {
+                    // Login eșuat
+                    if (xhr.status === 401 || xhr.status === 403) {
+                        $(".signup-section").prepend(
+                            `<div class="error-message">Datele introduse sunt greșite!</div>`
+                        );
+                    } else {
+                        $(".signup-section").prepend(
+                            `<div class="error-message">A apărut o eroare la autentificare!</div>`
+                        );
+                    }
                 }
-            },
-            error: function (xhr) {
-                $(".error-message").remove();
-                var err = xhr.responseJSON?.error || "A crăpat ceva pe server!";
+            });
+            return;
+        }
+
+        // Pentru register - păstrăm logica existentă
+        if (actionUrl === '/register') {
+            // Check terms checkbox
+            var $termsCheckbox = $form.find('input[name="termsAndConditions"]');
+            if (!$termsCheckbox.prop('checked')) {
                 $(".signup-section").prepend(
-                    `<div class="error-message">${err}</div>`
+                    `<div class="error-message">Acceptă termenii și condițiile, boss!</div>`
                 );
-            },
-        });
+                return;
+            }
+
+            $.ajax({
+                url: actionUrl,
+                type: "POST",
+                data: formData,
+                success: function (response) {
+                    if (response.success) {
+                        $(".signup-section").prepend(
+                            `<div class="success-message">${response.success}</div>`
+                        );
+
+                        // Închide formularul după 1 secundă
+                        setTimeout(function () {
+                            $('.signup-section').fadeOut(400);
+                        }, 1000);
+                    }
+                },
+                error: function (xhr) {
+                    var err = xhr.responseJSON?.error || "A crăpat ceva pe server!";
+                    $(".signup-section").prepend(
+                        `<div class="error-message">${err}</div>`
+                    );
+                },
+            });
+        }
     });
 
     // Initial binding for go-to-login button (if it exists on page load)
@@ -183,18 +216,18 @@
     $(document).on('click', '.radio-check label .checkbox', function(e) {
         e.preventDefault();
         e.stopPropagation();
-        
+
         var $label = $(this).closest('label');
         var $checkbox = $label.find('input[type="checkbox"]');
         var isChecked = $checkbox.prop('checked');
-        
+
         console.log('Checkbox clicked, current state:', isChecked);
-        
+
         // Toggle checkbox state
         $checkbox.prop('checked', !isChecked);
-        
+
         console.log('Checkbox new state:', $checkbox.prop('checked'));
-        
+
         // Trigger change event for form validation
         $checkbox.trigger('change');
     });
@@ -206,14 +239,14 @@
             e.preventDefault();
             var $checkbox = $(this).find('input[type="checkbox"]');
             var isChecked = $checkbox.prop('checked');
-            
+
             console.log('Label clicked, current state:', isChecked);
-            
+
             // Toggle checkbox state
             $checkbox.prop('checked', !isChecked);
-            
+
             console.log('Checkbox new state:', $checkbox.prop('checked'));
-            
+
             // Trigger change event for form validation
             $checkbox.trigger('change');
         }
