@@ -113,39 +113,29 @@
 
     // interceptăm submitul pentru orice form din .signup-section
     $(document).on("submit", ".signup-section form", function (e) {
-        e.preventDefault(); // nu mai face reload
         var $form = $(this);
         var actionUrl = $form.attr("action"); // /register sau /login
-        
-        // Check if this is a register form and validate terms checkbox
-        if (actionUrl === '/register') {
-            var $termsCheckbox = $form.find('input[name="termsAndConditions"]');
-            console.log('Terms checkbox found:', $termsCheckbox.length);
-            console.log('Terms checkbox checked:', $termsCheckbox.prop('checked'));
-            
-            if ($termsCheckbox.length === 0) {
-                console.log('No terms checkbox found!');
-                $(".error-message").remove();
-                $(".success-message").remove();
-                $(".signup-section").prepend(
-                    `<div class="error-message">Terms checkbox not found. Please refresh the page.</div>`
-                );
-                return;
-            }
-            
-            if (!$termsCheckbox.prop('checked')) {
-                console.log('Terms checkbox not checked!');
-                $(".error-message").remove();
-                $(".success-message").remove();
-                $(".signup-section").prepend(
-                    `<div class="error-message">Acceptă termenii și condițiile, boss!</div>`
-                );
-                return;
-            }
-            
-            console.log('Terms validation passed!');
+
+        if (actionUrl === '/login') {
+            // Pentru login, lasă submit-ul să meargă normal
+            // Spring Security va face redirect-ul la /index
+            return;
         }
-        
+
+        // Dacă ajunge aici, e /register -> AJAX
+        e.preventDefault(); // nu mai face reload
+
+        // Check terms checkbox
+        var $termsCheckbox = $form.find('input[name="termsAndConditions"]');
+        if (!$termsCheckbox.prop('checked')) {
+            $(".error-message").remove();
+            $(".success-message").remove();
+            $(".signup-section").prepend(
+                `<div class="error-message">Acceptă termenii și condițiile, boss!</div>`
+            );
+            return;
+        }
+
         var formData = $form.serialize();
 
         $.ajax({
@@ -161,8 +151,9 @@
                         `<div class="success-message">${response.success}</div>`
                     );
 
+                    // Închide formularul după 1 secundă
                     setTimeout(function () {
-                        window.location.href = "/index";
+                        $('.signup-section').fadeOut(400);
                     }, 1000);
                 }
             },

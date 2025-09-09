@@ -20,10 +20,12 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-    @GetMapping("/login")
-    public String login(){
-        return "redirect:/index";
+    @PostMapping("/login")
+    @ResponseBody
+    public Map<String, String> loginSuccess() {
+        return Map.of("success", "Login realizat cu succes!");
     }
+
 
     @PostMapping("/register")
     @ResponseBody
@@ -51,6 +53,5 @@ public class UserController {
             return ResponseEntity.ok(Map.of("success", "Te-ai înregistrat cu succes!"));
 
     }
-
 
 }
