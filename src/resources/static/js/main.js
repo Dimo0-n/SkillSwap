@@ -111,6 +111,44 @@
         $('.signup-section').find('form').html(formHtml);
     }
 
+    // interceptăm submitul pentru orice form din .signup-section
+    $(document).on("submit", ".signup-section form", function (e) {
+        e.preventDefault(); // nu mai face reload
+        var $form = $(this);
+        var actionUrl = $form.attr("action"); // /register sau /login
+        var formData = $form.serialize();
+
+        $.ajax({
+            url: actionUrl,
+            type: "POST",
+            data: formData,
+            success: function (response) {
+                if (response.success) {
+                    // curățăm eventualele erori
+                    $(".error-message").remove();
+
+                    // mesaj de succes
+                    $(".signup-section").prepend(
+                        `<div class="success-message">${response.success}</div>`
+                    );
+
+                    // redirect la index după 1 secundă
+                    setTimeout(function () {
+                        window.location.href = "/index";
+                    }, 1000);
+                }
+            },
+            error: function (xhr) {
+                $(".error-message").remove(); // curățăm erorile vechi
+                var err = xhr.responseJSON?.error || "A crăpat ceva pe server!";
+                $(".signup-section").prepend(
+                    `<div class="error-message" style="color:red; margin-bottom:10px;">${err}</div>`
+                );
+            },
+        });
+    });
+
+
     // Initial binding for go-to-login button (if it exists on page load)
     $(document).on('click', '#go-to-login', function() {
         console.log('Go to login clicked');

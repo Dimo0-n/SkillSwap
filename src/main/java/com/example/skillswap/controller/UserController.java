@@ -1,0 +1,56 @@
+package com.example.skillswap.controller;
+
+import com.example.skillswap.entity.User;
+import com.example.skillswap.repository.UserRepository;
+import com.example.skillswap.sevice.UserServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+import java.util.Optional;
+
+@Controller
+public class UserController {
+
+    @Autowired
+    private UserServiceImpl userService;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @GetMapping("/login")
+    public String login(){
+        return "redirect:/index";
+    }
+
+    @PostMapping("/register")
+    @ResponseBody
+    public ResponseEntity<?> register(@RequestParam String username,
+                                      @RequestParam String password,
+                                      @RequestParam String confirmPassword,
+                                      @RequestParam String email,
+                                      @RequestParam String fullName) {
+
+        if (!password.equals(confirmPassword)) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(Map.of("error", "Parolele nu coincid, boss!"));
+        }
+
+        Optional<User> existingUser = userRepository.findByEmail(email);
+
+        if (userRepository.findByEmail(username).isPresent()) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(Map.of("error", "Username-ul e deja folosit, schimbă placa!"));
+        }
+
+        userService.saveUser(username, password, email, fullName);
+
+        return ResponseEntity.ok(Map.of("success", "Te-ai înregistrat cu succes!"));
+    }
+
+
+}
