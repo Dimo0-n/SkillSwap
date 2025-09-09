@@ -30,9 +30,7 @@ public class UserController {
     public ResponseEntity<?> register(@RequestParam String password,
                                       @RequestParam String confirmPassword,
                                       @RequestParam String email,
-                                      @RequestParam String fullName,
-                                      @RequestParam (required = false) String termsAndConditions) {
-        if (termsAndConditions != null) {
+                                      @RequestParam String fullName) {
 
             if (!password.equals(confirmPassword)) {
                 return ResponseEntity
@@ -51,12 +49,7 @@ public class UserController {
             userService.saveUser(email, password, fullName);
 
             return ResponseEntity.ok(Map.of("success", "Te-ai înregistrat cu succes!"));
-        }
-        else{
-            return ResponseEntity
-                    .badRequest()
-                    .body(Map.of("error", "Acceptati termenile si conditiile"));
-        }
+
     }
 
 

@@ -410,9 +410,6 @@ ol {
 	visibility: hidden;
 }
 
-.signup-text .signup-form .radio-check label input:checked~.checkbox {
-	background: #c4c4c4;
-}
 
 .signup-text .signup-form .radio-check label .checkbox {
 	position: absolute;
@@ -422,6 +419,58 @@ ol {
 	width: 11px;
 	border: 1px solid #c4c4c4;
 	border-radius: 2px;
+	background: transparent;
+	transition: all 0.3s ease;
+	cursor: pointer;
+}
+
+.signup-text .signup-form .radio-check label .checkbox:hover {
+	border-color: #812acf;
+	transform: scale(1.1);
+}
+
+.signup-text .signup-form .radio-check label .checkbox:after {
+	content: '';
+	position: absolute;
+	left: 3px;
+	top: 0px;
+	width: 3px;
+	height: 6px;
+	border: solid #fff;
+	border-width: 0 2px 2px 0;
+	transform: rotate(45deg);
+	opacity: 0;
+	transition: opacity 0.3s ease;
+}
+
+.signup-text .signup-form .radio-check label input:checked~.checkbox {
+	background: #812acf;
+	border-color: #812acf;
+}
+
+.signup-text .signup-form .radio-check label input:checked~.checkbox:after {
+	opacity: 1;
+}
+
+/* Error and success message styles */
+.error-message {
+	background: #ff4444;
+	color: white;
+	padding: 10px 15px;
+	margin: 10px 0;
+	border-radius: 4px;
+	font-size: 14px;
+	text-align: center;
+}
+
+.success-message {
+	background: #44ff44;
+	color: white;
+	padding: 10px 15px;
+	margin: 10px 0;
+	border-radius: 4px;
+	font-size: 14px;
+	text-align: center;
 }
 
 .signup-text .signup-form button {

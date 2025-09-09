@@ -97,8 +97,8 @@
                 <input type="text" class="input-value" placeholder="Full Name" name="fullName" required>
             </div>
             <div class="radio-check">
-                <label for="rc-agree">
-                    <input type="checkbox" id="rc-agree" name="terms" required>
+                <label for="rc-agree-dynamic">
+                    <input type="checkbox" id="rc-agree-dynamic" name="termsAndConditions">
                     <span class="checkbox"></span>
                     I agree with the terms & conditions
                 </label>
@@ -116,6 +116,36 @@
         e.preventDefault(); // nu mai face reload
         var $form = $(this);
         var actionUrl = $form.attr("action"); // /register sau /login
+        
+        // Check if this is a register form and validate terms checkbox
+        if (actionUrl === '/register') {
+            var $termsCheckbox = $form.find('input[name="termsAndConditions"]');
+            console.log('Terms checkbox found:', $termsCheckbox.length);
+            console.log('Terms checkbox checked:', $termsCheckbox.prop('checked'));
+            
+            if ($termsCheckbox.length === 0) {
+                console.log('No terms checkbox found!');
+                $(".error-message").remove();
+                $(".success-message").remove();
+                $(".signup-section").prepend(
+                    `<div class="error-message">Terms checkbox not found. Please refresh the page.</div>`
+                );
+                return;
+            }
+            
+            if (!$termsCheckbox.prop('checked')) {
+                console.log('Terms checkbox not checked!');
+                $(".error-message").remove();
+                $(".success-message").remove();
+                $(".signup-section").prepend(
+                    `<div class="error-message">Acceptă termenii și condițiile, boss!</div>`
+                );
+                return;
+            }
+            
+            console.log('Terms validation passed!');
+        }
+        
         var formData = $form.serialize();
 
         $.ajax({
@@ -156,6 +186,51 @@
     $(document).on('click', '#go-to-register', function() {
         console.log('Go to register clicked');
         switchToRegister();
+    });
+
+    // Custom checkbox functionality - make the checkbox square itself clickable
+    $(document).on('click', '.radio-check label .checkbox', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        var $label = $(this).closest('label');
+        var $checkbox = $label.find('input[type="checkbox"]');
+        var isChecked = $checkbox.prop('checked');
+        
+        console.log('Checkbox clicked, current state:', isChecked);
+        
+        // Toggle checkbox state
+        $checkbox.prop('checked', !isChecked);
+        
+        console.log('Checkbox new state:', $checkbox.prop('checked'));
+        
+        // Trigger change event for form validation
+        $checkbox.trigger('change');
+    });
+
+    // Also make the label clickable for better UX
+    $(document).on('click', '.radio-check label', function(e) {
+        // Only handle if not clicking on the checkbox span itself
+        if (!$(e.target).hasClass('checkbox')) {
+            e.preventDefault();
+            var $checkbox = $(this).find('input[type="checkbox"]');
+            var isChecked = $checkbox.prop('checked');
+            
+            console.log('Label clicked, current state:', isChecked);
+            
+            // Toggle checkbox state
+            $checkbox.prop('checked', !isChecked);
+            
+            console.log('Checkbox new state:', $checkbox.prop('checked'));
+            
+            // Trigger change event for form validation
+            $checkbox.trigger('change');
+        }
+    });
+
+    // Debug checkbox state changes
+    $(document).on('change', 'input[name="termsAndConditions"]', function() {
+        console.log('Checkbox state changed via change event:', $(this).prop('checked'));
     });
 
     /*------------------
