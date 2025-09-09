@@ -19,10 +19,9 @@
                 <div id="messages"></div>
                 <form th:action="@{/register}" method="post" class="signup-form">
                     <div class="sf-input-list">
-                        <input type="text" class="input-value" placeholder="User Name*" name="username">
+                        <input type="email" class="input-value" placeholder="Email Address" name="email" required>
                         <input type="password" class="input-value" placeholder="Password" name="password" required>
                         <input type="password" class="input-value" placeholder="Confirm Password" name="confirmPassword" required>
-                        <input type="email" class="input-value" placeholder="Email Address" name="email" required>
                         <input type="text" class="input-value" placeholder="Full Name" name="fullName" required>
                     </div>
                     <div class="radio-check">

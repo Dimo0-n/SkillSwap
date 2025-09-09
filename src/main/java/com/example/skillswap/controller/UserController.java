@@ -27,8 +27,7 @@ public class UserController {
 
     @PostMapping("/register")
     @ResponseBody
-    public ResponseEntity<?> register(@RequestParam String username,
-                                      @RequestParam String password,
+    public ResponseEntity<?> register(@RequestParam String password,
                                       @RequestParam String confirmPassword,
                                       @RequestParam String email,
                                       @RequestParam String fullName) {
@@ -41,13 +40,13 @@ public class UserController {
 
         Optional<User> existingUser = userRepository.findByEmail(email);
 
-        if (userRepository.findByEmail(username).isPresent()) {
+        if (existingUser.isPresent()) {
             return ResponseEntity
                     .badRequest()
-                    .body(Map.of("error", "Username-ul e deja folosit, schimbă placa!"));
+                    .body(Map.of("error", "Email-ul e deja folosit, baga altul!"));
         }
 
-        userService.saveUser(username, password, email, fullName);
+        userService.saveUser(email, password, fullName);
 
         return ResponseEntity.ok(Map.of("success", "Te-ai înregistrat cu succes!"));
     }

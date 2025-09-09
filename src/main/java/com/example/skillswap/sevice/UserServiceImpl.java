@@ -17,13 +17,9 @@ public class UserServiceImpl implements UserService {
     private BCryptPasswordEncoder passwordEncoder;
 
     @Override
-    public void saveUser(String username, String password, String email, String fullName) {
+    public void saveUser(String email, String password, String fullName) {
         User newUser = new User();
 
-        if (username.isEmpty())
-            newUser.setUsername(null);
-        else
-            newUser.setUsername(username);
         newUser.setPassword(passwordEncoder.encode(password));
         newUser.setEmail(email);
         newUser.setFullName(fullName);

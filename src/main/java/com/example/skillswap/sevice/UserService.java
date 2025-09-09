@@ -2,6 +2,6 @@ package com.example.skillswap.sevice;
 
 public interface UserService {
 
-    void saveUser(String username, String password, String email, String fullName);
+    void saveUser(String email, String password, String fullName);
 
 }

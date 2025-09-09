@@ -91,10 +91,9 @@
         // Update form fields for register
         var formHtml = `
             <div class="sf-input-list">
-                <input type="text" class="input-value" placeholder="User Name*" name="username" required>
+                <input type="email" class="input-value" placeholder="Email Address" name="email" required>
                 <input type="password" class="input-value" placeholder="Password" name="password" required>
                 <input type="password" class="input-value" placeholder="Confirm Password" name="confirmPassword" required>
-                <input type="email" class="input-value" placeholder="Email Address" name="email" required>
                 <input type="text" class="input-value" placeholder="Full Name" name="fullName" required>
             </div>
             <div class="radio-check">
@@ -147,7 +146,6 @@
             },
         });
     });
-
 
     // Initial binding for go-to-login button (if it exists on page load)
     $(document).on('click', '#go-to-login', function() {
