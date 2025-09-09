@@ -67,11 +67,11 @@
         $('.signup-section').find('h2').text('Sign in');
         $('.signup-section').find('p').text('Fill out the form below to recieve a free and confidential');
         $('.signup-section').find('form').attr('action', '/login');
-        
+
         // Update form fields for login
         var formHtml = `
             <div class="sf-input-list">
-                <input type="text" class="input-value" placeholder="User Name*" name="username" required>
+                <input type="text" class="input-value" placeholder="Email" name="email" required>
                 <input type="password" class="input-value" placeholder="Password" name="password" required>
             </div>
             <button type="submit"><span>LOGIN</span></button>
@@ -87,7 +87,7 @@
         $('.signup-section').find('h2').text('Sign up');
         $('.signup-section').find('p').text('Fill out the form below to recieve a free and confidential');
         $('.signup-section').find('form').attr('action', '/register');
-        
+
         // Update form fields for register
         var formHtml = `
             <div class="sf-input-list">
@@ -97,9 +97,10 @@
                 <input type="text" class="input-value" placeholder="Full Name" name="fullName" required>
             </div>
             <div class="radio-check">
-                <label for="rc-agree">I agree with the term & conditions
-                    <input type="checkbox" id="rc-agree">
+                <label for="rc-agree">
+                    <input type="checkbox" id="rc-agree" name="terms" required>
                     <span class="checkbox"></span>
+                    I agree with the terms & conditions
                 </label>
             </div>
             <button type="submit"><span>REGISTER NOW</span></button>
@@ -123,25 +124,23 @@
             data: formData,
             success: function (response) {
                 if (response.success) {
-                    // curățăm eventualele erori
                     $(".error-message").remove();
+                    $(".success-message").remove();
 
-                    // mesaj de succes
                     $(".signup-section").prepend(
                         `<div class="success-message">${response.success}</div>`
                     );
 
-                    // redirect la index după 1 secundă
                     setTimeout(function () {
                         window.location.href = "/index";
                     }, 1000);
                 }
             },
             error: function (xhr) {
-                $(".error-message").remove(); // curățăm erorile vechi
+                $(".error-message").remove();
                 var err = xhr.responseJSON?.error || "A crăpat ceva pe server!";
                 $(".signup-section").prepend(
-                    `<div class="error-message" style="color:red; margin-bottom:10px;">${err}</div>`
+                    `<div class="error-message">${err}</div>`
                 );
             },
         });

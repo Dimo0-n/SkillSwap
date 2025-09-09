@@ -30,25 +30,33 @@ public class UserController {
     public ResponseEntity<?> register(@RequestParam String password,
                                       @RequestParam String confirmPassword,
                                       @RequestParam String email,
-                                      @RequestParam String fullName) {
+                                      @RequestParam String fullName,
+                                      @RequestParam (required = false) String termsAndConditions) {
+        if (termsAndConditions != null) {
 
-        if (!password.equals(confirmPassword)) {
+            if (!password.equals(confirmPassword)) {
+                return ResponseEntity
+                        .badRequest()
+                        .body(Map.of("error", "Parolele nu coincid, boss!"));
+            }
+
+            Optional<User> existingUser = userRepository.findByEmail(email);
+
+            if (existingUser.isPresent()) {
+                return ResponseEntity
+                        .badRequest()
+                        .body(Map.of("error", "Email-ul e deja folosit, baga altul!"));
+            }
+
+            userService.saveUser(email, password, fullName);
+
+            return ResponseEntity.ok(Map.of("success", "Te-ai înregistrat cu succes!"));
+        }
+        else{
             return ResponseEntity
                     .badRequest()
-                    .body(Map.of("error", "Parolele nu coincid, boss!"));
+                    .body(Map.of("error", "Acceptati termenile si conditiile"));
         }
-
-        Optional<User> existingUser = userRepository.findByEmail(email);
-
-        if (existingUser.isPresent()) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(Map.of("error", "Email-ul e deja folosit, baga altul!"));
-        }
-
-        userService.saveUser(email, password, fullName);
-
-        return ResponseEntity.ok(Map.of("success", "Te-ai înregistrat cu succes!"));
     }
 
 

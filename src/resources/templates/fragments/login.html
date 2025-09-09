@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Register</title>
+    <title>Login</title>
 </head>
 <body>
 <div th:fragment="login">
@@ -16,7 +16,7 @@
                 </div>
                 <form th:action="@{/login}" method="post" class="signup-form">
                     <div class="sf-input-list">
-                        <input type="email" class="input-value" placeholder="Email" name="email" required>
+                        <input type="text" class="input-value" placeholder="Email" name="email" required>
                         <input type="password" class="input-value" placeholder="Password" name="password" required>
                     </div>
                     <button type="submit"><span>LOGIN</span></button>
