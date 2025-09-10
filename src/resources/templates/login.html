@@ -195,6 +195,8 @@
     </form>
 </div>
 
+<div id="message" class="message"></div>
+
 <script>
     const urlParams = new URLSearchParams(window.location.search);
     if(urlParams.has('error')) {
@@ -211,5 +213,44 @@
         setTimeout(() => messageDiv.classList.remove('show'), 4000);
     }
 </script>
+
+<style>
+    /* Stil pentru mesaj exact ca la register */
+    .message {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 15px 30px;
+        border-radius: 10px;
+        color: white;
+        font-weight: 500;
+        z-index: 1000;
+        opacity: 0;
+        transition: all 0.3s ease;
+        min-width: 300px;
+        text-align: center;
+    }
+
+    .message.show {
+        opacity: 1;
+        animation: slideDown 0.3s ease;
+    }
+
+    .message.success {
+        background: linear-gradient(135deg,#10b981,#059669);
+        border: 1px solid #34d399;
+    }
+
+    .message.error {
+        background: linear-gradient(135deg,#ef4444,#dc2626);
+        border: 1px solid #f87171;
+    }
+
+    @keyframes slideDown {
+        from { transform: translateX(-50%) translateY(-100%); }
+        to { transform: translateX(-50%) translateY(0); }
+    }
+</style>
 </body>
 </html>
