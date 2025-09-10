@@ -31,28 +31,42 @@
             <div class="row">
                 <div class="col-lg-6 col-md-8">
                     <div class="ht-widget">
-                        <ul>
-                            <li><i class="fa fa-clock-o"></i> <span id="current-date"></span></li>
-                            <li sec:authorize="!isAuthenticated()" class="signup-switch signup-open">
-                                <i class="fa fa-sign-out"></i> Login / Sign up
+
+                        <ul sec:authorize="!isAuthenticated()">
+                            <li><i class="fa fa-clock-o"></i> <span id="current-date1"></span></li>
+                            <li>
+                                <a th:href="@{/login}"><i class="fa fa-sign-in"></i> Login</a>
                             </li>
-                            <li sec:authorize="isAuthenticated()" id="logout-btn" class="signup-switch signup-open">
-                                <i class="fa fa-sign-out"></i> Logout
+                            <li>
+                                <a th:href="@{/register}"><i class="fa fa-user-plus"></i> Sign up</a>
                             </li>
                         </ul>
+
+                        <ul sec:authorize="isAuthenticated()">
+                            <li><i class="fa fa-clock-o"></i> <span id="current-date2"></span></li>
+                            <li>
+                                <a th:href="@{/logout}"><i class="fa fa-user-plus"></i> Logout</a>
+                            </li>
+                        </ul>
+
                     </div>
                 </div>
 
                 <script>
-                    // Obține data actuală
-                    const today = new Date();
+                    document.addEventListener('DOMContentLoaded', function () {
+                        const today = new Date();
 
-                    // Formatează data (ex: Aug 16, 2025)
-                    const options = { month: 'short', day: '2-digit', year: 'numeric' };
-                    const formattedDate = today.toLocaleDateString('en-US', options);
+                        // Formatează data (ex: Aug 16, 2025)
+                        const options = { month: 'short', day: '2-digit', year: 'numeric' };
+                        const formattedDate = today.toLocaleDateString('en-US', options);
 
-                    // Afișează în span
-                    document.getElementById('current-date').textContent = formattedDate;
+                        // Afișează în span-uri doar dacă există
+                        const date1 = document.getElementById('current-date1');
+                        const date2 = document.getElementById('current-date2');
+
+                        if (date1) date1.textContent = formattedDate;
+                        if (date2) date2.textContent = formattedDate;
+                    });
                 </script>
 
                 <div class="col-lg-6 col-md-4">

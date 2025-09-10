@@ -38,23 +38,19 @@ public class SecurityConfig {
                                         .anyRequest().authenticated()
                 )
                 .formLogin(
-                        form -> form
-                                .loginPage("/login")
-                                .loginProcessingUrl("/login")
-                                .usernameParameter("email")
-                                .passwordParameter("password")
-                                .defaultSuccessUrl("/index", true)
-                                .failureUrl("/login?error=true")
-                                .permitAll()
-                ).logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID")
-                        .logoutSuccessHandler((request, response, authentication) -> {
-                            response.setStatus(200);
-                        })
+                form -> form
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/index", true)
+                        .failureUrl("/login?error")
                         .permitAll()
-                );
+        ).logout(
+                logout -> logout
+                        .logoutUrl("/logout")
+                        .invalidateHttpSession(true)  // Închide sesiunea curentă
+                        .deleteCookies("JSESSIONID")  // Șterge cookie-ul sesiunii
+                        .logoutSuccessUrl("/login?logout=true")
+                        .permitAll()
+        );
         return http.build();
     }
 

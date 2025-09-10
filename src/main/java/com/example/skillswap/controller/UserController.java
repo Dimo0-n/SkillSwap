@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Map;
 import java.util.Optional;
@@ -20,46 +21,32 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-    // Endpoint pentru SUCCESS după login (apelat de AJAX)
-    @PostMapping("/login-success")
-    @ResponseBody
-    public Map<String, String> loginSuccess() {
-        return Map.of("success", "Login realizat cu succes!");
+    @GetMapping("/register")
+    public String register(){
+        return "register";
     }
 
-    // Endpoint pentru EROARE de login (apelat de AJAX)
-    @PostMapping("/login-error")
+    @PostMapping("/register/save")
     @ResponseBody
-    public ResponseEntity<?> loginError() {
-        return ResponseEntity
-                .badRequest()
-                .body(Map.of("error", "Datele introduse sunt greșite!"));
-    }
+    public ResponseEntity<String> registerUser(@RequestParam Map<String, String> allRequestParams) {
+        Optional<User> user = userService.searchUserByEmail(allRequestParams.get("email"));
 
-    @PostMapping("/register")
-    @ResponseBody
-    public ResponseEntity<?> register(@RequestParam String password,
-                                      @RequestParam String confirmPassword,
-                                      @RequestParam String email,
-                                      @RequestParam String fullName) {
-
-        if (!password.equals(confirmPassword)) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(Map.of("error", "Parolele nu coincid, boss!"));
+        if (user.isPresent()) {
+            return ResponseEntity.badRequest().body("Acest email deja este înregistrat!");
         }
 
-        Optional<User> existingUser = userRepository.findByEmail(email);
+        userService.saveUser(
+                allRequestParams.get("email"),
+                allRequestParams.get("password"),
+                allRequestParams.get("fullName")
+        );
 
-        if (existingUser.isPresent()) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(Map.of("error", "Email-ul e deja folosit, baga altul!"));
-        }
-
-        userService.saveUser(email, password, fullName);
-
-        return ResponseEntity.ok(Map.of("success", "Te-ai înregistrat cu succes!"));
-
+        return ResponseEntity.ok("Cont creat cu succes!");
     }
+
+    @GetMapping("/login")
+    public String login(){
+        return "login";
+    }
+
 }

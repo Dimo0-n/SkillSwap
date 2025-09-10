@@ -4302,6 +4302,18 @@ ol {
     display: none; /* ascundem checkbox-ul standard */
 }
 
+li a {
+    color: white;            /* sau ce culoare vrei */
+    text-decoration: none;   /* scoate underline-ul */
+    font-weight: 500;        /* un pic mai bold */
+    transition: color 0.3s;  /* efect smooth la hover */
+}
+
+li a:hover {
+    color: #8b45c3;          /* mov frumos la hover */
+}
+
+
 /* Stiluri pentru mesajele de eroare și succes */
 .error-message {
     background-color: #f8d7da;

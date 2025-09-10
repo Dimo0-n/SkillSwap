@@ -7,6 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -27,6 +28,11 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(newUser);
 
+    }
+
+    @Override
+    public Optional<User> searchUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
 }

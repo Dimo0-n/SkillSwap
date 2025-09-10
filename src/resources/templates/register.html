@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Skill Swap</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #533483 50%, #7b4397 75%, #dc2430 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Background shapes similar to the design */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: rgba(139, 69, 195, 0.3);
+            border-radius: 50%;
+            top: -100px;
+            left: -100px;
+            z-index: 1;
+        }
+
+        body::after {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: rgba(75, 0, 130, 0.4);
+            border-radius: 50%;
+            bottom: -50px;
+            right: -50px;
+            z-index: 1;
+        }
+
+        .register-container {
+            background: rgba(30, 30, 30, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(139, 69, 195, 0.3);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 35px;
+            height: 35px;
+            background: #8b45c3;
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: #a855f7;
+            transform: scale(1.1);
+        }
+
+        .register-title {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #8b45c3;
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-shadow: 0 0 20px rgba(139, 69, 195, 0.5);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #e0e0e0;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(139, 69, 195, 0.3);
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .form-group input:focus {
+            border-color: #8b45c3;
+            box-shadow: 0 0 15px rgba(139, 69, 195, 0.4);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin: 25px 0;
+            gap: 12px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #8b45c3;
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            color: #e0e0e0;
+            font-size: 14px;
+            cursor: pointer;
+            line-height: 1.4;
+        }
+
+        .checkbox-group a {
+            color: #8b45c3;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .checkbox-group a:hover {
+            color: #a855f7;
+        }
+
+        .register-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #8b45c3, #a855f7);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 10px;
+        }
+
+        .register-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(139, 69, 195, 0.4);
+        }
+
+        .register-btn:active {
+            transform: translateY(0);
+        }
+
+        .message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 15px 30px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            opacity: 0;
+            transition: all 0.3s ease;
+            min-width: 300px;
+            text-align: center;
+        }
+
+        .message.show {
+            opacity: 1;
+            animation: slideDown 0.3s ease;
+        }
+
+        .message.success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            border: 1px solid #34d399;
+        }
+
+        .message.error {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            border: 1px solid #f87171;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateX(-50%) translateY(-100%);
+            }
+            to {
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            color: #e0e0e0;
+            font-size: 14px;
+        }
+
+        .login-link a {
+            color: #8b45c3;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .login-link a:hover {
+            color: #a855f7;
+        }
+
+        /* Responsive design */
+        @media (max-width: 480px) {
+            .register-container {
+                margin: 20px;
+                padding: 30px 25px;
+            }
+
+            .register-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="register-container">
+    <button class="close-btn" onclick="window.location.href='/index'">&times;</button>
+
+    <h2 class="register-title">Register</h2>
+    <div th:if="${error}" class="message error" th:text="${error}"></div>
+    <div th:if="${success}" class="message success" th:text="${success}"></div>
+    <form th:action="@{register/save}" id="registerForm">
+        <div class="form-group">
+            <label for="fullName">Nume Complet</label>
+            <input type="text" id="fullName" name="fullName" placeholder="Introduceți numele complet" required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Introduceți adresa de email" required>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Parolă</label>
+            <input type="password" id="password" name="password" placeholder="Introduceți parola" required>
+        </div>
+
+        <div class="form-group">
+            <label for="confirmPassword">Confirmați Parola</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirmați parola" required>
+        </div>
+
+        <div class="checkbox-group">
+            <input type="checkbox" id="terms" name="terms" required>
+            <label for="terms">
+                Accept <a href="#" onclick="showTerms()">termenii și condițiile</a>
+            </label>
+        </div>
+
+        <button type="submit" class="register-btn">Creează Cont</button>
+
+        <div class="login-link">
+            Ai deja un cont? <a th:href="@{/login}" onclick="goToLogin()">Conectează-te</a>
+        </div>
+    </form>
+</div>
+
+<div id="message" class="message"></div>
+
+<script>
+    function showMessage(text, type = 'error') {
+        const messageDiv = document.getElementById('message');
+        messageDiv.textContent = text;
+        messageDiv.className = `message ${type}`;
+        messageDiv.classList.add('show');
+
+        setTimeout(() => {
+            messageDiv.classList.remove('show');
+        }, 4000);
+    }
+
+    function closeForm() {
+        // Aici poți adăuga logica pentru închiderea formularului
+        // De exemplu, ascunderea containerului sau redirecționarea
+        document.querySelector('.register-container').style.opacity = '0';
+        document.querySelector('.register-container').style.transform = 'scale(0.8)';
+
+        setTimeout(() => {
+            // Poți să ascunzi complet elementul sau să redirecționezi
+            window.location.href = '#'; // sau pagina principală
+        }, 300);
+    }
+
+    function showTerms() {
+        showMessage('Termenii și condițiile vor fi afișate în curând.', 'success');
+    }
+
+    function goToLogin() {
+        showMessage('Redirecționare către pagina de login...', 'success');
+        // Aici poți adăuga logica de redirecționare
+        setTimeout(() => {
+            window.location.href = '#login'; // sau URL-ul paginii de login
+        }, 1500);
+    }
+
+    document.getElementById('registerForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const fullName = document.getElementById('fullName').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        const terms = document.getElementById('terms').checked;
+
+        // Validări client
+        if (!fullName || fullName.length < 2) {
+            showMessage('Numele complet trebuie să conțină cel puțin 2 caractere.');
+            return;
+        }
+
+        if (!email || !email.includes('@')) {
+            showMessage('Vă rugăm să introduceți o adresă de email validă.');
+            return;
+        }
+
+        if (!password || password.length < 6) {
+            showMessage('Parola trebuie să conțină cel puțin 6 caractere.');
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            showMessage('Parolele nu se potrivesc.');
+            return;
+        }
+
+        if (!terms) {
+            showMessage('Trebuie să acceptați termenii și condițiile.');
+            return;
+        }
+
+        // Trimitere la backend
+        const formData = new FormData(this);
+
+        try {
+            const response = await fetch('/register/save', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.text();
+
+            if (response.ok) {
+                showMessage('Cont creat cu succes! Vă rugăm să vă verificați emailul.', 'success');
+                setTimeout(() => window.location.href = '/login', 2000);
+            } else {
+                showMessage(result, 'error'); // ex: "Acest email deja este înregistrat!"
+            }
+        } catch (err) {
+            showMessage('A apărut o eroare de server. Încearcă mai târziu.', 'error');
+        }
+    });
+
+    // Efect de focus pentru input-uri
+    document.querySelectorAll('input').forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.style.transform = 'scale(1.02)';
+        });
+
+        input.addEventListener('blur', function() {
+            this.parentElement.style.transform = 'scale(1)';
+        });
+    });
+</script>
+</body>
+</html>
