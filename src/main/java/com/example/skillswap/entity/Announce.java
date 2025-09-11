@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Base64;
 
 @Entity
 @Getter
@@ -31,6 +32,25 @@ public class Announce {
     private String category1; //skill-ul care-l ofera user-ul
 
     private String category2; //skill-ul care-l cauta user-ul
+
+    @Lob
+    @Column(name = "image",  columnDefinition = "LONGBLOB")
+    private byte[] image;
+
+    public String getBase64Image() {
+        if (this.image != null) {
+            return Base64.getEncoder().encodeToString(this.image);
+        }
+        return null;
+    }
+
+    public void setBase64Image(String base64Image) {
+        if (base64Image != null) {
+            this.image = Base64.getDecoder().decode(base64Image);
+        } else {
+            this.image = null;
+        }
+    }
 
 }
 
