@@ -1,17 +1,26 @@
 package com.example.skillswap.controller;
 
-import com.example.skillswap.entity.User;
+import com.example.skillswap.entity.Announce;
+import com.example.skillswap.sevice.AnnounceService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.List;
 
 @Controller
 public class HomeController {
 
     //TODO de adaugat o validare de schiluri
 
+    @Autowired
+    private AnnounceService announceService;
+
     @GetMapping("/index")
-    public String home(){
+    public String home(Model model){
+        List<Announce> latest5Announces = announceService.getLatest5Announces();
+        model.addAttribute("latest5Announces", latest5Announces);
         return "index";
     }
 
