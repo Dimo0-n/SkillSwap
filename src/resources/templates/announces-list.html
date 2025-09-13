@@ -48,23 +48,28 @@
         </div>
 
         <div class="row" id="items-container">
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="cg-item" data-skill="reviews">
-                    <div class="cg-pic set-bg" data-setbg="img/categories-grid/cg-1.jpg">
-                        <div class="label"><span>Reviews</span></div>
-                    </div>
-                    <div class="cg-text">
-                        <h5><a href="#">Teamfight Tactics is in chaos after today's patch...</a></h5>
-                        <ul>
-                            <li>by <span>Admin</span></li>
-                            <li><i class="fa fa-clock-o"></i> Aug 01, 2019</li>
-                            <li><i class="fa fa-comment-o"></i> 20</li>
-                        </ul>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                            incididunt ut labore et dolore magna aliqua suspendisse ultrices...</p>
+            <th:block th:each="announce : ${announcesList}">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="cg-item" data-skill="reviews">
+                        <div class="cg-pic set-bg" th:attr="data-setbg=@{${'/' + announce.image}}">
+                            <div class="label"><span>Reviews</span></div>
+                        </div>
+                        <div class="cg-text">
+                            <h5><a th:text="${announce.title}" href="#"></a></h5>
+                            <ul>
+                                <li>by <span th:text="${announce.author}"></span></li>
+                                <li>
+                                    <i class="fa fa-clock-o"></i>
+                                    <span th:text="${#temporals.format(announce.createDate, 'dd MMMM HH:mm')}"></span>
+                                </li>
+                                <li><i class="fa fa-comment-o"></i> 20</li>
+                            </ul>
+                            <p th:text="${announce.description}"></p>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </th:block>
+            </th:block>
             <div class="col-lg-4 col-md-6 mb-4">
                 <div class="cg-item" data-skill="windows">
                     <div class="cg-pic set-bg" data-setbg="img/categories-grid/cg-2.jpg">

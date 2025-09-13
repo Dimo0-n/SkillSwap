@@ -34,11 +34,6 @@ public class HomeController {
         return "categories-list";
     }
 
-    @GetMapping("/announces-list")
-    public String categoryGrid(){
-        return "announces-list";
-    }
-
     @GetMapping("/contact")
     public String contact(){
         return "contact";

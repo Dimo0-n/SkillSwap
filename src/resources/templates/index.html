@@ -193,7 +193,7 @@
                                 <a th:text="${announce.title}" href="#"></a>
                             </h5>
                             <ul>
-                                <li><span th:text="${announce.author}"></span></li>
+                                <li>by<span th:text="${announce.author}"></span></li>
                                 <li>
                                     <i class="fa fa-clock-o"></i>
                                     <span th:text="${#temporals.format(announce.createDate, 'dd MMMM HH:mm')}"></span>

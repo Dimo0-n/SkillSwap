@@ -8,4 +8,5 @@ public interface AnnounceService {
 
     List<Announce> getLatest5Announces();
 
+    List<Announce> getAnnouncesList();
 }
