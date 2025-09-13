@@ -182,81 +182,27 @@
 
 <!--                img 370 x 247-->
 
-                <div class="ip-item">
-                    <div class="ip-pic">
-                        <img src="img/skill/skill-programming.png" alt="programming">
+                <th:block th:each="announce : ${latest5Announces}">
+                    <div class="ip-item">
+                        <div class="ip-pic">
+                            <img th:src="@{${'/' + announce.image}}" alt="programming">
+                        </div>
+                        <div class="ip-text">
+                            <div class="label"><span>NOU</span></div>
+                            <h5>
+                                <a th:text="${announce.title}" href="#"></a>
+                            </h5>
+                            <ul>
+                                <li><span th:text="${announce.author}"></span></li>
+                                <li>
+                                    <i class="fa fa-clock-o"></i>
+                                    <span th:text="${#temporals.format(announce.createDate, 'dd MMMM HH:mm')}"></span>
+                                </li>
+                            </ul>
+                            <p th:text="${announce.description}"></p>
+                        </div>
                     </div>
-                    <div class="ip-text">
-                        <div class="label"><span>NOU</span></div>
-                        <h5><a href="#">Ofer lecții de programare Java în schimb de design grafic</a></h5>
-                        <ul>
-                            <li><span>Andrei</span></li>
-                            <li><i class="fa fa-clock-o"></i>17 august 2025</li>
-                        </ul>
-                        <p>Caut pe cineva care mă poate ajuta cu Photoshop. La schimb, te învăț să scrii cod în Java de la 0.
-                            Ne putem conecta online sau față în față.</p>
-                    </div>
-                </div>
-
-                <div class="ip-item">
-                    <div class="ip-pic">
-                        <img src="/img/skill/skill-photography.png" alt="fotografie">
-                    </div>
-                    <div class="ip-text">
-                        <div class="label"><span>NOU</span></div>
-                        <h5><a href="#">Ofer cursuri de fotografie în schimb de lecții de engleză</a></h5>
-                        <ul>
-                            <li><span>Maria</span></li>
-                            <li><i class="fa fa-clock-o"></i>16 august 2025</li>
-                        </ul>
-                        <p>Am experiență în fotografia de portret și peisaj. Îmi doresc să îmi îmbunătățesc engleza conversațională.</p>
-                    </div>
-                </div>
-
-                <div class="ip-item">
-                    <div class="ip-pic">
-                        <img src="/img/skill/skill-guitar.png" alt="muzica">
-                    </div>
-                    <div class="ip-text">
-                        <div class="label"><span>NOU</span></div>
-                        <h5><a href="#">Predau chitară acustică în schimb de ajutor la programare</a></h5>
-                        <ul>
-                            <li><span>Alex</span></li>
-                            <li><i class="fa fa-clock-o"></i>15 august 2025</li>
-                        </ul>
-                        <p>Sunt pasionat de muzică și pot învăța pe oricine acorduri de bază și piese simple. În schimb, caut pe cineva care știe JavaScript.</p>
-                    </div>
-                </div>
-
-                <div class="ip-item">
-                    <div class="ip-pic">
-                        <img src="/img/skill/skill-photography.png" alt="fotografie">
-                    </div>
-                    <div class="ip-text">
-                        <div class="label"><span>NOU</span></div>
-                        <h5><a href="#">Ofer cursuri de fotografie în schimb de lecții de engleză</a></h5>
-                        <ul>
-                            <li><span>Maria</span></li>
-                            <li><i class="fa fa-clock-o"></i>16 august 2025</li>
-                        </ul>
-                        <p>Am experiență în fotografia de portret și peisaj. Îmi doresc să îmi îmbunătățesc engleza conversațională.</p>
-                    </div>
-                </div>
-
-                <div class="ip-item">
-                    <div class="ip-pic">
-                        <img src="/img/skill/skill-photoshop.png" alt="design grafic">
-                    </div>
-                    <div class="ip-text">
-                        <div class="label"><span>NOU</span></div>
-                        <h5><a href="#">Ofer lecții de design grafic în schimb de cursuri de marketing</a></h5>
-                        <ul>
-                            <li><span>Ioana</span></li>
-                            <li><i class="fa fa-clock-o"></i>17 august 2025</li>
-                        </ul>
-                        <p>Pot să te ajut să înveți Photoshop și Illustrator de la 0. Eu vreau să învăț mai multe despre promovare online.</p>
-                    </div>
-                </div>
+                </th:block>
 
             </div>
             <div class="col-lg-4 col-md-7">
