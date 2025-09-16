@@ -18,6 +18,13 @@
             background: linear-gradient(to bottom, #c77dff, #9d4edd);
         }
 
+        /*admin btn*/
+        .admin-btn {
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
     </style>
 
 </head>
@@ -83,9 +90,16 @@
     </div>
     <div class="logo">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-12 text-center">
+            <div class="row align-items-center">
+                <div class="col-lg-12 text-center d-flex justify-content-center align-items-center">
                     <a href="/index"><img src="/img/skill-swap-logo.png" alt=""></a>
+                    <!-- Buton Admin-->
+                    <a sec:authorize="hasRole('ROLE_ADMIN')"
+                       th:href="@{/admin}"
+                       class="btn btn-danger admin-btn"
+                       style="margin-left: 40px;">
+                        <i class="fa fa-shield"></i> Admin
+                    </a>
                 </div>
             </div>
         </div>
