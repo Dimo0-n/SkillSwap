@@ -43,7 +43,7 @@
                     <div class="breadcrumb-text">
                         <h3>Contact us</h3>
                         <div class="bt-option">
-                            <a href="/index">Home</a>
+                            <a th:href="@{/index}">Home</a>
                             <span>Contact</span>
                         </div>
                     </div>
@@ -66,13 +66,12 @@
                         </div>
                         <div class="contact-form">
                             <div class="dt-leave-comment">
-                                <form action="#">
+                                <form th:action="@{/contact/faq}" method="post" th:object="${contact}">
                                     <div class="input-list">
-                                        <input type="text" placeholder="Name">
-                                        <input type="text" placeholder="Email">
-                                        <input type="text" placeholder="Website">
+                                        <input th:field="*{fullName}" type="text" placeholder="Full Name" name="fullName">
+                                        <input th:field="*{email}" type="text" placeholder="Email" name="email">
                                     </div>
-                                    <textarea placeholder="Message"></textarea>
+                                    <textarea th:field="*{message}" placeholder="Message"></textarea>
                                     <button type="submit">Submit</button>
                                 </form>
                             </div>
@@ -85,8 +84,6 @@
     <!-- Contact Section End -->
 
     <div th:replace="~{/fragments/about :: about}"></div>
-
-
 
     <!-- Search model Begin -->
     <div class="search-model">

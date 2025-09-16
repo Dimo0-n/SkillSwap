@@ -3183,7 +3183,7 @@ ol {
 
 .details-text .dt-leave-comment form .input-list input,
 .contact-form .dt-leave-comment form .input-list input {
-	width: calc(33.33% - 20px);
+	width: calc(50% - 20px);
 	margin-right: 20px;
 	float: left;
 	height: 46px;

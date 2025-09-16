@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -15,12 +16,12 @@
         </div>
         <div class="hw-menu mobile-menu">
             <ul>
-                <li class="active"><a href="/index"><span>Acasă</span></a></li>
-                <li><a href="/announces-list"><span>Anunțuri</span></a></li>
+                <li class="active"><a th:href="@{/index}"><span>Acasă</span></a></li>
+                <li><a th:href="@{/announces-list}"><span>Anunțuri</span></a></li>
 <!--                <li><a href="/post-details"><span>Pages</i></span></a></li>-->
-                <li><a href="/chat"><span>Chat</i></span></a></li>
-                <li><a href="/contact">Contact</a></li>
-                <li><a href="/profil">Profil</a></li>
+                <li><a th:href="@{/chat}"><span>Chat</i></span></a></li>
+                <li><a th:href="@{/contact}">Contact</a></li>
+                <li><a sec:authorize="isAuthenticated()" th:href="@{/profil}">Profil</a></li>
             </ul>
         </div>
         <div id="mobile-menu-wrap"></div>

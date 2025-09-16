@@ -21,6 +21,7 @@ public class HomeController {
     public String home(Model model){
         List<Announce> latest5Announces = announceService.getLatest5Announces();
         model.addAttribute("latest5Announces", latest5Announces);
+        model.addAttribute("page", "index" );
         return "index";
     }
 
@@ -34,13 +35,9 @@ public class HomeController {
         return "categories-list";
     }
 
-    @GetMapping("/contact")
-    public String contact(){
-        return "contact";
-    }
-
     @GetMapping("/chat")
-    public String detailsPostDefault(){
+    public String chat(Model model){
+        model.addAttribute("page", "chat" );
         return "chat";
     }
 
@@ -50,7 +47,8 @@ public class HomeController {
     }
 
     @GetMapping("/profil")
-    public String detailsPostReview(){
+    public String profil(Model model){
+        model.addAttribute("page", "profil" );
         return "profil";
     }
 
