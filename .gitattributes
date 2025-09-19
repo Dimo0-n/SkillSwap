@@ -1,2 +1,24 @@
 /mvnw text eol=lf
 *.cmd text eol=crlf
+
+# JS minificat ignorat
+*.min.js linguist-generated=true
+
+# Fișiere compilate sau generate (să nu influențeze limbajele)
+*.map linguist-generated=true
+*.lock linguist-generated=true
+
+# HTML considerat "document", nu cod
+*.html linguist-documentation
+
+# Imagini și media
+*.png linguist-generated=true
+*.jpg linguist-generated=true
+*.jpeg linguist-generated=true
+*.gif linguist-generated=true
+*.svg linguist-generated=true
+*.ico linguist-generated=true
+
+# Dacă vrei să accentuezi Java
+*.java linguist-detectable=true
+*.java linguist-language=Java
