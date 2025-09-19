@@ -25,3 +25,6 @@
 # Accentuează Java
 *.java linguist-detectable=true
 *.java linguist-language=Java
+
+*.js linguist-detectable=false
+*.js linguist-vendored=true
