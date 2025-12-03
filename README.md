@@ -1,7 +1,7 @@
 # SkillSwap – Documentație Tehnică  
 **Standard:** ISO/IEC/IEEE 26515 · Documentație Software  
 **Versiune:** 1.0.0  
-**Data:** 2025-02-XX  
+**Data:** 2025-12-04
 **Clasificare:** Aplicație Web Enterprise  
 **Autor:** Dumitru Frimu  
 
@@ -222,3 +222,4 @@ UI-ul pentru Chat, Profil și Meeting este implementat, dar backend-ul poate fi 
 - Notificări realtime  
 - Integrare Jitsi completă  
 - Funcționalități avansate de messaging  
+
