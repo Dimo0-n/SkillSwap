@@ -24,4 +24,9 @@ class AnnounceController {
         return "announces-list";
     }
 
+    @GetMapping("/new-announce")
+    public String addAnnounce(){
+        return "announce-create";
+    }
+
 }

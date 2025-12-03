@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zxx">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="SkillSwap Create Announce">
+    <meta name="keywords" content="SkillSwap, announce, create, form">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>SkillSwap – Creează anunț</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Cinzel:400,700,900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="/css/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/barfiller.css" type="text/css">
+    <link rel="stylesheet" href="/css/magnific-popup.css" type="text/css">
+    <link rel="stylesheet" href="/css/slicknav.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+    <style>
+        body {
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        a { color: #fff; }
+        a:hover { color: #cbb2ff; }
+
+        /* Glow subtle */
+        .glow {
+            text-shadow: 0 0 6px #9d4edd, 0 0 12px #9d4edd;
+        }
+
+        .page-header-gradient {
+            background: radial-gradient(circle at top, #1a0b2e, #000);
+            padding: 28px 0;
+            border-radius: 12px;
+            animation: fadeIn 1.2s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .create-card {
+            background: #0d0d0d;
+            border: 1px solid #241a38;
+            border-radius: 14px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,.7);
+            animation: pop 0.6s ease;
+        }
+
+        @keyframes pop {
+            0% { transform: scale(.95); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .form-control, .form-select, textarea {
+            border-radius: 10px;
+            border: 1px solid #392b52;
+            background: #0b0b0b;
+            color: #fff;
+            transition: .25s;
+        }
+
+        .form-control:focus, textarea:focus {
+            border-color: #b26bff;
+            box-shadow: 0 0 12px rgba(178,107,255,.4);
+        }
+
+        .btn-publish {
+            background: linear-gradient(135deg, #c77dff, #9d4edd);
+            border-radius: 12px;
+            padding: 12px 26px;
+            border: none;
+            transition: .25s;
+        }
+
+        .btn-publish:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 18px #9d4edd;
+        }
+
+        /* Floating particles */
+        .particles {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: -1;
+        }
+        .particle {
+            position: absolute;
+            width: 6px; height: 6px;
+            background: #9d4edd;
+            border-radius: 50%;
+            opacity: .6;
+            animation: floatUp linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(120vh); opacity: 0; }
+            20% { opacity: .7; }
+            100% { transform: translateY(-20vh); opacity: 0; }
+        }
+    </style>
+</head>
+
+<body>
+<div class="particles" id="particles"></div>
+
+<div id="preloder"><div class="loader"></div></div>
+
+<div th:replace="~{fragments/lateral-menu :: lateral-menu}"></div>
+<div th:replace="~{/fragments/navbar :: navbar}"></div>
+
+<section class="spad">
+    <div class="container">
+        <div class="page-header-gradient text-center">
+            <!-- Titlul principal – schimbarea culorii este aici -->
+            <h3 style="font-weight:700; letter-spacing:1px; color:#ffffff;">Creează un anunț nou</h3>
+            <div class="bt-option mt-2" style="opacity:.9;">
+                <a th:href="@{/index}">Acasă</a>
+                <span style="color:#e9d5ff;">/ Creează anunț</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="spad">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-9">
+                <div class="create-card">
+                    <h4 style="font-weight:700; letter-spacing:0.5px; color:#ffffff; margin-bottom:1rem;">Detalii anunț</h4>
+
+                    <form action="#" method="post" enctype="multipart/form-data" onsubmit="return false;">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label class="form-label">Titlu anunț</label>
+                                <input type="text" class="form-control" placeholder="Ex: Ofer lecții de chitară în schimb de engleză">
+                                <div class="helper">Un titlu clar ajută utilizatorii să înțeleagă rapid oferta ta.</div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <label class="form-label">Descriere</label>
+                                <textarea class="form-control" rows="5" placeholder="Descrie ce oferi, ce ai nevoie și cum se face schimbul"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Categoria – ceea ce oferi</label>
+                                <input type="text" class="form-control" placeholder="Ex: Programare Java">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Categoria – ceea ce cauți</label>
+                                <input type="text" class="form-control" placeholder="Ex: Design grafic">
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Nume autor</label>
+                                <input type="text" class="form-control" placeholder="Ex: Andrei Popescu">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Imagine (URL)</label>
+                                <input type="text" class="form-control" placeholder="Ex: img/skill/skill-programming.png">
+                                <div class="helper">Poți folosi iconițele existente.</div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-md-12 d-flex justify-content-end">
+                                <button class="btn btn-publish" type="submit">
+                                    <i class="fa fa-paper-plane"></i> Publică anunțul
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="/js/jquery-3.3.1.min.js"></script>
+<script>
+    const container = document.getElementById('particles');
+    for (let i = 0; i < 40; i++) {
+        let p = document.createElement('div');
+        p.classList.add('particle');
+        p.style.left = Math.random()*100 + 'vw';
+        p.style.animationDuration = 5 + Math.random()*5 + 's';
+        container.appendChild(p);
+    }
+</script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+</body>
+</html>
