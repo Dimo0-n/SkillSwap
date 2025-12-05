@@ -40,7 +40,30 @@
         $(".nav-options").removeClass("humberger-change");
     });
 
-    // Search model
+    // Navbar search panel
+    const $navbarSearchPanel = $('.navbar-search-panel');
+    const $navbarSearchInput = $('#navbar-search-input');
+
+    $('.navbar-search-toggle').on('click', function (e) {
+        e.stopPropagation();
+        $navbarSearchPanel.toggleClass('is-open');
+        if ($navbarSearchPanel.hasClass('is-open')) {
+            $navbarSearchInput.trigger('focus');
+        }
+    });
+
+    $(document).on('click', function (e) {
+        if ($navbarSearchPanel.hasClass('is-open') &&
+            !$(e.target).closest('.navbar-search-panel, .navbar-search-toggle').length) {
+            $navbarSearchPanel.removeClass('is-open');
+        }
+    });
+
+    $('.navbar-search-panel form').on('submit', function () {
+        $navbarSearchPanel.removeClass('is-open');
+    });
+
+    // Search model (fallback)
     $('.search-switch').on('click', function () {
         $('.search-model').fadeIn(400);
     });

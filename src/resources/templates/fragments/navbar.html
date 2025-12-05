@@ -106,21 +106,37 @@
     </div>
     <div class="nav-options">
         <div class="container">
-            <div class="humberger-menu humberger-open">
-                <i class="fa fa-bars"></i>
-            </div>
-            <div class="nav-search search-switch">
-                <i class="fa fa-search"></i>
-            </div>
-            <div class="nav-menu">
-                <ul>
-                    <li><a th:href="@{/index}"><span>Acasă</span></a></li>
-                    <li><a th:href="@{/announces-list}"><span>Anunțuri</span></a></li>
+            <div class="nav-bar">
+                <div class="nav-left">
+                    <button class="humberger-menu humberger-open" type="button" aria-label="Deschide meniul">
+                        <i class="fa fa-bars"></i>
+                    </button>
+<!--                    <button class="nav-search navbar-search-toggle" type="button" aria-label="Deschide căutarea">-->
+<!--                        <i class="fa fa-search"></i>-->
+<!--                    </button>-->
+                </div>
+                <div class="nav-menu">
+                    <ul>
+                        <li><a th:href="@{/index}"><span>Acasă</span></a></li>
+                        <li><a th:href="@{/announces-list}"><span>Anunțuri</span></a></li>
 <!--                    <li><a href="/post-details"><span>Pages</i></span></a></li>-->
-                    <li><a th:href="@{/chat}"><span>Chat</i></span></a></li>
-                    <li><a th:href="@{/contact}">Contact</a></li>
-                    <li><a sec:authorize="isAuthenticated()" th:href="@{/profil}">Profil</a></li>
-                </ul>
+                        <li><a th:href="@{/chat}"><span>Chat</i></span></a></li>
+                        <li><a th:href="@{/contact}">Contact</a></li>
+                        <li><a sec:authorize="isAuthenticated()" th:href="@{/profil}">Profil</a></li>
+                    </ul>
+                </div>
+                <div class="nav-right">
+                    <a th:href="@{/announces/new}" class="btn-create-announce"><span>+ Creează anunț</span></a>
+                </div>
+            </div>
+            <div class="navbar-search-panel" id="navbarSearchPanel">
+                <form class="navbar-search-form" th:action="@{/announces-list}" method="get">
+                    <!-- Folosește același endpoint de filtrare ca bara principală de căutare -->
+                    <input type="text" id="navbar-search-input" name="query" placeholder="Caută un skill sau anunț" aria-label="Caută">
+                    <button type="submit" aria-label="Trimite căutare">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </form>
             </div>
         </div>
     </div>

@@ -41,9 +41,24 @@
         <div class="row mb-4">
             <div class="col-12">
                 <div class="section-title">
-                    <h5>Hai cu un nou skill. Caută chiar aici</h5>
+                    <h5>Hai cu un nou skill. Caut? chiar aici</h5>
                 </div>
-                <input type="text" id="skill-search" class="form-control" placeholder="Scrie...">
+                <div class="main-search-bar">
+                    <form id="announces-main-search" class="main-search-form" th:action="@{/announces-list}" method="get">
+                        <div class="main-search-shell">
+                            <span class="main-search-icon"><i class="fa fa-search"></i></span>
+                            <input type="text"
+                                   id="skill-search"
+                                   name="query"
+                                   class="main-search-field"
+                                   placeholder="Caut? un skill sau un anun?"
+                                   aria-label="Caut? un anun?">
+                            <button type="submit" class="main-search-submit">
+                                <span>Caut?</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
 
@@ -90,6 +105,39 @@
 <script src="/js/owl.carousel.min.js"></script>
 <script src="/js/main.js"></script>
 <script src="/js/categories-list.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const mainSearchForm = document.getElementById('announces-main-search');
+        const mainSearchInput = document.getElementById('skill-search');
+        const navbarSearchForm = document.querySelector('.navbar-search-form');
+        const navbarSearchInput = document.getElementById('navbar-search-input');
+        const navbarSearchPanel = document.getElementById('navbarSearchPanel');
+
+        const syncSearch = (value) => {
+            if (mainSearchInput) {
+                mainSearchInput.value = value;
+                mainSearchInput.dispatchEvent(new Event('keyup'));
+            }
+        };
+
+        if (mainSearchForm && mainSearchInput) {
+            mainSearchForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                syncSearch(mainSearchInput.value);
+            });
+        }
+
+        if (navbarSearchForm && navbarSearchInput) {
+            navbarSearchForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                syncSearch(navbarSearchInput.value);
+                if (navbarSearchPanel) {
+                    navbarSearchPanel.classList.remove('is-open');
+                }
+            });
+        }
+    });
+</script>
 
 <style>
     /* Stiluri pentru paginare */
@@ -123,19 +171,6 @@
     .pagination-dots {
         padding: 8px 4px;
         color: #999;
-    }
-
-    #skill-search {
-        padding: 12px;
-        border: 2px solid #e1e1e1;
-        border-radius: 6px;
-        font-size: 16px;
-        transition: border-color 0.3s ease;
-    }
-
-    #skill-search:focus {
-        outline: none;
-        border-color: #812ACF;
     }
 
     #results-info {
