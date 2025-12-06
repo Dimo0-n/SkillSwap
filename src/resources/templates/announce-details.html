@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="ro">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="SkillSwap - Detalii anunt">
+    <meta name="keywords" content="SkillSwap, announce, details">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>SkillSwap</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800,900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Cinzel:400,700,900&display=swap" rel="stylesheet">
+
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="/css/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/barfiller.css" type="text/css">
+    <link rel="stylesheet" href="/css/magnific-popup.css" type="text/css">
+    <link rel="stylesheet" href="/css/slicknav.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+    <style>
+        :root {
+            --bg: #0b0b0f;
+            --card: #12121a;
+            --card-soft: #161624;
+            --accent: #a675ff;
+            --accent-strong: #c7a2ff;
+            --text: #d7d7d7;
+            --muted: #a5a5b6;
+            --stroke: rgba(166, 117, 255, 0.4);
+            --radius: 14px;
+            --shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .page-shell {
+            padding: 40px 0 100px;
+        }
+
+        .announce-hero {
+            position: relative;
+            padding: 120px 0 60px;
+            background: radial-gradient(circle at 20% 20%, rgba(166, 117, 255, 0.12), transparent 35%), radial-gradient(circle at 80% 0%, rgba(166, 117, 255, 0.08), transparent 30%), var(--bg);
+            overflow: hidden;
+        }
+
+        .announce-hero::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(120deg, rgba(166, 117, 255, 0.12), transparent 50%, rgba(166, 117, 255, 0.05));
+            pointer-events: none;
+        }
+
+        .hero-card {
+            position: relative;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 32px 36px;
+            border-radius: 18px;
+            border: 1px solid var(--stroke);
+            background: linear-gradient(140deg, rgba(166, 117, 255, 0.12), rgba(31, 23, 46, 0.85));
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(5px);
+            display: grid;
+            gap: 16px;
+        }
+
+        .hero-top {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            border: 1px solid var(--stroke);
+            background: rgba(166, 117, 255, 0.12);
+            font-size: 12px;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            color: var(--accent-strong);
+        }
+
+        .hero-title {
+            font-size: clamp(28px, 4vw, 40px);
+            font-weight: 800;
+            color: #f3e9ff;
+            margin: 8px 0 4px;
+        }
+
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 14px;
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        .meta-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+            display: inline-block;
+            margin: 0 6px;
+        }
+
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .author-chip {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .author-avatar {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            border: 1px solid var(--stroke);
+            background: linear-gradient(135deg, rgba(166, 117, 255, 0.35), rgba(166, 117, 255, 0.08));
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #f3e9ff;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .primary-btn {
+            padding: 12px 20px;
+            border: 1px solid var(--accent);
+            background: linear-gradient(120deg, rgba(166, 117, 255, 0.85), rgba(132, 90, 255, 0.8));
+            color: #0b0b0f;
+            font-weight: 700;
+            border-radius: 12px;
+            letter-spacing: 0.4px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 10px 30px rgba(166, 117, 255, 0.35);
+        }
+
+        .primary-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 16px 40px rgba(166, 117, 255, 0.45);
+        }
+
+        .ghost-btn {
+            padding: 12px 18px;
+            border: 1px solid var(--stroke);
+            color: var(--text);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            transition: border-color 0.2s ease, color 0.2s ease;
+        }
+
+        .ghost-btn:hover {
+            border-color: var(--accent);
+            color: #f3e9ff;
+        }
+
+        .announce-layout {
+            margin-top: 32px;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+        }
+
+        .panel-card {
+            background: linear-gradient(160deg, rgba(18, 18, 26, 0.9), rgba(18, 18, 26, 0.85));
+            border: 1px solid var(--stroke);
+            border-radius: var(--radius);
+            padding: 28px;
+            box-shadow: var(--shadow);
+        }
+
+        .panel-card + .panel-card {
+            margin-top: 18px;
+        }
+
+        .panel-head {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .panel-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(166, 117, 255, 0.12);
+            color: var(--accent-strong);
+            border: 1px solid var(--stroke);
+        }
+
+        .panel-title {
+            margin: 0;
+            font-size: 18px;
+            color: #f3e9ff;
+        }
+
+        .panel-body {
+            color: var(--muted);
+            line-height: 1.7;
+            font-size: 15px;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .detail-row {
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid var(--stroke);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .detail-label {
+            display: block;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--muted);
+            margin-bottom: 6px;
+        }
+
+        .detail-value {
+            color: #f3e9ff;
+            font-weight: 600;
+        }
+
+        .quick-card {
+            position: sticky;
+            top: 110px;
+            align-self: flex-start;
+        }
+
+        .quick-card .panel-head {
+            margin-bottom: 16px;
+        }
+
+        .quick-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .quick-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid var(--stroke);
+            background: rgba(255, 255, 255, 0.02);
+            font-size: 14px;
+        }
+
+        .quick-item span {
+            color: var(--muted);
+        }
+
+        .quick-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .image-card {
+            margin-top: 28px;
+        }
+
+        .image-shell {
+            overflow: hidden;
+            border-radius: 16px;
+            border: 1px solid var(--stroke);
+            background: var(--card);
+        }
+
+        .image-shell img {
+            width: 100%;
+            height: 320px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .similar-section {
+            margin-top: 48px;
+        }
+
+        .section-title-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .section-title-row h4 {
+            margin: 0;
+            color: #f3e9ff;
+        }
+
+        .slider-shell {
+            position: relative;
+        }
+
+        .similar-track {
+            display: grid;
+            grid-auto-flow: column;
+            grid-auto-columns: minmax(240px, 1fr);
+            gap: 16px;
+            overflow-x: auto;
+            padding: 6px 4px 8px;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: thin;
+        }
+
+        .similar-track::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .similar-track::-webkit-scrollbar-thumb {
+            background: rgba(166, 117, 255, 0.35);
+            border-radius: 10px;
+        }
+
+        .similar-card {
+            scroll-snap-align: start;
+            border-radius: 14px;
+            border: 1px solid var(--stroke);
+            background: var(--card);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .similar-card img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+        }
+
+        .similar-card .body {
+            padding: 14px 16px 16px;
+        }
+
+        .similar-card h6 {
+            color: #f3e9ff;
+            margin: 0 0 8px;
+        }
+
+        .similar-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--muted);
+            font-size: 12px;
+            margin-bottom: 6px;
+        }
+
+        .similar-nav {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--stroke);
+            background: rgba(255, 255, 255, 0.03);
+            color: #f3e9ff;
+            cursor: pointer;
+            transition: border-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .similar-nav:hover {
+            border-color: var(--accent);
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 992px) {
+            .hero-actions {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .announce-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-card {
+                position: relative;
+                top: 0;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero-card {
+                padding: 24px;
+            }
+
+            .panel-card {
+                padding: 22px;
+            }
+
+            .similar-track {
+                grid-auto-columns: 80%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<!-- Page Preloder -->
+<div id="preloder">
+    <div class="loader"></div>
+</div>
+
+<div th:replace="~{fragments/lateral-menu :: lateral-menu}"></div>
+
+<div th:replace="~{/fragments/navbar :: navbar}"></div>
+
+<section class="announce-hero">
+    <div class="container">
+        <div class="hero-card">
+            <div class="hero-top">
+                <span class="hero-badge"><i class="fa fa-code"></i><span th:text="${announce == null ? 'Categorie oferita' : announce.category1}">Categoria oferita</span></span>
+                <span class="hero-badge"><i class="fa fa-exchange"></i><span th:text="${announce == null ? 'Categorie cautata' : announce.category2}">Categoria cautata</span></span>
+            </div>
+            <div>
+                <h1 class="hero-title" th:text="${announce == null ? 'Titlul anuntului' : announce.title}">Titlul anuntului</h1>
+                <div class="hero-meta">
+                    <span>
+                        <i class="fa fa-user"></i>
+                        <span th:text="${announce == null ? 'Autor' : announce.author}">Autor</span>
+                    </span>
+                    <span class="meta-dot"></span>
+                    <span>
+                        <i class="fa fa-clock-o"></i>
+                        <span th:text="${announce == null ? 'Data publicarii' : #temporals.format(announce.createDate, 'dd MMMM yyyy')}">Data publicarii</span>
+                    </span>
+                </div>
+            </div>
+            <div class="hero-actions">
+                <div class="author-chip">
+                    <div class="author-avatar" th:text="${announce == null ? 'SS' : #strings.substring(announce.author,0,2)}">SS</div>
+                    <div>
+                        <div style="color:#f3e9ff;font-weight:700;" th:text="${announce == null ? 'Autor SkillSwap' : announce.author}">Autor SkillSwap</div>
+                        <div style="color:var(--muted);font-size:13px;">Disponibil pentru schimb</div>
+                    </div>
+                </div>
+                <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                    <a href="#" class="primary-btn">Contacteaza autorul</a>
+                    <button type="button" class="ghost-btn">Salveaza anuntul</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="page-shell">
+    <div class="container">
+        <div class="announce-layout">
+            <div>
+                <div class="panel-card">
+                    <div class="panel-head">
+                        <div class="panel-icon"><i class="fa fa-align-left"></i></div>
+                        <h4 class="panel-title">Descriere completa</h4>
+                    </div>
+                    <div class="panel-body" th:text="${announce == null ? 'Descrierea completa a anuntului apare aici, intr-un format aerisit si usor de citit.' : announce.description}">Descrierea completa a anuntului apare aici, intr-un format aerisit si usor de citit.</div>
+                </div>
+
+                <div class="panel-card">
+                    <div class="panel-head">
+                        <div class="panel-icon"><i class="fa fa-gift"></i></div>
+                        <h4 class="panel-title">Ce ofera userul</h4>
+                    </div>
+                    <div class="panel-body" th:text="${announce == null ? 'Detaliaza skill-ul pe care il poti oferi si modul in care poti ajuta.' : (announce.category1 != null ? announce.category1 : announce.description)}">Detaliaza skill-ul pe care il poti oferi si modul in care poti ajuta.</div>
+                </div>
+
+                <div class="panel-card">
+                    <div class="panel-head">
+                        <div class="panel-icon"><i class="fa fa-handshake-o"></i></div>
+                        <h4 class="panel-title">Ce cauta userul in schimb</h4>
+                    </div>
+                    <div class="panel-body" th:text="${announce == null ? 'Explica ce iti doresti sa inveti sau sa primesti in schimb.' : (announce.category2 != null ? announce.category2 : 'Skill cautat necompletat inca.')}">Explica ce iti doresti sa inveti sau sa primesti in schimb.</div>
+                </div>
+
+                <div class="panel-card">
+                    <div class="panel-head">
+                        <div class="panel-icon"><i class="fa fa-map-marker"></i></div>
+                        <h4 class="panel-title">Detalii optionale</h4>
+                    </div>
+                    <div class="detail-grid">
+                        <div class="detail-row">
+                            <span class="detail-label">Locatie</span>
+                            <span class="detail-value" th:text="${announce == null ? 'Nespecificat' : (announce.optionalNote != null ? announce.optionalNote : 'Nespecificat')}">Nespecificat</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Mod livrare</span>
+                            <span class="detail-value">Online / Offline</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Disponibilitate</span>
+                            <span class="detail-value">Flexibil</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Conditii</span>
+                            <span class="detail-value">Detalii la discutie</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <aside class="quick-card panel-card">
+                <div class="panel-head">
+                    <div class="panel-icon"><i class="fa fa-bolt"></i></div>
+                    <h4 class="panel-title">Detalii rapide</h4>
+                </div>
+                <div class="quick-list">
+                    <div class="quick-item">
+                        <span>Categorie oferita</span>
+                        <strong th:text="${announce == null ? 'Categorie' : announce.category1}">Categorie</strong>
+                    </div>
+                    <div class="quick-item">
+                        <span>Categorie cautata</span>
+                        <strong th:text="${announce == null ? 'Categorie' : announce.category2}">Categorie</strong>
+                    </div>
+                    <div class="quick-item">
+                        <span>Nivel skill oferit</span>
+                        <strong>Intermediar</strong>
+                    </div>
+                    <div class="quick-item">
+                        <span>Nivel skill dorit</span>
+                        <strong>Orice nivel</strong>
+                    </div>
+                    <div class="quick-item">
+                        <span>Locatie</span>
+                        <strong th:text="${announce == null ? 'Remote' : (announce.optionalNote != null ? announce.optionalNote : 'Remote')}">Remote</strong>
+                    </div>
+                    <div class="quick-item">
+                        <span>Frecventa</span>
+                        <strong>Saptamanal</strong>
+                    </div>
+                </div>
+                <div class="quick-actions">
+                    <a href="#" class="primary-btn" style="width:100%; text-align:center;">Incepe schimbul</a>
+                    <button type="button" class="ghost-btn" style="width:100%;">Raporteaza anunt</button>
+                </div>
+            </aside>
+        </div>
+
+        <div class="panel-card image-card">
+            <div class="panel-head">
+                <div class="panel-icon"><i class="fa fa-picture-o"></i></div>
+                <h4 class="panel-title">Imagine anunt</h4>
+            </div>
+            <div class="image-shell">
+                <img th:src="@{${announce == null || announce.image == null ? '/img/placeholder-announce.jpg' : '/' + announce.image}}" alt="Imagine anunt">
+            </div>
+        </div>
+
+        <div class="similar-section">
+            <div class="section-title-row">
+                <h4>Anunturi similare</h4>
+                <div style="display:flex; gap:10px;">
+                    <button class="similar-nav" data-similar-nav="prev"><i class="fa fa-chevron-left"></i></button>
+                    <button class="similar-nav" data-similar-nav="next"><i class="fa fa-chevron-right"></i></button>
+                </div>
+            </div>
+            <div class="slider-shell">
+                <div class="similar-track" id="similarTrack">
+                    <th:block th:if="${latest5Announces != null}" th:each="announce : ${latest5Announces}">
+                        <div class="similar-card">
+                            <img th:src="@{${'/' + announce.image}}" alt="Imagine anunt similar">
+                            <div class="body">
+                                <div class="similar-meta">
+                                    <i class="fa fa-tag"></i>
+                                    <span th:text="${announce.category1}">Categorie</span>
+                                </div>
+                                <h6 th:text="${announce.title}">Titlu anunt</h6>
+                                <div class="similar-meta">
+                                    <i class="fa fa-user"></i>
+                                    <span th:text="${announce.author}">Autor</span>
+                                    <span class="meta-dot"></span>
+                                    <i class="fa fa-clock-o"></i>
+                                    <span th:text="${#temporals.format(announce.createDate, 'dd MMM')}">01 Ian</span>
+                                </div>
+                            </div>
+                        </div>
+                    </th:block>
+                    <th:block th:if="${latest5Announces == null}">
+                        <div class="similar-card">
+                            <img src="/img/placeholder-announce.jpg" alt="Anunt similar">
+                            <div class="body">
+                                <div class="similar-meta"><i class="fa fa-tag"></i><span>Design</span></div>
+                                <h6>Workshop UI/UX colaborativ</h6>
+                                <div class="similar-meta"><i class="fa fa-user"></i><span>Alex</span><span class="meta-dot"></span><i class="fa fa-clock-o"></i><span>12 Sep</span></div>
+                            </div>
+                        </div>
+                        <div class="similar-card">
+                            <img src="/img/placeholder-announce.jpg" alt="Anunt similar">
+                            <div class="body">
+                                <div class="similar-meta"><i class="fa fa-tag"></i><span>Programming</span></div>
+                                <h6>Mentorat Java pentru incepatori</h6>
+                                <div class="similar-meta"><i class="fa fa-user"></i><span>Mara</span><span class="meta-dot"></span><i class="fa fa-clock-o"></i><span>03 Aug</span></div>
+                            </div>
+                        </div>
+                        <div class="similar-card">
+                            <img src="/img/placeholder-announce.jpg" alt="Anunt similar">
+                            <div class="body">
+                                <div class="similar-meta"><i class="fa fa-tag"></i><span>Languages</span></div>
+                                <h6>Schimb: Engleza conversationala</h6>
+                                <div class="similar-meta"><i class="fa fa-user"></i><span>Irina</span><span class="meta-dot"></span><i class="fa fa-clock-o"></i><span>21 Iul</span></div>
+                            </div>
+                        </div>
+                    </th:block>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Search model Begin -->
+<div class="search-model">
+    <div class="h-100 d-flex align-items-center justify-content-center">
+        <div class="search-close-switch">+</div>
+        <form class="search-model-form">
+            <input type="text" id="search-input" placeholder="Search here.....">
+        </form>
+    </div>
+</div>
+<!-- Search model end -->
+
+<!-- Js Plugins -->
+<script src="/js/jquery-3.3.1.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/jquery.magnific-popup.min.js"></script>
+<script src="/js/circle-progress.min.js"></script>
+<script src="/js/jquery.barfiller.js"></script>
+<script src="/js/jquery.slicknav.js"></script>
+<script src="/js/owl.carousel.min.js"></script>
+<script src="/js/main.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const track = document.getElementById('similarTrack');
+        const prev = document.querySelector('[data-similar-nav="prev"]');
+        const next = document.querySelector('[data-similar-nav="next"]');
+
+        const scrollAmount = () => {
+            const card = track ? track.querySelector('.similar-card') : null;
+            if (!card) return 320;
+            const style = getComputedStyle(track);
+            const gap = parseInt(style.columnGap || style.gap || '16', 10);
+            return card.getBoundingClientRect().width + gap;
+        };
+
+        const scrollTrack = (direction) => {
+            if (!track) return;
+            track.scrollBy({ left: direction * scrollAmount(), behavior: 'smooth' });
+        };
+
+        if (prev) prev.addEventListener('click', () => scrollTrack(-1));
+        if (next) next.addEventListener('click', () => scrollTrack(1));
+    });
+</script>
+</body>
+
+</html>

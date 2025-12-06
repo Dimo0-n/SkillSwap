@@ -43,7 +43,7 @@ public class HomeController {
 
     @GetMapping("/post-details")
     public String detailsPostGallery(){
-        return "post-details";
+        return "announce-details";
     }
 
     @GetMapping("/profil")

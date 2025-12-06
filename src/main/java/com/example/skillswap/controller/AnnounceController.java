@@ -25,8 +25,15 @@ class AnnounceController {
     }
 
     @GetMapping("/announces/new")
-    public String addAnnounce(){
+    public String addAnnounce(Model model){
+        Announce announce = new Announce();
+        model.addAttribute("announce", announce);
         return "announce-create";
+    }
+
+    @GetMapping("/announce-details")
+    public String postDetails(){
+        return "announce-details";
     }
 
 }

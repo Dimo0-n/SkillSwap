@@ -33,8 +33,9 @@ public class Announce {
 
     private String category2;
 
-    private String image;
+    private String optionalNote;
 
+    private String image;
 
 }
 
