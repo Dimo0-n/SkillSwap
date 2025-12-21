@@ -1,0 +1,602 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --purple-primary: #8b5cf6;
+    --purple-dark: #6d28d9;
+    --purple-light: #a78bfa;
+    --purple-glow: rgba(139, 92, 246, 0.3);
+    --bg-dark: #000000;
+    --bg-card: #0a0a0a;
+    --bg-input: #1a1a1a;
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0b8;
+    --border-color: rgba(139, 92, 246, 0.2);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.5);
+    --shadow-glow: 0 0 30px var(--purple-glow);
+}
+
+body {
+    background: #000000;
+    color: var(--text-primary);
+    font-family: 'Montserrat', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: static;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+            radial-gradient(circle at 20% 20%, rgba(139, 92, 246, 0.05), transparent 40%),
+            radial-gradient(circle at 80% 80%, rgba(109, 40, 217, 0.03), transparent 40%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+    position: relative;
+    z-index: 1;
+}
+
+/* Header Section */
+.page-header {
+    text-align: center;
+    padding: 120px 0 60px;
+    position: relative;
+}
+
+.header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--purple-primary);
+    padding: 12px 32px;
+    border-radius: 0;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    box-shadow: none;
+    margin-bottom: 24px;
+    animation: fadeInDown 0.6s ease-out;
+    transform: skewX(-10deg);
+    position: relative;
+}
+
+.header-badge span,
+.header-badge i {
+    transform: skewX(10deg);
+}
+
+.header-badge i {
+    font-size: 16px;
+}
+
+.page-header h1 {
+    font-size: 48px;
+    font-weight: 900;
+    letter-spacing: -1px;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, #ffffff, var(--purple-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: fadeInUp 0.6s ease-out 0.2s both;
+}
+
+.page-header p {
+    font-size: 18px;
+    color: var(--text-secondary);
+    max-width: 600px;
+    margin: 0 auto;
+    animation: fadeInUp 0.6s ease-out 0.4s both;
+}
+
+/* Main Grid Layout */
+.announce-grid {
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    gap: 32px;
+    margin-bottom: 80px;
+    animation: fadeInUp 0.6s ease-out 0.6s both;
+}
+
+/* Main Form Card */
+.form-card {
+    background: var(--bg-card);
+    border-radius: 24px;
+    padding: 48px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-lg);
+    position: relative;
+    overflow: hidden;
+}
+
+.form-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--purple-primary), var(--purple-light));
+}
+
+.form-section {
+    margin-bottom: 40px;
+}
+
+.form-section:last-child {
+    margin-bottom: 0;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.section-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--purple-primary), var(--purple-dark));
+    display: flex;
+    place-items: center;
+    font-size: 18px;
+    justify-content: center;
+    margin-bottom: 6px;
+    box-shadow: var(--shadow-glow);
+}
+
+.section-title {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin: 0;             /* scoate marginile default de la h2 */
+    line-height: 1;        /* evită diferențe de aliniere */
+}
+
+/* Form Inputs */
+.form-group {
+    margin-bottom: 24px;
+    position: relative;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.form-input,
+.form-textarea {
+    width: 100%;
+    background: var(--bg-input);
+    border: 2px solid var(--border-color);
+    border-radius: 16px;
+    padding: 16px 20px;
+    color: var(--text-primary);
+    font-size: 15px;
+    font-family: 'Montserrat', sans-serif;
+    transition: all 0.3s ease;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--purple-primary);
+    box-shadow: 0 0 0 4px var(--purple-glow);
+    background: var(--bg-card);
+}
+
+.form-textarea {
+    min-height: 140px;
+    resize: vertical;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text-primary);
+    letter-spacing: 0.3px;
+}
+
+.form-hint {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.form-hint i {
+    color: var(--purple-light);
+}
+
+.input-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+/* Image Preview Section */
+.image-preview-section {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.05), rgba(109, 40, 217, 0.05));
+    border: 2px dashed var(--border-color);
+    border-radius: 20px;
+    padding: 32px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.image-preview-section:hover {
+    border-color: var(--purple-primary);
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.08), rgba(109, 40, 217, 0.08));
+}
+
+.preview-image-container {
+    width: 100%;
+    height: 300px;
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--bg-input);
+    display: grid;
+    place-items: center;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow-md);
+}
+
+.preview-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.preview-image-container img:hover {
+    transform: scale(1.05);
+}
+
+.auto-select-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-input);
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+}
+
+.auto-select-badge i {
+    color: var(--purple-primary);
+}
+
+/* Submit Button */
+.submit-section {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    margin-top: 32px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border-color);
+}
+
+.btn {
+    padding: 16px 36px;
+    border-radius: 0;
+    font-weight: 700;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transform: skewX(-10deg);
+    position: relative;
+}
+
+.btn span,
+.btn i {
+    transform: skewX(10deg);
+}
+
+.btn-primary {
+    background: var(--purple-primary);
+    color: white;
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+}
+
+.btn-primary:hover {
+    background: var(--purple-dark);
+    transform: skewX(-10deg) translateY(-2px);
+    box-shadow: 0 6px 16px rgba(139, 92, 246, 0.6);
+}
+
+.btn-primary:active {
+    transform: skewX(-10deg) translateY(0);
+}
+
+/* Preview Sidebar */
+.preview-sidebar {
+    position: sticky;
+    top: 120px;
+    height: fit-content;
+}
+
+.preview-card {
+    background: var(--bg-card);
+    border-radius: 24px;
+    padding: 32px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-lg);
+    position: relative;
+    overflow: hidden;
+}
+
+.preview-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--purple-light), var(--purple-primary));
+}
+
+.preview-header {
+    display: flex;
+    align-items: center;        /* icon + text pe același rând */
+    gap: 12px;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.preview-icon {
+    width: 40px;                /* IDENTIC cu section-icon */
+    height: 40px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--purple-primary), var(--purple-dark));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    box-shadow: var(--shadow-glow);
+    position: relative;
+}
+
+.preview-header h3 {
+    font-size: 20px;            /* identic vizual cu section-title */
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin: 0;                  /* scoate margin default */
+    line-height: 1;             /* aliniere perfectă */
+}
+
+.preview-badges {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.preview-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--purple-primary);
+    border: none;
+    padding: 10px 16px;
+    border-radius: 0;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    transform: skewX(-10deg);
+}
+
+.preview-badge span,
+.preview-badge i {
+    transform: skewX(10deg);
+}
+
+.preview-badge i {
+    font-size: 14px;
+}
+
+.preview-title {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--text-primary);
+    margin: 0;             /* scoate marginile default de la h2 */
+    line-height: 1;        /* evită diferențe de aliniere */
+}
+
+.preview-description {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+}
+
+.preview-image {
+    width: 100%;
+    height: 220px;
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--bg-input);
+    box-shadow: var(--shadow-md);
+}
+
+.preview-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Info Alert */
+.info-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(109, 40, 217, 0.1));
+    border: 1px solid var(--border-color);
+    border-left: 4px solid var(--purple-primary);
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+}
+
+.info-alert i {
+    color: var(--purple-primary);
+    font-size: 20px;
+    margin-top: 2px;
+}
+
+.info-alert-content {
+    flex: 1;
+}
+
+.info-alert-content p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+/* Animations */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .announce-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .preview-sidebar {
+        position: static;
+    }
+}
+
+@media (max-width: 768px) {
+    .page-header {
+        padding: 80px 0 40px;
+    }
+
+    .page-header h1 {
+        font-size: 36px;
+    }
+
+    .form-card {
+        padding: 32px 24px;
+    }
+
+    .input-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .submit-section {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-header h1 {
+        font-size: 28px;
+    }
+
+    .form-card {
+        padding: 24px 16px;
+    }
+
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* ===============================
+   NAVBAR ISOLATION ZONE
+================================ */
+
+.app-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10000;
+}
+
+/* Reset local – paginile NU mai pot strica navbar-ul */
+.app-navbar *,
+.app-navbar *::before,
+.app-navbar *::after {
+    box-sizing: border-box;
+}
+
+/* Burger + overlay sunt scoase complet din flow */
+.app-navbar .humberger-menu-overlay,
+.app-navbar .humberger-menu-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    transform: none !important;
+}
+
+/* Z-index clar, fără conflicte */
+.app-navbar .humberger-menu-overlay {
+    z-index: 10001;
+}
+
+.app-navbar .humberger-menu-wrapper {
+    z-index: 10002;
+}
+

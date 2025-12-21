@@ -510,6 +510,7 @@ ol {
 	transition: all 0.3s;
 	z-index: 999;
 	visibility: hidden;
+    transform: none !important;
 }
 
 .humberger-menu-overlay.active {
@@ -4600,6 +4601,43 @@ li a:hover {
     margin-bottom: 15px;
     font-size: 14px;
     text-align: center;
+}
+
+/* ===============================
+   NAVBAR ISOLATION ZONE
+================================ */
+
+.app-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10000;
+}
+
+/* Reset local – paginile NU mai pot strica navbar-ul */
+.app-navbar *,
+.app-navbar *::before,
+.app-navbar *::after {
+    box-sizing: border-box;
+}
+
+/* Burger + overlay sunt scoase complet din flow */
+.app-navbar .humberger-menu-overlay,
+.app-navbar .humberger-menu-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    transform: none !important;
+}
+
+/* Z-index clar, fără conflicte */
+.app-navbar .humberger-menu-overlay {
+    z-index: 10001;
+}
+
+.app-navbar .humberger-menu-wrapper {
+    z-index: 10002;
 }
 
 

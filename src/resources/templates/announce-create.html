@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zxx">
+<html lang="ro">
 <head>
     <meta charset="UTF-8">
     <meta name="description" content="SkillSwap Create Announce">
@@ -8,9 +8,11 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>SkillSwap | Creează anunț</title>
 
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800,900&display=swap" rel="stylesheet">
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800,900&display=swap"
+          rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Cinzel:400,700,900&display=swap" rel="stylesheet">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
     <link rel="stylesheet" href="/css/font-awesome.min.css" type="text/css">
     <link rel="stylesheet" href="/css/elegant-icons.css" type="text/css">
@@ -19,531 +21,255 @@
     <link rel="stylesheet" href="/css/magnific-popup.css" type="text/css">
     <link rel="stylesheet" href="/css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/announce-create.css" type="text/css">
 
-    <style>
-        :root {
-            --bg-body: #0d0d0d;
-            --bg-panel: #120c1d;
-            --bg-panel-2: #160f24;
-            --border: #2a1f3f;
-            --text: #f6f4ff;
-            --muted: #bcb3d5;
-            --purple: #9b4dd8;
-            --purple-2: #7b2cbf;
-            --purple-soft: #c77dff;
-            --shadow: 0 22px 45px rgba(0, 0, 0, 0.55);
-            --radius: 16px;
-            --transition: 220ms ease;
-        }
-
-        body {
-            background: radial-gradient(circle at 20% 20%, rgba(155, 77, 216, 0.05), transparent 35%),
-                        radial-gradient(circle at 80% 0%, rgba(199, 125, 255, 0.06), transparent 30%),
-                        var(--bg-body);
-            color: var(--text);
-            overflow-x: hidden;
-            font-family: "Montserrat", sans-serif;
-        }
-
-        a { color: var(--text); }
-        a:hover { color: var(--purple-soft); }
-
-        .announce-create-page {
-            padding-top: 80px;
-            padding-bottom: 80px;
-        }
-
-        .page-title {
-            text-align: center;
-            margin-bottom: 32px;
-            letter-spacing: 0.5px;
-        }
-
-        .announce-wrapper {
-            max-width: 1040px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1.35fr 0.85fr;
-            gap: 24px;
-            align-items: start;
-        }
-
-        .main-card {
-            background: linear-gradient(145deg, var(--bg-panel), var(--bg-panel-2));
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            padding: 40px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .main-card:before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at 18% 12%, rgba(155, 77, 216, 0.1), transparent 28%),
-                        radial-gradient(circle at 86% 18%, rgba(199, 125, 255, 0.08), transparent 24%);
-            pointer-events: none;
-        }
-
-        .main-card .card-inner {
-            position: relative;
-            z-index: 1;
-        }
-
-        .section-block {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(155, 77, 216, 0.08);
-            border-radius: 14px;
-            padding: 22px 22px 18px;
-            margin-bottom: 18px;
-            transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
-        }
-
-        .section-block:hover {
-            transform: translateY(-2px);
-            border-color: rgba(155, 77, 216, 0.25);
-            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.28);
-        }
-
-        .section-title {
-            font-weight: 700;
-            font-size: 15px;
-            letter-spacing: 0.8px;
-            text-transform: uppercase;
-            color: var(--purple-soft);
-            margin-bottom: 12px;
-        }
-
-        .grid-2 {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 14px;
-        }
-
-        .input-group-floating {
-            position: relative;
-        }
-
-        .input-group-floating input,
-        .input-group-floating textarea,
-        .input-group-floating select {
-            width: 100%;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            background: rgba(255, 255, 255, 0.02);
-            color: var(--text);
-            padding: 16px 14px 10px;
-            transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
-        }
-
-        .input-group-floating textarea {
-            resize: vertical;
-            min-height: 120px;
-        }
-
-        .input-group-floating label {
-            position: absolute;
-            top: 12px;
-            left: 14px;
-            font-size: 13px;
-            color: var(--muted);
-            letter-spacing: 0.2px;
-            transition: transform var(--transition), color var(--transition), font-size var(--transition), top var(--transition);
-            pointer-events: none;
-        }
-
-        .input-group-floating input:focus,
-        .input-group-floating textarea:focus,
-        .input-group-floating select:focus {
-            border-color: var(--purple-soft);
-            box-shadow: 0 0 0 4px rgba(155, 77, 216, 0.18);
-            background: rgba(255, 255, 255, 0.03);
-        }
-
-        .input-group-floating input:focus + label,
-        .input-group-floating input:not(:placeholder-shown) + label,
-        .input-group-floating textarea:focus + label,
-        .input-group-floating textarea:not(:placeholder-shown) + label,
-        .input-group-floating select:focus + label,
-        .input-group-floating select:not([value=""]):valid + label {
-            transform: translateY(-12px);
-            font-size: 11px;
-            color: var(--purple-soft);
-        }
-
-        .helper {
-            font-size: 12px;
-            color: var(--muted);
-            margin-top: 6px;
-        }
-
-        .field-tip {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 12px;
-            color: var(--muted);
-            margin-top: 6px;
-        }
-
-        .field-tip i {
-            color: var(--purple-soft);
-        }
-
-        .image-preview-card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(155, 77, 216, 0.15);
-            border-radius: 14px;
-            padding: 14px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .image-preview {
-            border-radius: 12px;
-            overflow: hidden;
-            background: radial-gradient(circle at 30% 30%, rgba(155, 77, 216, 0.3), rgba(18, 12, 29, 0.9));
-            min-height: 200px;
-            display: grid;
-            place-items: center;
-            position: relative;
-        }
-
-        .image-preview img {
-            width: 100%;
-            max-height: 260px;
-            object-fit: cover;
-            opacity: 0;
-            transition: opacity 240ms ease;
-        }
-
-        .image-preview img.is-visible {
-            opacity: 1;
-        }
-
-        .auto-text {
-            font-size: 12px;
-            margin-top: 10px;
-            color: var(--muted);
-        }
-
-        .publish-row {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 6px;
-        }
-
-        .btn-publish {
-            background: linear-gradient(135deg, var(--purple-soft), var(--purple));
-            border-radius: 14px;
-            padding: 14px 30px;
-            border: none;
-            text-transform: uppercase;
-            font-weight: 800;
-            letter-spacing: 0.6px;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            color: #fff;
-            box-shadow: 0 12px 28px rgba(155, 77, 216, 0.35);
-            transition: transform 180ms ease, box-shadow 180ms ease;
-        }
-
-        .btn-publish:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 16px 32px rgba(155, 77, 216, 0.45);
-        }
-
-        .btn-publish:active {
-            transform: translateY(0px);
-        }
-
-        .preview-card {
-            background: linear-gradient(150deg, rgba(155, 77, 216, 0.12), rgba(18, 12, 29, 0.95));
-            border: 1px solid rgba(155, 77, 216, 0.25);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            padding: 22px;
-            height: auto;
-            align-self: flex-start;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .preview-card h6 {
-            font-weight: 700;
-            letter-spacing: 0.4px;
-            margin-bottom: 12px;
-        }
-
-        .preview-chip {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(155, 77, 216, 0.12);
-            border: 1px solid rgba(155, 77, 216, 0.3);
-            color: #fff;
-            padding: 8px 12px;
-            border-radius: 10px;
-            font-size: 12px;
-            margin-right: 8px;
-        }
-
-        .preview-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: #fff;
-            margin-top: 6px;
-            margin-bottom: 10px;
-        }
-
-        .preview-desc {
-            font-size: 13px;
-            color: var(--muted);
-            line-height: 1.5;
-            margin-bottom: 12px;
-        }
-
-        .preview-image {
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            background: rgba(0, 0, 0, 0.4);
-            min-height: 160px;
-            display: grid;
-            place-items: center;
-        }
-
-        .preview-image img {
-            width: 100%;
-            object-fit: cover;
-            opacity: 0;
-            transition: opacity 240ms ease;
-        }
-
-        .preview-image img.is-visible {
-            opacity: 1;
-        }
-
-        .micro-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 12px;
-            color: var(--muted);
-        }
-
-        /* Responsive */
-        @media (max-width: 992px) {
-            .announce-wrapper {
-                grid-template-columns: 1fr;
-            }
-            .announce-create-page {
-                padding: 60px 0;
-            }
-            .main-card {
-                padding: 30px;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .grid-2 {
-                grid-template-columns: 1fr;
-            }
-            .main-card {
-                padding: 22px;
-            }
-            .btn-publish {
-                width: 100%;
-                justify-content: center;
-            }
-        }
-    </style>
 </head>
 
 <body>
-<div id="preloder"><div class="loader"></div></div>
 
 <div th:replace="~{fragments/lateral-menu :: lateral-menu}"></div>
+
 <div th:replace="~{/fragments/navbar :: navbar}"></div>
 
-<section class="announce-create-page">
-    <div class="container">
-        <div class="page-title">
-            <div class="preview-chip"><i class="fa fa-magic"></i><span>Creează anunț</span></div>
-            <h3 style="font-weight:800; margin-top:12px; color: var(--text);">Pregătește schimbul tău de skill-uri</h3>
+<!-- Page Header -->
+<div class="container">
+    <div class="page-header">
+        <div class="header-badge">
+            <i class="fas fa-magic"></i>
+            <span>Creează anunț nou</span>
+        </div>
+        <h1>Pregătește schimbul tău de skill-uri</h1>
+        <p>Completează detaliile anunțului și ajută comunitatea să găsească exact ce caută</p>
+    </div>
+
+    <!-- Main Grid -->
+    <div class="announce-grid">
+        <!-- Form Card -->
+        <div class="form-card">
+            <form id="announceForm">
+                <!-- Main Details Section -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <h2 class="section-title text-white">Detalii principale</h2>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Titlul anunțului</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="announce-title" class="form-input" placeholder="Ex: Predau programare Python în schimbul lecții de chitară">
+                        </div>
+                        <div class="form-hint">
+                            <i class="fas fa-lightbulb"></i>
+                            <span>Un titlu clar și descriptiv ajută utilizatorii să înțeleagă rapid oferta ta</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Descriere detaliată</label>
+                        <div class="input-wrapper">
+                            <textarea id="announce-description" class="form-textarea" placeholder="Descrie experiența ta, nivelul pe care îl predai și ce anume cauți în schimb..."></textarea>
+                        </div>
+                        <div class="form-hint">
+                            <i class="fas fa-info-circle"></i>
+                            <span>Adaugă detalii despre experiența ta și așteptări</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exchange Details Section -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <h2 class="section-title text-white">Ce oferți și ce cauți</h2>
+                    </div>
+
+                    <div class="input-grid">
+                        <div class="form-group">
+                            <label class="form-label">Categoria oferită</label>
+                            <input type="text" id="category-offer" class="form-input" placeholder="Ex: Programare">
+                            <div class="form-hint">
+                                <i class="fas fa-star"></i>
+                                <span>Skill-ul pe care îl oferi</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Categoria căutată</label>
+                            <input type="text" id="category-want" class="form-input" placeholder="Ex: Chitară">
+                            <div class="form-hint">
+                                <i class="fas fa-search"></i>
+                                <span>Skill-ul pe care îl dorești</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="input-grid">
+                        <div class="form-group">
+                            <label class="form-label">Nume autor</label>
+                            <input type="text" id="author-name" class="form-input" placeholder="Numele tău">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Notă secundară (opțional)</label>
+                            <input type="text" id="secondary-note" class="form-input" placeholder="Detalii suplimentare">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Image Section -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        <h2 class="section-title text-white">Imaginea anunțului</h2>
+                    </div>
+
+                    <div class="image-preview-section">
+                        <div class="preview-image-container">
+                            <img id="main-preview-image" src="/img/skill/skill-programming.png" alt="Preview">
+                        </div>
+                        <div class="auto-select-badge">
+                            <i class="fas fa-magic"></i>
+                            <span>Imaginea se selectează automat în funcție de categoria aleasă</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Section -->
+                <div class="form-section">
+                    <div class="info-alert">
+                        <i class="fas fa-check-circle"></i>
+                        <div class="info-alert-content">
+                            <p>Verifică toate detaliile înainte de publicare. Anunțul tău va fi vizibil imediat în comunitate!</p>
+                        </div>
+                    </div>
+
+                    <div class="submit-section">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i>
+                            <span>Publică anunțul</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
         </div>
 
-        <div class="announce-wrapper">
-            <div class="main-card">
-                <div class="card-inner">
-                    <form action="#" method="post" enctype="multipart/form-data" onsubmit="return false;">
-                        <div class="section-block">
-                            <div class="section-title">Detalii principale</div>
-                            <div class="input-group-floating">
-                                <input type="text" id="announce-title" placeholder=" " />
-                                <label for="announce-title">Titlul anunțului</label>
-                            </div>
-                            <div class="field-tip"><i class="fa fa-info-circle"></i>Un titlu clar ajută utilizatorii să înțeleagă rapid oferta ta.</div>
+        <!-- Preview Sidebar -->
+        <div class="preview-sidebar">
+            <div class="preview-card">
+                <div class="preview-header">
+                    <div class="preview-icon">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <h3 class="section-title text-white">Preview Live</h3>
+                </div>
 
-                            <div class="input-group-floating" style="margin-top:14px;">
-                                <textarea id="announce-description" rows="5" placeholder=" "></textarea>
-                                <label for="announce-description">Descrierea</label>
-                            </div>
-                        </div>
+                <div class="preview-badges">
+                    <div class="preview-badge">
+                        <i class="fas fa-star"></i>
+                        <span id="preview-offer">Categoria oferită</span>
+                    </div>
+                    <div class="preview-badge">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span id="preview-want">Categoria căutată</span>
+                    </div>
+                </div>
 
-                        <div class="section-block">
-                            <div class="section-title">Ce cauți în schimb</div>
-                            <div class="grid-2">
-                                <div class="input-group-floating">
-                                    <input type="text" id="category-offer" placeholder=" " autocomplete="off" />
-                                    <label for="category-offer">Categoria oferită</label>
-                                    <div class="field-tip"><i class="fa fa-bolt"></i>Folosește termeni simpli (ex: Programare, Chitară).</div>
-                                </div>
-                                <div class="input-group-floating">
-                                    <input type="text" id="category-want" placeholder=" " autocomplete="off" />
-                                    <label for="category-want">Categoria căutată</label>
-                                </div>
-                            </div>
-                            <div class="grid-2" style="margin-top:12px;">
-                                <div class="input-group-floating">
-                                    <input type="text" id="author-name" placeholder=" " />
-                                    <label for="author-name">Nume autor</label>
-                                </div>
-                                <div class="input-group-floating">
-                                    <input type="text" id="secondary-note" placeholder=" " />
-                                    <label for="secondary-note">Notă secundară (opțional)</label>
-                                </div>
-                            </div>
-                        </div>
+                <h4 class="preview-title" id="preview-title">Titlul anunțului tău</h4>
+                <p class="preview-description" id="preview-description">Descrierea va apărea aici imediat ce o completezi. Adaugă informații relevante pentru a atrage persoanele potrivite.</p>
 
-                        <div class="section-block">
-                            <div class="section-title">Imaginea anunțului</div>
-                            <div class="image-preview-card">
-                                <div class="image-preview">
-                                    <img id="offer-image" src="/img/skill/skill-programming.png" alt="Preview categorie">
-                                </div>
-                                <div class="auto-text">Imaginea a fost selectată automat în funcție de categoria aleasă.</div>
-                            </div>
-                        </div>
-
-                        <div class="section-block">
-                            <div class="section-title">Publicare</div>
-                            <div class="micro-row" style="margin-bottom:10px;">
-                                <i class="fa fa-check-circle" style="color: var(--purple-soft);"></i>
-                                <span>Verifică titlul, categoriile și descrierea înainte de a trimite.</span>
-                            </div>
-                            <div class="publish-row">
-                                <button class="btn btn-publish" type="submit">
-                                    <i class="fa fa-paper-plane"></i>
-                                    <span>Publică anunțul</span>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+                <div class="preview-image">
+                    <img id="sidebar-preview-image" src="/img/skill/skill-programming.png" alt="Preview">
                 </div>
             </div>
-
-            <aside class="preview-card">
-                <h6 style="color: #ffffff;">Preview live</h6>
-                <div class="preview-chip"><i class="fa fa-star"></i><span id="preview-offer">Categoria oferită</span></div>
-                <div class="preview-chip" style="margin-top:8px;"><i class="fa fa-exchange"></i><span id="preview-want">Categoria căutată</span></div>
-                <div class="preview-title" id="preview-title">Titlul anunțului tău</div>
-                <div class="preview-desc" id="preview-description">Descrierea va apărea aici imediat ce o completezi.</div>
-                <div class="preview-image">
-                    <img id="preview-image" src="/img/skill/skill-programming.png" alt="Preview imagine">
-                </div>
-            </aside>
         </div>
     </div>
-</section>
+</div>
 
-<script src="/js/jquery-3.3.1.min.js"></script>
-<script src="/js/bootstrap.min.js"></script>
-<script src="/js/main.js"></script>
 <script>
-    (function () {
-        const titleInput = document.getElementById('announce-title');
-        const descInput = document.getElementById('announce-description');
-        const offerInput = document.getElementById('category-offer');
-        const wantInput = document.getElementById('category-want');
-        const previewTitle = document.getElementById('preview-title');
-        const previewDesc = document.getElementById('preview-description');
-        const previewOffer = document.getElementById('preview-offer');
-        const previewWant = document.getElementById('preview-want');
-        const previewImage = document.getElementById('preview-image');
-        const offerImage = document.getElementById('offer-image');
+    // Category to Image Mapping
+    const categoryImages = {
+        'programming': '/img/skill/skill-programming.png',
+        'programare': '/img/skill/skill-programming.png',
+        'guitar': '/img/skill/skill-guitar.png',
+        'chitară': '/img/skill/skill-guitar.png',
+        'chitara': '/img/skill/skill-guitar.png',
+        'english': '/img/skill/skill-english.png',
+        'engleză': '/img/skill/skill-english.png',
+        'engleza': '/img/skill/skill-english.png',
+        'photoshop': '/img/skill/skill-photoshop.png',
+        'design': '/img/skill/skill-photoshop.png',
+        'fotografie': '/img/skill/skill-photography.png',
+        'photography': '/img/skill/skill-photography.png',
+        'cooking': '/img/skill/skill-cooking.png',
+        'gătit': '/img/skill/skill-cooking.png',
+        'gatit': '/img/skill/skill-cooking.png',
+        'dans': '/img/skill/skill-dance.png',
+        'dance': '/img/skill/skill-dance.png',
+        'speaking': '/img/skill/skill-public-speaking.png',
+        'prezentare': '/img/skill/skill-public-speaking.png'
+    };
 
-        const categoryImages = {
-            programming: '/img/skill/skill-programming.png',
-            programare: '/img/skill/skill-programming.png',
-            guitar: '/img/skill/skill-guitar.png',
-            chitară: '/img/skill/skill-guitar.png',
-            chitara: '/img/skill/skill-guitar.png',
-            english: '/img/skill/skill-english.png',
-            engleză: '/img/skill/skill-english.png',
-            engleza: '/img/skill/skill-english.png',
-            photoshop: '/img/skill/skill-photoshop.png',
-            design: '/img/skill/skill-photoshop.png',
-            fotografie: '/img/skill/skill-photography.png',
-            photography: '/img/skill/skill-photography.png',
-            cooking: '/img/skill/skill-cooking.png',
-            gătit: '/img/skill/skill-cooking.png',
-            gatit: '/img/skill/skill-cooking.png',
-            dans: '/img/skill/skill-dance.png',
-            dance: '/img/skill/skill-dance.png',
-            speaking: '/img/skill/skill-public-speaking.png',
-            prezentare: '/img/skill/skill-public-speaking.png'
-        };
+    const defaultImage = '/img/skill/skill-programming.png';
 
-        const defaultImage = '/img/skill/skill-programming.png';
+    // Get Elements
+    const titleInput = document.getElementById('announce-title');
+    const descInput = document.getElementById('announce-description');
+    const offerInput = document.getElementById('category-offer');
+    const wantInput = document.getElementById('category-want');
+    const previewTitle = document.getElementById('preview-title');
+    const previewDesc = document.getElementById('preview-description');
+    const previewOffer = document.getElementById('preview-offer');
+    const previewWant = document.getElementById('preview-want');
+    const mainPreviewImage = document.getElementById('main-preview-image');
+    const sidebarPreviewImage = document.getElementById('sidebar-preview-image');
 
-        const updatePreviewText = () => {
-            previewTitle.textContent = titleInput.value.trim() || 'Titlul anunțului tău';
-            previewDesc.textContent = descInput.value.trim() || 'Descrierea va apărea aici imediat ce o completezi.';
-            previewOffer.textContent = offerInput.value.trim() || 'Categoria oferită';
-            previewWant.textContent = wantInput.value.trim() || 'Categoria căutată';
-        };
+    // Update Preview Text
+    function updatePreview() {
+        previewTitle.textContent = titleInput.value.trim() || 'Titlul anunțului tău';
+        previewDesc.textContent = descInput.value.trim() || 'Descrierea va apărea aici imediat ce o completezi. Adaugă informații relevante pentru a atrage persoanele potrivite.';
+        previewOffer.textContent = offerInput.value.trim() || 'Categoria oferită';
+        previewWant.textContent = wantInput.value.trim() || 'Categoria căutată';
+    }
 
-        const pickImage = (value) => {
-            if (!value) return defaultImage;
-            const key = value.toLowerCase().trim();
-            return categoryImages[key] || defaultImage;
-        };
+    // Get Image Based on Category
+    function getImageForCategory(category) {
+        if (!category) return defaultImage;
+        const key = category.toLowerCase().trim();
+        return categoryImages[key] || defaultImage;
+    }
 
-        const swapImage = (src) => {
-            [offerImage, previewImage].forEach(img => {
-                img.classList.remove('is-visible');
-                img.addEventListener('transitionend', function handler() {
-                    img.classList.add('is-visible');
-                    img.removeEventListener('transitionend', handler);
-                });
-                img.src = src;
-                // force repaint for transition
-                void img.offsetWidth;
-            });
-        };
+    // Update Images
+    function updateImages() {
+        const imageSrc = getImageForCategory(offerInput.value);
+        mainPreviewImage.src = imageSrc;
+        sidebarPreviewImage.src = imageSrc;
+    }
 
-        const syncImage = () => {
-            const src = pickImage(offerInput.value);
-            swapImage(src);
-        };
+    // Event Listeners
+    titleInput.addEventListener('input', updatePreview);
+    descInput.addEventListener('input', updatePreview);
+    offerInput.addEventListener('input', () => {
+        updatePreview();
+        updateImages();
+    });
+    wantInput.addEventListener('input', updatePreview);
 
-        ['input', 'keyup'].forEach(evt => {
-            titleInput.addEventListener(evt, updatePreviewText);
-            descInput.addEventListener(evt, updatePreviewText);
-            offerInput.addEventListener(evt, () => { updatePreviewText(); syncImage(); });
-            wantInput.addEventListener(evt, updatePreviewText);
-        });
+    // Form Submit
+    document.getElementById('announceForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        alert('Anunțul tău a fost publicat cu succes! 🎉');
+    });
 
-        // Initial state
-        offerImage.classList.add('is-visible');
-        previewImage.classList.add('is-visible');
-        updatePreviewText();
-    })();
+    // Initialize
+    updatePreview();
+    updateImages();
 </script>
 </body>
 </html>
