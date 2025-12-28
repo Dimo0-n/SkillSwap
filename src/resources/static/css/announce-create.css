@@ -550,27 +550,3 @@
         align-items: flex-start;
     }
 }
-
-/*!* ===============================*/
-/*   NAVBAR ISOLATION ZONE*/
-/*================================ *!*/
-/*!* Navbar isolation zone removed: avoid overriding global navbar behavior here.*/
-/*   We keep only announce-page scoped fixes below to adjust spacing for this page. *!*/
-
-/*!* Fix: navbar hamburger sits too close to left on announce page*/
-/*   Scope padding adjustments so other pages remain unchanged *!*/
-/*.announce-page .nav-options .container {*/
-/*    padding-left: 28px; !* add left spacing so hamburger isn't flush to edge *!*/
-/*    padding-right: 28px;*/
-/*}*/
-
-/*.announce-page .nav-options .nav-left {*/
-/*    padding-left: 6px; !* small inner offset for the left group *!*/
-/*}*/
-
-/*.announce-page .nav-options .humberger-menu {*/
-/*    margin-left: 4px; !* nudge hamburger away from left edge *!*/
-/*    position: relative;*/
-/*    z-index: 60; !* ensure it's above decorative layers *!*/
-/*}*/
-

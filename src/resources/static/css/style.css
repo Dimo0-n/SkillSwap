@@ -1,7 +1,7 @@
 html,
 body {
 	height: 100%;
-	font-family: "Montserrat", sans-serif;
+	font-family: "Montserrat", sans-serif; !important;
 	-webkit-font-smoothing: antialiased;
 	font-smoothing: antialiased;
 }
@@ -810,11 +810,32 @@ ol {
 
 .logo {
 	background: #0d0d0d;
-	padding: 44px 0;
+	/* Reduced vertical padding to make the black header smaller; keep logo size unchanged */
+	padding: 12px 0;
 }
 
 .logo a {
 	display: inline-block;
+}
+
+/* Logo image sizing: central control for header and mobile menu */
+.site-logo {
+	width: 340px;
+	height: auto;
+	max-width: 100%;
+	display: block;
+}
+
+@media (max-width: 992px) {
+	.site-logo {
+		width: 260px;
+	}
+}
+
+@media (max-width: 576px) {
+	.site-logo {
+		width: 200px;
+	}
 }
 
 .nav-options {
@@ -4656,5 +4677,42 @@ li a:hover {
 .app-navbar .humberger-menu-wrapper {
     z-index: 10002;
 }
+
+/*admin*/
+.admin-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 12px 28px;
+    margin-left: 40px;
+
+    background: linear-gradient(135deg, #dc2626, #991b1b);
+    color: #fff;
+
+    font-weight: 700;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+
+    border-radius: 0;
+    text-decoration: none;
+
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+    transition: all 0.25s ease;
+
+    transform: skewX(-10deg);
+}
+
+.admin-link i {
+    transform: skewX(10deg);
+}
+
+.admin-link:hover {
+    background: linear-gradient(135deg, #ef4444, #b91c1c);
+    transform: skewX(-10deg) translateY(-2px);
+    box-shadow: 0 6px 18px rgba(220, 38, 38, 0.6);
+}
+
 
 
