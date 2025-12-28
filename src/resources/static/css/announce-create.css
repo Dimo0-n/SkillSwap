@@ -148,16 +148,19 @@
     place-items: center;
     font-size: 18px;
     justify-content: center;
-    margin-bottom: 6px;
+    margin-bottom: 0; /* remove extra bottom margin so vertical centering works */
     box-shadow: 0 0 30px var(--brand-glow);
 }
 
-.section-title {
+.section-title-announce-create {
     font-size: 20px;
     font-weight: 700;
     letter-spacing: -0.5px;
     margin: 0;             /* scoate marginile default de la h2 */
     line-height: 1;        /* evită diferențe de aliniere */
+    align-self: center;    /* ensure the heading is centered relative to the icon */
+    display: flex;
+    align-items: center;
 }
 
 /* Form Inputs */
