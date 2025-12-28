@@ -6,6 +6,23 @@ body {
 	font-smoothing: antialiased;
 }
 
+/* Design tokens - centralized variables for the whole site */
+:root{
+	--brand-primary: #812acf;
+	--brand-primary-dark: #6d28d9;
+	--brand-primary-light: #a78bfa;
+	--brand-glow: rgba(129,42,207,0.15);
+	--bg-dark: #000000;
+	--card-bg: #0a0a0a;
+	--input-bg: #1a1a1a;
+	--text-primary: #ffffff;
+	--text-secondary: #c4c4c4;
+	--muted: #a0a0b8;
+	--border-muted: rgba(129,42,207,0.12);
+	--shadow-sm: 0 2px 8px rgba(0,0,0,0.12);
+	--shadow-md: 0 8px 24px rgba(0,0,0,0.18);
+}
+
 h1,
 h2,
 h3,

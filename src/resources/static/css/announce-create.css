@@ -1,36 +1,23 @@
-* {
-    margin: 0;
-    padding: 0;
+/* Scope styles to the announce page to avoid affecting other pages */
+.announce-page * {
     box-sizing: border-box;
 }
 
-:root {
-    --purple-primary: #8b5cf6;
-    --purple-dark: #6d28d9;
-    --purple-light: #a78bfa;
-    --purple-glow: rgba(139, 92, 246, 0.3);
-    --bg-dark: #000000;
-    --bg-card: #0a0a0a;
-    --bg-input: #1a1a1a;
-    --text-primary: #ffffff;
-    --text-secondary: #a0a0b8;
-    --border-color: rgba(139, 92, 246, 0.2);
-    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
-    --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.5);
-    --shadow-glow: 0 0 30px var(--purple-glow);
-}
+/* Using global design tokens from `style.css` to avoid duplication */
+/* announce-create.css now references the global variables directly (e.g. --brand-primary) */
 
-body {
+/* Page wrapper styles (scoped) */
+.announce-page {
     background: #000000;
     color: var(--text-primary);
     font-family: 'Montserrat', sans-serif;
     min-height: 100vh;
     overflow-x: hidden;
-    position: static;
+    position: relative;
 }
 
-body::before {
+/* Decorative background layers for the announce page only */
+.announce-page::before {
     content: '';
     position: fixed;
     top: 0;
@@ -63,7 +50,7 @@ body::before {
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    background: var(--purple-primary);
+    background: var(--brand-primary);
     padding: 12px 32px;
     border-radius: 0;
     font-size: 14px;
@@ -91,7 +78,7 @@ body::before {
     font-weight: 900;
     letter-spacing: -1px;
     margin-bottom: 16px;
-    background: linear-gradient(135deg, #ffffff, var(--purple-light));
+    background: linear-gradient(135deg, #ffffff, var(--brand-primary-light));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -117,11 +104,11 @@ body::before {
 
 /* Main Form Card */
 .form-card {
-    background: var(--bg-card);
+    background: var(--card-bg);
     border-radius: 24px;
     padding: 48px;
-    border: 1px solid var(--border-color);
-    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-muted);
+    box-shadow: var(--shadow-md);
     position: relative;
     overflow: hidden;
 }
@@ -133,7 +120,7 @@ body::before {
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, var(--purple-primary), var(--purple-light));
+    background: linear-gradient(90deg, var(--brand-primary), var(--brand-primary-light));
 }
 
 .form-section {
@@ -149,20 +136,20 @@ body::before {
     align-items: center;
     gap: 12px;
     margin-bottom: 16px;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-muted);
 }
 
 .section-icon {
     width: 40px;
     height: 40px;
     border-radius: 12px;
-    background: linear-gradient(135deg, var(--purple-primary), var(--purple-dark));
+    background: linear-gradient(135deg, var(--brand-primary), var(--brand-primary-dark));
     display: flex;
     place-items: center;
     font-size: 18px;
     justify-content: center;
     margin-bottom: 6px;
-    box-shadow: var(--shadow-glow);
+    box-shadow: 0 0 30px var(--brand-glow);
 }
 
 .section-title {
@@ -187,7 +174,7 @@ body::before {
 .form-textarea {
     width: 100%;
     background: var(--bg-input);
-    border: 2px solid var(--border-color);
+    border: 2px solid var(--border-muted);
     border-radius: 16px;
     padding: 16px 20px;
     color: var(--text-primary);
@@ -199,9 +186,9 @@ body::before {
 .form-input:focus,
 .form-textarea:focus {
     outline: none;
-    border-color: var(--purple-primary);
-    box-shadow: 0 0 0 4px var(--purple-glow);
-    background: var(--bg-card);
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 4px var(--brand-glow);
+    background: var(--card-bg);
 }
 
 .form-textarea {
@@ -228,7 +215,7 @@ body::before {
 }
 
 .form-hint i {
-    color: var(--purple-light);
+    color: var(--brand-primary-light);
 }
 
 .input-grid {
@@ -240,7 +227,7 @@ body::before {
 /* Image Preview Section */
 .image-preview-section {
     background: linear-gradient(135deg, rgba(139, 92, 246, 0.05), rgba(109, 40, 217, 0.05));
-    border: 2px dashed var(--border-color);
+    border: 2px dashed var(--border-muted);
     border-radius: 20px;
     padding: 32px;
     text-align: center;
@@ -248,7 +235,7 @@ body::before {
 }
 
 .image-preview-section:hover {
-    border-color: var(--purple-primary);
+    border-color: var(--brand-primary);
     background: linear-gradient(135deg, rgba(139, 92, 246, 0.08), rgba(109, 40, 217, 0.08));
 }
 
@@ -284,11 +271,11 @@ body::before {
     border-radius: 12px;
     font-size: 13px;
     color: var(--text-secondary);
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--border-muted);
 }
 
 .auto-select-badge i {
-    color: var(--purple-primary);
+    color: var(--brand-primary);
 }
 
 /* Submit Button */
@@ -298,7 +285,7 @@ body::before {
     gap: 16px;
     margin-top: 32px;
     padding-top: 32px;
-    border-top: 1px solid var(--border-color);
+    border-top: 1px solid var(--border-muted);
 }
 
 .btn {
@@ -324,15 +311,15 @@ body::before {
 }
 
 .btn-primary {
-    background: var(--purple-primary);
+    background: var(--brand-primary);
     color: white;
-    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+    box-shadow: 0 4px 12px rgba(129, 42, 207, 0.4);
 }
 
 .btn-primary:hover {
-    background: var(--purple-dark);
+    background: var(--brand-primary-dark);
     transform: skewX(-10deg) translateY(-2px);
-    box-shadow: 0 6px 16px rgba(139, 92, 246, 0.6);
+    box-shadow: 0 6px 16px rgba(129, 42, 207, 0.6);
 }
 
 .btn-primary:active {
@@ -347,11 +334,11 @@ body::before {
 }
 
 .preview-card {
-    background: var(--bg-card);
+    background: var(--card-bg);
     border-radius: 24px;
     padding: 32px;
-    border: 1px solid var(--border-color);
-    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-muted);
+    box-shadow: var(--shadow-md);
     position: relative;
     overflow: hidden;
 }
@@ -363,7 +350,7 @@ body::before {
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, var(--purple-light), var(--purple-primary));
+    background: linear-gradient(90deg, var(--brand-primary-light), var(--brand-primary));
 }
 
 .preview-header {
@@ -372,19 +359,20 @@ body::before {
     gap: 12px;
     margin-bottom: 16px;
     padding-bottom: 16px;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-muted);
 }
 
 .preview-icon {
     width: 40px;                /* IDENTIC cu section-icon */
     height: 40px;
     border-radius: 12px;
-    background: linear-gradient(135deg, var(--purple-primary), var(--purple-dark));
+    background: linear-gradient(135deg, var(--brand-primary), var(--brand-primary-dark));
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 18px;
-    box-shadow: var(--shadow-glow);
+    box-shadow: 0 0 30px var(--brand-glow);
+    transform: translateY(4px); /* nudge icon slightly lower relative to heading */
     position: relative;
 }
 
@@ -407,7 +395,7 @@ body::before {
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    background: var(--purple-primary);
+    background: var(--brand-primary);
     border: none;
     padding: 10px 16px;
     border-radius: 0;
@@ -464,15 +452,15 @@ body::before {
     align-items: flex-start;
     gap: 12px;
     background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(109, 40, 217, 0.1));
-    border: 1px solid var(--border-color);
-    border-left: 4px solid var(--purple-primary);
+    border: 1px solid var(--border-muted);
+    border-left: 4px solid var(--brand-primary);
     padding: 16px;
     border-radius: 12px;
     margin-bottom: 24px;
 }
 
 .info-alert i {
-    color: var(--purple-primary);
+    color: var(--brand-primary);
     font-size: 20px;
     margin-top: 2px;
 }
@@ -563,40 +551,26 @@ body::before {
     }
 }
 
-/* ===============================
-   NAVBAR ISOLATION ZONE
-================================ */
+/*!* ===============================*/
+/*   NAVBAR ISOLATION ZONE*/
+/*================================ *!*/
+/*!* Navbar isolation zone removed: avoid overriding global navbar behavior here.*/
+/*   We keep only announce-page scoped fixes below to adjust spacing for this page. *!*/
 
-.app-navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 10000;
-}
+/*!* Fix: navbar hamburger sits too close to left on announce page*/
+/*   Scope padding adjustments so other pages remain unchanged *!*/
+/*.announce-page .nav-options .container {*/
+/*    padding-left: 28px; !* add left spacing so hamburger isn't flush to edge *!*/
+/*    padding-right: 28px;*/
+/*}*/
 
-/* Reset local – paginile NU mai pot strica navbar-ul */
-.app-navbar *,
-.app-navbar *::before,
-.app-navbar *::after {
-    box-sizing: border-box;
-}
+/*.announce-page .nav-options .nav-left {*/
+/*    padding-left: 6px; !* small inner offset for the left group *!*/
+/*}*/
 
-/* Burger + overlay sunt scoase complet din flow */
-.app-navbar .humberger-menu-overlay,
-.app-navbar .humberger-menu-wrapper {
-    position: fixed;
-    top: 0;
-    left: 0;
-    transform: none !important;
-}
-
-/* Z-index clar, fără conflicte */
-.app-navbar .humberger-menu-overlay {
-    z-index: 10001;
-}
-
-.app-navbar .humberger-menu-wrapper {
-    z-index: 10002;
-}
+/*.announce-page .nav-options .humberger-menu {*/
+/*    margin-left: 4px; !* nudge hamburger away from left edge *!*/
+/*    position: relative;*/
+/*    z-index: 60; !* ensure it's above decorative layers *!*/
+/*}*/
 
