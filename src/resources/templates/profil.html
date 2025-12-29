@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="/css/magnific-popup.css" type="text/css">
     <link rel="stylesheet" href="/css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/profile.css" type="text/css">
 </head>
 
 <body>
@@ -35,31 +36,37 @@
 
     <div th:replace="~{/fragments/navbar :: navbar}"></div>
 
-    <!-- Details Hero Section Begin -->
-    <section class="details-hero-section set-bg" data-setbg="/img/profil/background.png">
-        <!-- Imaginea suprapusă -->
-        <div class="hero-overlay-image">
-            <img src="img/profil/img.png" alt="Overlay Image" class="overlay-img">
-        </div>
-
+    <section class="profile-hero">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="details-hero-text">
-                        <div class="label"><span>Playstation</span></div>
-                        <div class="label"><span>Hardware</span></div>
-                        <h3>Jupiter Hell, the spiritual successor to a Doom roguelike week</h3>
-                        <ul>
-                            <li>by <span>Admin</span></li>
-                            <li><i class="fa fa-clock-o"></i> Aug 01, 2019</li>
-                            <li><i class="fa fa-comment-o"></i> 20</li>
-                        </ul>
+            <div class="profile-card">
+                <div class="profile-avatar">
+                    <img src="/img/profil/img.png" alt="User Avatar">
+                </div>
+
+                <div class="profile-info">
+                    <h2>Alex M.</h2>
+                    <p class="profile-role">Frontend Developer & UI Enthusiast</p>
+
+                    <div class="profile-rating">
+                        <span>⭐ 4.8</span>
+                        <small>(128 reviews)</small>
+                    </div>
+
+                    <p class="profile-bio">
+                        Passionate about clean UI, smooth UX and modern web design.
+                        Always learning, always improving.
+                    </p>
+
+                    <div class="profile-skills">
+                        <span>HTML</span>
+                        <span>CSS</span>
+                        <span>JavaScript</span>
+                        <span>UI/UX</span>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-    <!-- Details Hero Section End -->
 
     <style>
         .details-hero-section {
