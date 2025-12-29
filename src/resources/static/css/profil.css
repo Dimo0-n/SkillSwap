@@ -1,0 +1,66 @@
+/* Profile page custom styles */
+:root{
+    --accent:#812ACF;
+    --muted:#9b8fa4;
+    --panel-bg:rgba(255,255,255,0.02);
+}
+
+/* Header */
+.site-header{background:linear-gradient(90deg,#3a0f6b88,#12060a88);padding:18px 0}
+.brand a{color:#fff;font-family:'Cinzel',serif;font-weight:700;font-size:22px;text-decoration:none}
+.main-nav a{color:#fff;margin-right:18px;text-decoration:none;opacity:0.9}
+
+/* Hero / profile header */
+.profile-hero{background:#0c0b0c;padding:48px 0;border-bottom:1px solid rgba(255,255,255,0.03)}
+.profile-avatar{display:inline-block;width:170px;height:170px;border-radius:14px;overflow:hidden;border:6px solid rgba(129,42,207,0.12);box-shadow:0 8px 30px rgba(0,0,0,0.6)}
+.profile-avatar img{width:100%;height:100%;object-fit:cover;display:block}
+.profile-name{color:#fff;margin-top:10px;margin-bottom:0;font-weight:700}
+.profile-location{color:var(--muted);font-size:13px;margin-top:6px}
+
+.profile-intro{padding:8px 24px}
+.profile-intro h2{color:#fff;font-weight:700;margin-bottom:8px}
+.profile-intro p{color:#b8b0c1;line-height:1.6}
+
+.profile-stats{margin-top:14px;display:flex;align-items:center;position:relative}
+.rating-circle{width:88px;height:88px;border-radius:50%;background:linear-gradient(180deg,#0f0d10,#1a1419);display:flex;align-items:center;justify-content:center;border:3px solid rgba(129,42,207,0.18);margin-right:16px;position:relative}
+.rating-circle .rating-score{color:#fff;font-weight:700;font-size:22px}
+.rating-circle .rating-suffix{position:absolute;top:62%;font-size:10px;color:var(--muted);transform:translateY(-10%)}
+.rating-label{color:#fff;font-weight:600}
+.rating-stars{margin-top:6px;color:#d4cde0}
+.rating-stars .fa{color:#f6c84c;margin-right:6px}
+.rating-count{margin-left:10px;color:var(--muted);font-size:13px}
+
+.profile-side-card{background:var(--panel-bg);padding:16px;border-radius:10px;text-align:center}
+.profile-side-card .side-members{color:#a88de0;font-weight:700}
+.profile-side-card .side-count{color:#fff;font-size:22px;font-weight:700;margin-top:6px}
+.btn-follow{margin-top:12px;background:var(--accent);color:#fff;border:0;padding:10px 18px;border-radius:8px;cursor:pointer}
+
+/* Content */
+.profile-content{background:#080607;padding:48px 0}
+.profile-main-card{background:var(--panel-bg);padding:22px;border-radius:12px}
+.profile-main-card h4{color:#dcd3ea;margin-bottom:8px}
+.profile-main-card p{color:#b9b0c5;line-height:1.6}
+
+.profile-skills h5{color:#fff;margin-bottom:10px}
+.skills-list{display:flex;flex-wrap:wrap;gap:10px}
+.skill-badge{background:rgba(129,42,207,0.12);color:#d9ccff;padding:8px 12px;border-radius:999px;font-weight:600}
+
+.profile-quote h5{color:#fff;margin-bottom:10px}
+.profile-quote blockquote{background:linear-gradient(90deg,rgba(129,42,207,0.06),rgba(0,0,0,0.02));padding:18px;border-left:4px solid rgba(129,42,207,0.6);color:#e6def6;border-radius:8px;font-style:italic;margin:0}
+.profile-quote .quote-author{display:block;text-align:right;color:#ab9be0;font-style:normal;margin-top:8px}
+
+.activity-panel{background:var(--panel-bg);padding:18px;border-radius:12px}
+.activity-panel h5{color:#dcd3ea}
+.activity-list{color:#b8b0c1;list-style:none;padding-left:0;margin-top:12px}
+.activity-list li{padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.02)}
+.activity-list li:last-child{border-bottom:none}
+.activity-list i{margin-right:8px;color:var(--muted)}
+
+/* Footer */
+.site-footer{background:#080607;padding:26px 0;border-top:1px solid rgba(255,255,255,0.02);color:var(--muted);text-align:center}
+
+/* Keep legacy hero overlay rules if used elsewhere */
+.details-hero-section{position:relative;overflow:hidden}
+.hero-overlay-image{position:absolute;top:0;right:0;width:50%;height:100%;z-index:1;overflow:hidden}
+.overlay-img{width:100%;height:100%;object-fit:cover;object-position:center;opacity:0.9;mask:linear-gradient(to left, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%);-webkit-mask:linear-gradient(to left, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%)}
+.hero-overlay-image::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(45deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 50%);pointer-events:none}

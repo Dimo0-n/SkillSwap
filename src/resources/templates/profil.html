@@ -14,7 +14,7 @@
         rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Cinzel:400,700,900&display=swap" rel="stylesheet">
 
-    <!-- Css Styles -->
+    <!-- Css Styles (relative paths so this file works opened directly) -->
     <link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
     <link rel="stylesheet" href="/css/font-awesome.min.css" type="text/css">
     <link rel="stylesheet" href="/css/elegant-icons.css" type="text/css">
@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="/css/magnific-popup.css" type="text/css">
     <link rel="stylesheet" href="/css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/profil.css" type="text/css">
 </head>
 
 <body>
@@ -35,281 +36,95 @@
 
     <div th:replace="~{/fragments/navbar :: navbar}"></div>
 
-    <!-- Details Hero Section Begin -->
-    <section class="details-hero-section set-bg" data-setbg="/img/profil/background.png">
-        <!-- Imaginea suprapusă -->
-        <div class="hero-overlay-image">
-            <img src="img/profil/img.png" alt="Overlay Image" class="overlay-img">
+    <!-- Profile Header Section -->
+    <section class="profile-hero">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-3 text-center">
+                    <div class="profile-avatar">
+                        <img src="/img/profil/img.png" alt="Profile">
+                    </div>
+                    <h4 class="profile-name">Andrei Pop</h4>
+                    <div class="profile-location">București · Mentor Python & Guită</div>
+                </div>
+                <div class="col-md-6">
+                    <div class="profile-intro">
+                        <h2>Salut, eu sunt Andrei — pasionat de cod și muzică</h2>
+                        <p>Predau programare Python la nivel începător-intermediar și caut sesiuni de chitară în schimb. Am 5+ ani experiență în dezvoltare web și proiecte open-source.</p>
+                        <div class="profile-stats">
+                            <div class="rating-circle">
+                                <div class="rating-score">4.8</div>
+                                <div class="rating-suffix">/5</div>
+                            </div>
+                            <div>
+                                <div class="rating-label">Evaluare comunitate</div>
+                                <div class="rating-stars">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star-half-o"></i>
+                                    <span class="rating-count">(234 recenzii)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 text-center">
+                    <div class="profile-side-card">
+                        <div class="side-members">Membri</div>
+                        <div class="side-count">1.2k</div>
+                        <button class="btn-follow">Urmărește</button>
+                    </div>
+                </div>
+            </div>
         </div>
+    </section>
 
+    
+    <!-- Details Hero Section End -->
+
+    <!-- Profile Content Section -->
+    <section class="profile-content spad">
         <div class="container">
             <div class="row">
-                <div class="col-lg-6">
-                    <div class="details-hero-text">
-                        <div class="label"><span>Playstation</span></div>
-                        <div class="label"><span>Hardware</span></div>
-                        <h3>Jupiter Hell, the spiritual successor to a Doom roguelike week</h3>
-                        <ul>
-                            <li>by <span>Admin</span></li>
-                            <li><i class="fa fa-clock-o"></i> Aug 01, 2019</li>
-                            <li><i class="fa fa-comment-o"></i> 20</li>
+                <div class="col-lg-8">
+                    <div class="profile-main-card">
+                        <h4>Despre mine</h4>
+                        <p>Sunt dezvoltator și educator, ajut oamenii să învețe programare prin proiecte practice. Prefer sesiuni 1-la-1, code reviews și mici provocări practice.</p>
+
+                        <div class="profile-skills">
+                            <h5>Skill-uri</h5>
+                            <div class="skills-list">
+                                <span class="skill-badge">Python</span>
+                                <span class="skill-badge">Django</span>
+                                <span class="skill-badge">JavaScript</span>
+                                <span class="skill-badge">Guitar</span>
+                                <span class="skill-badge">Photoshop</span>
+                            </div>
+                        </div>
+
+                        <div class="profile-quote">
+                            <h5>Citat aleatoriu</h5>
+                            <blockquote>“Programarea este arta de a spune povești mașinilor.” <span class="quote-author">— Ada Lovelace</span></blockquote>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="activity-panel">
+                        <h5>Activitate</h5>
+                        <ul class="activity-list">
+                            <li><i class="fa fa-clock-o"></i> Ultima activitate: 2 zile în urmă</li>
+                            <li><i class="fa fa-comments"></i> 120 conversații</li>
+                            <li><i class="fa fa-users"></i> 1.2k urmăritori</li>
                         </ul>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-    <!-- Details Hero Section End -->
-
-    <style>
-        .details-hero-section {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-overlay-image {
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 50%; /* Ajustează lățimea după preferință */
-            height: 100%;
-            z-index: 1;
-            overflow: hidden;
-        }
-
-        .overlay-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center;
-            /* Efect de transparență pentru integrare mai bună */
-            opacity: 0.9;
-
-            /* Efect de fade spre stânga pentru o tranziție mai naturală */
-            mask: linear-gradient(to left, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%);
-            -webkit-mask: linear-gradient(to left, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%);
-        }
-
-        /* Asigură-te că textul rămâne vizibil peste imaginea suprapusă */
-        .details-hero-text {
-            position: relative;
-            z-index: 2;
-        }
-
-        .container {
-            position: relative;
-            z-index: 2;
-        }
-
-        /* Efect suplimentar pentru o integrare mai bună */
-        .hero-overlay-image::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 50%);
-            pointer-events: none;
-        }
-    </style>
-    <!-- Details Hero Section End -->
-
-    <!-- Details Post Section Begin -->
-    <section class="details-post-section spad">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 p-0">
-                    <div class="details-text">
-                        <div class="dt-desc">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                                incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                                exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                                incididunt ut labore et dolore magna aliqua accusantium doloremque laudantium.</p>
-                            <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                                commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-                                dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt
-                                in. . Sed ut perspiciatis unde omnis iste natus error sit voluptatem.</p>
-                        </div>
-                        <div class="dt-overall-rating">
-                            <div class="or-heading">
-                                <div class="or-item">
-                                    <div class="or-loader">
-                                        <div class="loader-circle-wrap">
-                                            <div class="loader-circle">
-                                                <span class="circle-progress-2" data-cpid="id-5" data-cpvalue="85"
-                                                    data-cpcolor="#812ACFFF"></span>
-                                                <div class="review-point">
-                                                    <div>8.5</div>
-                                                    <span>AVERAGE SCORE</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="or-text">
-                                        <h5>Overall rating</h5>
-                                        <p>Holistic content e-tailers niches proactive blogospheres Cluetrain,
-                                            interfaces eyeballs, engage, e-business! Semantic–utilize mindshare, B2C
-                                            viral technologies functionalities intuitive real-time. Generate global
-                                            value-added podcasts, experiences value back-end blogospheres networkeffects
-                                            24/365. Sexy dot-com citizen-media extend architect bleeding-edge benchmark
-                                            dynamic.</p>
-                                    </div>
-                                </div>
-                                <div class="or-skill">
-                                    <div class="skill-item">
-                                        <p>Design</p>
-                                        <div id="bar-1" class="barfiller">
-                                            <span class="fill" data-percentage="80"></span>
-                                            <div class="tipWrap" style="display: inline;">
-                                                <span class="tip"></span>
-                                                <span class="bar-point">8.0</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="skill-item">
-                                        <p>Design</p>
-                                        <div id="bar-2" class="barfiller">
-                                            <span class="fill" data-percentage="80"></span>
-                                            <div class="tipWrap" style="display: inline;">
-                                                <span class="tip"></span>
-                                                <span class="bar-point">8.0</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="skill-item">
-                                        <p>Design</p>
-                                        <div id="bar-3" class="barfiller">
-                                            <span class="fill" data-percentage="78"></span>
-                                            <div class="tipWrap" style="display: inline;">
-                                                <span class="tip"></span>
-                                                <span class="bar-point">7.8</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="skill-item">
-                                        <p>Design</p>
-                                        <div id="bar-4" class="barfiller">
-                                            <span class="fill" data-percentage="85"></span>
-                                            <div class="tipWrap" style="display: inline;">
-                                                <span class="tip"></span>
-                                                <span class="bar-point">8.5</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="skill-item">
-                                        <p>Design</p>
-                                        <div id="bar-5" class="barfiller">
-                                            <span class="fill" data-percentage="90"></span>
-                                            <div class="tipWrap" style="display: inline;">
-                                                <span class="tip"></span>
-                                                <span class="bar-point">9.0</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="skill-item">
-                                        <p>Design</p>
-                                        <div id="bar-6" class="barfiller">
-                                            <span class="fill" data-percentage="80"></span>
-                                            <div class="tipWrap" style="display: inline;">
-                                                <span class="tip"></span>
-                                                <span class="bar-point">9.7</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="or-qualities">
-                                <div class="qualities-item">
-                                    <p>The Goods</p>
-                                    <ul>
-                                        <li><i class="fa fa-check"></i> Ut enim veniam, quis nostrud exercitation.</li>
-                                        <li><i class="fa fa-check"></i> Irure dolor in reprehenderit in voluptate velit.
-                                        </li>
-                                        <li><i class="fa fa-check"></i> Excepteur sint occaecat cupidatat proident.</li>
-                                        <li><i class="fa fa-check"></i> Sed ut perspiciatis unde omnis iste natus error.
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="qualities-item bad-item">
-                                    <p>The bads</p>
-                                    <ul>
-                                        <li><i class="fa fa-close"></i> Ut enim veniam, quis nostrud exercitation.</li>
-                                        <li><i class="fa fa-close"></i> Irure dolor in reprehenderit in voluptate velit.
-                                        </li>
-                                        <li><i class="fa fa-close"></i> Excepteur sint occaecat cupidatat proident.</li>
-                                        <li><i class="fa fa-close"></i> Sed ut perspiciatis unde omnis iste natus error.
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="or-rating">
-                                <p><span>User Rating:</span> 4.5/5 ( 23 votes )</p>
-                                <div class="rating-star">
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star-half-o"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="dt-desc-more">
-                            <p>Duis aute irure dolor inenim ad minim veniam, quis nostrud exercitation ullamco laboris
-                                nisi ut aliquip ex ea commodo conslaboris nisi ut aliquip ex ea commodo consequat. Duis
-                                aute irure Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                                tempor incididunt ut labore et dolore magna aliqua.</p>
-                        </div>
-                        <div class="dt-quote">
-                            <p>“ It's these long and meandering character arcs that make my adventures feel so epic in
-                                scale, like if Game of Thrones was a high-fantasy anime.” - <span>Steven Jobs</span></p>
-                        </div>
-                        <div class="dt-item">
-                            <p>laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure Lorem ipsum dolor sit
-                                amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore
-                                magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                                aliquip ex ea commodo consequat.</p>
-                        </div>
-                        <div class="dt-tags">
-                            <a href="#"><span>Gaming</span></a>
-                            <a href="#"><span>Platform</span></a>
-                            <a href="#"><span>Playstation</span></a>
-                            <a href="#"><span>Hardware</span></a>
-                        </div>
-<!--                        share profil page-->
-                        <div class="dt-share">
-                            <div class="ds-title">Share</div>
-                            <div class="ds-links">
-                                <a href="#" class="wide"><i class="fa fa-heart-o"></i><span>120</span></a>
-                                <a href="#"><i class="fa fa-facebook"></i></a>
-                                <a href="#"><i class="fa fa-twitter"></i></a>
-                                <a href="#"><i class="fa fa-google-plus"></i></a>
-                                <a href="#"><i class="fa fa-instagram"></i></a>
-                                <a href="#"><i class="fa fa-youtube-play"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-7">
-                    <div class="sidebar-option">
-
-                        <div th:replace="~{/fragments/social-media :: social-media}"></div>
-
-                        <div th:replace="~{/fragments/adds :: adds}"></div>
-
-                        <div th:replace="~{/fragments/trend :: trend}"></div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- Details Post Section End -->
 
     <div th:replace="~{/fragments/about :: about}"></div>
-
-
 
     <!-- Search model Begin -->
     <div class="search-model">
