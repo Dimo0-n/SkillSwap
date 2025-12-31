@@ -66,12 +66,14 @@
             background: #8b5cf6;
             color: #ffffff;
             padding: 6px 12px;
-            border-radius: 6px;
             font-size: 12px;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             margin-bottom: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+            -webkit-clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
         }
 
         .announce-title {
@@ -105,11 +107,13 @@
             background: #8b5cf6;
             color: #ffffff;
             padding: 10px 18px;
-            border-radius: 8px;
             font-size: 14px;
             font-weight: 600;
             text-decoration: none;
             transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+            -webkit-clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
         }
 
         .category-badge:hover {
@@ -275,11 +279,10 @@
         .btn-primary {
             flex: 1;
             min-width: 180px;
-            background: #8b5cf6;
+            background: linear-gradient(to bottom, #a78bfa, #8b5cf6);
             color: #ffffff;
             border: none;
             padding: 14px 24px;
-            border-radius: 8px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
@@ -288,10 +291,12 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+            -webkit-clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
         }
 
         .btn-primary:hover {
-            background: #a78bfa;
+            background: linear-gradient(to bottom, #c4b5fd, #a78bfa);
             box-shadow: 0 4px 16px rgba(139, 92, 246, 0.4);
             transform: translateY(-2px);
         }
@@ -303,7 +308,6 @@
             color: #8b5cf6;
             border: 2px solid #8b5cf6;
             padding: 12px 24px;
-            border-radius: 8px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
@@ -312,6 +316,8 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+            -webkit-clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
         }
 
         .btn-secondary:hover {
