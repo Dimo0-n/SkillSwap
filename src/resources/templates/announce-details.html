@@ -1,163 +1,528 @@
 <!DOCTYPE html>
-<html lang="ro" xmlns:th="http://www.thymeleaf.org">
+<html lang="ro">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SkillSwap | Detalii anunț</title>
-
-    <!-- Fonts & CSS (reuse site styles) -->
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800,900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Cinzel:400,700,900&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
+    <title>SkillSwap – Detalii anunț</title>
     <link rel="stylesheet" href="/css/font-awesome.min.css" type="text/css">
-    <link rel="stylesheet" href="/css/elegant-icons.css" type="text/css">
-    <link rel="stylesheet" href="/css/owl.carousel.min.css" type="text/css">
-    <link rel="stylesheet" href="/css/barfiller.css" type="text/css">
-    <link rel="stylesheet" href="/css/magnific-popup.css" type="text/css">
-    <link rel="stylesheet" href="/css/slicknav.min.css" type="text/css">
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #0b0b0f;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        .announce-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .announce-layout {
+            display: grid;
+            grid-template-columns: 55% 45%;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .announce-image-section {
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+
+        .announce-image-wrapper {
+            background: #13131a;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .announce-image-wrapper img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .announce-content {
+            background: #13131a;
+            border-radius: 16px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .announce-header {
+            margin-bottom: 32px;
+        }
+
+        .announce-badge {
+            display: inline-block;
+            background: #8b5cf6;
+            color: #ffffff;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+
+        .announce-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .announce-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            color: #b3b3b3;
+            font-size: 14px;
+        }
+
+        .announce-meta span {
+            color: #8b5cf6;
+        }
+
+        .announce-categories {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+
+        .category-badge {
+            background: #8b5cf6;
+            color: #ffffff;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .category-badge:hover {
+            background: #a78bfa;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+
+        .announce-description {
+            color: #b3b3b3;
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 40px;
+        }
+
+        .announce-description p {
+            margin-bottom: 16px;
+        }
+
+        .announce-description p:last-child {
+            margin-bottom: 0;
+        }
+
+        .offer-seek-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+            margin-bottom: 40px;
+        }
+
+        .offer-seek-item h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .offer-seek-item h3::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: #8b5cf6;
+            border-radius: 2px;
+        }
+
+        .offer-seek-list {
+            list-style: none;
+        }
+
+        .offer-seek-list li {
+            color: #b3b3b3;
+            font-size: 15px;
+            padding: 8px 0;
+            padding-left: 24px;
+            position: relative;
+        }
+
+        .offer-seek-list li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #8b5cf6;
+            font-size: 20px;
+            line-height: 1;
+        }
+
+        .author-card {
+            background: #0b0b0f;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+
+        .author-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .author-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #8b5cf6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .author-info h4 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 4px;
+        }
+
+        .author-info p {
+            font-size: 14px;
+            color: #b3b3b3;
+        }
+
+        .author-rating {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .rating-stars {
+            display: flex;
+            gap: 4px;
+        }
+
+        .rating-stars span {
+            color: #8b5cf6;
+            font-size: 14px;
+        }
+
+        .rating-text {
+            font-size: 14px;
+            color: #b3b3b3;
+        }
+
+        .author-status {
+            display: inline-block;
+            background: rgba(139, 92, 246, 0.1);
+            color: #8b5cf6;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 12px;
+        }
+
+        .author-profile-link {
+            display: inline-block;
+            margin-top: 16px;
+            color: #8b5cf6;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .author-profile-link:hover {
+            color: #a78bfa;
+        }
+
+        .announce-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            flex: 1;
+            min-width: 180px;
+            background: #8b5cf6;
+            color: #ffffff;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary:hover {
+            background: #a78bfa;
+            box-shadow: 0 4px 16px rgba(139, 92, 246, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            flex: 1;
+            min-width: 180px;
+            background: transparent;
+            color: #8b5cf6;
+            border: 2px solid #8b5cf6;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(139, 92, 246, 0.1);
+            border-color: #a78bfa;
+            color: #a78bfa;
+        }
+
+        .btn-icon {
+            width: 48px;
+            height: 48px;
+            background: #0b0b0f;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            color: #b3b3b3;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .btn-icon:hover {
+            background: #13131a;
+            border-color: #8b5cf6;
+            color: #8b5cf6;
+        }
+
+        .btn-icon.saved {
+            color: #8b5cf6;
+            border-color: #8b5cf6;
+        }
+
+        @media (max-width: 1024px) {
+            .announce-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .announce-image-section {
+                position: static;
+            }
+
+            .announce-image-wrapper {
+                max-width: 600px;
+                margin: 0 auto;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .announce-container {
+                padding: 20px 16px;
+            }
+
+            .announce-content {
+                padding: 24px;
+            }
+
+            .announce-title {
+                font-size: 24px;
+            }
+
+            .offer-seek-section {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .announce-actions {
+                flex-direction: column;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-<!-- Page Preloder -->
-<div id="preloder"><div class="loader"></div></div>
-
-<!-- Lateral menu + navbar fragments -->
 <div th:replace="~{fragments/lateral-menu :: lateral-menu}"></div>
 <div th:replace="~{/fragments/navbar :: navbar}"></div>
 
-<!-- Announce Details Section -->
-<section class="categories-grid-section spad">
-    <div class="container">
-
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="section-title">
-                    <h5>Titlul anunțului</h5>
-                </div>
+<section class="announce-container">
+    <div class="announce-layout">
+        <div class="announce-image-section">
+            <div class="announce-image-wrapper">
+                <img src="/img/skill/skill-programming.png" alt="Programare Java">
             </div>
         </div>
 
-        <div class="row">
-            <!-- Main content -->
-            <div class="col-lg-8">
-                <div class="detail-card">
-                    <div class="detail-image mb-3">
-                        <img src="/img/skill/skill-programming.png" alt="Imagine anunț" class="img-fluid rounded"/>
-                    </div>
-
-                    <div class="detail-meta mb-2">
-                        <ul>
-                            <li>by <strong class="meta-author">Autor</strong></li>
-                            <li><i class="fa fa-clock-o"></i> <span class="meta-date">data</span></li>
-                            <li><i class="fa fa-tag"></i> <span class="meta-category">Categorie</span></li>
-                        </ul>
-                    </div>
-
-                    <div class="detail-description">
-                        <p>Descrierea anunțului va apărea aici.</p>
-                    </div>
-
-                    <div class="detail-actions mt-4">
-                        <a href="/profil/" class="btn btn-outline-purple mr-2">Vezi profil</a>
-                        <a href="/messages/new" class="btn btn-purple">Contactează</a>
-                    </div>
+        <div class="announce-content">
+            <div class="announce-header">
+                <span class="announce-badge">NOU</span>
+                <h1 class="announce-title">Ofer lecții de programare Java în schimb de design grafic</h1>
+                <div class="announce-meta">
+                    <span>de</span>
+                    <strong>Andrei Popescu</strong>
+                    <span>•</span>
+                    <span>17 August 2025</span>
                 </div>
             </div>
 
-            <!-- Sidebar -->
-            <div class="col-lg-4">
-                <div class="sidebar-card mb-4 p-4 rounded">
-                    <div class="author-box text-center mb-3">
-                        <img src="/img/profil/default-profile.png" alt="Autor" class="rounded-circle" style="width:100px;height:100px;object-fit:cover;"/>
-                        <h5 class="mt-2 text-white">Autor</h5>
-                        <p class="mb-1 text-white">Membru din <span>luna</span></p>
-                        <a href="/profil/" class="btn btn-sm btn-outline-purple">Vezi profil complet</a>
-                    </div>
+            <div class="announce-categories">
+                <a href="#" class="category-badge">Ofer: Programare Java</a>
+                <a href="#" class="category-badge">Caut: Design grafic</a>
+            </div>
 
-                    <div class="contact-box mt-3">
-                        <h6 class="text-white">Detalii contact</h6>
-                        <p class="mb-1"><i class="fa fa-envelope"></i> <a href="mailto:contact@example.com">contact@example.com</a></p>
-                        <p class="mb-1"><i class="fa fa-phone"></i> <span>+40 700 000 000</span></p>
-                    </div>
+            <div class="announce-description">
+                <p>Programez de 5 ani în Java și am experiență solidă în dezvoltarea aplicațiilor backend. Caut pe cineva să mă învețe Photoshop și design grafic pentru a-mi îmbunătăți abilitățile de creare a interfețelor utilizator.</p>
+                <p>Ofer lecții practice de Java, de la baze până la concepte avansate, inclusiv Spring Framework, Hibernate și arhitectură de aplicații. În schimb, aș dori să învăț cum să creez design-uri atractive, să lucrez cu straturi în Photoshop și să înțeleg principiile de design UI/UX.</p>
+            </div>
 
-                    <div class="tags-box mt-3">
-                        <h6 class="text-white">Etichete</h6>
-                        <div>
-                            <a class="tag-pill mr-1" href="/announces-list">tag</a>
-                        </div>
-                    </div>
+            <div class="offer-seek-section">
+                <div class="offer-seek-item">
+                    <h3>Ce ofer</h3>
+                    <ul class="offer-seek-list">
+                        <li>Lecții de Java de la baze până la concepte avansate</li>
+                        <li>Spring Framework și Spring Boot</li>
+                        <li>Hibernate și lucrul cu baze de date</li>
+                        <li>Arhitectură de aplicații și best practices</li>
+                        <li>Debugging și optimizare de cod</li>
+                        <li>Sesiuni practice cu exemple reale</li>
+                        <li>Flexibilitate în program și modalitate</li>
+                    </ul>
                 </div>
 
-                <!-- Related announces (reuse cg-item cards style) -->
-                <div class="related-section">
-                    <h6 class="mb-3 text-white">Anunțuri similare</h6>
-                    <div class="row">
-                        <th:block>
-                            <div class="col-12 mb-3">
-                                <div class="cg-item" style="display:flex;gap:10px;align-items:center;">
-                                        <div class="cg-pic set-bg" style="width:100px;height:70px;overflow:hidden;flex:0 0 100px;">
-                                        <img src="/img/skill/skill-programming.png" style="width:100%;height:100%;object-fit:cover;" alt="thumb"/>
-                                    </div>
-                                    <div class="cg-text" style="flex:1;padding-left:0;">
-                                        <h6 class="mb-1 text-white"><a href="/announces/">Titlu</a></h6>
-                                        <small class="text-muted">data</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </th:block>
+                <div class="offer-seek-item">
+                    <h3>Ce caut</h3>
+                    <ul class="offer-seek-list">
+                        <li>Lucrul cu straturi în Photoshop</li>
+                        <li>Crearea de design-uri pentru interfețe web</li>
+                        <li>Principii de UI/UX design</li>
+                        <li>Workflow de design de la sketch la asset-uri</li>
+                        <li>Tehnici de compoziție și tipografie</li>
+                        <li>Optimizarea asset-urilor pentru web</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="author-card">
+                <div class="author-header">
+                    <div class="author-avatar">AP</div>
+                    <div class="author-info">
+                        <h4>Andrei Popescu</h4>
+                        <p>5 ani programare Java | Backend Developer</p>
                     </div>
                 </div>
+                <div class="author-rating">
+                    <div class="rating-stars">
+                        <span>★★★★★</span>
+                    </div>
+                    <span class="rating-text">4.8 (12 evaluări)</span>
+                </div>
+                <span class="author-status">Membru activ</span>
+                <a href="#" class="author-profile-link">Vezi profilul complet →</a>
+            </div>
+
+            <div class="announce-actions">
+                <button class="btn-primary">
+                    <i class="fa fa-envelope"></i>
+                    Trimite mesaj
+                </button>
+                <button class="btn-secondary">
+                    <i class="fa fa-handshake-o"></i>
+                    Propune schimb
+                </button>
+                <button class="btn-icon" id="saveBtn">
+                    <i class="fa fa-bookmark-o"></i>
+                </button>
             </div>
         </div>
-
     </div>
 </section>
 
-<!-- Footer fragment reused if available -->
 <div th:replace="~{/fragments/about :: about}"></div>
 
-<script src="/js/jquery-3.3.1.min.js"></script>
-<script src="/js/bootstrap.min.js"></script>
-<script src="/js/jquery.magnific-popup.min.js"></script>
-<script src="/js/circle-progress.min.js"></script>
-<script src="/js/jquery.barfiller.js"></script>
-<script src="/js/jquery.slicknav.js"></script>
-<script src="/js/owl.carousel.min.js"></script>
-<script src="/js/main.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const saveBtn = document.getElementById('saveBtn');
+        const saveIcon = saveBtn.querySelector('i');
 
-<style>
-    .detail-card { background: transparent; color: #fff; }
-    .detail-meta ul { list-style: none; padding: 0; display:flex; gap:12px; color: #bdbdbd; }
-    .detail-meta ul li { font-size: 14px; }
-    .meta-author, .meta-date, .meta-category { color: #9d4edd; font-weight:600; }
-    .detail-description p { font-size: 16px; line-height: 1.8; color: #ddd; }
-    .sidebar-card { background: rgba(255,255,255,0.03); }
-    .tag-pill { background: linear-gradient(90deg,#9d4edd,#7b2cbf); padding:6px 10px; color:white; border-radius:20px; text-decoration:none; display:inline-block; }
+        saveBtn.addEventListener('click', function() {
+            if (saveIcon.classList.contains('fa-bookmark-o')) {
+                saveIcon.classList.remove('fa-bookmark-o');
+                saveIcon.classList.add('fa-bookmark');
+                saveBtn.classList.add('saved');
+            } else {
+                saveIcon.classList.remove('fa-bookmark');
+                saveIcon.classList.add('fa-bookmark-o');
+                saveBtn.classList.remove('saved');
+            }
+        });
 
-    /* Purple button variants */
-    .btn-outline-purple { color: #cfa7ff; border-color: #9d4edd; background: transparent; }
-    .btn-outline-purple:hover { color: #fff; background: linear-gradient(90deg,#9d4edd,#7b2cbf); border-color: #7b2cbf; }
-    .btn-sm.btn-outline-purple { padding: .25rem .5rem; }
-    .btn-purple { color: #fff; background: linear-gradient(90deg,#9d4edd,#7b2cbf); border: none; }
-    .btn-purple:hover { opacity: .95; }
+        const primaryBtn = document.querySelector('.btn-primary');
+        const secondaryBtn = document.querySelector('.btn-secondary');
 
-    .comments-section .comment { background: rgba(255,255,255,0.02); padding:10px; border-radius:6px; }
+        primaryBtn.addEventListener('click', function() {
+            console.log('Trimite mesaj clicked');
+        });
 
-    /* Comments styling */
-    .section-heading { font-family: 'Cinzel', serif; font-size:28px; color:#fff; letter-spacing:1px; }
-    .comment-list { margin-top:20px; }
-    .comment-item { border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom:18px; }
-    .comment-author { font-family: 'Cinzel', serif; font-weight:700; text-transform:uppercase; color:#fff; font-size:16px; }
-    .comment-date { color:#9b9b9b; font-size:13px; margin-top:2px; }
-    .btn-reply { background:#222; color:#fff; border:none; padding:10px 16px; border-radius:2px; font-weight:700; }
-    .btn-reply:hover { background:#2b2b2b; }
-    .comment-text { color:#d0d0d0; line-height:1.8; margin-top:10px; }
-    .comment-textarea { background:rgba(255,255,255,0.02); color:#e6e6e6; border:1px solid rgba(255,255,255,0.03); height:220px; resize:none; }
-    .btn-submit { width:100%; background:#1f1f1f; color:#fff; border:none; padding:14px 20px; font-weight:700; }
-    .btn-submit:hover { background:#2a2a2a; }
-</style>
+        secondaryBtn.addEventListener('click', function() {
+            console.log('Propune schimb clicked');
+        });
+    });
+</script>
 
 </body>
+
 </html>
