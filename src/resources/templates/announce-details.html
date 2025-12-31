@@ -31,28 +31,40 @@
         }
 
         .announce-image-section {
-            position: sticky;
-            top: 20px;
-            height: fit-content;
+            position: relative;
         }
 
         .announce-image-wrapper {
-            background: #13131a;
-            border-radius: 16px;
+            position: sticky;
+            top: 20px;
+            background: #000000;
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
         }
 
         .announce-image-wrapper img {
             width: 100%;
             height: auto;
             display: block;
+            mask-image: linear-gradient(
+                to bottom,
+                black 70%,
+                transparent 100%
+            );
+            -webkit-mask-image: linear-gradient(
+                to bottom,
+                black 70%,
+                transparent 100%
+            );
+            filter: blur(0.5px);
+            transition: filter 0.3s ease;
+        }
+
+        .announce-image-wrapper:hover img {
+            filter: blur(0px);
         }
 
         .announce-content {
             background: #13131a;
-            border-radius: 16px;
             padding: 40px;
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
