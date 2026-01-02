@@ -99,6 +99,7 @@
     grid-template-columns: 1fr 420px;
     gap: 32px;
     margin-bottom: 80px;
+    padding-top: 40px;
     animation: fadeInUp 0.6s ease-out 0.6s both;
 }
 
