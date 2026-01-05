@@ -64,27 +64,37 @@
 
         function updateActiveSection() {
             const scrollPos = $(window).scrollTop() + 200; // Offset for sticky header
-            
+
             let currentActive = null;
-            
+
             sections.forEach(function(section) {
                 const $section = $(section.element);
                 if ($section.length) {
                     const sectionTop = $section.offset().top;
                     const sectionHeight = $section.outerHeight();
-                    
+
                     if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
                         currentActive = section.id;
                     }
                 }
             });
 
-            if (currentActive && currentActive !== state.currentSection) {
-                state.currentSection = currentActive;
+            // Dacă s-a detectat o secțiune la scroll
+            if (currentActive) {
+                if (currentActive !== state.currentSection) {
+                    state.currentSection = currentActive;
+                    updateActiveStep();
+                    updateProgress();
+                }
+            }
+                // Fallback: la load (sau când nu e nimic detectat),
+            // păstrează secțiunea inițială (Identitate)
+            else {
                 updateActiveStep();
                 updateProgress();
             }
         }
+
 
         function requestTick() {
             if (!ticking) {
