@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ro" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Completează-ți profilul SkillSwap">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Completează-ți profilul - SkillSwap</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800,900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Cinzel:400,700,900&display=swap" rel="stylesheet">
+
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/profile-complete.css" type="text/css">
+</head>
+
+<body>
+    <!-- Page Preloder -->
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
+
+    <div th:replace="~{fragments/lateral-menu :: lateral-menu}"></div>
+    <div th:replace="~{/fragments/navbar :: navbar}"></div>
+
+    <!-- Profile Completion Section -->
+    <section class="profile-complete-section">
+        <div class="profile-complete-wrapper">
+            
+            <!-- LEFT SIDEBAR - STEP NAVIGATION (STICKY) -->
+            <aside class="step-navigation">
+                <div class="step-nav-inner">
+                    <h3 class="step-nav-title">Progres</h3>
+                    <nav class="step-list">
+                        <a href="#section-identity" class="step-item" data-section="identity">
+                            <span class="step-number">1</span>
+                            <span class="step-label">Identitate</span>
+                            <i class="fa fa-check step-check" style="display: none;"></i>
+                        </a>
+                        <a href="#section-bio" class="step-item" data-section="bio">
+                            <span class="step-number">2</span>
+                            <span class="step-label">Bio</span>
+                            <i class="fa fa-check step-check" style="display: none;"></i>
+                        </a>
+                        <a href="#section-skills" class="step-item" data-section="skills">
+                            <span class="step-number">3</span>
+                            <span class="step-label">Skill-uri</span>
+                            <i class="fa fa-check step-check" style="display: none;"></i>
+                        </a>
+                        <a href="#section-description" class="step-item" data-section="description">
+                            <span class="step-number">4</span>
+                            <span class="step-label">Descriere</span>
+                            <i class="fa fa-check step-check" style="display: none;"></i>
+                        </a>
+                        <a href="#section-availability" class="step-item" data-section="availability">
+                            <span class="step-number">5</span>
+                            <span class="step-label">Disponibilitate</span>
+                            <i class="fa fa-check step-check" style="display: none;"></i>
+                        </a>
+                        <a href="#section-strengths" class="step-item" data-section="strengths">
+                            <span class="step-number">6</span>
+                            <span class="step-label">Trăsături</span>
+                            <i class="fa fa-check step-check" style="display: none;"></i>
+                        </a>
+                        <a href="#section-settings" class="step-item" data-section="settings">
+                            <span class="step-number">7</span>
+                            <span class="step-label">Setări</span>
+                            <i class="fa fa-check step-check" style="display: none;"></i>
+                        </a>
+                    </nav>
+                </div>
+            </aside>
+
+            <!-- MAIN CONTENT - CARD-BASED SECTIONS -->
+            <main class="profile-content">
+                
+                <!-- Introduction Header -->
+                <div class="intro-header">
+                    <h1 class="page-title">Completează-ți profilul</h1>
+                    <p class="page-subtitle">
+                        Profilul tău reprezintă identitatea ta profesională pe SkillSwap. 
+                        Fiecare secțiune te ajută să te prezinti clar și autentic.
+                    </p>
+                </div>
+
+                <!-- 1. BASIC IDENTITY - LARGE CARD -->
+                <section id="section-identity" class="profile-card card-large">
+                    <h2 class="card-title">Identitate de bază</h2>
+                    <p class="card-help">Cine ești tu? Definește-te în mod clar și autentic.</p>
+                    
+                    <div class="form-group">
+                        <label for="profilePicture" class="form-label">Fotografie de profil</label>
+                        <div class="picture-upload-area">
+                            <input type="file" id="profilePicture" accept="image/*" class="picture-input">
+                            <div class="picture-preview" id="picturePreview">
+                                <i class="fa fa-user"></i>
+                                <span>Fă click pentru a încărca</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="displayName" class="form-label">Nume de afișare</label>
+                        <input type="text" id="displayName" class="form-control" 
+                               placeholder="Ex: Alex M. sau Alex Mihai">
+                        <small class="form-help">Poți folosi inițiale sau nume complet. Alege ce te reprezintă.</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="professionalTitle" class="form-label">Titlu profesional</label>
+                        <input type="text" id="professionalTitle" class="form-control" 
+                               placeholder="Ex: Frontend Developer & UI Enthusiast">
+                        <small class="form-help">O descriere scurtă și clară a rolului tău.</small>
+                    </div>
+                </section>
+
+                <!-- 2. SHORT BIO - MEDIUM CARD -->
+                <section id="section-bio" class="profile-card card-medium">
+                    <h2 class="card-title">Bio scurt</h2>
+                    <p class="card-help">Cum te prezinți? Acest text va apărea direct sub numele tău în profil.</p>
+                    
+                    <div class="form-group">
+                        <label for="shortBio" class="form-label">Descriere scurtă</label>
+                        <textarea id="shortBio" class="form-control" rows="3" 
+                                  maxlength="200" placeholder="2-3 propoziții, personale dar profesionale..."></textarea>
+                        <div class="char-counter">
+                            <span id="bioCharCount">0</span> / 200 caractere
+                        </div>
+                        <small class="form-help">Fii concis și autentic. Ce vrei să știe despre tine?</small>
+                    </div>
+                </section>
+
+                <!-- 3. CORE SKILLS - MEDIUM CARD -->
+                <section id="section-skills" class="profile-card card-medium">
+                    <h2 class="card-title">Competențe principale</h2>
+                    <p class="card-help">Ce oferi? Selectează doar competențele principale, relevante.</p>
+                    
+                    <div class="form-group">
+                        <label for="skillInput" class="form-label">Adaugă competențe</label>
+                        <div class="skill-input-group">
+                            <input type="text" id="skillInput" class="form-control" 
+                                   placeholder="Ex: JavaScript, Design UI/UX, Marketing Digital">
+                            <button type="button" id="addSkillBtn" class="btn-add-skill">
+                                <i class="fa fa-plus"></i> Adaugă
+                            </button>
+                        </div>
+                        <div class="skills-container" id="skillsContainer">
+                            <!-- Skills will be added here as badges -->
+                        </div>
+                        <small class="form-help">Evită zgomotul. Alege doar competențele principale.</small>
+                    </div>
+                </section>
+
+                <!-- 4. DETAILED DESCRIPTION - EXTRA LARGE CARD -->
+                <section id="section-description" class="profile-card card-extra-large">
+                    <h2 class="card-title">Descriere detaliată</h2>
+                    <p class="card-help">Stilul tău de lucru. Descrie ce oferi, cum lucrezi, pentru cine ești potrivit.</p>
+                    
+                    <div class="form-group">
+                        <label for="detailedDescription" class="form-label">Descriere completă</label>
+                        <textarea id="detailedDescription" class="form-control" rows="10" 
+                                  placeholder="Descrie:
+- Ce oferi exact
+- Cum lucrezi
+- Pentru cine ești potrivit
+- Pentru cine NU ești potrivit
+
+Fii clar și direct. Nu e nevoie de marketing, ci de claritate."></textarea>
+                        <small class="form-help">Această secțiune ajută la filtrare și claritate, nu la promovare.</small>
+                    </div>
+                </section>
+
+                <!-- 5. AVAILABILITY & LIMITATIONS - MEDIUM CARD -->
+                <section id="section-availability" class="profile-card card-medium">
+                    <h2 class="card-title">Disponibilitate și limitări</h2>
+                    <p class="card-help">Când și în ce condiții lucrezi? Este esențial și normal să ai limitări.</p>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Disponibilitate</label>
+                        <div class="availability-options">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="morning" value="morning">
+                                <span>Dimineața</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="afternoon" value="afternoon">
+                                <span>După-amiaza</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="evening" value="evening">
+                                <span>Seara</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="weekend" value="weekend">
+                                <span>Weekend</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="limitationsInput" class="form-label">Limitări</label>
+                        <div class="limitations-input-group">
+                            <input type="text" id="limitationsInput" class="form-control" 
+                                   placeholder="Ex: Nu ofer lecții avansate">
+                            <button type="button" id="addLimitationBtn" class="btn-add-skill">
+                                <i class="fa fa-plus"></i> Adaugă
+                            </button>
+                        </div>
+                        <div class="limitations-container" id="limitationsContainer">
+                            <!-- Limitations will be added here -->
+                        </div>
+                        <small class="form-help">Limitările sunt normale și esențiale. Fii clar despre ce nu oferi.</small>
+                    </div>
+                </section>
+
+                <!-- 6. STRENGTHS / WORK TRAITS - MEDIUM CARD -->
+                <section id="section-strengths" class="profile-card card-medium">
+                    <h2 class="card-title">Puncte forte / Trăsături de lucru</h2>
+                    <p class="card-help">Cum ești perceput? Acestea vor apărea ca evidențieri pozitive pe profil.</p>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Selectează din opțiuni</label>
+                        <div class="strengths-options">
+                            <label class="checkbox-label">
+                                <input type="checkbox" class="strength-checkbox" value="clear-communication">
+                                <span>Comunicare clară</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" class="strength-checkbox" value="simple-explanations">
+                                <span>Explic pe înțelesul tuturor</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" class="strength-checkbox" value="reliable-schedule">
+                                <span>Serios cu programările</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" class="strength-checkbox" value="easy-collaboration">
+                                <span>Găsesc limbă comună cu fiecare</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" class="strength-checkbox" value="patient">
+                                <span>Răbdător și înțelegător</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" class="strength-checkbox" value="organized">
+                                <span>Organizat și structurat</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="customStrengthInput" class="form-label">Adaugă trăsătură personalizată</label>
+                        <div class="skill-input-group">
+                            <input type="text" id="customStrengthInput" class="form-control" 
+                                   placeholder="Ex: Răspund rapid la mesaje">
+                            <button type="button" id="addCustomStrengthBtn" class="btn-add-skill">
+                                <i class="fa fa-plus"></i> Adaugă
+                            </button>
+                        </div>
+                        <div class="custom-strengths-container" id="customStrengthsContainer">
+                            <!-- Custom strengths will be added here -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 7. VISIBILITY & PRIVACY SETTINGS - SMALL CARD -->
+                <section id="section-settings" class="profile-card card-small">
+                    <h2 class="card-title">Vizibilitate și setări de confidențialitate</h2>
+                    <p class="card-help">Controlează cine poate vedea profilul tău și cum te pot contacta.</p>
+                    
+                    <div class="form-group">
+                        <label class="toggle-label">
+                            <input type="checkbox" id="profilePublic" checked>
+                            <span class="toggle-slider"></span>
+                            <span class="toggle-text">Profil public</span>
+                        </label>
+                        <small class="form-help">Dacă este dezactivat, doar tu poți vedea profilul.</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="toggle-label">
+                            <input type="checkbox" id="allowDirectContact" checked>
+                            <span class="toggle-slider"></span>
+                            <span class="toggle-text">Permite contact direct</span>
+                        </label>
+                        <small class="form-help">Alții te pot contacta direct prin platformă.</small>
+                    </div>
+                </section>
+
+                <!-- 8. FINAL ACTIONS -->
+                <section class="profile-card card-actions">
+                    <div class="form-actions">
+                        <button type="button" id="saveProfileBtn" class="btn-primary">
+                            <i class="fa fa-save"></i> Salvează profilul
+                        </button>
+                        <button type="button" id="saveDraftBtn" class="btn-secondary">
+                            <i class="fa fa-file-text-o"></i> Salvează ca draft
+                        </button>
+                    </div>
+                    <p class="reassurance-text">
+                        <i class="fa fa-info-circle"></i> 
+                        Profilul poate fi editat oricând mai târziu.
+                    </p>
+                </section>
+
+            </main>
+
+        </div>
+    </section>
+
+    <!-- Success Message Modal -->
+    <div id="successModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <i class="fa fa-check-circle"></i>
+            <h3>Profil salvat cu succes!</h3>
+            <p>Datele tale au fost salvate. Poți edita profilul oricând.</p>
+            <button type="button" class="btn-primary" onclick="closeSuccessModal()">Înțeles</button>
+        </div>
+    </div>
+
+    <!-- Mobile Progress Indicator -->
+    <div class="mobile-progress" style="display: none;">
+        <span class="progress-text">Pasul <span id="currentStep">1</span> din <span id="totalSteps">7</span></span>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+    </div>
+
+    <!-- Js Plugins -->
+    <script src="/js/jquery-3.3.1.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/profile-complete.js"></script>
+</body>
+
+</html>

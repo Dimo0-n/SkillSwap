@@ -1,0 +1,746 @@
+/* ============================================
+   PROFILE COMPLETION PAGE - THREE COLUMN LAYOUT
+   ============================================ */
+
+/* Base Dark Theme */
+.profile-complete-section {
+    background: #000000;
+    min-height: 100vh;
+    padding: 120px 0 80px;
+    color: #ffffff;
+}
+
+.profile-complete-wrapper {
+    display: grid;
+    grid-template-columns: 20% 80%;
+    gap: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    position: relative;
+}
+
+/* ============================================
+   LEFT SIDEBAR - STEP NAVIGATION (STICKY)
+   ============================================ */
+
+.step-navigation {
+    position: relative;
+}
+
+.step-nav-inner {
+    position: sticky;
+    top: 140px;
+    padding: 2rem 0;
+}
+
+.step-nav-title {
+    font-family: "Cinzel", serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(129, 42, 207, 0.2);
+}
+
+.step-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.step-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #a0a0b8;
+    font-family: "Montserrat", sans-serif;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.step-item:hover {
+    background: rgba(129, 42, 207, 0.1);
+    color: #c4c4c4;
+}
+
+.step-item.active {
+    background: rgba(125, 44, 191, 0.15);
+    color: #9d4edd;
+    border-left: 3px solid #7b2cbf;
+}
+
+.step-item.completed {
+    color: #7b2cbf;
+}
+
+.step-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(129, 42, 207, 0.2);
+    color: #a0a0b8;
+    font-size: 12px;
+    font-weight: 600;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+
+.step-item.active .step-number {
+    background: linear-gradient(135deg, #7b2cbf, #5a189a);
+    color: #ffffff;
+}
+
+.step-item.completed .step-number {
+    display: none;
+}
+
+.step-label {
+    flex: 1;
+}
+
+.step-check {
+    color: #7b2cbf;
+    font-size: 14px;
+    margin-left: auto;
+}
+
+.step-item.completed .step-check {
+    display: inline-block !important;
+}
+
+/* ============================================
+   MAIN CONTENT - CARD-BASED SECTIONS
+   ============================================ */
+
+.profile-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+}
+
+.intro-header {
+    margin-bottom: 1rem;
+}
+
+.page-title {
+    font-family: "Cinzel", serif;
+    font-size: 42px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #c77dff, #9d4edd);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.page-subtitle {
+    font-family: "Montserrat", sans-serif;
+    font-size: 16px;
+    color: #c4c4c4;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Card Base Styles */
+.profile-card {
+    background: #1a1a1a;
+    border-radius: 16px;
+    padding: 2.5rem 3rem;
+    border: 1px solid rgba(129, 42, 207, 0.12);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+    transition: all 0.3s ease;
+    scroll-margin-top: 140px;
+}
+
+.profile-card:hover {
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+    border-color: rgba(129, 42, 207, 0.2);
+}
+
+/* Visual Hierarchy - Card Sizes */
+.card-large {
+    padding: 3rem 3.5rem;
+}
+
+.card-medium {
+    padding: 2.5rem 3rem;
+}
+
+.card-extra-large {
+    padding: 3.5rem 4rem;
+}
+
+.card-small {
+    padding: 2rem 2.5rem;
+    background: rgba(26, 26, 26, 0.6);
+    border-color: rgba(129, 42, 207, 0.08);
+}
+
+.card-actions {
+    text-align: center;
+    background: linear-gradient(135deg, rgba(125, 44, 191, 0.1), rgba(90, 24, 154, 0.05));
+    border-color: rgba(125, 44, 191, 0.2);
+}
+
+/* Typography */
+.card-title {
+    font-family: "Cinzel", serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 0.5rem;
+}
+
+.card-small .card-title {
+    font-size: 22px;
+}
+
+.card-help {
+    font-family: "Montserrat", sans-serif;
+    font-size: 14px;
+    color: #a0a0b8;
+    margin-bottom: 2rem;
+    line-height: 1.5;
+}
+
+/* Form Elements */
+.form-group {
+    margin-bottom: 2rem;
+}
+
+.form-label {
+    display: block;
+    font-family: "Montserrat", sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: #ffffff;
+    margin-bottom: 0.75rem;
+}
+
+.form-control {
+    width: 100%;
+    background: #0f0f0f;
+    border: 1px solid rgba(129, 42, 207, 0.12);
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-family: "Montserrat", sans-serif;
+    font-size: 15px;
+    color: #ffffff;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #7b2cbf;
+    box-shadow: 0 0 0 3px rgba(129, 42, 207, 0.15);
+    background: #0a0a0a;
+}
+
+.form-control::placeholder {
+    color: #666;
+}
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-help {
+    display: block;
+    font-family: "Montserrat", sans-serif;
+    font-size: 13px;
+    color: #a0a0b8;
+    margin-top: 0.5rem;
+    line-height: 1.4;
+}
+
+/* Picture Upload */
+.picture-upload-area {
+    margin-bottom: 1rem;
+}
+
+.picture-input {
+    display: none;
+}
+
+.picture-preview {
+    width: 160px;
+    height: 160px;
+    border-radius: 12px;
+    border: 2px dashed rgba(129, 42, 207, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #0f0f0f;
+    position: relative;
+    overflow: hidden;
+}
+
+.picture-preview:hover {
+    border-color: #7b2cbf;
+    background: #0a0a0a;
+}
+
+.picture-preview i {
+    font-size: 48px;
+    color: #7b2cbf;
+    margin-bottom: 0.5rem;
+}
+
+.picture-preview span {
+    font-family: "Montserrat", sans-serif;
+    font-size: 13px;
+    color: #a0a0b8;
+    text-align: center;
+    padding: 0 1rem;
+}
+
+.picture-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* Character Counter */
+.char-counter {
+    text-align: right;
+    font-family: "Montserrat", sans-serif;
+    font-size: 12px;
+    color: #a0a0b8;
+    margin-top: 0.5rem;
+}
+
+/* Skills Management */
+.skill-input-group,
+.limitations-input-group {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.skill-input-group .form-control,
+.limitations-input-group .form-control {
+    flex: 1;
+}
+
+.btn-add-skill {
+    background: linear-gradient(135deg, #7b2cbf, #5a189a);
+    border: none;
+    border-radius: 12px;
+    padding: 14px 24px;
+    color: #ffffff;
+    font-family: "Montserrat", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.btn-add-skill:hover {
+    background: linear-gradient(135deg, #9d4edd, #7b2cbf);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(125, 44, 191, 0.3);
+}
+
+.btn-add-skill:active {
+    transform: translateY(0);
+}
+
+.skills-container,
+.limitations-container,
+.custom-strengths-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    min-height: 40px;
+}
+
+.skill-badge,
+.limitation-badge,
+.strength-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, #7b2cbf, #5a189a);
+    color: #ffffff;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-family: "Montserrat", sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(125, 44, 191, 0.2);
+}
+
+.skill-badge .remove-btn,
+.limitation-badge .remove-btn,
+.strength-badge .remove-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    color: #ffffff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    transition: all 0.2s ease;
+    padding: 0;
+    line-height: 1;
+}
+
+.skill-badge .remove-btn:hover,
+.limitation-badge .remove-btn:hover,
+.strength-badge .remove-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+/* Availability Options */
+.availability-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    font-family: "Montserrat", sans-serif;
+    font-size: 14px;
+    color: #ffffff;
+    user-select: none;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: #7b2cbf;
+}
+
+.checkbox-label span {
+    color: #c4c4c4;
+}
+
+.checkbox-label:hover span {
+    color: #ffffff;
+}
+
+/* Strengths Options */
+.strengths-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Toggle Switches */
+.toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    margin-bottom: 1rem;
+}
+
+.toggle-label input[type="checkbox"] {
+    display: none;
+}
+
+.toggle-slider {
+    position: relative;
+    width: 50px;
+    height: 26px;
+    background: #0f0f0f;
+    border: 1px solid rgba(129, 42, 207, 0.3);
+    border-radius: 26px;
+    transition: all 0.3s ease;
+}
+
+.toggle-slider::before {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #666;
+    top: 2px;
+    left: 2px;
+    transition: all 0.3s ease;
+}
+
+.toggle-label input[type="checkbox"]:checked + .toggle-slider {
+    background: linear-gradient(135deg, #7b2cbf, #5a189a);
+    border-color: #7b2cbf;
+}
+
+.toggle-label input[type="checkbox"]:checked + .toggle-slider::before {
+    transform: translateX(24px);
+    background: #ffffff;
+}
+
+.toggle-text {
+    font-family: "Montserrat", sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: #ffffff;
+}
+
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.btn-primary,
+.btn-secondary {
+    padding: 16px 32px;
+    border-radius: 12px;
+    font-family: "Montserrat", sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #7b2cbf, #5a189a);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(125, 44, 191, 0.3);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #9d4edd, #7b2cbf);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(125, 44, 191, 0.4);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-secondary {
+    background: #1a1a1a;
+    color: #ffffff;
+    border: 1px solid rgba(129, 42, 207, 0.3);
+}
+
+.btn-secondary:hover {
+    background: #0f0f0f;
+    border-color: #7b2cbf;
+}
+
+.reassurance-text {
+    font-family: "Montserrat", sans-serif;
+    font-size: 13px;
+    color: #a0a0b8;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.reassurance-text i {
+    color: #7b2cbf;
+}
+
+/* Success Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+}
+
+.modal-content {
+    background: #1a1a1a;
+    border: 1px solid rgba(129, 42, 207, 0.3);
+    border-radius: 16px;
+    padding: 3rem;
+    text-align: center;
+    max-width: 400px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+}
+
+.modal-content i {
+    font-size: 64px;
+    color: #7b2cbf;
+    margin-bottom: 1rem;
+}
+
+.modal-content h3 {
+    font-family: "Cinzel", serif;
+    font-size: 24px;
+    color: #ffffff;
+    margin-bottom: 1rem;
+}
+
+.modal-content p {
+    font-family: "Montserrat", sans-serif;
+    font-size: 14px;
+    color: #c4c4c4;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.modal-content .btn-primary {
+    width: 100%;
+    justify-content: center;
+}
+
+/* ============================================
+   MOBILE ADAPTATION
+   ============================================ */
+
+@media (max-width: 1200px) {
+    .profile-complete-wrapper {
+        grid-template-columns: 18% 82%;
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 992px) {
+    .profile-complete-wrapper {
+        grid-template-columns: 1fr;
+        gap: 0;
+        padding: 0 1rem;
+    }
+
+    .step-navigation {
+        display: none;
+    }
+
+    .mobile-progress {
+        display: block !important;
+        position: sticky;
+        top: 100px;
+        background: #0a0a0a;
+        padding: 1rem;
+        border-bottom: 1px solid rgba(129, 42, 207, 0.2);
+        z-index: 100;
+    }
+
+    .progress-text {
+        font-family: "Montserrat", sans-serif;
+        font-size: 14px;
+        color: #c4c4c4;
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+
+    .progress-bar {
+        width: 100%;
+        height: 4px;
+        background: rgba(129, 42, 207, 0.2);
+        border-radius: 2px;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(135deg, #7b2cbf, #5a189a);
+        transition: width 0.3s ease;
+        width: 14.28%; /* 1/7 */
+    }
+
+    .profile-content {
+        gap: 2rem;
+    }
+
+    .profile-card {
+        padding: 2rem 1.5rem;
+        scroll-margin-top: 120px;
+    }
+
+    .card-large,
+    .card-medium,
+    .card-extra-large,
+    .card-small {
+        padding: 2rem 1.5rem;
+    }
+
+    .page-title {
+        font-size: 32px;
+    }
+
+    .card-title {
+        font-size: 24px;
+    }
+
+    .skill-input-group,
+    .limitations-input-group {
+        flex-direction: column;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .profile-complete-section {
+        padding: 100px 0 60px;
+    }
+
+    .profile-card {
+        padding: 1.5rem 1rem;
+    }
+
+    .card-large,
+    .card-medium,
+    .card-extra-large,
+    .card-small {
+        padding: 1.5rem 1rem;
+    }
+
+    .page-title {
+        font-size: 28px;
+    }
+
+    .card-title {
+        font-size: 20px;
+    }
+}
