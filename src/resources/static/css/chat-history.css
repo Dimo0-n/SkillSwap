@@ -300,6 +300,23 @@
     color: var(--text-primary);
 }
 
+.call-button.disabled {
+    background: var(--input-bg);
+    opacity: 0.5;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.call-button.disabled:hover {
+    background: var(--input-bg);
+    transform: none;
+    box-shadow: none;
+}
+
+.call-button.disabled i {
+    color: var(--text-secondary);
+}
+
 /* Messages Container */
 .messages-container {
     flex: 1;

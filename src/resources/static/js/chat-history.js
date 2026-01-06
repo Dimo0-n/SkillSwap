@@ -169,6 +169,7 @@ function updateChatHeader(userName, userAvatar, userStatus) {
     const headerAvatar = document.getElementById('chatHeaderAvatar');
     const headerStatus = document.getElementById('chatHeaderStatus');
     const headerStatusText = document.getElementById('chatHeaderStatusText');
+    const callButton = document.getElementById('startCallButton');
 
     if (headerName) headerName.textContent = userName;
     if (headerAvatar) headerAvatar.src = userAvatar;
@@ -180,6 +181,17 @@ function updateChatHeader(userName, userAvatar, userStatus) {
     
     if (headerStatusText) {
         headerStatusText.textContent = userStatus === 'online' ? 'Online' : 'Offline';
+    }
+
+    // Update call button state based on user status
+    if (callButton) {
+        if (userStatus === 'online') {
+            callButton.classList.remove('disabled');
+            callButton.disabled = false;
+        } else {
+            callButton.classList.add('disabled');
+            callButton.disabled = true;
+        }
     }
 }
 
@@ -345,11 +357,30 @@ function initializeChatHistory() {
     const callButton = document.getElementById('startCallButton');
     if (callButton) {
         callButton.addEventListener('click', function() {
+            // Don't allow call if button is disabled (user offline)
+            if (this.disabled || this.classList.contains('disabled')) {
+                return;
+            }
             // Mock: Just show a console message
             // In a real implementation, this would initiate a video call/meeting
             console.log('Initiating video call/meeting...');
             // Example: window.location.href = '/meeting?userId=' + currentUserId;
         });
+    }
+
+    // Initialize call button state based on first conversation
+    const firstConv = document.querySelector('.conversation-item');
+    if (firstConv) {
+        const userStatus = firstConv.getAttribute('data-user-status');
+        if (callButton) {
+            if (userStatus === 'online') {
+                callButton.classList.remove('disabled');
+                callButton.disabled = false;
+            } else {
+                callButton.classList.add('disabled');
+                callButton.disabled = true;
+            }
+        }
     }
 }
 
