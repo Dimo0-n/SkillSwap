@@ -340,10 +340,22 @@ function initializeChatHistory() {
             }
         });
     }
+
+    // Handle call button click (mock - ready for backend integration)
+    const callButton = document.getElementById('startCallButton');
+    if (callButton) {
+        callButton.addEventListener('click', function() {
+            // Mock: Just show a console message
+            // In a real implementation, this would initiate a video call/meeting
+            console.log('Initiating video call/meeting...');
+            // Example: window.location.href = '/meeting?userId=' + currentUserId;
+        });
+    }
 }
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
     initializeChatHistory();
 });
+
 
