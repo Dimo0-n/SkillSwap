@@ -62,4 +62,10 @@ public class HomeController {
         return "jitsi-meet";
     }
 
+    @GetMapping("/chat-history")
+    public String chatHistory(Model model){
+        model.addAttribute("page", "chat-history");
+        return "chat-history";
+    }
+
 }

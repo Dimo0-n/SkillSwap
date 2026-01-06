@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zxx" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="SkillSwap Chat History">
+    <meta name="keywords" content="chat, messages, skillswap">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Chat History - SkillSwap</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800,900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Cinzel:400,700,900&display=swap" rel="stylesheet">
+
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="/css/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/barfiller.css" type="text/css">
+    <link rel="stylesheet" href="/css/magnific-popup.css" type="text/css">
+    <link rel="stylesheet" href="/css/slicknav.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/chat-history.css" type="text/css">
+</head>
+
+<body>
+    <!-- Page Preloder -->
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
+
+    <div th:replace="~{fragments/lateral-menu :: lateral-menu}"></div>
+
+    <div th:replace="~{/fragments/navbar :: navbar}"></div>
+
+    <!-- Chat History Section Begin -->
+    <section class="chat-history-section spad">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="chat-history-container">
+                        <!-- Sidebar - Conversations List -->
+                        <div class="chat-sidebar">
+                            <!-- Search Bar -->
+                            <div class="chat-search-wrapper">
+                                <div class="chat-search-input-wrapper">
+                                    <i class="fa fa-search chat-search-icon"></i>
+                                    <input type="text" 
+                                           id="conversationSearch" 
+                                           class="chat-search-input" 
+                                           placeholder="Search conversations…">
+                                </div>
+                            </div>
+
+                            <!-- Conversations List -->
+                            <div class="conversations-list" id="conversationsList">
+                                <!-- Conversation Item 1 -->
+                                <div class="conversation-item active" data-conversation-id="1" data-user-name="Maria Popescu" data-user-avatar="/img/details/comment/comment-1.jpg" data-user-status="online">
+                                    <div class="conversation-avatar">
+                                        <img src="/img/details/comment/comment-1.jpg" alt="Maria Popescu">
+                                        <span class="status-indicator status-online"></span>
+                                    </div>
+                                    <div class="conversation-content">
+                                        <div class="conversation-header">
+                                            <span class="conversation-name">Maria Popescu</span>
+                                            <span class="conversation-time">14:32</span>
+                                        </div>
+                                        <div class="conversation-preview">Mulțumesc pentru ajutor! Totul e clar acum.</div>
+                                    </div>
+                                    <span class="unread-badge">2</span>
+                                </div>
+
+                                <!-- Conversation Item 2 -->
+                                <div class="conversation-item" data-conversation-id="2" data-user-name="Ion Ionescu" data-user-avatar="/img/details/comment/comment-2.jpg" data-user-status="offline">
+                                    <div class="conversation-avatar">
+                                        <img src="/img/details/comment/comment-2.jpg" alt="Ion Ionescu">
+                                        <span class="status-indicator status-offline"></span>
+                                    </div>
+                                    <div class="conversation-content">
+                                        <div class="conversation-header">
+                                            <span class="conversation-name">Ion Ionescu</span>
+                                            <span class="conversation-time">Ieri</span>
+                                        </div>
+                                        <div class="conversation-preview">Poți să-mi explici cum funcționează Spring Boot?</div>
+                                    </div>
+                                </div>
+
+                                <!-- Conversation Item 3 -->
+                                <div class="conversation-item" data-conversation-id="3" data-user-name="Ana Dumitrescu" data-user-avatar="/img/details/comment/comment-3.jpg" data-user-status="online">
+                                    <div class="conversation-avatar">
+                                        <img src="/img/details/comment/comment-3.jpg" alt="Ana Dumitrescu">
+                                        <span class="status-indicator status-online"></span>
+                                    </div>
+                                    <div class="conversation-content">
+                                        <div class="conversation-header">
+                                            <span class="conversation-name">Ana Dumitrescu</span>
+                                            <span class="conversation-time">12:15</span>
+                                        </div>
+                                        <div class="conversation-preview">Perfect! Ne vedem mâine la ora 10.</div>
+                                    </div>
+                                </div>
+
+                                <!-- Conversation Item 4 -->
+                                <div class="conversation-item" data-conversation-id="4" data-user-name="George Marinescu" data-user-avatar="/img/details/comment/comment-1.jpg" data-user-status="offline">
+                                    <div class="conversation-avatar">
+                                        <img src="/img/details/comment/comment-1.jpg" alt="George Marinescu">
+                                        <span class="status-indicator status-offline"></span>
+                                    </div>
+                                    <div class="conversation-content">
+                                        <div class="conversation-header">
+                                            <span class="conversation-name">George Marinescu</span>
+                                            <span class="conversation-time">Acum 3 zile</span>
+                                        </div>
+                                        <div class="conversation-preview">Salut! Ai timp să discutăm despre React?</div>
+                                    </div>
+                                    <span class="unread-badge">1</span>
+                                </div>
+
+                                <!-- Conversation Item 5 -->
+                                <div class="conversation-item" data-conversation-id="5" data-user-name="Elena Constantinescu" data-user-avatar="/img/details/comment/comment-2.jpg" data-user-status="online">
+                                    <div class="conversation-avatar">
+                                        <img src="/img/details/comment/comment-2.jpg" alt="Elena Constantinescu">
+                                        <span class="status-indicator status-online"></span>
+                                    </div>
+                                    <div class="conversation-content">
+                                        <div class="conversation-header">
+                                            <span class="conversation-name">Elena Constantinescu</span>
+                                            <span class="conversation-time">Acum 5 zile</span>
+                                        </div>
+                                        <div class="conversation-preview">Mulțumesc mult pentru tutorial!</div>
+                                    </div>
+                                </div>
+
+                                <!-- Conversation Item 6 -->
+                                <div class="conversation-item" data-conversation-id="6" data-user-name="Mihai Radu" data-user-avatar="/img/details/comment/comment-3.jpg" data-user-status="offline">
+                                    <div class="conversation-avatar">
+                                        <img src="/img/details/comment/comment-3.jpg" alt="Mihai Radu">
+                                        <span class="status-indicator status-offline"></span>
+                                    </div>
+                                    <div class="conversation-content">
+                                        <div class="conversation-header">
+                                            <span class="conversation-name">Mihai Radu</span>
+                                            <span class="conversation-time">Săptămâna trecută</span>
+                                        </div>
+                                        <div class="conversation-preview">Poți să-mi recomanzi niște resurse pentru JavaScript?</div>
+                                    </div>
+                                </div>
+
+                                <!-- Conversation Item 7 -->
+                                <div class="conversation-item" data-conversation-id="7" data-user-name="Andreea Stan" data-user-avatar="/img/details/comment/comment-1.jpg" data-user-status="online">
+                                    <div class="conversation-avatar">
+                                        <img src="/img/details/comment/comment-1.jpg" alt="Andreea Stan">
+                                        <span class="status-indicator status-online"></span>
+                                    </div>
+                                    <div class="conversation-content">
+                                        <div class="conversation-header">
+                                            <span class="conversation-name">Andreea Stan</span>
+                                            <span class="conversation-time">Săptămâna trecută</span>
+                                        </div>
+                                        <div class="conversation-preview">Excelent! Chiar am nevoie de ajutor cu CSS.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Chat Area -->
+                        <div class="chat-area">
+                            <!-- Chat Header -->
+                            <div class="chat-header" id="chatHeader">
+                                <div class="chat-header-user">
+                                    <div class="chat-header-avatar">
+                                        <img src="/img/details/comment/comment-1.jpg" alt="User" id="chatHeaderAvatar">
+                                        <span class="status-indicator status-online" id="chatHeaderStatus"></span>
+                                    </div>
+                                    <div class="chat-header-info">
+                                        <h5 class="chat-header-name" id="chatHeaderName">Maria Popescu</h5>
+                                        <span class="chat-header-status-text" id="chatHeaderStatusText">Online</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Messages Container -->
+                            <div class="messages-container" id="messagesContainer">
+                                <!-- Messages will be dynamically inserted here via JavaScript -->
+                                <div class="message-group" data-conversation-id="1">
+                                    <!-- Message from other user -->
+                                    <div class="message message-incoming">
+                                        <div class="message-avatar">
+                                            <img src="/img/details/comment/comment-1.jpg" alt="Maria Popescu">
+                                        </div>
+                                        <div class="message-content">
+                                            <div class="message-bubble">
+                                                <p>Salut! Ai putea să-mi explici cum funcționează autentificarea în Spring Security?</p>
+                                            </div>
+                                            <div class="message-time">10:15</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Message from current user -->
+                                    <div class="message message-outgoing">
+                                        <div class="message-content">
+                                            <div class="message-bubble">
+                                                <p>Desigur! Îți pot explica pas cu pas. Ai deja un proiect Spring Boot configurat?</p>
+                                            </div>
+                                            <div class="message-time">10:18</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Message from other user -->
+                                    <div class="message message-incoming">
+                                        <div class="message-avatar">
+                                            <img src="/img/details/comment/comment-1.jpg" alt="Maria Popescu">
+                                        </div>
+                                        <div class="message-content">
+                                            <div class="message-bubble">
+                                                <p>Da, am deja un proiect de bază. Cum încep?</p>
+                                            </div>
+                                            <div class="message-time">10:20</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Message from current user -->
+                                    <div class="message message-outgoing">
+                                        <div class="message-content">
+                                            <div class="message-bubble">
+                                                <p>Perfect! Primul pas este să adaugi dependența Spring Security în pom.xml. Dorești să discutăm mai multe detalii?</p>
+                                            </div>
+                                            <div class="message-time">10:22</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Message from other user -->
+                                    <div class="message message-incoming">
+                                        <div class="message-avatar">
+                                            <img src="/img/details/comment/comment-1.jpg" alt="Maria Popescu">
+                                        </div>
+                                        <div class="message-content">
+                                            <div class="message-bubble">
+                                                <p>Mulțumesc pentru ajutor! Totul e clar acum.</p>
+                                            </div>
+                                            <div class="message-time">14:32</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Message Input Area -->
+                            <div class="message-input-area">
+                                <form id="messageForm" class="message-form">
+                                    <div class="message-input-wrapper">
+                                        <input type="text" 
+                                               id="messageInput" 
+                                               class="message-input" 
+                                               placeholder="Type a message…">
+                                        <button type="submit" class="message-send-btn">
+                                            <i class="fa fa-paper-plane"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Chat History Section End -->
+
+    <!-- Search model Begin -->
+    <div class="search-model">
+        <div class="h-100 d-flex align-items-center justify-content-center">
+            <div class="search-close-switch">+</div>
+            <form class="search-model-form">
+                <input type="text" id="search-input" placeholder="Search here.....">
+            </form>
+        </div>
+    </div>
+    <!-- Search model end -->
+
+    <!-- Js Plugins -->
+    <script src="/js/jquery-3.3.1.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/jquery.magnific-popup.min.js"></script>
+    <script src="/js/circle-progress.min.js"></script>
+    <script src="/js/jquery.barfiller.js"></script>
+    <script src="/js/jquery.slicknav.js"></script>
+    <script src="/js/owl.carousel.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/chat-history.js"></script>
+</body>
+
+</html>
+
