@@ -160,19 +160,30 @@
 
                 <!-- 4. DETAILED DESCRIPTION - EXTRA LARGE CARD -->
                 <section id="section-description" class="profile-card card-extra-large">
-                    <h2 class="card-title">Descriere detaliată</h2>
-                    <p class="card-help">Stilul tău de lucru. Descrie ce oferi, cum lucrezi, pentru cine ești potrivit.</p>
+                    <div class="card-header-wrapper">
+                        <div class="card-header-content">
+                            <h2 class="card-title">Descriere detaliată</h2>
+                            <p class="card-help">Stilul tău de lucru. Descrie ce oferi, cum lucrezi, pentru cine ești potrivit.</p>
+                        </div>
+                        <button type="button" class="btn-ai-generate" id="aiGenerateBtn" aria-label="Generare AI">
+                            <i class="fa fa-magic"></i> AI Generate
+                        </button>
+                    </div>
                     
                     <div class="form-group">
                         <label for="detailedDescription" class="form-label">Descriere completă</label>
                         <textarea id="detailedDescription" class="form-control" rows="10" 
-                                  placeholder="Descrie:
-- Ce oferi exact
-- Cum lucrezi
-- Pentru cine ești potrivit
-- Pentru cine NU ești potrivit
+                                  placeholder="Poți completa descrierea în două moduri:
 
-Fii clar și direct. Nu e nevoie de marketing, ci de claritate."></textarea>
+✍️ Manual – scrie liber, clar și direct.
+🤖 AI – notează idei scurte, AI-ul le va transforma într-o descriere completă.
+
+Include (indiferent de variantă):
+• Ce oferi exact
+• Cum lucrezi
+• Pentru cine ești potrivit
+• Pentru cine NU ești potrivit"
+                        ></textarea>
                         <small class="form-help">Această secțiune ajută la filtrare și claritate, nu la promovare.</small>
                     </div>
                 </section>

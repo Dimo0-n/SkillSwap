@@ -193,6 +193,18 @@
 }
 
 /* Typography */
+.card-header-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.card-header-content {
+    flex: 1;
+}
+
 .card-title {
     font-family: "Cinzel", serif;
     font-size: 28px;
@@ -211,6 +223,45 @@
     color: #a0a0b8;
     margin-bottom: 2rem;
     line-height: 1.5;
+}
+
+/* Remove margin-bottom when card-help is inside card-header-wrapper */
+.card-header-wrapper .card-help {
+    margin-bottom: 0;
+}
+
+/* AI Generate Button */
+.btn-ai-generate {
+    background: linear-gradient(135deg, #7b2cbf, #5a189a);
+    border: none;
+    border-radius: 12px;
+    padding: 12px 20px;
+    color: #ffffff;
+    font-family: "Montserrat", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 12px rgba(125, 44, 191, 0.3);
+    flex-shrink: 0;
+}
+
+.btn-ai-generate:hover {
+    background: linear-gradient(135deg, #9d4edd, #7b2cbf);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(125, 44, 191, 0.4);
+}
+
+.btn-ai-generate:active {
+    transform: translateY(0);
+}
+
+.btn-ai-generate i {
+    font-size: 16px;
 }
 
 /* Form Elements */
@@ -704,6 +755,15 @@ textarea.form-control {
         font-size: 24px;
     }
 
+    .card-header-wrapper {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .btn-ai-generate {
+        align-self: flex-end;
+    }
+
     .skill-input-group,
     .limitations-input-group {
         flex-direction: column;
@@ -742,5 +802,16 @@ textarea.form-control {
 
     .card-title {
         font-size: 20px;
+    }
+
+    .card-header-wrapper {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .btn-ai-generate {
+        width: 100%;
+        justify-content: center;
+        align-self: stretch;
     }
 }
