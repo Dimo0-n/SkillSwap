@@ -69,6 +69,9 @@
                     });
                 </script>
 
+                <!-- Notifications JS -->
+                <script src="/js/notifications.js"></script>
+
                 <div class="col-lg-6 col-md-4">
                     <div class="ht-social">
                         <a href="#"><i class="fa fa-facebook"></i></a>
@@ -117,8 +120,26 @@
                         <li><a sec:authorize="isAuthenticated()" th:href="@{/profil}">Profil</a></li>
                     </ul>
                 </div>
-                <div class="nav-right">
                     <a th:href="@{/announces/new}" class="btn-create-announce"><span>+ Creează anunț</span></a>
+                <br>
+                <br>
+                <div class="nav-right">
+                    <!-- Notifications Button -->
+                    <div class="notifications-wrapper" sec:authorize="isAuthenticated()">
+                        <button class="btn-notifications" type="button" id="notificationsButton" aria-label="Notificări">
+                            <i class="fa fa-bell"></i>
+                            <span class="notification-badge" id="notificationBadge">3</span>
+                        </button>
+                        <!-- Notifications Dropdown -->
+                        <div class="notifications-dropdown" id="notificationsDropdown">
+                            <div class="notifications-header">
+                                <h6>Notificări</h6>
+                            </div>
+                            <div class="notifications-list" id="notificationsList">
+                                <!-- Notification items will be dynamically inserted here -->
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="navbar-search-panel" id="navbarSearchPanel">
