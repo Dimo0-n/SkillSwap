@@ -39,11 +39,12 @@
     <section class="profile-hero">
         <div class="container">
             <div class="profile-card">
-                <button class="btn-profile-edit" id="editProfileBtn" aria-label="Edit profile">
-                    <i class="fa fa-pencil"></i>
-                    <span>Edit</span>
-                </button>
-                
+                <a th:href="@{/announces/new}">
+                    <button class="btn-profile-edit" id="editProfileBtn" aria-label="Edit profile">
+                        <i class="fa fa-pencil"></i>
+                        <span>Edit</span>
+                    </button>
+                </a>
                 <div class="profile-avatar">
                     <img src="/img/profil/img.png" alt="User Avatar">
                 </div>
