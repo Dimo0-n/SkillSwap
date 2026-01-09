@@ -26,6 +26,89 @@
     <link rel="stylesheet" href="/css/style.css" type="text/css">
 
     <style>
+        /* Hide hero section completely on mobile */
+        @media (max-width: 768px) {
+            section.hero-section {
+                display: none !important;
+                visibility: hidden !important;
+                height: 0 !important;
+                min-height: 0 !important;
+                max-height: 0 !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                overflow: hidden !important;
+                background: none !important;
+                background-image: none !important;
+                opacity: 0 !important;
+                position: relative !important;
+                line-height: 0 !important;
+            }
+            
+            section.hero-section *,
+            section.hero-section *::before,
+            section.hero-section *::after {
+                display: none !important;
+                visibility: hidden !important;
+                height: 0 !important;
+                width: 0 !important;
+                background: none !important;
+                background-image: none !important;
+                opacity: 0 !important;
+            }
+            
+            section.hero-section .container,
+            section.hero-section .row,
+            section.hero-section [class*="col-"] {
+                display: none !important;
+                visibility: hidden !important;
+                height: 0 !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            
+            .hero-slider,
+            .hero-slider.owl-carousel,
+            .hero-slider .owl-stage-outer,
+            .hero-slider .owl-stage,
+            .hero-slider .owl-item,
+            .hero-slider .hs-item,
+            .hs-item,
+            .hs-item.set-bg {
+                display: none !important;
+                visibility: hidden !important;
+                height: 0 !important;
+                width: 0 !important;
+                overflow: hidden !important;
+                background: none !important;
+                background-image: none !important;
+                opacity: 0 !important;
+                position: absolute !important;
+                left: -9999px !important;
+                top: -9999px !important;
+            }
+            
+            .hs-item::after {
+                display: none !important;
+                content: none !important;
+            }
+            
+            .hs-text,
+            .hs-text *,
+            .hs-text .label,
+            .hs-text h3 {
+                display: none !important;
+                visibility: hidden !important;
+                height: 0 !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            
+            .hero-slider.owl-carousel .owl-dots {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+        
         .hs-item {
             position: relative;
         }
