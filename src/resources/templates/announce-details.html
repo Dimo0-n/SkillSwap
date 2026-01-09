@@ -6,408 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SkillSwap – Detalii anunț</title>
     <link rel="stylesheet" href="/css/font-awesome.min.css" type="text/css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            line-height: 1.6;
-        }
-
-        .announce-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
-
-        .announce-layout {
-            display: grid;
-            grid-template-columns: 55% 45%;
-            gap: 40px;
-            margin-bottom: 40px;
-        }
-
-        .announce-image-section {
-            position: relative;
-        }
-
-        .announce-image-wrapper {
-            position: sticky;
-            top: 20px;
-            background: #000000;
-            overflow: hidden;
-        }
-
-        .announce-image-wrapper img {
-            width: 100%;
-            height: auto;
-            display: block;
-            mask-image: linear-gradient(
-                to bottom,
-                black 70%,
-                transparent 100%
-            );
-            -webkit-mask-image: linear-gradient(
-                to bottom,
-                black 70%,
-                transparent 100%
-            );
-            filter: blur(0.5px);
-            transition: filter 0.3s ease;
-        }
-
-        .announce-image-wrapper:hover img {
-            filter: blur(0px);
-        }
-
-        .announce-content {
-            background: #13131a;
-            padding: 40px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .announce-header {
-            margin-bottom: 32px;
-        }
-
-        .announce-badge {
-            display: inline-block;
-            background: #8b5cf6;
-            color: #ffffff;
-            padding: 6px 12px;
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
-            -webkit-clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
-        }
-
-        .announce-title {
-            font-size: 32px;
-            font-weight: 700;
-            color: #ffffff;
-            margin-bottom: 12px;
-            line-height: 1.3;
-        }
-
-        .announce-meta {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            color: #b3b3b3;
-            font-size: 14px;
-        }
-
-        .announce-meta span {
-            color: #8b5cf6;
-        }
-
-        .announce-categories {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 32px;
-            flex-wrap: wrap;
-        }
-
-        .category-badge {
-            background: #8b5cf6;
-            color: #ffffff;
-            padding: 10px 18px;
-            font-size: 14px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
-            -webkit-clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
-        }
-
-        .category-badge:hover {
-            background: #a78bfa;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
-        }
-
-        .announce-description {
-            color: #b3b3b3;
-            font-size: 16px;
-            line-height: 1.8;
-            margin-bottom: 40px;
-        }
-
-        .announce-description p {
-            margin-bottom: 16px;
-        }
-
-        .announce-description p:last-child {
-            margin-bottom: 0;
-        }
-
-        .offer-seek-section {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 32px;
-            margin-bottom: 40px;
-        }
-
-        .offer-seek-item h3 {
-            font-size: 18px;
-            font-weight: 600;
-            color: #ffffff;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .offer-seek-item h3::before {
-            content: '';
-            width: 4px;
-            height: 20px;
-            background: #8b5cf6;
-            border-radius: 2px;
-        }
-
-        .offer-seek-list {
-            list-style: none;
-        }
-
-        .offer-seek-list li {
-            color: #b3b3b3;
-            font-size: 15px;
-            padding: 8px 0;
-            padding-left: 24px;
-            position: relative;
-        }
-
-        .offer-seek-list li::before {
-            content: '•';
-            position: absolute;
-            left: 0;
-            color: #8b5cf6;
-            font-size: 20px;
-            line-height: 1;
-        }
-
-        .author-card {
-            background: #0b0b0f;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 32px;
-        }
-
-        .author-header {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 16px;
-        }
-
-        .author-avatar {
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            background: #8b5cf6;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #ffffff;
-            font-size: 24px;
-            font-weight: 600;
-        }
-
-        .author-info h4 {
-            font-size: 18px;
-            font-weight: 600;
-            color: #ffffff;
-            margin-bottom: 4px;
-        }
-
-        .author-info p {
-            font-size: 14px;
-            color: #b3b3b3;
-        }
-
-        .author-rating {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 12px;
-        }
-
-        .rating-stars {
-            display: flex;
-            gap: 4px;
-        }
-
-        .rating-stars span {
-            color: #8b5cf6;
-            font-size: 14px;
-        }
-
-        .rating-text {
-            font-size: 14px;
-            color: #b3b3b3;
-        }
-
-        .author-status {
-            display: inline-block;
-            background: rgba(139, 92, 246, 0.1);
-            color: #8b5cf6;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-top: 12px;
-        }
-
-        .author-profile-link {
-            display: inline-block;
-            margin-top: 16px;
-            color: #8b5cf6;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 600;
-            transition: color 0.3s ease;
-        }
-
-        .author-profile-link:hover {
-            color: #a78bfa;
-        }
-
-        .announce-actions {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .btn-primary {
-            flex: 1;
-            min-width: 180px;
-            background: linear-gradient(to bottom, #a78bfa, #8b5cf6);
-            color: #ffffff;
-            border: none;
-            padding: 14px 24px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
-            -webkit-clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
-        }
-
-        .btn-primary:hover {
-            background: linear-gradient(to bottom, #c4b5fd, #a78bfa);
-            box-shadow: 0 4px 16px rgba(139, 92, 246, 0.4);
-            transform: translateY(-2px);
-        }
-
-        .btn-secondary {
-            flex: 1;
-            min-width: 180px;
-            background: transparent;
-            color: #8b5cf6;
-            border: 2px solid #8b5cf6;
-            padding: 12px 24px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
-            -webkit-clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(139, 92, 246, 0.1);
-            border-color: #a78bfa;
-            color: #a78bfa;
-        }
-
-        .btn-icon {
-            width: 48px;
-            height: 48px;
-            background: #0b0b0f;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 8px;
-            color: #b3b3b3;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-        }
-
-        .btn-icon:hover {
-            background: #13131a;
-            border-color: #8b5cf6;
-            color: #8b5cf6;
-        }
-
-        .btn-icon.saved {
-            color: #8b5cf6;
-            border-color: #8b5cf6;
-        }
-
-        @media (max-width: 1024px) {
-            .announce-layout {
-                grid-template-columns: 1fr;
-            }
-
-            .announce-image-section {
-                position: static;
-            }
-
-            .announce-image-wrapper {
-                max-width: 600px;
-                margin: 0 auto;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .announce-container {
-                padding: 20px 16px;
-            }
-
-            .announce-content {
-                padding: 24px;
-            }
-
-            .announce-title {
-                font-size: 24px;
-            }
-
-            .offer-seek-section {
-                grid-template-columns: 1fr;
-                gap: 24px;
-            }
-
-            .announce-actions {
-                flex-direction: column;
-            }
-
-            .btn-primary,
-            .btn-secondary {
-                width: 100%;
-            }
-        }
-    </style>
-    <link rel="stylesheet" href="/css/font-awesome.min.css" type="text/css">
     <link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
     <link rel="stylesheet" href="/css/elegant-icons.css" type="text/css">
     <link rel="stylesheet" href="/css/owl.carousel.min.css" type="text/css">
@@ -416,9 +14,559 @@
     <link rel="stylesheet" href="/css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="/css/style.css" type="text/css">
     <style>
+        /* Announce Details Page - Refactored Layout */
+        :root {
+            --announce-primary: var(--brand-primary, #812acf);
+            --announce-primary-light: var(--brand-primary-light, #a78bfa);
+            --announce-bg: var(--bg-dark, #000000);
+            --announce-card-bg: var(--card-bg, #0a0a0a);
+            --announce-text: var(--text-primary, #ffffff);
+            --announce-text-secondary: var(--text-secondary, #c4c4c4);
+            --announce-muted: var(--muted, #a0a0b8);
+            --announce-border: var(--border-muted, rgba(129,42,207,0.12));
+        }
+
         html, body {
-            background: #000000 !important;
-            color: #ffffff !important;
+            background: var(--announce-bg) !important;
+            color: var(--announce-text) !important;
+        }
+
+        .announce-details-section {
+            padding: 120px 0 80px;
+            min-height: 100vh;
+        }
+
+        .announce-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Header Section - Conditional Image Display */
+        .announce-header-section {
+            margin-bottom: 3rem;
+        }
+
+        .announce-header-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            display: block;
+        }
+
+        .announce-header-image.hidden {
+            display: none;
+        }
+
+        .announce-header-fallback {
+            display: none;
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, rgba(129, 42, 207, 0.2), rgba(109, 40, 217, 0.1));
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--announce-border);
+        }
+
+        .announce-header-fallback.visible {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .announce-header-fallback::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 20px,
+                rgba(129, 42, 207, 0.05) 20px,
+                rgba(129, 42, 207, 0.05) 40px
+            );
+            animation: slide 20s linear infinite;
+        }
+
+        @keyframes slide {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(40px, 40px); }
+        }
+
+        .announce-header-fallback-icon {
+            position: relative;
+            z-index: 1;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--announce-primary), var(--announce-primary-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            color: var(--announce-text);
+            box-shadow: 0 8px 24px rgba(129, 42, 207, 0.3);
+        }
+
+        .announce-header-fallback-text {
+            position: relative;
+            z-index: 1;
+            font-family: "Montserrat", sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--announce-text);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Main Layout: 70% Content + 30% Sidebar */
+        .announce-main-layout {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        /* Main Content Column (70%) */
+        .announce-content-column {
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+        }
+
+        /* Title Section */
+        .announce-title-section {
+            margin-bottom: 0.5rem;
+        }
+
+        .announce-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--announce-primary), var(--announce-primary-dark));
+            color: var(--announce-text);
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 1rem;
+            border-radius: 6px;
+            font-family: "Montserrat", sans-serif;
+        }
+
+        .announce-title {
+            font-family: "Cinzel", serif;
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--announce-text);
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        .announce-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+            font-family: "Montserrat", sans-serif;
+            font-size: 14px;
+            color: var(--announce-muted);
+        }
+
+        .announce-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .announce-meta-item i {
+            color: var(--announce-primary);
+            font-size: 12px;
+        }
+
+        .announce-meta-separator {
+            color: var(--announce-muted);
+        }
+
+
+        /* Content Sections */
+        .announce-section {
+            background: var(--announce-card-bg);
+            border: 1px solid var(--announce-border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .announce-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--announce-primary), var(--announce-primary-light));
+        }
+
+        .announce-section:hover {
+            border-color: rgba(129, 42, 207, 0.2);
+            box-shadow: var(--shadow-md);
+        }
+
+        .announce-section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--announce-border);
+        }
+
+        .announce-section-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--announce-primary), var(--announce-primary-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: var(--announce-text);
+            box-shadow: 0 0 30px rgba(129, 42, 207, 0.3);
+        }
+
+        .announce-section-title {
+            font-family: "Montserrat", sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: var(--announce-text);
+            margin: 0;
+            line-height: 1;
+        }
+
+        .announce-details-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .announce-detail-item {
+            margin-bottom: 0;
+        }
+
+        .announce-detail-label {
+            display: block;
+            margin-bottom: 10px;
+            font-family: "Montserrat", sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--announce-text);
+            letter-spacing: 0.3px;
+        }
+
+        .announce-detail-content {
+            font-family: "Montserrat", sans-serif;
+            font-size: 15px;
+            line-height: 1.8;
+            color: var(--announce-text-secondary);
+        }
+
+        .announce-detail-content p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+
+        .announce-detail-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        .announce-category-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--announce-primary);
+            border: none;
+            padding: 10px 16px;
+            border-radius: 0;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            transform: skewX(-10deg);
+            color: var(--announce-text);
+        }
+
+        .announce-category-badge span,
+        .announce-category-badge i {
+            transform: skewX(10deg);
+        }
+
+        .announce-category-badge i {
+            font-size: 14px;
+        }
+
+        .announce-category-badge.seek {
+            background: var(--announce-primary-light);
+        }
+
+        /* Sidebar (30% - Sticky) */
+        .announce-sidebar {
+            position: sticky;
+            top: 140px;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* User Card */
+        .announce-user-card {
+            background: var(--announce-card-bg);
+            border: 1px solid var(--announce-border);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .announce-user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--announce-primary), var(--announce-primary-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--announce-text);
+            font-size: 32px;
+            font-weight: 600;
+            margin: 0 auto 1rem;
+            box-shadow: 0 4px 16px rgba(129, 42, 207, 0.3);
+        }
+
+        .announce-user-name {
+            font-family: "Cinzel", serif;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--announce-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .announce-user-title {
+            font-family: "Montserrat", sans-serif;
+            font-size: 14px;
+            color: var(--announce-muted);
+            margin-bottom: 1rem;
+        }
+
+        .announce-user-rating {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background: rgba(129, 42, 207, 0.05);
+            border-radius: 8px;
+        }
+
+        .announce-rating-stars {
+            color: #fbbf24;
+            font-size: 16px;
+        }
+
+        .announce-rating-text {
+            font-family: "Montserrat", sans-serif;
+            font-size: 14px;
+            color: var(--announce-text-secondary);
+        }
+
+        .announce-user-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 6px 12px;
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+            border-radius: 6px;
+            font-family: "Montserrat", sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .announce-user-status i {
+            font-size: 10px;
+        }
+
+        .announce-user-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--announce-border);
+        }
+
+        .announce-user-meta-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-family: "Montserrat", sans-serif;
+            font-size: 13px;
+            color: var(--announce-text-secondary);
+        }
+
+        .announce-user-meta-label {
+            color: var(--announce-muted);
+        }
+
+        .announce-user-meta-value {
+            color: var(--announce-text);
+            font-weight: 600;
+        }
+
+        /* CTA Buttons */
+        .announce-cta-section {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .announce-btn {
+            width: 100%;
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-family: "Montserrat", sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            border: none;
+            text-decoration: none;
+        }
+
+        .announce-btn-primary {
+            background: linear-gradient(135deg, var(--announce-primary), var(--announce-primary-dark));
+            color: var(--announce-text);
+            box-shadow: 0 4px 12px rgba(129, 42, 207, 0.3);
+        }
+
+        .announce-btn-primary:hover {
+            background: linear-gradient(135deg, var(--announce-primary-light), var(--announce-primary));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(129, 42, 207, 0.4);
+        }
+
+        .announce-btn-secondary {
+            background: transparent;
+            color: var(--announce-primary);
+            border: 2px solid var(--announce-primary);
+        }
+
+        .announce-btn-secondary:hover {
+            background: rgba(129, 42, 207, 0.1);
+            border-color: var(--announce-primary-light);
+            color: var(--announce-primary-light);
+        }
+
+        .announce-btn-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--announce-card-bg);
+            border: 1px solid var(--announce-border);
+            border-radius: 12px;
+            color: var(--announce-text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .announce-btn-icon:hover {
+            background: rgba(129, 42, 207, 0.1);
+            border-color: var(--announce-primary);
+            color: var(--announce-primary);
+        }
+
+        .announce-btn-icon.saved {
+            color: var(--announce-primary);
+            border-color: var(--announce-primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .announce-main-layout {
+                grid-template-columns: 1fr 320px;
+                gap: 2rem;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .announce-main-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .announce-sidebar {
+                position: static;
+                order: -1;
+            }
+
+            .announce-title {
+                font-size: 28px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .announce-details-section {
+                padding: 100px 0 60px;
+            }
+
+            .announce-container {
+                padding: 0 1rem;
+            }
+
+            .announce-title {
+                font-size: 24px;
+            }
+
+            .announce-section {
+                padding: 1.5rem;
+            }
+
+            .announce-section-title {
+                font-size: 18px;
+            }
+
+            .announce-details-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .announce-section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .announce-detail-item {
+                margin-bottom: 20px;
+            }
         }
     </style>
 </head>
@@ -426,69 +574,169 @@
 <body>
 
 <div th:replace="~{fragments/lateral-menu :: lateral-menu}"></div>
-
 <div th:replace="~{/fragments/navbar :: navbar}"></div>
 
-<section class="announce-container">
-    <div class="announce-layout">
-        <div class="announce-image-section">
-            <div class="announce-image-wrapper">
-                <img src="/img/skill/skill-programming.png" alt="Programare Java">
+<section class="announce-details-section">
+    <div class="announce-container">
+        <!-- Header Section - Conditional Image -->
+        <div class="announce-header-section">
+            <!-- Image will be shown only if user uploaded one -->
+            <img id="announceHeaderImage" 
+                 class="announce-header-image" 
+                 src="" 
+                 alt="Announce image"
+                 style="display: none;">
+            
+            <!-- Fallback header with gradient and skill icon -->
+            <div id="announceHeaderFallback" class="announce-header-fallback visible">
+                <div class="announce-header-fallback-icon">
+                    <i class="fa fa-code"></i>
+                </div>
+                <div class="announce-header-fallback-text">Programare Java</div>
             </div>
         </div>
 
-        <div class="announce-content">
-            <div class="announce-header">
-                <span class="announce-badge">NOU</span>
-                <h1 class="announce-title">Ofer lecții de programare Java în schimb de design grafic</h1>
-                <div class="announce-meta">
-                    <span>de</span>
-                    <strong>Andrei Popescu</strong>
-                    <span>•</span>
-                    <span>17 August 2025</span>
-                </div>
-            </div>
-
-            <div class="announce-categories">
-                <a href="#" class="category-badge">Ofer: Programare Java</a>
-                <a href="#" class="category-badge">Caut: Design grafic</a>
-            </div>
-
-            <div class="announce-description">
-                <p>Programez de 5 ani în Java și am experiență solidă în dezvoltarea aplicațiilor backend. Caut pe cineva să mă învețe Photoshop și design grafic pentru a-mi îmbunătăți abilitățile de creare a interfețelor utilizator.</p>
-                <p>Ofer lecții practice de Java, de la baze până la concepte avansate, inclusiv Spring Framework, Hibernate și arhitectură de aplicații. În schimb, aș dori să învăț cum să creez design-uri atractive, să lucrez cu straturi în Photoshop și să înțeleg principiile de design UI/UX.</p>
-            </div>
-
-            <div class="author-card">
-                <div class="author-header">
-                    <div class="author-avatar">AP</div>
-                    <div class="author-info">
-                        <h4>Andrei Popescu</h4>
-                        <p>5 ani programare Java | Backend Developer</p>
+        <!-- Main Layout: Content + Sidebar -->
+        <div class="announce-main-layout">
+            <!-- Main Content Column (70%) -->
+            <div class="announce-content-column">
+                <!-- Title Section -->
+                <div class="announce-title-section">
+                    <span class="announce-badge">NOU</span>
+                    <h1 class="announce-title">Ofer lecții de programare Java în schimb de design grafic</h1>
+                    <div class="announce-meta">
+                        <div class="announce-meta-item">
+                            <i class="fa fa-user"></i>
+                            <span>Andrei Popescu</span>
+                        </div>
+                        <span class="announce-meta-separator">•</span>
+                        <div class="announce-meta-item">
+                            <i class="fa fa-calendar"></i>
+                            <span>17 August 2025</span>
+                        </div>
+                        <span class="announce-meta-separator">•</span>
+                        <div class="announce-meta-item">
+                            <i class="fa fa-clock-o"></i>
+                            <span>Anunț activ de 3 zile</span>
+                        </div>
                     </div>
                 </div>
-                <div class="author-rating">
-                    <div class="rating-stars">
-                        <span>★★★★★</span>
+
+                <!-- Main Details Section -->
+                <div class="announce-section">
+                    <div class="announce-section-header">
+                        <div class="announce-section-icon">
+                            <i class="fa fa-file-text"></i>
+                        </div>
+                        <h2 class="announce-section-title">Detalii principale</h2>
                     </div>
-                    <span class="rating-text">4.8 (12 evaluări)</span>
+                    
+                    <div class="announce-detail-item">
+                        <label class="announce-detail-label">Descriere detaliată</label>
+                        <div class="announce-detail-content">
+                            <p>Programez de 5 ani în Java și am experiență solidă în dezvoltarea aplicațiilor backend. Caut pe cineva să mă învețe Photoshop și design grafic pentru a-mi îmbunătăți abilitățile de creare a interfețelor utilizator.</p>
+                            <p>Ofer lecții practice de Java, de la baze până la concepte avansate, inclusiv Spring Framework, Hibernate și arhitectură de aplicații. În schimb, aș dori să învăț cum să creez design-uri atractive, să lucrez cu straturi în Photoshop și să înțeleg principiile de design UI/UX.</p>
+                        </div>
+                    </div>
                 </div>
-                <span class="author-status">Membru activ</span>
-                <a href="#" class="author-profile-link">Vezi profilul complet →</a>
+
+                <!-- Exchange Details Section -->
+                <div class="announce-section">
+                    <div class="announce-section-header">
+                        <div class="announce-section-icon">
+                            <i class="fa fa-exchange"></i>
+                        </div>
+                        <h2 class="announce-section-title">Ce oferți și ce cauți</h2>
+                    </div>
+
+                    <div class="announce-details-grid">
+                        <div class="announce-detail-item">
+                            <label class="announce-detail-label">Categoria oferită</label>
+                            <div class="announce-detail-content">
+                                <div class="announce-category-badge offer">
+                                    <i class="fa fa-star"></i>
+                                    <span>Programare Java</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="announce-detail-item">
+                            <label class="announce-detail-label">Categoria căutată</label>
+                            <div class="announce-detail-content">
+                                <div class="announce-category-badge seek">
+                                    <i class="fa fa-search"></i>
+                                    <span>Design grafic</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="announce-detail-item">
+                            <label class="announce-detail-label">Nume autor</label>
+                            <div class="announce-detail-content">
+                                <p>Andrei Popescu</p>
+                            </div>
+                        </div>
+
+                        <div class="announce-detail-item">
+                            <label class="announce-detail-label">Notă secundară (opțional)</label>
+                            <div class="announce-detail-content">
+                                <p>Disponibil pentru sesiuni online sau offline, flexibil în funcție de preferințe. Accept începători în design, ofer lecții pentru toate nivelurile în Java.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="announce-actions">
-                <button class="btn-primary">
-                    <i class="fa fa-envelope"></i>
-                    Trimite mesaj
-                </button>
-                <button class="btn-secondary">
-                    <i class="fa fa-handshake-o"></i>
-                    Propune schimb
-                </button>
-                <button class="btn-icon" id="saveBtn">
-                    <i class="fa fa-bookmark-o"></i>
-                </button>
+            <!-- Sidebar (30% - Sticky) -->
+            <div class="announce-sidebar">
+                <!-- User Card -->
+                <div class="announce-user-card">
+                    <div class="announce-user-avatar">AP</div>
+                    <h3 class="announce-user-name">Andrei Popescu</h3>
+                    <p class="announce-user-title">5 ani programare Java | Backend Developer</p>
+                    
+                    <div class="announce-user-rating">
+                        <div class="announce-rating-stars">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                        </div>
+                        <span class="announce-rating-text">4.8 (12 evaluări)</span>
+                    </div>
+
+                    <div class="announce-user-status">
+                        <i class="fa fa-circle"></i>
+                        <span>Activ recent</span>
+                    </div>
+
+                    <div class="announce-user-meta">
+                        <div class="announce-user-meta-item">
+                            <span class="announce-user-meta-label">Răspunde de obicei în</span>
+                            <span class="announce-user-meta-value">2-4 ore</span>
+                        </div>
+                        <div class="announce-user-meta-item">
+                            <span class="announce-user-meta-label">Schimburi finalizate</span>
+                            <span class="announce-user-meta-value">8</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CTA Section -->
+                <div class="announce-cta-section">
+                    <button class="announce-btn announce-btn-primary" id="sendMessageBtn">
+                        <i class="fa fa-envelope"></i>
+                        <span>Trimite mesaj</span>
+                    </button>
+                    <button class="announce-btn announce-btn-secondary" id="proposeSwapBtn">
+                        <i class="fa fa-handshake-o"></i>
+                        <span>Propune schimb</span>
+                    </button>
+                    <button class="announce-btn announce-btn-icon" id="saveBtn">
+                        <i class="fa fa-bookmark-o"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -498,6 +746,24 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Handle image display logic
+        const headerImage = document.getElementById('announceHeaderImage');
+        const headerFallback = document.getElementById('announceHeaderFallback');
+        
+        // Check if image exists (in real app, this would check if user uploaded image)
+        // For now, we'll hide the image and show fallback
+        // To show image: set headerImage.src to actual image URL and remove 'hidden' class
+        const hasUserImage = false; // Change to true if user uploaded image
+        
+        if (hasUserImage && headerImage.src) {
+            headerImage.style.display = 'block';
+            headerFallback.classList.remove('visible');
+        } else {
+            headerImage.style.display = 'none';
+            headerFallback.classList.add('visible');
+        }
+
+        // Save button toggle
         const saveBtn = document.getElementById('saveBtn');
         const saveIcon = saveBtn.querySelector('i');
 
@@ -513,15 +779,18 @@
             }
         });
 
-        const primaryBtn = document.querySelector('.btn-primary');
-        const secondaryBtn = document.querySelector('.btn-secondary');
+        // CTA buttons
+        const sendMessageBtn = document.getElementById('sendMessageBtn');
+        const proposeSwapBtn = document.getElementById('proposeSwapBtn');
 
-        primaryBtn.addEventListener('click', function() {
+        sendMessageBtn.addEventListener('click', function() {
             console.log('Trimite mesaj clicked');
+            // TODO: Implement message functionality
         });
 
-        secondaryBtn.addEventListener('click', function() {
+        proposeSwapBtn.addEventListener('click', function() {
             console.log('Propune schimb clicked');
+            // TODO: Implement swap proposal functionality
         });
     });
 </script>
