@@ -17,6 +17,7 @@
     border-radius: 12px;
     border: 1px solid var(--border-muted);
     box-shadow: var(--shadow-md);
+    position: relative;
 }
 
 .profile-avatar img {
@@ -65,4 +66,69 @@
     margin: 4px;
     font-size: 12px;
     color: white;
+}
+
+/* Edit Profile Button */
+.btn-profile-edit {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #ffffff;
+    background: linear-gradient(135deg, #d17bff 0%, #9b4dd8 100%);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: "Montserrat", sans-serif;
+    box-shadow: 0 4px 12px rgba(129, 42, 207, 0.3);
+    z-index: 10;
+}
+
+.btn-profile-edit:hover {
+    background: linear-gradient(135deg, #e3b2ff 0%, #b66dff 100%);
+    box-shadow: 0 6px 16px rgba(129, 42, 207, 0.4);
+    transform: translateY(-2px);
+}
+
+.btn-profile-edit:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 12px rgba(129, 42, 207, 0.3);
+}
+
+.btn-profile-edit i {
+    font-size: 14px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .btn-profile-edit {
+        top: 12px;
+        right: 12px;
+        padding: 8px 16px;
+        font-size: 12px;
+    }
+
+    .btn-profile-edit span {
+        display: none;
+    }
+
+    .btn-profile-edit {
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        border-radius: 50%;
+    }
+
+    .btn-profile-edit i {
+        margin: 0;
+    }
 }

@@ -39,6 +39,11 @@
     <section class="profile-hero">
         <div class="container">
             <div class="profile-card">
+                <button class="btn-profile-edit" id="editProfileBtn" aria-label="Edit profile">
+                    <i class="fa fa-pencil"></i>
+                    <span>Edit</span>
+                </button>
+                
                 <div class="profile-avatar">
                     <img src="/img/profil/img.png" alt="User Avatar">
                 </div>
@@ -286,6 +291,20 @@
     <script src="/js/jquery.slicknav.js"></script>
     <script src="/js/owl.carousel.min.js"></script>
     <script src="/js/main.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const editProfileBtn = document.getElementById('editProfileBtn');
+            
+            if (editProfileBtn) {
+                editProfileBtn.addEventListener('click', function() {
+                    console.log('Edit profile clicked');
+                    // TODO: Navigate to profile edit page or open edit modal
+                    // window.location.href = '/profile-complete';
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>
