@@ -542,20 +542,34 @@
         }
 
         @media (max-width: 768px) {
+            /* Mobile optimizations - Desktop unchanged */
+            body, html {
+                overflow-x: hidden;
+                width: 100%;
+            }
+            
+            * {
+                max-width: 100%;
+                box-sizing: border-box;
+            }
+            
             .announce-details-section {
-                padding: 100px 0 60px;
+                padding: 24px 0 40px;
             }
 
             .announce-container {
-                padding: 0 1rem;
+                padding: 0 16px;
             }
 
             .announce-title {
-                font-size: 24px;
+                font-size: 22px;
+                line-height: 1.3;
             }
 
             .announce-section {
-                padding: 1.5rem;
+                padding: 20px 16px;
+                margin-bottom: 20px;
+                border-radius: 16px;
             }
 
             .announce-section-title {
@@ -564,8 +578,47 @@
 
             .announce-details-grid {
                 grid-template-columns: 1fr;
-                gap: 20px;
+                gap: 16px;
             }
+            
+            .announce-main-layout {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            
+            .announce-sidebar {
+                position: static;
+                margin-top: 24px;
+            }
+            
+            .announce-header-image {
+                display: none;
+            }
+            
+            .announce-header-fallback {
+                height: 120px;
+                margin-bottom: 24px;
+            }
+            
+            .announce-user-card {
+                padding: 20px 16px;
+            }
+            
+            .announce-btn {
+                width: 100%;
+                padding: 14px 20px;
+                min-height: 44px;
+                font-size: 16px;
+                margin-bottom: 12px;
+            }
+            
+            /* Prevent overflow */
+            .announce-details-section,
+            .announce-container,
+            .announce-main-layout {
+                overflow-x: hidden;
+            }
+        }
 
             .announce-section-header {
                 flex-direction: column;
