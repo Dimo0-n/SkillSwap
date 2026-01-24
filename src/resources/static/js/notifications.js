@@ -113,14 +113,6 @@ function toggleNotificationsDropdown() {
     
     if (dropdown && button) {
         const isOpen = dropdown.classList.contains('is-open');
-        
-        if (!isOpen) {
-            // Calculate position when opening
-            const buttonRect = button.getBoundingClientRect();
-            const dropdownTop = buttonRect.bottom + 10; // 10px gap
-            dropdown.style.top = dropdownTop + 'px';
-        }
-        
         dropdown.classList.toggle('is-open');
     }
 }
