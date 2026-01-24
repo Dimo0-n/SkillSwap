@@ -27,15 +27,19 @@ public class Announce {
 
     private String author;
 
-    private LocalDateTime createDate;
+    private String categoryOffered;
 
-    private String category1;
+    private String categoryRequired;
 
-    private String category2;
+    private String additionalInfo;
 
-    private String optionalNote;
+    private int imageId;
 
-    private String image;
+    private LocalDateTime date;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
 }
 

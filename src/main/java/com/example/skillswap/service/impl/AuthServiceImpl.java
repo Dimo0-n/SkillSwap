@@ -1,9 +1,10 @@
-package com.example.skillswap.sevice;
+package com.example.skillswap.service.impl;
 
 import com.example.skillswap.entity.Role;
 import com.example.skillswap.entity.User;
 import com.example.skillswap.repository.RoleRepository;
 import com.example.skillswap.repository.UserRepository;
+import com.example.skillswap.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;

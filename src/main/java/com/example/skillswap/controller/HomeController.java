@@ -1,7 +1,7 @@
 package com.example.skillswap.controller;
 
 import com.example.skillswap.entity.Announce;
-import com.example.skillswap.sevice.AnnounceService;
+import com.example.skillswap.service.AnnounceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

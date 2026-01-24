@@ -70,7 +70,7 @@
 
 /* Edit Profile Button */
 .btn-profile-edit {
-    position: absolute;
+    position: static;
     top: 20px;
     right: 20px;
     display: inline-flex;

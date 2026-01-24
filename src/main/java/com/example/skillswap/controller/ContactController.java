@@ -1,7 +1,7 @@
 package com.example.skillswap.controller;
 
 import com.example.skillswap.entity.Contact;
-import com.example.skillswap.sevice.ContactService;
+import com.example.skillswap.service.ContactService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

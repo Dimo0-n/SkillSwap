@@ -40,12 +40,22 @@
     <section class="profile-hero">
         <div class="container">
             <div class="profile-card">
-                <a th:href="@{/profile/complete}">
-                    <button class="btn-profile-edit" id="editProfileBtn" aria-label="Edit profile">
-                        <i class="fa fa-pencil"></i>
-                        <span>Edit</span>
-                    </button>
-                </a>
+                <div class="profile-actions">
+                    <a th:href="@{/categories-list}">
+                        <button class="btn-profile-edit">
+                            <i class="fa fa-list"></i>
+                            <span>Anunturile mele</span>
+                        </button>
+                    </a>
+
+                    <a th:href="@{/profile/complete}">
+                        <button class="btn-profile-edit">
+                            <i class="fa fa-pencil"></i>
+                            <span>Edit</span>
+                        </button>
+                    </a>
+                </div>
+
                 <div class="profile-avatar">
                     <img src="/img/profil/img.png" alt="User Avatar">
                 </div>
@@ -71,6 +81,15 @@
     </section>
 
     <style>
+        .profile-actions {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 12px;
+            z-index: 10;
+        }
+
         .details-hero-section {
             position: relative;
             overflow: hidden;

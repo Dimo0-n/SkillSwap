@@ -106,16 +106,12 @@
                     <button class="humberger-menu humberger-open" type="button" aria-label="Deschide meniul">
                         <i class="fa fa-bars"></i>
                     </button>
-<!--                    <button class="nav-search navbar-search-toggle" type="button" aria-label="Deschide căutarea">-->
-<!--                        <i class="fa fa-search"></i>-->
-<!--                    </button>-->
                 </div>
                 <div class="nav-menu">
                     <ul>
                         <li><a th:href="@{/index}"><span>Acasă</span></a></li>
                         <li><a th:href="@{/announces-list}"><span>Anunțuri</span></a></li>
-<!--                    <li><a href="/post-details"><span>Pages</i></span></a></li>-->
-                        <li><a sec:authorize="isAuthenticated()" th:href="@{/chat}"><span>Chat</i></span></a></li>
+<!--                    <li><a sec:authorize="isAuthenticated()" th:href="@{/chat}"><span>Chat</i></span></a></li>-->
                         <li><a th:href="@{/contact}">Contact</a></li>
                         <li><a sec:authorize="isAuthenticated()" th:href="@{/profil}">Profil</a></li>
                     </ul>

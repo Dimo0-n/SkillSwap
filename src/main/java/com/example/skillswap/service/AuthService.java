@@ -1,4 +1,4 @@
-package com.example.skillswap.sevice;
+package com.example.skillswap.service;
 
 import com.example.skillswap.entity.User;
 

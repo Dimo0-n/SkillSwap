@@ -2,7 +2,7 @@ package com.example.skillswap.controller;
 
 import com.example.skillswap.entity.User;
 import com.example.skillswap.repository.UserRepository;
-import com.example.skillswap.sevice.AuthServiceImpl;
+import com.example.skillswap.service.impl.AuthServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

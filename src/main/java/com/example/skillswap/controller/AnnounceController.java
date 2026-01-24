@@ -1,12 +1,11 @@
 package com.example.skillswap.controller;
 
 import com.example.skillswap.entity.Announce;
-import com.example.skillswap.sevice.AnnounceService;
+import com.example.skillswap.service.AnnounceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
@@ -18,9 +17,9 @@ class AnnounceController {
 
     @GetMapping("/announces-list")
     public String categoryGrid(Model model){
-        List<Announce> announcesList = announceService.getAnnouncesList();
-        model.addAttribute("announcesList", announcesList);
-        model.addAttribute("page", "annouces-list" );
+//        List<Announce> announcesList = announceService.getAnnouncesList();
+//        model.addAttribute("announcesList", announcesList);
+//        model.addAttribute("page", "annouces-list" );
         return "announces-list";
     }
 

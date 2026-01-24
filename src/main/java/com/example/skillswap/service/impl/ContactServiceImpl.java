@@ -1,7 +1,8 @@
-package com.example.skillswap.sevice;
+package com.example.skillswap.service.impl;
 
 import com.example.skillswap.entity.Contact;
 import com.example.skillswap.repository.ContactRepository;
+import com.example.skillswap.service.ContactService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
