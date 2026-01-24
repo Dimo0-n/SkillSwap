@@ -23,8 +23,7 @@
         { id: 'skills', element: '#section-skills' },
         { id: 'description', element: '#section-description' },
         { id: 'availability', element: '#section-availability' },
-        { id: 'strengths', element: '#section-strengths' },
-        { id: 'settings', element: '#section-settings' }
+        { id: 'strengths', element: '#section-strengths' }
     ];
 
     // Initialize on DOM ready
@@ -147,9 +146,6 @@
                 case 'strengths':
                     isCompleted = $('.strength-checkbox:checked').length > 0 || 
                                  state.customStrengths.length > 0;
-                    break;
-                case 'settings':
-                    isCompleted = true; // Settings are always considered "complete"
                     break;
             }
 

@@ -16,33 +16,42 @@ import java.util.Optional;
 @Service
 public class AuthServiceImpl implements AuthService {
 
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
-    @Autowired
-    private RoleRepository roleRepository;
+    public AuthServiceImpl(
+            UserRepository userRepository,
+            RoleRepository roleRepository,
+            BCryptPasswordEncoder passwordEncoder
+    ) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     public void saveUser(String email, String password, String fullName) {
-        User newUser = new User();
 
-        newUser.setPassword(passwordEncoder.encode(password));
+        Role userRole = roleRepository.findByName("ROLE_USER")
+                .orElseThrow(() ->
+                        new IllegalStateException("ROLE_USER not found in database")
+                );
+
+        User newUser = new User();
         newUser.setEmail(email);
         newUser.setFullName(fullName);
+        newUser.setPassword(passwordEncoder.encode(password));
         newUser.setRegisterData(LocalDateTime.now());
 
-        Role role = roleRepository.findByName("ROLE_USER");
-        newUser.setRoles(Arrays.asList(role));
+        newUser.getRoles().add(userRole); // Set, nu List
 
         userRepository.save(newUser);
-
     }
 
     @Override
     public Optional<User> searchUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
-
 }
+

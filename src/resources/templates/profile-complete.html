@@ -70,15 +70,11 @@
                             <span class="step-label">Trăsături</span>
                             <i class="fa fa-check step-check" style="display: none;"></i>
                         </a>
-                        <a href="#section-settings" class="step-item" data-section="settings">
-                            <span class="step-number">7</span>
-                            <span class="step-label">Setări</span>
-                            <i class="fa fa-check step-check" style="display: none;"></i>
-                        </a>
                     </nav>
                 </div>
             </aside>
 
+        <form th:object="${profil}" th:action="@{/profile/save}" method="post" enctype="multipart/form-data">
             <!-- MAIN CONTENT - CARD-BASED SECTIONS -->
             <main class="profile-content">
                 
@@ -99,7 +95,7 @@
                     <div class="form-group">
                         <label for="profilePicture" class="form-label">Fotografie de profil</label>
                         <div class="picture-upload-area">
-                            <input type="file" id="profilePicture" accept="image/*" class="picture-input">
+                            <input type="file" name="profilePicture" id="profilePicture" accept="image/*" class="picture-input">
                             <div class="picture-preview" id="picturePreview">
                                 <i class="fa fa-user"></i>
                                 <span>Fă click pentru a încărca</span>
@@ -109,14 +105,14 @@
 
                     <div class="form-group">
                         <label for="displayName" class="form-label">Nume de afișare</label>
-                        <input type="text" id="displayName" class="form-control" 
+                        <input name="name" th:field="*{name}" type="text" id="displayName" class="form-control"
                                placeholder="Ex: Alex M. sau Alex Mihai">
                         <small class="form-help">Poți folosi inițiale sau nume complet. Alege ce te reprezintă.</small>
                     </div>
 
                     <div class="form-group">
                         <label for="professionalTitle" class="form-label">Titlu profesional</label>
-                        <input type="text" id="professionalTitle" class="form-control" 
+                        <input name="profession" th:field="*{profession}" type="text" id="professionalTitle" class="form-control"
                                placeholder="Ex: Frontend Developer & UI Enthusiast">
                         <small class="form-help">O descriere scurtă și clară a rolului tău.</small>
                     </div>
@@ -129,7 +125,7 @@
                     
                     <div class="form-group">
                         <label for="shortBio" class="form-label">Descriere scurtă</label>
-                        <textarea id="shortBio" class="form-control" rows="3" 
+                        <textarea name="bioShort" th:field="*{bioShort}" id="shortBio" class="form-control" rows="3"
                                   maxlength="200" placeholder="2-3 propoziții, personale dar profesionale..."></textarea>
                         <div class="char-counter">
                             <span id="bioCharCount">0</span> / 200 caractere
@@ -142,20 +138,21 @@
                 <section id="section-skills" class="profile-card card-medium">
                     <h2 class="card-title">Competențe principale</h2>
                     <p class="card-help">Ce oferi? Selectează doar competențele principale, relevante.</p>
-                    
                     <div class="form-group">
                         <label for="skillInput" class="form-label">Adaugă competențe</label>
                         <div class="skill-input-group">
-                            <input type="text" id="skillInput" class="form-control" 
+                            <input type="text" id="skillInput" class="form-control"
                                    placeholder="Ex: JavaScript, Design UI/UX, Marketing Digital">
+
                             <button type="button" id="addSkillBtn" class="btn-add-skill">
                                 <i class="fa fa-plus"></i> Adaugă
                             </button>
                         </div>
-                        <div class="skills-container" id="skillsContainer">
-                            <!-- Skills will be added here as badges -->
-                        </div>
-                        <small class="form-help">Evită zgomotul. Alege doar competențele principale.</small>
+                        <input name="competences" type="hidden" th:field="*{competences}" id="competencesHidden">
+                        <div class="skills-container" id="skillsContainer"></div>
+                        <small class="form-help">
+                            Evită zgomotul. Alege doar competențele principale.
+                        </small>
                     </div>
                 </section>
 
@@ -173,7 +170,7 @@
                     
                     <div class="form-group">
                         <label for="detailedDescription" class="form-label">Descriere completă</label>
-                        <textarea id="detailedDescription" class="form-control" rows="10" 
+                        <textarea name="completeDescription" th:field="*{completeDescription}" id="detailedDescription" class="form-control" rows="10"
                                   placeholder="Poți completa descrierea în două moduri:
 
 ✍️ Manual – scrie liber, clar și direct.
@@ -193,40 +190,40 @@ Include (indiferent de variantă):
                 <section id="section-availability" class="profile-card card-medium">
                     <h2 class="card-title">Disponibilitate și limitări</h2>
                     <p class="card-help">Când și în ce condiții lucrezi? Este esențial și normal să ai limitări.</p>
-                    
+
                     <div class="form-group">
                         <label class="form-label">Disponibilitate</label>
                         <div class="availability-options">
                             <label class="checkbox-label">
-                                <input type="checkbox" id="morning" value="morning">
+                                <input type="checkbox" class="availability-checkbox" data-bit="1">
                                 <span>Dimineața</span>
                             </label>
                             <label class="checkbox-label">
-                                <input type="checkbox" id="afternoon" value="afternoon">
+                                <input type="checkbox" class="availability-checkbox" data-bit="2">
                                 <span>După-amiaza</span>
                             </label>
                             <label class="checkbox-label">
-                                <input type="checkbox" id="evening" value="evening">
+                                <input type="checkbox" class="availability-checkbox" data-bit="4">
                                 <span>Seara</span>
                             </label>
                             <label class="checkbox-label">
-                                <input type="checkbox" id="weekend" value="weekend">
+                                <input type="checkbox" class="availability-checkbox" data-bit="8">
                                 <span>Weekend</span>
                             </label>
                         </div>
+                        <input name="availabilityMask" type="hidden" th:field="*{availabilityMask}" id="availabilityMask">
                     </div>
 
                     <div class="form-group">
                         <label for="limitationsInput" class="form-label">Limitări</label>
                         <div class="limitations-input-group">
-                            <input type="text" id="limitationsInput" class="form-control" 
+                            <input name="limits" th:field="*{limits}" type="text" id="limitationsInput" class="form-control"
                                    placeholder="Ex: Nu ofer lecții avansate">
                             <button type="button" id="addLimitationBtn" class="btn-add-skill">
                                 <i class="fa fa-plus"></i> Adaugă
                             </button>
                         </div>
                         <div class="limitations-container" id="limitationsContainer">
-                            <!-- Limitations will be added here -->
                         </div>
                         <small class="form-help">Limitările sunt normale și esențiale. Fii clar despre ce nu oferi.</small>
                     </div>
@@ -280,40 +277,15 @@ Include (indiferent de variantă):
                             <!-- Custom strengths will be added here -->
                         </div>
                     </div>
-                </section>
 
-                <!-- 7. VISIBILITY & PRIVACY SETTINGS - SMALL CARD -->
-                <section id="section-settings" class="profile-card card-small">
-                    <h2 class="card-title">Vizibilitate și setări de confidențialitate</h2>
-                    <p class="card-help">Controlează cine poate vedea profilul tău și cum te pot contacta.</p>
-                    
-                    <div class="form-group">
-                        <label class="toggle-label">
-                            <input type="checkbox" id="profilePublic" checked>
-                            <span class="toggle-slider"></span>
-                            <span class="toggle-text">Profil public</span>
-                        </label>
-                        <small class="form-help">Dacă este dezactivat, doar tu poți vedea profilul.</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="toggle-label">
-                            <input type="checkbox" id="allowDirectContact" checked>
-                            <span class="toggle-slider"></span>
-                            <span class="toggle-text">Permite contact direct</span>
-                        </label>
-                        <small class="form-help">Alții te pot contacta direct prin platformă.</small>
-                    </div>
+                    <input name="strengths" type="hidden" th:field="*{strengths}" id="strengthsHidden">
                 </section>
 
                 <!-- 8. FINAL ACTIONS -->
                 <section class="profile-card card-actions">
                     <div class="form-actions">
-                        <button type="button" id="saveProfileBtn" class="btn-primary">
+                        <button type="submit" id="saveProfileBtn" class="btn-primary">
                             <i class="fa fa-save"></i> Salvează profilul
-                        </button>
-                        <button type="button" id="saveDraftBtn" class="btn-secondary">
-                            <i class="fa fa-file-text-o"></i> Salvează ca draft
                         </button>
                     </div>
                     <p class="reassurance-text">
@@ -323,7 +295,7 @@ Include (indiferent de variantă):
                 </section>
 
             </main>
-
+        </form>
         </div>
     </section>
 
@@ -339,11 +311,147 @@ Include (indiferent de variantă):
 
     <!-- Mobile Progress Indicator -->
     <div class="mobile-progress" style="display: none;">
-        <span class="progress-text">Pasul <span id="currentStep">1</span> din <span id="totalSteps">7</span></span>
+        <span class="progress-text">Pasul <span id="currentStep">1</span> din <span id="totalSteps">6</span></span>
         <div class="progress-bar">
             <div class="progress-fill" id="progressFill"></div>
         </div>
     </div>
+
+    <script>
+        const skillInput = document.getElementById("skillInput");
+        const addSkillBtn = document.getElementById("addSkillBtn");
+        const skillsContainer = document.getElementById("skillsContainer");
+        const hiddenInput = document.getElementById("competencesHidden");
+
+        let skills = [];
+
+        addSkillBtn.addEventListener("click", () => {
+            const value = skillInput.value.trim();
+
+            if (!value || skills.includes(value)) return;
+
+            skills.push(value);
+            skillInput.value = "";
+
+            renderSkills();
+            updateHiddenInput();
+        });
+
+        function renderSkills() {
+            skillsContainer.innerHTML = "";
+
+            skills.forEach(skill => {
+                const badge = document.createElement("span");
+                badge.className = "skill-badge";
+                badge.textContent = skill;
+
+                badge.addEventListener("click", () => {
+                    skills = skills.filter(s => s !== skill);
+                    renderSkills();
+                    updateHiddenInput();
+                });
+
+                skillsContainer.appendChild(badge);
+            });
+        }
+
+        function updateHiddenInput() {
+            hiddenInput.value = skills.join(",");
+        }
+
+        const checkboxes = document.querySelectorAll(".availability-checkbox");
+        const hiddenMask = document.getElementById("availabilityMask");
+
+        function updateAvailabilityMask() {
+            let mask = 0;
+
+            checkboxes.forEach(cb => {
+                if (cb.checked) {
+                    mask |= parseInt(cb.dataset.bit, 10);
+                }
+            });
+
+            hiddenMask.value = mask;
+        }
+
+        // ascultă schimbările
+        checkboxes.forEach(cb => {
+            cb.addEventListener("change", updateAvailabilityMask);
+        });
+
+        const strengthCheckboxes = document.querySelectorAll(".strength-checkbox");
+        const strengthsHidden = document.getElementById("strengthsHidden");
+
+        const customInput = document.getElementById("customStrengthInput");
+        const addCustomBtn = document.getElementById("addCustomStrengthBtn");
+        const customContainer = document.getElementById("customStrengthsContainer");
+
+        let customStrengths = [];
+
+        // normalizează textul (important)
+        function normalize(text) {
+            return text
+                .trim()
+                .toLowerCase()
+                .replace(/\s+/g, "-");
+        }
+
+        function updateStrengthsHidden() {
+            const selected = [];
+
+            // checkbox-uri
+            strengthCheckboxes.forEach(cb => {
+                if (cb.checked) {
+                    selected.push(cb.value);
+                }
+            });
+
+            // custom
+            customStrengths.forEach(cs => selected.push(cs));
+
+            strengthsHidden.value = selected.join(",");
+        }
+
+        // checkbox change
+        strengthCheckboxes.forEach(cb =>
+            cb.addEventListener("change", updateStrengthsHidden)
+        );
+
+        // adăugare custom
+        addCustomBtn.addEventListener("click", () => {
+            const raw = customInput.value;
+            if (!raw) return;
+
+            const normalized = normalize(raw);
+
+            if (customStrengths.includes(normalized)) return;
+
+            customStrengths.push(normalized);
+            customInput.value = "";
+
+            renderCustomStrengths();
+            updateStrengthsHidden();
+        });
+
+        function renderCustomStrengths() {
+            customContainer.innerHTML = "";
+
+            customStrengths.forEach(cs => {
+                const badge = document.createElement("span");
+                badge.className = "skill-badge";
+                badge.textContent = cs.replace(/-/g, " ");
+
+                badge.addEventListener("click", () => {
+                    customStrengths = customStrengths.filter(s => s !== cs);
+                    renderCustomStrengths();
+                    updateStrengthsHidden();
+                });
+
+                customContainer.appendChild(badge);
+            });
+        }
+
+    </script>
 
     <!-- Js Plugins -->
     <script src="/js/jquery-3.3.1.min.js"></script>
