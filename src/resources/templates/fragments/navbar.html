@@ -47,6 +47,9 @@
                             <li>
                                 <a th:href="@{/logout}"><i class="fa fa-power-off"></i> Logout</a>
                             </li>
+                            <li>
+                                <a th:href="@{/admin}"><i class="fa fa-shield"></i> Admin</a>
+                            </li>
                         </ul>
 
                     </div>
@@ -107,12 +110,6 @@
                     </div>
                     <a th:href="@{/announces/new}" class="btn-create-announce"><span>+ Creează anunț</span></a>
                     <div class="nav-right">
-<!--                    &lt;!&ndash; Buton Admin&ndash;&gt;-->
-<!--                    <a sec:authorize="hasRole('ROLE_ADMIN')"-->
-<!--                       th:href="@{/admin}"-->
-<!--                       class="admin-link">-->
-<!--                        <i class="fa fa-shield"></i> Admin-->
-<!--                    </a>-->
                         <!-- Conversations Button -->
                         <a th:href="@{/chat-history}" class="btn-conversations" sec:authorize="isAuthenticated()" aria-label="Conversații">
                             <i class="fa fa-comments"></i>

@@ -876,14 +876,46 @@ ol {
 }
 
 .nav-options {
-	background: #6a2ba8;
+	background: transparent;
 	padding: 0 0;
 	position: relative;
 	z-index: 50;
 }
 
+/* Tighten navbar height without changing button/logo sizes */
+.nav-options {
+	padding-top: 0;
+	padding-bottom: 0;
+	margin-bottom: -14px;
+}
+
+/* Inset navbar background without resizing content */
+.nav-options::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	bottom: 4px;
+	left: 0;
+	right: 0;
+	background: #6a2ba8;
+	z-index: 0;
+}
+
+.nav-options > .container,
+.nav-options .nav-bar,
+.nav-options .nav-left,
+.nav-options .nav-center,
+.nav-options .nav-right {
+	padding-top: 0;
+	padding-bottom: 0;
+	min-height: 0;
+	line-height: normal;
+	align-items: center;
+}
+
 .nav-options .container {
 	position: relative;
+	z-index: 1;
 }
 
 /* Navbar should span full width so the logo sits closer to the left edge */
@@ -902,6 +934,13 @@ ol {
 }
 
 .nav-options.humberger-change {
+	background: transparent;
+	-webkit-transition: all 0.3s;
+	-o-transition: all 0.3s;
+	transition: all 0.3s;
+}
+
+.nav-options.humberger-change::before {
 	background: #6c2b96;
 	-webkit-transition: all 0.3s;
 	-o-transition: all 0.3s;
