@@ -877,13 +877,20 @@ ol {
 
 .nav-options {
 	background: #6a2ba8;
-	padding: 10px 0;
+	padding: 0 0;
 	position: relative;
 	z-index: 50;
 }
 
 .nav-options .container {
 	position: relative;
+}
+
+/* Navbar should span full width so the logo sits closer to the left edge */
+.nav-options > .container {
+	max-width: 100% !important;
+	padding-left: 2cm !important;
+	padding-right: 12px !important;
 }
 
 .nav-options .nav-bar {
@@ -922,13 +929,55 @@ ol {
 .nav-options .nav-left {
 	display: flex;
 	align-items: center;
-	gap: 10px;
+	gap: 4px;
+	flex: 0 0 auto;
+}
+
+.nav-options .nav-center .nav-menu {
+	flex: 0 1 auto;
+	text-align: center;
+}
+
+.nav-options .nav-center .nav-menu ul {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+}
+
+.nav-options .nav-center .nav-menu ul li {
+	margin-right: 4px;
+}
+
+.nav-logo {
+	display: flex;
+	align-items: center;
+}
+
+.nav-logo .site-logo {
+	display: block;
+}
+
+.nav-options .nav-center {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 16px;
+	flex: 1 1 auto;
+}
+
+/* Extra spacing between Profil and Creează anunț */
+.nav-options .nav-center .btn-create-announce {
+	margin-left: 2.5cm;
 }
 
 .nav-options .nav-right {
 	display: flex;
 	align-items: center;
 	gap: 16px;
+}
+
+.nav-options .nav-right .admin-link {
+	margin-left: 0;
 }
 
 .nav-options .humberger-menu {
@@ -1181,7 +1230,7 @@ ol {
 	color: #ffffff;
 	font-family: "Space Grotesk", sans-serif;
 	text-transform: uppercase;
-	padding: 17px 15px 13px 30px;
+	padding: 13px 15px 9px 30px;
 	display: inline-block;
 	background: linear-gradient(135deg, #b66dff 0%, #8c48e8 100%);
 	-webkit-transform: skewX(-15deg);
@@ -1244,7 +1293,7 @@ ol {
 	align-items: center;
 	justify-content: center;
 	gap: 8px;
-	padding: 14px 22px;
+	padding: 10px 22px;
 	font-size: 14px;
 	font-weight: 600;
 	text-transform: uppercase;
@@ -4606,7 +4655,7 @@ ol {
 	}
 	.nav-options {
 		text-align: center;
-		padding: 12px 0;
+		padding: 0 0;
 	}
 	.nav-options .nav-bar {
 		display: flex;

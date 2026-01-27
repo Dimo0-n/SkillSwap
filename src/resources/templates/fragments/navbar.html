@@ -84,67 +84,62 @@
             </div>
         </div>
     </div>
-    <div class="logo">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-12 text-center d-flex justify-content-center align-items-center">
-                    <a href="/index"><img class="site-logo" src="/img/skill-swap-logo-cameleon.png" alt="SkillSwap logo"></a>
-                    <!-- Buton Admin-->
-                    <a sec:authorize="hasRole('ROLE_ADMIN')"
-                       th:href="@{/admin}"
-                       class="admin-link">
-                        <i class="fa fa-shield"></i> Admin
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="nav-options">
         <div class="container">
-            <div class="nav-bar">
+                        <div class="nav-bar">
                 <div class="nav-left">
-                    <button class="humberger-menu humberger-open" type="button" aria-label="Deschide meniul">
-                        <i class="fa fa-bars"></i>
-                    </button>
-                </div>
-                <div class="nav-menu">
-                    <ul>
-                        <li><a th:href="@{/index}"><span>Acasă</span></a></li>
-                        <li><a th:href="@{/announces-list}"><span>Anunțuri</span></a></li>
-<!--                    <li><a sec:authorize="isAuthenticated()" th:href="@{/chat}"><span>Chat</i></span></a></li>-->
-                        <li><a th:href="@{/contact}">Contact</a></li>
-                        <li><a sec:authorize="isAuthenticated()" th:href="@{/profil}">Profil</a></li>
-                    </ul>
-                </div>
-                    <a th:href="@{/announces/new}" class="btn-create-announce"><span>+ Creează anunț</span></a>
-                <br>
-                <br>
-                <div class="nav-right">
-                    <!-- Conversations Button -->
-                    <a th:href="@{/chat-history}" class="btn-conversations" sec:authorize="isAuthenticated()" aria-label="Conversații">
-                        <i class="fa fa-comments"></i>
-                        <span class="conversation-badge" id="conversationBadge">2</span>
+<!--                    <button class="humberger-menu humberger-open" type="button" aria-label="Deschide meniul">-->
+<!--                        <i class="fa fa-bars"></i>-->
+<!--                    </button>-->
+                    <a href="/index" class="nav-logo">
+                        <img class="site-logo" src="/img/skill-swap-logo-cameleon.png" alt="SkillSwap logo">
                     </a>
-                    
-                    <!-- Notifications Button -->
-                    <div class="notifications-wrapper" sec:authorize="isAuthenticated()">
-                        <button class="btn-notifications" type="button" id="notificationsButton" aria-label="Notificări">
-                            <i class="fa fa-bell"></i>
-                            <span class="notification-badge" id="notificationBadge">3</span>
-                        </button>
-                        <!-- Notifications Dropdown -->
-                        <div class="notifications-dropdown" id="notificationsDropdown">
-                            <div class="notifications-header">
-                                <h6>Notificări</h6>
-                            </div>
-                            <div class="notifications-list" id="notificationsList">
-                                <!-- Notification items will be dynamically inserted here -->
+                </div>
+                <div class="nav-center">
+                    <div class="nav-menu">
+                        <ul>
+                            <li><a th:href="@{/index}"><span>Acasă</span></a></li>
+                            <li><a th:href="@{/announces-list}"><span>Anunțuri</span></a></li>
+<!--                    <li><a sec:authorize="isAuthenticated()" th:href="@{/chat}"><span>Chat</i></span></a></li>-->
+                            <li><a th:href="@{/contact}">Contact</a></li>
+                            <li><a sec:authorize="isAuthenticated()" th:href="@{/profil}">Profil</a></li>
+                        </ul>
+                    </div>
+                    <a th:href="@{/announces/new}" class="btn-create-announce"><span>+ Creează anunț</span></a>
+                    <div class="nav-right">
+<!--                    &lt;!&ndash; Buton Admin&ndash;&gt;-->
+<!--                    <a sec:authorize="hasRole('ROLE_ADMIN')"-->
+<!--                       th:href="@{/admin}"-->
+<!--                       class="admin-link">-->
+<!--                        <i class="fa fa-shield"></i> Admin-->
+<!--                    </a>-->
+                        <!-- Conversations Button -->
+                        <a th:href="@{/chat-history}" class="btn-conversations" sec:authorize="isAuthenticated()" aria-label="Conversații">
+                            <i class="fa fa-comments"></i>
+                            <span class="conversation-badge" id="conversationBadge">2</span>
+                        </a>
+                        
+                        <!-- Notifications Button -->
+                        <div class="notifications-wrapper" sec:authorize="isAuthenticated()">
+                            <button class="btn-notifications" type="button" id="notificationsButton" aria-label="Notificări">
+                                <i class="fa fa-bell"></i>
+                                <span class="notification-badge" id="notificationBadge">3</span>
+                            </button>
+                            <!-- Notifications Dropdown -->
+                            <div class="notifications-dropdown" id="notificationsDropdown">
+                                <div class="notifications-header">
+                                    <h6>Notificări</h6>
+                                </div>
+                                <div class="notifications-list" id="notificationsList">
+                                    <!-- Notification items will be dynamically inserted here -->
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="navbar-search-panel" id="navbarSearchPanel">
+        </div>
+        <div class="navbar-search-panel" id="navbarSearchPanel">
                 <form class="navbar-search-form" th:action="@{/announces-list}" method="get">
                     <!-- Folosește același endpoint de filtrare ca bara principală de căutare -->
                     <input type="text" id="navbar-search-input" name="query" placeholder="Caută un skill sau anunț" aria-label="Caută">
