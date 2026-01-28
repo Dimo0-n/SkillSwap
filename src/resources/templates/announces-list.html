@@ -42,7 +42,7 @@
         <div class="row mb-4">
             <div class="col-12">
                 <div class="section-title">
-                    <h5>Hai cu un nou skill. Caut? chiar aici</h5>
+                    <h5>Hai cu un nou skill. Cauta chiar aici</h5>
                 </div>
                 <div class="main-search-bar">
                     <form id="announces-main-search" class="main-search-form" th:action="@{/announces-list}" method="get">
@@ -52,10 +52,10 @@
                                    id="skill-search"
                                    name="query"
                                    class="main-search-field"
-                                   placeholder="Caut? un skill sau un anun?"
-                                   aria-label="Caut? un anun?">
+                                   placeholder="Cauta un skill sau un anunt"
+                                   aria-label="Cauta un anunt">
                             <button type="submit" class="main-search-submit">
-                                <span>Caut?</span>
+                                <span>Cauta</span>
                             </button>
                         </div>
                     </form>
@@ -67,7 +67,7 @@
             <th:block th:each="announce : ${announcesList}">
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="cg-item" data-skill="reviews">
-                        <div class="cg-pic set-bg" th:attr="data-setbg=@{${'/' + announce.image}}">
+                        <div class="cg-pic set-bg" th:attr="data-setbg=@{${'/' + announce.image.imagePath}}">
                             <div class="label"><span>Reviews</span></div>
                         </div>
                         <div class="cg-text">
@@ -76,7 +76,7 @@
                                 <li>by <span th:text="${announce.author}"></span></li>
                                 <li>
                                     <i class="fa fa-clock-o"></i>
-                                    <span th:text="${#temporals.format(announce.createDate, 'dd MMMM HH:mm')}"></span>
+                                    <span th:text="${#temporals.format(announce.date, 'dd MMMM HH:mm')}"></span>
                                 </li>
                                 <li><i class="fa fa-comment-o"></i> 20</li>
                             </ul>

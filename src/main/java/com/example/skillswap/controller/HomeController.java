@@ -30,9 +30,9 @@ public class HomeController {
         return "404";
     }
 
-    @GetMapping("/categories-list")
-    public String categoryList(){
-        return "categories-list";
+    @GetMapping("/user-announces-list")
+    public String userAnnouncesList(){
+        return "user-announces-list";
     }
 
     @GetMapping("/chat")

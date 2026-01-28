@@ -31,9 +31,11 @@ public class Announce {
 
     private String categoryRequired;
 
-    private String additionalInfo;
+    @ManyToOne
+    @JoinColumn(name = "image_id")
+    private AnnounceImage image;
 
-    private int imageId;
+    private String additionalInfo;
 
     private LocalDateTime date;
 

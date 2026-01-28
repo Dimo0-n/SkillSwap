@@ -269,7 +269,7 @@
                 <th:block th:each="announce : ${latest5Announces}">
                     <div class="ip-item">
                         <div class="ip-pic">
-                            <img th:src="@{${'/' + announce.image}}" alt="programming">
+                            <img th:src="@{${'/' + announce.image.imagePath}}" alt="programming">
                         </div>
                         <div class="ip-text">
                             <div class="label"><span>NOU</span></div>
@@ -280,7 +280,7 @@
                                 <li>by<span th:text="${announce.author}"></span></li>
                                 <li>
                                     <i class="fa fa-clock-o"></i>
-                                    <span th:text="${#temporals.format(announce.createDate, 'dd MMMM HH:mm')}"></span>
+                                    <span th:text="${#temporals.format(announce.date, 'dd MMMM HH:mm')}"></span>
                                 </li>
                             </ul>
                             <p th:text="${announce.description}"></p>
