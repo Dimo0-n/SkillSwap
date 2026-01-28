@@ -19,7 +19,7 @@ class AnnounceController {
     public String categoryGrid(Model model){
         List<Announce> announcesList = announceService.getAnnouncesList();
         model.addAttribute("announcesList", announcesList);
-        model.addAttribute("page", "annouces-list" );
+        model.addAttribute("page", "announces-list" );
         return "announces-list";
     }
 

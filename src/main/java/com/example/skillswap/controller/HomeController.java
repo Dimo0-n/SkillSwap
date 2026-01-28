@@ -31,7 +31,10 @@ public class HomeController {
     }
 
     @GetMapping("/user-announces-list")
-    public String userAnnouncesList(){
+    public String userAnnouncesList(Model model){
+        List<Announce> announcesList = announceService.getAnnouncesList();
+        model.addAttribute("announcesList", announcesList);
+        model.addAttribute("page", "announces-list" );
         return "user-announces-list";
     }
 

@@ -25,6 +25,59 @@
     <link rel="stylesheet" href="/css/magnific-popup.css" type="text/css">
     <link rel="stylesheet" href="/css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+    <style>
+        .cl-pic {
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* FORM */
+        .delete-overlay-form {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            z-index: 5;
+        }
+
+        /* BUTTON */
+        .delete-overlay-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(220, 53, 69, 0.9); /* red danger */
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            backdrop-filter: blur(6px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            transition: all 0.2s ease;
+        }
+
+        .delete-overlay-btn i {
+            font-size: 14px;
+        }
+
+        .delete-overlay-btn:hover {
+            background: #dc3545;
+            transform: scale(1.15) rotate(-5deg);
+        }
+
+        /* optional: apare doar la hover pe imagine */
+        .cl-pic .delete-overlay-form {
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.2s ease;
+        }
+
+        .cl-pic:hover .delete-overlay-form {
+            opacity: 1;
+            transform: scale(1);
+        }
+    </style>
 </head>
 
 <body>
@@ -42,141 +95,41 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 p-0">
-                    <div class="cl-item">
-                        <div class="cl-pic">
-                            <img src="/img/categories-list/cl-1.jpg" alt="">
+                    <th:block th:each="announce : ${announcesList}">
+                        <div class="cl-item">
+                            <div class="cl-pic">
+                                <!-- DELETE BUTTON ON IMAGE -->
+                                <form th:action="@{/announces/delete/{id}(id=${announce.id})}"
+                                      method="post"
+                                      class="delete-overlay-form"
+                                      onsubmit="return confirm('Sigur vrei să ștergi acest anunț?');">
+
+                                    <button type="submit" class="delete-overlay-btn">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </form>
+                                <img th:src="@{${'/' + announce.image.imagePath}}" alt="programming">
+                            </div>
+                            <div class="cl-text">
+                                <div class="label"><span>Reviews</span></div>
+                                <h5>
+                                    <a th:text="${announce.title}" href="#"></a> </h5>
+                                <ul>
+                                    <li>by <span th:text="${announce.author}"></span></li>
+                                    <li><i class="fa fa-clock-o"></i>
+                                        <span th:text="${#temporals.format(announce.date, 'dd MMMM HH:mm')}"></span>
+                                    </li>
+                                </ul>
+                                <p th:text="${announce.description}"></p>
+                            </div>
                         </div>
-                        <div class="cl-text">
-                            <div class="label"><span>Reviews</span></div>
-                            <h5><a href="#">Here's an hour of side-quests from The Outer Worlds...</a></h5>
-                            <ul>
-                                <li>by <span>Admin</span></li>
-                                <li><i class="fa fa-clock-o"></i> Aug 01, 2019</li>
-                                <li><i class="fa fa-comment-o"></i> 20</li>
-                            </ul>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                                ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices...</p>
-                        </div>
-                    </div>
-                    <div class="cl-item">
-                        <div class="cl-pic">
-                            <img src="/img/categories-list/cl-2.jpg" alt="">
-                        </div>
-                        <div class="cl-text">
-                            <div class="label"><span>Windows</span></div>
-                            <h5><a href="#">Infinity Ward's focus isn't on battle royale, Call of...</a></h5>
-                            <ul>
-                                <li>by <span>Admin</span></li>
-                                <li><i class="fa fa-clock-o"></i> Aug 01, 2019</li>
-                                <li><i class="fa fa-comment-o"></i> 20</li>
-                            </ul>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                                ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices...</p>
-                        </div>
-                    </div>
-                    <div class="cl-item">
-                        <div class="cl-pic">
-                            <img src="/img/categories-list/cl-3.jpg" alt="">
-                        </div>
-                        <div class="cl-text">
-                            <div class="label"><span>Hardware</span></div>
-                            <h5><a href="#">Capcom asks select fans to test new Resident Evil game</a></h5>
-                            <ul>
-                                <li>by <span>Admin</span></li>
-                                <li><i class="fa fa-clock-o"></i> Aug 01, 2019</li>
-                                <li><i class="fa fa-comment-o"></i> 20</li>
-                            </ul>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                                ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices...</p>
-                        </div>
-                    </div>
-                    <div class="cl-item">
-                        <div class="cl-pic">
-                            <img src="/img/categories-list/cl-4.jpg" alt="">
-                        </div>
-                        <div class="cl-text">
-                            <div class="label"><span>Playstation</span></div>
-                            <h5><a href="#">Teamfight Tactics is in chaos after today's patch...</a></h5>
-                            <ul>
-                                <li>by <span>Admin</span></li>
-                                <li><i class="fa fa-clock-o"></i> Aug 01, 2019</li>
-                                <li><i class="fa fa-comment-o"></i> 20</li>
-                            </ul>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                                ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices...</p>
-                        </div>
-                    </div>
-                    <div class="cl-item">
-                        <div class="cl-pic">
-                            <img src="/img/categories-list/cl-5.jpg" alt="">
-                        </div>
-                        <div class="cl-text">
-                            <div class="label"><span>Reviews</span></div>
-                            <h5><a href="#">Republican politicians say videogames partly...</a></h5>
-                            <ul>
-                                <li>by <span>Admin</span></li>
-                                <li><i class="fa fa-clock-o"></i> Aug 01, 2019</li>
-                                <li><i class="fa fa-comment-o"></i> 20</li>
-                            </ul>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                                ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices...</p>
-                        </div>
-                    </div>
-                    <div class="cl-item">
-                        <div class="cl-pic">
-                            <img src="/img/categories-list/cl-6.jpg" alt="">
-                        </div>
-                        <div class="cl-text">
-                            <div class="label"><span>Windows</span></div>
-                            <h5><a href="#">Borderlands 2 dev explains why there's mysterious boxes...</a></h5>
-                            <ul>
-                                <li>by <span>Admin</span></li>
-                                <li><i class="fa fa-clock-o"></i> Aug 01, 2019</li>
-                                <li><i class="fa fa-comment-o"></i> 20</li>
-                            </ul>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                                ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices...</p>
-                        </div>
-                    </div>
-                    <div class="cl-item">
-                        <div class="cl-pic">
-                            <img src="/img/categories-list/cl-7.jpg" alt="">
-                        </div>
-                        <div class="cl-text">
-                            <div class="label"><span>Hardware</span></div>
-                            <h5><a href="#">Automachef and Wonder Boy among four free games...</a></h5>
-                            <ul>
-                                <li>by <span>Admin</span></li>
-                                <li><i class="fa fa-clock-o"></i> Aug 01, 2019</li>
-                                <li><i class="fa fa-comment-o"></i> 20</li>
-                            </ul>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                                ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices...</p>
-                        </div>
-                    </div>
-                    <div class="cl-item">
-                        <div class="cl-pic">
-                            <img src="/img/categories-list/cl-8.jpg" alt="">
-                        </div>
-                        <div class="cl-text">
-                            <div class="label"><span>Playstation</span></div>
-                            <h5><a href="#">A new Borderlands 3 trailer introduces Moze and her...</a></h5>
-                            <ul>
-                                <li>by <span>Admin</span></li>
-                                <li><i class="fa fa-clock-o"></i> Aug 01, 2019</li>
-                                <li><i class="fa fa-comment-o"></i> 20</li>
-                            </ul>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                                ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices...</p>
-                        </div>
-                    </div>
-                    <div class="pagination-item">
-                        <a href="#"><span>1</span></a>
-                        <a href="#"><span>2</span></a>
-                        <a href="#"><span>3</span></a>
-                        <a href="#"><span>Next</span></a>
-                    </div>
+                    </th:block>
                 </div>
+
+                <!--        Paginarea start-->
+                <div class="pagination-item mt-4 d-flex justify-content-center" id="pagination-container"></div>
+                <!--            Paginare end-->
+
                 <div class="col-lg-4 col-md-7 p-0">
                     <div class="sidebar-option">
                         <div th:replace="~{/fragments/social-media :: social-media}"></div>
@@ -218,6 +171,7 @@
     <script src="/js/jquery.slicknav.js"></script>
     <script src="/js/owl.carousel.min.js"></script>
     <script src="/js/main.js"></script>
+    <script src="/js/categories-list.js"></script>
 </body>
 
 </html>
