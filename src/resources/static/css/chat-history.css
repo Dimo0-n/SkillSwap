@@ -3,13 +3,13 @@
 .chat-history-section {
     padding-top: 10px;
     padding-bottom: 0;
-    min-height: calc(100vh - 100px);
+    min-height: calc(100vh - 143px);
     background: var(--bg-dark);
 }
 
 .chat-history-container {
     display: flex;
-    height: calc(100vh - 120px);
+    height: calc(100vh - 143px);
     max-height: none;
     background: var(--card-bg);
     border-radius: 16px;
