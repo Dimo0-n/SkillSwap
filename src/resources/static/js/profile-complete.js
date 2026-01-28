@@ -28,10 +28,12 @@
 
     // Initialize on DOM ready
     $(document).ready(function() {
+        bootstrapStateFromDom();
         initializeEventListeners();
         initializeStepNavigation();
         initializeScrollTracking();
         initializeLivePreview();
+        syncHiddenFields();
         updateProgress();
     });
 
@@ -140,7 +142,7 @@
                     isCompleted = $('#detailedDescription').val().trim() !== '';
                     break;
                 case 'availability':
-                    isCompleted = $('input[type="checkbox"][id="morning"], input[type="checkbox"][id="afternoon"], input[type="checkbox"][id="evening"], input[type="checkbox"][id="weekend"]').is(':checked') ||
+                    isCompleted = $('.availability-checkbox:checked').length > 0 ||
                                  state.limitations.length > 0;
                     break;
                 case 'strengths':
@@ -229,10 +231,17 @@
         $('.strength-checkbox').on('change', function() {
             updateLivePreview();
             checkSectionCompletion();
+            syncHiddenFields();
         });
 
         // Availability checkboxes
-        $('#morning, #afternoon, #evening, #weekend').on('change', checkSectionCompletion);
+        $('.availability-checkbox').on('change', function() {
+            syncHiddenFields();
+            checkSectionCompletion();
+        });
+
+        // Ensure hidden fields are in sync before submit
+        $('form').on('submit', syncHiddenFields);
 
         // Save buttons
         $('#saveProfileBtn').on('click', saveProfile);
@@ -317,6 +326,7 @@
         renderSkills();
         updateLivePreview();
         checkSectionCompletion();
+        syncHiddenFields();
     }
 
     /**
@@ -327,6 +337,7 @@
         renderSkills();
         updateLivePreview();
         checkSectionCompletion();
+        syncHiddenFields();
     }
 
     /**
@@ -371,6 +382,7 @@
         input.val('');
         renderLimitations();
         checkSectionCompletion();
+        syncHiddenFields();
     }
 
     /**
@@ -380,6 +392,7 @@
         state.limitations.splice(index, 1);
         renderLimitations();
         checkSectionCompletion();
+        syncHiddenFields();
     }
 
     /**
@@ -415,15 +428,18 @@
             return;
         }
 
-        if (state.customStrengths.includes(strength)) {
+        const normalized = normalizeStrength(strength);
+
+        if (state.customStrengths.includes(normalized)) {
             alert('Această trăsătură este deja adăugată.');
             return;
         }
 
-        state.customStrengths.push(strength);
+        state.customStrengths.push(normalized);
         input.val('');
         renderCustomStrengths();
         checkSectionCompletion();
+        syncHiddenFields();
     }
 
     /**
@@ -433,6 +449,7 @@
         state.customStrengths.splice(index, 1);
         renderCustomStrengths();
         checkSectionCompletion();
+        syncHiddenFields();
     }
 
     /**
@@ -445,7 +462,7 @@
         state.customStrengths.forEach(function(strength, index) {
             const badge = $('<div>')
                 .addClass('strength-badge')
-                .html('<span>' + escapeHtml(strength) + '</span>' +
+                .html('<span>' + escapeHtml(strength.replace(/-/g, ' ')) + '</span>' +
                       '<button type="button" class="remove-btn" data-index="' + index + '">×</button>');
             container.append(badge);
         });
@@ -473,6 +490,93 @@
     }
 
     /**
+     * Populate state from hidden inputs when editing existing data
+     */
+    function bootstrapStateFromDom() {
+        const skillsValue = $('#competencesHidden').val();
+        if (skillsValue) {
+            state.skills = skillsValue.split(',').filter(Boolean);
+            renderSkills();
+        }
+
+        const limitsValue = $('#limitsHidden').val();
+        if (limitsValue) {
+            state.limitations = limitsValue.split(',').filter(Boolean);
+            renderLimitations();
+        }
+
+        const strengthsValue = $('#strengthsHidden').val();
+        if (strengthsValue) {
+            strengthsValue.split(',').filter(Boolean).forEach(function(value) {
+                const checkbox = $('.strength-checkbox[value="' + value + '"]');
+                if (checkbox.length) {
+                    checkbox.prop('checked', true);
+                } else {
+                    state.customStrengths.push(value);
+                }
+            });
+            renderCustomStrengths();
+        }
+
+        const maskValue = parseInt($('#availabilityMask').val() || '0', 10);
+        if (!isNaN(maskValue)) {
+            $('.availability-checkbox').each(function() {
+                const bit = parseInt($(this).data('bit'), 10);
+                if (!isNaN(bit) && (maskValue & bit) === bit) {
+                    $(this).prop('checked', true);
+                }
+            });
+        }
+    }
+
+    /**
+     * Synchronize aggregated values into hidden inputs before submit
+     */
+    function syncHiddenFields() {
+        const skillsField = $('#competencesHidden');
+        if (skillsField.length) {
+            skillsField.val(state.skills.join(','));
+        }
+
+        const limitsField = $('#limitsHidden');
+        if (limitsField.length) {
+            limitsField.val(state.limitations.join(','));
+        }
+
+        const strengths = [];
+        $('.strength-checkbox:checked').each(function() {
+            strengths.push($(this).val());
+        });
+        state.customStrengths.forEach(function(value) {
+            strengths.push(value);
+        });
+
+        const strengthsField = $('#strengthsHidden');
+        if (strengthsField.length) {
+            strengthsField.val(strengths.join(','));
+        }
+
+        const availabilityField = $('#availabilityMask');
+        if (availabilityField.length) {
+            let mask = 0;
+            $('.availability-checkbox').each(function() {
+                const checkbox = $(this);
+                if (checkbox.is(':checked')) {
+                    const bit = parseInt(checkbox.data('bit'), 10);
+                    if (!isNaN(bit)) {
+                        mask |= bit;
+                    }
+                }
+            });
+            availabilityField.val(mask);
+        }
+    }
+
+    function normalizeStrength(text) {
+        return text.trim().toLowerCase().replace(/\s+/g, '-');
+    }
+
+    /**
      * Save profile (placeholder)
      */
     function saveProfile() {
@@ -485,12 +589,7 @@
             skills: state.skills,
             limitations: state.limitations,
             customStrengths: state.customStrengths,
-            availability: {
-                morning: $('#morning').is(':checked'),
-                afternoon: $('#afternoon').is(':checked'),
-                evening: $('#evening').is(':checked'),
-                weekend: $('#weekend').is(':checked')
-            },
+            availabilityMask: parseInt($('#availabilityMask').val() || '0', 10),
             visibility: {
                 public: $('#profilePublic').is(':checked'),
                 allowDirectContact: $('#allowDirectContact').is(':checked')

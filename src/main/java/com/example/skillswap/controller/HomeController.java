@@ -49,12 +49,6 @@ public class HomeController {
         return "announce-details";
     }
 
-    @GetMapping("/profil")
-    public String profil(Model model){
-        model.addAttribute("page", "profil" );
-        return "profil";
-    }
-
     @GetMapping("/typography")
     public String typography(){
         return "typography";

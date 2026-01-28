@@ -217,12 +217,13 @@ Include (indiferent de variantă):
                     <div class="form-group">
                         <label for="limitationsInput" class="form-label">Limitări</label>
                         <div class="limitations-input-group">
-                            <input name="limits" th:field="*{limits}" type="text" id="limitationsInput" class="form-control"
+                            <input type="text" id="limitationsInput" class="form-control"
                                    placeholder="Ex: Nu ofer lecții avansate">
                             <button type="button" id="addLimitationBtn" class="btn-add-skill">
                                 <i class="fa fa-plus"></i> Adaugă
                             </button>
                         </div>
+                        <input type="hidden" th:field="*{limits}" id="limitsHidden">
                         <div class="limitations-container" id="limitationsContainer">
                         </div>
                         <small class="form-help">Limitările sunt normale și esențiale. Fii clar despre ce nu oferi.</small>
@@ -317,141 +318,7 @@ Include (indiferent de variantă):
         </div>
     </div>
 
-    <script>
-        const skillInput = document.getElementById("skillInput");
-        const addSkillBtn = document.getElementById("addSkillBtn");
-        const skillsContainer = document.getElementById("skillsContainer");
-        const hiddenInput = document.getElementById("competencesHidden");
-
-        let skills = [];
-
-        addSkillBtn.addEventListener("click", () => {
-            const value = skillInput.value.trim();
-
-            if (!value || skills.includes(value)) return;
-
-            skills.push(value);
-            skillInput.value = "";
-
-            renderSkills();
-            updateHiddenInput();
-        });
-
-        function renderSkills() {
-            skillsContainer.innerHTML = "";
-
-            skills.forEach(skill => {
-                const badge = document.createElement("span");
-                badge.className = "skill-badge";
-                badge.textContent = skill;
-
-                badge.addEventListener("click", () => {
-                    skills = skills.filter(s => s !== skill);
-                    renderSkills();
-                    updateHiddenInput();
-                });
-
-                skillsContainer.appendChild(badge);
-            });
-        }
-
-        function updateHiddenInput() {
-            hiddenInput.value = skills.join(",");
-        }
-
-        const checkboxes = document.querySelectorAll(".availability-checkbox");
-        const hiddenMask = document.getElementById("availabilityMask");
-
-        function updateAvailabilityMask() {
-            let mask = 0;
-
-            checkboxes.forEach(cb => {
-                if (cb.checked) {
-                    mask |= parseInt(cb.dataset.bit, 10);
-                }
-            });
-
-            hiddenMask.value = mask;
-        }
-
-        // ascultă schimbările
-        checkboxes.forEach(cb => {
-            cb.addEventListener("change", updateAvailabilityMask);
-        });
-
-        const strengthCheckboxes = document.querySelectorAll(".strength-checkbox");
-        const strengthsHidden = document.getElementById("strengthsHidden");
-
-        const customInput = document.getElementById("customStrengthInput");
-        const addCustomBtn = document.getElementById("addCustomStrengthBtn");
-        const customContainer = document.getElementById("customStrengthsContainer");
-
-        let customStrengths = [];
-
-        // normalizează textul (important)
-        function normalize(text) {
-            return text
-                .trim()
-                .toLowerCase()
-                .replace(/\s+/g, "-");
-        }
-
-        function updateStrengthsHidden() {
-            const selected = [];
-
-            // checkbox-uri
-            strengthCheckboxes.forEach(cb => {
-                if (cb.checked) {
-                    selected.push(cb.value);
-                }
-            });
-
-            // custom
-            customStrengths.forEach(cs => selected.push(cs));
-
-            strengthsHidden.value = selected.join(",");
-        }
-
-        // checkbox change
-        strengthCheckboxes.forEach(cb =>
-            cb.addEventListener("change", updateStrengthsHidden)
-        );
-
-        // adăugare custom
-        addCustomBtn.addEventListener("click", () => {
-            const raw = customInput.value;
-            if (!raw) return;
-
-            const normalized = normalize(raw);
-
-            if (customStrengths.includes(normalized)) return;
-
-            customStrengths.push(normalized);
-            customInput.value = "";
-
-            renderCustomStrengths();
-            updateStrengthsHidden();
-        });
-
-        function renderCustomStrengths() {
-            customContainer.innerHTML = "";
-
-            customStrengths.forEach(cs => {
-                const badge = document.createElement("span");
-                badge.className = "skill-badge";
-                badge.textContent = cs.replace(/-/g, " ");
-
-                badge.addEventListener("click", () => {
-                    customStrengths = customStrengths.filter(s => s !== cs);
-                    renderCustomStrengths();
-                    updateStrengthsHidden();
-                });
-
-                customContainer.appendChild(badge);
-            });
-        }
-
-    </script>
+    
 
     <!-- Js Plugins -->
     <script src="/js/jquery-3.3.1.min.js"></script>

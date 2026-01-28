@@ -26,15 +26,21 @@ public class Profil {
 
     private String bioShort;
 
-    private List<String> competences;
-
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String completeDescription;
 
     private int availabilityMask;
 
     private String limits;
 
-    private List<String> strengths;
+    @Lob
+    @Column(columnDefinition = "TEXT")
+    private String competences;
+
+    @Lob
+    @Column(columnDefinition = "TEXT")
+    private String strengths;
 
     @Lob
     @Column(name = "image",  columnDefinition = "LONGBLOB")

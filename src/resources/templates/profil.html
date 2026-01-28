@@ -57,24 +57,20 @@
                 </div>
 
                 <div class="profile-avatar">
-                    <img src="/img/profil/img.png" alt="User Avatar">
+                    <img th:src="${profile.imageUrl}" alt="User Avatar">
                 </div>
 
                 <div class="profile-info">
-                    <h2>Alex M.</h2>
-                    <p class="profile-role">Frontend Developer & UI Enthusiast</p>
+                    <h2 th:text="${profile.name}">Alex M.</h2>
+                    <p class="profile-role" th:text="${profile.profession}"></p>
 
-                    <p class="profile-bio">
-                        Passionate about clean UI, smooth UX and modern web design.
-                        Always learning, always improving.
-                    </p>
+                    <p class="profile-bio" th:text="${profile.bioShort}"></p>
 
                     <div class="profile-skills">
-                        <span>HTML</span>
-                        <span>CSS</span>
-                        <span>JavaScript</span>
-                        <span>UI/UX</span>
+                        <span th:each="skill : ${profile.competences}"
+                        th:text="${skill}">Skill</span>
                     </div>
+
                 </div>
             </div>
         </div>
