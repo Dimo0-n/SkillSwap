@@ -1,7 +1,6 @@
 package com.example.skillswap.controller;
 
 import com.example.skillswap.dto.ProfilDto;
-import com.example.skillswap.entity.Profil;
 import com.example.skillswap.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
@@ -26,29 +25,52 @@ public class ProfileController {
     @GetMapping("")
     public String profilePage(Model model, Authentication auth) {
 
-        ProfilDto profile = profileService.getProfileForView(auth.getName());
+        if (auth == null) {
+            return "redirect:/login";
+        }
+
+        ProfilDto profile;
+        try {
+            profile = profileService.getProfileForView(auth.getName());
+        } catch (RuntimeException ex) {
+            return "redirect:/profile/complete";
+        }
 
         model.addAttribute("profile", profile);
         return "profil";
     }
 
     @GetMapping("/complete")
-    public String profileComplete(Model model) {
-        model.addAttribute("profile", new Profil());
+    public String profileComplete(Model model, Authentication auth) {
+        ProfilDto dto;
+        if (auth != null) {
+            try {
+                dto = profileService.getProfileForView(auth.getName());
+            } catch (RuntimeException ex) {
+                dto = new ProfilDto();
+            }
+        } else {
+            dto = new ProfilDto();
+        }
+        model.addAttribute("profile", dto);
         model.addAttribute("page", "profile-complete");
         return "profile-complete";
     }
 
     @PostMapping("/save")
     public String saveProfileComplete(
-            @ModelAttribute("profil") Profil profil,
+            @ModelAttribute("profil") ProfilDto profilDto,
             @RequestParam(value = "profilePicture", required = false) MultipartFile profilePicture,
             Authentication auth
     ) throws IOException {
 
+        if (auth == null) {
+            return "redirect:/login";
+        }
+
         String email = auth.getName();
 
-        profileService.saveProfile(profil, profilePicture, email);
+        profileService.saveProfile(profilDto, profilePicture, email);
         return "redirect:/profile/complete?success=true";
     }
 

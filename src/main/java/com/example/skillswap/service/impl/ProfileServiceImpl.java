@@ -7,15 +7,13 @@ import com.example.skillswap.repository.ProfileRepository;
 import com.example.skillswap.repository.UserRepository;
 import com.example.skillswap.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 import java.util.Optional;
-
-import org.springframework.core.io.ClassPathResource;
 
 @Service
 public class ProfileServiceImpl implements ProfileService {
@@ -26,7 +24,7 @@ public class ProfileServiceImpl implements ProfileService {
     @Autowired
     private UserRepository userRepository;
 
-    public void saveProfile(Profil profil, MultipartFile profilePicture, String email) throws IOException {
+    public void saveProfile(ProfilDto profilDto, MultipartFile profilePicture, String email) throws IOException {
 
         User user = Optional.ofNullable(userRepository.findUserByEmail(email))
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -35,14 +33,14 @@ public class ProfileServiceImpl implements ProfileService {
                 .orElseGet(Profil::new);
 
         toSave.setUser(user);
-        toSave.setName(profil.getName());
-        toSave.setProfession(profil.getProfession());
-        toSave.setBioShort(profil.getBioShort());
-        toSave.setCompleteDescription(profil.getCompleteDescription());
-        toSave.setAvailabilityMask(profil.getAvailabilityMask());
-        toSave.setLimits(profil.getLimits());
-        toSave.setCompetences(profil.getCompetences());
-        toSave.setStrengths(profil.getStrengths());
+        toSave.setName(profilDto.getName());
+        toSave.setProfession(profilDto.getProfession());
+        toSave.setBioShort(profilDto.getBioShort());
+        toSave.setCompleteDescription(profilDto.getCompleteDescription());
+        toSave.setAvailabilityMask(profilDto.getAvailabilityMask());
+        toSave.setLimits(profilDto.getLimits());
+        toSave.setCompetences(profilDto.getCompetences());
+        toSave.setStrengths(profilDto.getStrengths());
 
         if (profilePicture != null && !profilePicture.isEmpty()) {
             toSave.setImage(profilePicture.getBytes());
@@ -66,20 +64,14 @@ public class ProfileServiceImpl implements ProfileService {
         dto.setBioShort(profil.getBioShort());
         dto.setCompleteDescription(profil.getCompleteDescription());
 
-        dto.setCompetences(split(profil.getCompetences()));
-        dto.setStrengths(split(profil.getStrengths()));
-        dto.setLimits(split(profil.getLimits()));
+        dto.setCompetences(profil.getCompetences());
+        dto.setStrengths(profil.getStrengths());
+        dto.setLimits(profil.getLimits());
+        dto.setAvailabilityMask(profil.getAvailabilityMask());
 
         dto.setImageUrl("/profile/image/" + username);
 
         return dto;
-    }
-
-    private List<String> split(String value) {
-        if (value == null || value.isBlank()) {
-            return List.of();
-        }
-        return List.of(value.split(","));
     }
 
 

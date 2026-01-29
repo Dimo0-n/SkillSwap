@@ -67,7 +67,7 @@
                     <p class="profile-bio" th:text="${profile.bioShort}"></p>
 
                     <div class="profile-skills">
-                        <span th:each="skill : ${profile.competences}"
+                        <span th:each="skill : ${profile.competenceList}"
                         th:text="${skill}">Skill</span>
                     </div>
 
