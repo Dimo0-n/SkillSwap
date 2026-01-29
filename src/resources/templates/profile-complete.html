@@ -301,12 +301,12 @@ Include (indiferent de variantă):
     </section>
 
     <!-- Success Message Modal -->
-    <div id="successModal" class="modal-overlay" style="display: none;">
+    <div th:if="${param.success}" id="successModal" class="modal-overlay">
         <div class="modal-content">
             <i class="fa fa-check-circle"></i>
             <h3>Profil salvat cu succes!</h3>
             <p>Datele tale au fost salvate. Poți edita profilul oricând.</p>
-            <button type="button" class="btn-primary" onclick="closeSuccessModal()">Înțeles</button>
+            <a href="/profile" class="btn-primary">Înțeles</a>
         </div>
     </div>
 

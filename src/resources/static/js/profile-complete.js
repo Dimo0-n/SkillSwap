@@ -610,26 +610,6 @@
     }
 
     /**
-     * Save as draft (placeholder)
-     */
-    function saveDraft() {
-        // Same as save, but marked as draft
-        const profileData = {
-            draft: true,
-            displayName: $('#displayName').val(),
-            professionalTitle: $('#professionalTitle').val(),
-            shortBio: $('#shortBio').val(),
-            detailedDescription: $('#detailedDescription').val(),
-            skills: state.skills,
-            limitations: state.limitations,
-            customStrengths: state.customStrengths
-        };
-
-        console.log('Draft data to save:', profileData);
-        showSuccessModal('Draft salvat cu succes!');
-    }
-
-    /**
      * Show success modal
      */
     function showSuccessModal(message) {
