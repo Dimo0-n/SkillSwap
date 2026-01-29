@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html lang="zxx">
+﻿<!DOCTYPE html>
+<html lang="ro" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -146,16 +146,15 @@
                 <div class="col-lg-8 p-0">
                     <div class="details-text">
                         <div class="dt-desc">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                                incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                                exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                                incididunt ut labore et dolore magna aliqua accusantium doloremque laudantium.</p>
-                            <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                                commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-                                dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt
-                                in. . Sed ut perspiciatis unde omnis iste natus error sit voluptatem.</p>
+                            <h4>Descriere completă</h4>
+                            <p th:if="${!#strings.isEmpty(profile.completeDescription)}"
+                               th:text="${profile.completeDescription}"
+                               style="white-space: pre-line;"></p>
+                            <p th:if="${#strings.isEmpty(profile.completeDescription)}">
+                                Utilizatorul nu a adăugat încă o descriere detaliată.
+                            </p>
                         </div>
+                        <!-- secțiunea de rating păstrată neschimbată -->
                         <div class="dt-overall-rating">
                             <div class="or-heading">
                                 <div class="or-item">
@@ -186,37 +185,41 @@
                                 <div class="qualities-item">
                                     <p>Puncte forte</p>
                                     <ul>
-                                        <li><i class="fa fa-check"></i> Comunicare clară</li>
-                                        <li><i class="fa fa-check"></i> Explic pe înțelesul tuturor.</li>
-                                        <li><i class="fa fa-check"></i> Serios cu programările</li>
-                                        <li><i class="fa fa-check"></i> Găsesc limbă comună cu fiecare</li>
+                                        <li th:each="strength : ${profile.strengthsList}">
+                                            <i class="fa fa-check"></i>
+                                            <span th:text="${strength}">Punct forte</span>
+                                        </li>
+                                        <li th:if="${#lists.isEmpty(profile.strengthsList)}">
+                                            <i class="fa fa-minus"></i>
+                                            <span>Nu au fost adăugate puncte forte.</span>
+                                        </li>
                                     </ul>
                                 </div>
                                 <div class="qualities-item bad-item">
                                     <p>Limitări</p>
                                     <ul>
-                                        <li><i class="fa fa-close"></i> Nu ofer lecții avansate</li>
-                                        <li><i class="fa fa-close"></i> Nu fac proiecte comerciale</li>
-                                        <li><i class="fa fa-close"></i> Disponibil doar seara</li>
+                                        <li th:each="limit : ${profile.limitsList}">
+                                            <i class="fa fa-close"></i>
+                                            <span th:text="${limit}">Limitare</span>
+                                        </li>
+                                        <li th:if="${#lists.isEmpty(profile.limitsList)}">
+                                            <i class="fa fa-minus"></i>
+                                            <span>Nu sunt specificate limitări.</span>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
-                        <div class="dt-desc-more">
-                            <p>Duis aute irure dolor inenim ad minim veniam, quis nostrud exercitation ullamco laboris
-                                nisi ut aliquip ex ea commodo conslaboris nisi ut aliquip ex ea commodo consequat. Duis
-                                aute irure Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                                tempor incididunt ut labore et dolore magna aliqua.</p>
-                        </div>
-                        <div class="dt-quote">
-                            <p>“ It's these long and meandering character arcs that make my adventures feel so epic in
-                                scale, like if Game of Thrones was a high-fantasy anime.” - <span>Steven Jobs</span></p>
+                        <div class="dt-desc-more" th:if="${!#strings.isEmpty(profile.bioShort)}">
+                            <p th:text="${profile.bioShort}"></p>
                         </div>
                         <div class="dt-tags">
-                            <a href="#"><span>Gaming</span></a>
-                            <a href="#"><span>Platform</span></a>
-                            <a href="#"><span>Playstation</span></a>
-                            <a href="#"><span>Hardware</span></a>
+                            <a href="#" th:each="skill : ${profile.competenceList}">
+                                <span th:text="${skill}">Skill</span>
+                            </a>
+                            <span th:if="${#lists.isEmpty(profile.competenceList)}">
+                                Adaugă competențe pentru a fi afișate aici.
+                            </span>
                         </div>
 <!--                        share profil page-->
                         <div class="dt-share">

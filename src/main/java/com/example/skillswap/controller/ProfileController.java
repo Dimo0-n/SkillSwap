@@ -12,7 +12,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.net.URLConnection;
 import java.util.concurrent.TimeUnit;
 
 @Controller
@@ -59,7 +61,7 @@ public class ProfileController {
 
     @PostMapping("/save")
     public String saveProfileComplete(
-            @ModelAttribute("profil") ProfilDto profilDto,
+            @ModelAttribute("profile") ProfilDto profilDto,
             @RequestParam(value = "profilePicture", required = false) MultipartFile profilePicture,
             Authentication auth
     ) throws IOException {
@@ -74,24 +76,28 @@ public class ProfileController {
         return "redirect:/profile/complete?success=true";
     }
 
-    @GetMapping("/profile/image/{email}")
+    @GetMapping("/image/{email:.+}")
     @ResponseBody
     public ResponseEntity<byte[]> getProfileImage(@PathVariable String email) throws IOException {
 
         byte[] image = profileService.getProfileImageByEmail(email);
 
         return ResponseEntity.ok()
-                .contentType(MediaType.IMAGE_JPEG)
+                .contentType(detectMediaType(image))
                 .cacheControl(CacheControl.maxAge(1, TimeUnit.HOURS))
                 .body(image);
     }
 
-
+    private MediaType detectMediaType(byte[] image) {
+        try (ByteArrayInputStream bais = new ByteArrayInputStream(image)) {
+            String detected = URLConnection.guessContentTypeFromStream(bais);
+            if (detected != null) {
+                return MediaType.parseMediaType(detected);
+            }
+        } catch (IOException ignored) {
+        }
+        return MediaType.IMAGE_JPEG;
+    }
 
 }
-
-
-
-
-
 

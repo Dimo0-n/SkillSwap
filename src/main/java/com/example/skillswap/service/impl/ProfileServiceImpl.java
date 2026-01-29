@@ -57,21 +57,7 @@ public class ProfileServiceImpl implements ProfileService {
                 .findFirstByUserEmailOrderByIdDesc(username)
                 .orElseThrow(() -> new RuntimeException("Profil not found"));
 
-        ProfilDto dto = new ProfilDto();
-
-        dto.setName(profil.getName());
-        dto.setProfession(profil.getProfession());
-        dto.setBioShort(profil.getBioShort());
-        dto.setCompleteDescription(profil.getCompleteDescription());
-
-        dto.setCompetences(profil.getCompetences());
-        dto.setStrengths(profil.getStrengths());
-        dto.setLimits(profil.getLimits());
-        dto.setAvailabilityMask(profil.getAvailabilityMask());
-
-        dto.setImageUrl("/profile/image/" + username);
-
-        return dto;
+        return mapToDto(profil, username);
     }
 
 
@@ -87,6 +73,25 @@ public class ProfileServiceImpl implements ProfileService {
             }
         }
         return profil.getImage();
+    }
+
+    private ProfilDto mapToDto(Profil profil, String email) {
+        ProfilDto dto = new ProfilDto();
+
+        dto.setId(profil.getId());
+        dto.setName(profil.getName());
+        dto.setProfession(profil.getProfession());
+        dto.setBioShort(profil.getBioShort());
+        dto.setCompleteDescription(profil.getCompleteDescription());
+
+        dto.setCompetences(profil.getCompetences());
+        dto.setStrengths(profil.getStrengths());
+        dto.setLimits(profil.getLimits());
+        dto.setAvailabilityMask(profil.getAvailabilityMask());
+
+        dto.setImageUrl("/profile/image/" + email);
+
+        return dto;
     }
 
 
