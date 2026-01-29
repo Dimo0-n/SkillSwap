@@ -84,7 +84,9 @@ public class ProfileController {
 
         return ResponseEntity.ok()
                 .contentType(detectMediaType(image))
-                .cacheControl(CacheControl.maxAge(1, TimeUnit.HOURS))
+                .cacheControl(CacheControl.noStore())
+                .header("Pragma", "no-cache")
+                .header("Expires", "0")
                 .body(image);
     }
 

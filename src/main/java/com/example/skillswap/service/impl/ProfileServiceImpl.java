@@ -89,7 +89,10 @@ public class ProfileServiceImpl implements ProfileService {
         dto.setLimits(profil.getLimits());
         dto.setAvailabilityMask(profil.getAvailabilityMask());
 
-        dto.setImageUrl("/profile/image/" + email);
+        // Add a cache-busting param so the browser fetches the latest avatar after updates
+        String version = String.valueOf(
+                (profil.getImage() != null ? profil.getImage().length : 0) + profil.getId());
+        dto.setImageUrl("/profile/image/" + email + "?v=" + version);
 
         return dto;
     }
