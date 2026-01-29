@@ -185,11 +185,11 @@
                                 <div class="qualities-item">
                                     <p>Puncte forte</p>
                                     <ul>
-                                        <li th:each="strength : ${profile.strengthsList}">
+                                        <li th:each="strength : ${profile.strengthsDisplayList}">
                                             <i class="fa fa-check"></i>
                                             <span th:text="${strength}">Punct forte</span>
                                         </li>
-                                        <li th:if="${#lists.isEmpty(profile.strengthsList)}">
+                                        <li th:if="${#lists.isEmpty(profile.strengthsDisplayList)}">
                                             <i class="fa fa-minus"></i>
                                             <span>Nu au fost adăugate puncte forte.</span>
                                         </li>

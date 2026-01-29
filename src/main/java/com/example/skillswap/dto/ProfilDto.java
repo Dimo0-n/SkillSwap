@@ -36,6 +36,12 @@ public class ProfilDto {
         return splitCommaSeparated(strengths);
     }
 
+    public List<String> getStrengthsDisplayList() {
+        return getStrengthsList().stream()
+                .map(this::toReadableStrength)
+                .toList();
+    }
+
     public List<String> getAvailabilityList() {
         if (availabilityMask == 0) {
             return Collections.emptyList();
@@ -64,6 +70,36 @@ public class ProfilDto {
             case SEARA -> "Seara";
             case WEEKEND -> "Weekend";
         };
+    }
+
+    private String toReadableStrength(String value) {
+        if (value == null || value.isBlank()) {
+            return "";
+        }
+
+        return switch (value) {
+            case "clear-communication" -> "Comunicare clara";
+            case "simple-explanations" -> "Explic pe intelesul tuturor";
+            case "reliable-schedule" -> "Serios cu programarile";
+            case "easy-collaboration" -> "Gasesc limba comuna cu fiecare";
+            case "patient" -> "Rabdator si intelegator";
+            case "organized" -> "Organizat si structurat";
+            default -> capitalizeWords(value.replace("-", " "));
+        };
+    }
+
+    private String capitalizeWords(String text) {
+        String[] parts = text.trim().split("\\s+");
+        StringBuilder sb = new StringBuilder();
+        for (String part : parts) {
+            if (part.isEmpty()) continue;
+            sb.append(Character.toUpperCase(part.charAt(0)));
+            if (part.length() > 1) {
+                sb.append(part.substring(1).toLowerCase());
+            }
+            sb.append(" ");
+        }
+        return sb.toString().trim();
     }
 
 }
