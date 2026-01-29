@@ -2,8 +2,7 @@ package com.example.skillswap.controller;
 
 import com.example.skillswap.dto.ProfilDto;
 import com.example.skillswap.entity.Profil;
-import com.example.skillswap.enums.Availability;
-import com.example.skillswap.service.ProfilService;
+import com.example.skillswap.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
@@ -15,9 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @Controller
@@ -25,11 +21,20 @@ import java.util.concurrent.TimeUnit;
 public class ProfileController {
 
     @Autowired
-    private ProfilService profileService;
+    private ProfileService profileService;
+
+    @GetMapping("")
+    public String profilePage(Model model, Authentication auth) {
+
+        ProfilDto profile = profileService.getProfileForView(auth.getName());
+
+        model.addAttribute("profile", profile);
+        return "profil";
+    }
 
     @GetMapping("/complete")
     public String profileComplete(Model model) {
-        model.addAttribute("profil", new Profil());
+        model.addAttribute("profile", new Profil());
         model.addAttribute("page", "profile-complete");
         return "profile-complete";
     }
@@ -41,23 +46,10 @@ public class ProfileController {
             Authentication auth
     ) throws IOException {
 
-        if (auth == null) {
-            return "redirect:/login";
-        }
-
         String email = auth.getName();
 
         profileService.saveProfile(profil, profilePicture, email);
         return "redirect:/profile/complete?success=true";
-    }
-
-    @GetMapping("")
-    public String profilePage(Model model, Authentication auth) {
-
-        ProfilDto profile = profileService.getProfileForView(auth.getName());
-
-        model.addAttribute("profile", profile);
-        return "profil";
     }
 
     @GetMapping("/profile/image/{email}")

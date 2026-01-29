@@ -3,9 +3,9 @@ package com.example.skillswap.service.impl;
 import com.example.skillswap.dto.ProfilDto;
 import com.example.skillswap.entity.Profil;
 import com.example.skillswap.entity.User;
-import com.example.skillswap.repository.ProfilRepository;
+import com.example.skillswap.repository.ProfileRepository;
 import com.example.skillswap.repository.UserRepository;
-import com.example.skillswap.service.ProfilService;
+import com.example.skillswap.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,10 +18,10 @@ import java.util.Optional;
 import org.springframework.core.io.ClassPathResource;
 
 @Service
-public class ProfilServiceImpl implements ProfilService {
+public class ProfileServiceImpl implements ProfileService {
 
     @Autowired
-    private ProfilRepository profilRepository;
+    private ProfileRepository profileRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -31,7 +31,7 @@ public class ProfilServiceImpl implements ProfilService {
         User user = Optional.ofNullable(userRepository.findUserByEmail(email))
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        Profil toSave = profilRepository.findFirstByUserEmailOrderByIdDesc(email)
+        Profil toSave = profileRepository.findFirstByUserEmailOrderByIdDesc(email)
                 .orElseGet(Profil::new);
 
         toSave.setUser(user);
@@ -48,14 +48,14 @@ public class ProfilServiceImpl implements ProfilService {
             toSave.setImage(profilePicture.getBytes());
         }
 
-        profilRepository.save(toSave);
+        profileRepository.save(toSave);
 
     }
 
     @Override
     public ProfilDto getProfileForView(String username) {
 
-        Profil profil = profilRepository
+        Profil profil = profileRepository
                 .findFirstByUserEmailOrderByIdDesc(username)
                 .orElseThrow(() -> new RuntimeException("Profil not found"));
 
@@ -84,7 +84,7 @@ public class ProfilServiceImpl implements ProfilService {
 
 
     public byte[] getProfileImageByEmail(String email) throws IOException {
-        Profil profil = profilRepository
+        Profil profil = profileRepository
                 .findFirstByUserEmailOrderByIdDesc(email)
                 .orElseThrow(() -> new RuntimeException("Profil not found"));
 
