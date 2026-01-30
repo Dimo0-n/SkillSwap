@@ -44,7 +44,7 @@ public class AuthServiceImpl implements AuthService {
         newUser.setPassword(passwordEncoder.encode(password));
         newUser.setRegisterData(LocalDateTime.now());
 
-        newUser.getRoles().add(userRole); // Set, nu List
+        newUser.getRoles().add(userRole);
 
         userRepository.save(newUser);
     }

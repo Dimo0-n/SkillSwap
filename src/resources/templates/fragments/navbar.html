@@ -48,7 +48,7 @@
                                 <a th:href="@{/logout}"><i class="fa fa-power-off"></i> Logout</a>
                             </li>
                             <li>
-                                <a th:href="@{/admin}"><i class="fa fa-shield"></i> Admin</a>
+                                <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/admin}"><i class="fa fa-shield"></i> Admin</a>
                             </li>
                         </ul>
 
