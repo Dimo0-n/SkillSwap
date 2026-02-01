@@ -1,11 +1,13 @@
 package com.example.skillswap.controller;
 
+import com.example.skillswap.dto.AnnounceDto;
 import com.example.skillswap.entity.Announce;
 import com.example.skillswap.service.AnnounceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
@@ -25,9 +27,15 @@ class AnnounceController {
 
     @GetMapping("/announces/new")
     public String addAnnounce(Model model){
-        Announce announce = new Announce();
+        AnnounceDto announce = new AnnounceDto();
         model.addAttribute("announce", announce);
         return "announce-create";
+    }
+
+    @PostMapping("/announce/save")
+    public String saveAnnounce(AnnounceDto announceDto){
+
+        return "index";
     }
 
     @GetMapping("/announce-details")

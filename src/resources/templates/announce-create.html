@@ -35,7 +35,7 @@
     <div class="announce-grid">
         <!-- Form Card -->
         <div class="form-card">
-            <form id="announceForm">
+            <form th:object="${announce}" th:action="@{/announce/save}" method="post" id="announceForm">
                 <!-- Main Details Section -->
                 <div class="form-section">
                     <div class="section-header">
@@ -48,7 +48,7 @@
                     <div class="form-group">
                         <label class="form-label">Titlul anunțului</label>
                         <div class="input-wrapper">
-                            <input type="text" id="announce-title" class="form-input" placeholder="Ex: Predau programare Python în schimbul lecții de chitară">
+                            <input th:field="*{title}" type="text" id="announce-title" class="form-input" placeholder="Ex: Predau programare Python în schimbul lecții de chitară">
                         </div>
                         <div class="form-hint">
                             <i class="fa fa-lightbulb-o"></i>
@@ -59,7 +59,7 @@
                     <div class="form-group">
                         <label class="form-label">Descriere detaliată</label>
                         <div class="input-wrapper">
-                            <textarea id="announce-description" class="form-textarea" placeholder="Descrie experiența ta, nivelul pe care îl predai și ce anume cauți în schimb..."></textarea>
+                            <textarea th:field="*{description}" id="announce-description" class="form-textarea" placeholder="Descrie experiența ta, nivelul pe care îl predai și ce anume cauți în schimb..."></textarea>
                         </div>
                         <div class="form-hint">
                             <i class="fa fa-info-circle"></i>
@@ -80,7 +80,7 @@
                     <div class="input-grid">
                         <div class="form-group">
                             <label class="form-label">Categoria oferită</label>
-                            <input type="text" id="category-offer" class="form-input" placeholder="Ex: Programare">
+                            <input th:field="*{categoryOffered}" type="text" id="category-offer" class="form-input" placeholder="Ex: Programare">
                             <div class="form-hint">
                                 <i class="fa fa-star"></i>
                                 <span>Skill-ul pe care îl oferi</span>
@@ -89,7 +89,7 @@
 
                         <div class="form-group">
                             <label class="form-label">Categoria căutată</label>
-                            <input type="text" id="category-want" class="form-input" placeholder="Ex: Chitară">
+                            <input th:field="*{categoryRequired}" type="text" id="category-want" class="form-input" placeholder="Ex: Chitară">
                             <div class="form-hint">
                                 <i class="fa fa-search"></i>
                                 <span>Skill-ul pe care îl dorești</span>
@@ -100,12 +100,12 @@
                     <div class="input-grid">
                         <div class="form-group">
                             <label class="form-label">Nume autor</label>
-                            <input type="text" id="author-name" class="form-input" placeholder="Numele tău">
+                            <input th:field="*{author}" type="text" id="author-name" class="form-input" placeholder="Numele tău">
                         </div>
 
                         <div class="form-group">
                             <label class="form-label">Notă secundară (opțional)</label>
-                            <input type="text" id="secondary-note" class="form-input" placeholder="Detalii suplimentare">
+                            <input th:field="*{additionalInfo}" type="text" id="secondary-note" class="form-input" placeholder="Detalii suplimentare">
                         </div>
                     </div>
                 </div>
@@ -121,7 +121,7 @@
 
                     <div class="image-preview-section">
                         <div class="preview-image-container">
-                            <img id="main-preview-image" src="/img/skill/skill-programming.png" alt="Preview">
+                            <img id="main-preview-image" src="/img/skill/skill-default.png" alt="Preview">
                         </div>
                         <div class="auto-select-badge">
                             <i class="fa fa-magic"></i>
@@ -138,6 +138,8 @@
                             <p>Verifică toate detaliile înainte de publicare. Anunțul tău va fi vizibil imediat în comunitate!</p>
                         </div>
                     </div>
+
+                    <input type="hidden" th:field="*{imageKey}" id="imageKey">
 
                     <div class="submit-section">
                         <button type="submit" class="btn btn-primary">
@@ -184,30 +186,105 @@
 <div th:replace="~{/fragments/about :: about}"></div>
 
 <script>
-    // Category to Image Mapping
-    const categoryImages = {
-        'programming': '/img/skill/skill-programming.png',
-        'programare': '/img/skill/skill-programming.png',
-        'guitar': '/img/skill/skill-guitar.png',
-        'chitară': '/img/skill/skill-guitar.png',
-        'chitara': '/img/skill/skill-guitar.png',
-        'english': '/img/skill/skill-english.png',
-        'engleză': '/img/skill/skill-english.png',
-        'engleza': '/img/skill/skill-english.png',
-        'photoshop': '/img/skill/skill-photoshop.png',
-        'design': '/img/skill/skill-photoshop.png',
-        'fotografie': '/img/skill/skill-photography.png',
-        'photography': '/img/skill/skill-photography.png',
-        'cooking': '/img/skill/skill-cooking.png',
-        'gătit': '/img/skill/skill-cooking.png',
-        'gatit': '/img/skill/skill-cooking.png',
-        'dans': '/img/skill/skill-dance.png',
-        'dance': '/img/skill/skill-dance.png',
-        'speaking': '/img/skill/skill-public-speaking.png',
-        'prezentare': '/img/skill/skill-public-speaking.png'
+
+    const categoryImageKeys = {
+        programming: ["prog1", "prog2", "prog3"],
+        programare: ["prog1", "prog2", "prog3"],
+
+        guitar: ["guitar1", "guitar2"],
+        chitara: ["guitar1", "guitar2"],
+        "chitară": ["guitar1", "guitar2"],
+
+        english: ["eng1", "eng2"],
+        engleza: ["eng1", "eng2"],
+        "engleză": ["eng1", "eng2"],
+
+        photoshop: ["ps1", "ps2"],
+        design: ["ps1", "ps2"],
+
+        photography: ["photo1", "photo2"],
+        fotografie: ["photo1", "photo2"],
+
+        cooking: ["cook1", "cook2"],
+        gatit: ["cook1", "cook2"],
+        "gătit": ["cook1", "cook2"],
+
+        dance: ["dance1", "dance2"],
+        dans: ["dance1", "dance2"],
+
+        speaking: ["speak1", "speak2"],
+        prezentare: ["speak1", "speak2"]
     };
 
-    const defaultImage = '/img/skill/skill-programming.png';
+    const imageKeyToPath = {
+        prog1: "/img/skill/skill-programming.png",
+        prog2: "/img/skill/skill-programming-2.png",
+        prog3: "/img/skill/skill-programming-3.png",
+
+        guitar1: "/img/skill/skill-guitar.png",
+        guitar2: "/img/skill/skill-guitar-2.png",
+
+        eng1: "/img/skill/skill-english.png",
+        eng2: "/img/skill/skill-english-2.png",
+
+        ps1: "/img/skill/skill-photoshop.png",
+        ps2: "/img/skill/skill-photoshop-2.png",
+
+        photo1: "/img/skill/skill-photography.png",
+        photo2: "/img/skill/skill-photography-2.png",
+
+        cook1: "/img/skill/skill-cooking.png",
+        cook2: "/img/skill/skill-cooking-2.png",
+
+        dance1: "/img/skill/skill-dance.png",
+        dance2: "/img/skill/skill-dance-2.png",
+
+        speak1: "/img/skill/skill-public-speaking.png",
+        speak2: "/img/skill/skill-public-speaking-2.png",
+
+        default1: "/img/skill/skill-default.png",
+        default2: "/img/skill/skill-default-2.png"
+    };
+
+    const defaultImageKeys = ["default1", "default2"];
+
+    function normalizeCategory(str) {
+        return (str || "")
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .trim();
+    }
+
+    function pickRandom(arr) {
+        return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function getImageKeyForCategory(category) {
+        const key = normalizeCategory(category);
+        const keys = categoryImageKeys[key];
+        if (!keys || keys.length === 0) return pickRandom(defaultImageKeys);
+        return pickRandom(keys);
+    }
+
+    function updateImages() {
+        // opțional: dacă vrei default fix până scrie user ceva
+        if (!offerInput.value.trim()) {
+            const dk = pickRandom(defaultImageKeys);
+            mainPreviewImage.src = imageKeyToPath[dk];
+            sidebarPreviewImage.src = imageKeyToPath[dk];
+            if (imageKeyInput) imageKeyInput.value = dk;
+            return;
+        }
+
+        const imageKey = getImageKeyForCategory(offerInput.value);
+        const imagePath = imageKeyToPath[imageKey] || imageKeyToPath["default1"];
+
+        mainPreviewImage.src = imagePath;
+        sidebarPreviewImage.src = imagePath;
+
+        if (imageKeyInput) imageKeyInput.value = imageKey;
+    }
 
     // Get Elements
     const titleInput = document.getElementById('announce-title');
@@ -220,6 +297,7 @@
     const previewWant = document.getElementById('preview-want');
     const mainPreviewImage = document.getElementById('main-preview-image');
     const sidebarPreviewImage = document.getElementById('sidebar-preview-image');
+    const imageKeyInput = document.getElementById("imageKey");
 
     // Update Preview Text
     function updatePreview() {
@@ -229,34 +307,14 @@
         previewWant.textContent = wantInput.value.trim() || 'Categoria căutată';
     }
 
-    // Get Image Based on Category
-    function getImageForCategory(category) {
-        if (!category) return defaultImage;
-        const key = category.toLowerCase().trim();
-        return categoryImages[key] || defaultImage;
-    }
-
-    // Update Images
-    function updateImages() {
-        const imageSrc = getImageForCategory(offerInput.value);
-        mainPreviewImage.src = imageSrc;
-        sidebarPreviewImage.src = imageSrc;
-    }
-
     // Event Listeners
     titleInput.addEventListener('input', updatePreview);
     descInput.addEventListener('input', updatePreview);
-    offerInput.addEventListener('input', () => {
+    offerInput.addEventListener('change', () => {
         updatePreview();
         updateImages();
     });
     wantInput.addEventListener('input', updatePreview);
-
-    // Form Submit
-    document.getElementById('announceForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-        alert('Anunțul tău a fost publicat cu succes! 🎉');
-    });
 
     // Initialize
     updatePreview();

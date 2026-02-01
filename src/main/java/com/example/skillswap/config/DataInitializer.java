@@ -97,14 +97,15 @@ public class DataInitializer {
 
     private void addAnnouncesImages() {
         List<AnnounceImage> announceImageList = List.of(
-                new AnnounceImage(0, "img/skill/skill-cooking.png"),
-                new AnnounceImage(0, "img/skill/skill-dance.png"),
-                new AnnounceImage(0, "img/skill/skill-english.png"),
-                new AnnounceImage(0, "img/skill/skill-guitar.png"),
-                new AnnounceImage(0, "img/skill/skill-photography.png"),
-                new AnnounceImage(0, "img/skill/skill-photoshop.png"),
-                new AnnounceImage(0, "img/skill/skill-programming.png"),
-                new AnnounceImage(0, "img/skill/skill-public-speaking.png")
+                new AnnounceImage(0, "default", "img/skill/skill-default.png"),
+                new AnnounceImage(0, "cooking", "img/skill/skill-cooking.png"),
+                new AnnounceImage(0, "dance", "img/skill/skill-dance.png"),
+                new AnnounceImage(0, "english", "img/skill/skill-english.png"),
+                new AnnounceImage(0, "guitar", "img/skill/skill-guitar.png"),
+                new AnnounceImage(0, "photography", "img/skill/skill-photography.png"),
+                new AnnounceImage(0, "photoshop", "img/skill/skill-photoshop.png"),
+                new AnnounceImage(0, "programming", "img/skill/skill-programming.png"),
+                new AnnounceImage(0, "public speaking", "img/skill/skill-public-speaking.png")
         );
         announceImagesRepository.saveAll(announceImageList);
     }

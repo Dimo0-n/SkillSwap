@@ -17,6 +17,8 @@ public class AnnounceImage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    private String imageKey;
+
     private String imagePath;
 
 }
