@@ -1,9 +1,6 @@
 package com.example.skillswap.config;
 
-import com.example.skillswap.entity.Announce;
-import com.example.skillswap.entity.AnnounceImage;
 import com.example.skillswap.entity.Category;
-import com.example.skillswap.repository.AnnounceImagesRepository;
 import com.example.skillswap.repository.AnnounceRepository;
 import com.example.skillswap.repository.CategoryRepository;
 import jakarta.annotation.PostConstruct;
@@ -17,8 +14,6 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -29,10 +24,6 @@ public class DataInitializer {
 
     @Autowired
     private CategoryRepository categoryRepository;
-
-    @Autowired
-    private AnnounceImagesRepository announceImagesRepository;
-
 
     public DataInitializer(AnnounceRepository announceRepository) {
         this.announceRepository = announceRepository;
@@ -71,11 +62,6 @@ public class DataInitializer {
         if (categoryRepository.count() == 0) {
             addCategories();
         }
-
-        if (announceImagesRepository.count() == 0) {
-            addAnnouncesImages();
-        }
-
     }
 
     private void addCategories() throws Exception {
@@ -93,21 +79,6 @@ public class DataInitializer {
                 new Category(11L, "Muzică")
         );
         categoryRepository.saveAll(categoryList);
-    }
-
-    private void addAnnouncesImages() {
-        List<AnnounceImage> announceImageList = List.of(
-                new AnnounceImage(0, "default", "img/skill/skill-default.png"),
-                new AnnounceImage(0, "cooking", "img/skill/skill-cooking.png"),
-                new AnnounceImage(0, "dance", "img/skill/skill-dance.png"),
-                new AnnounceImage(0, "english", "img/skill/skill-english.png"),
-                new AnnounceImage(0, "guitar", "img/skill/skill-guitar.png"),
-                new AnnounceImage(0, "photography", "img/skill/skill-photography.png"),
-                new AnnounceImage(0, "photoshop", "img/skill/skill-photoshop.png"),
-                new AnnounceImage(0, "programming", "img/skill/skill-programming.png"),
-                new AnnounceImage(0, "public speaking", "img/skill/skill-public-speaking.png")
-        );
-        announceImagesRepository.saveAll(announceImageList);
     }
 
 }

@@ -31,9 +31,9 @@ public class Announce {
 
     private String categoryRequired;
 
-    @ManyToOne
-    @JoinColumn(name = "image_id")
-    private AnnounceImage image;
+    private String imageKey;
+
+    private String imagePath;
 
     private String additionalInfo;
 

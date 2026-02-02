@@ -67,7 +67,7 @@
             <th:block th:each="announce : ${announcesList}">
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="cg-item" data-skill="reviews">
-                        <div class="cg-pic set-bg" th:attr="data-setbg=@{${'/' + announce.image.imagePath}}">
+                        <div class="cg-pic set-bg" th:attr="data-setbg=@{${'/' + announce.imagePath}}">
                             <div class="label"><span>Reviews</span></div>
                         </div>
                         <div class="cg-text">

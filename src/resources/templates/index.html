@@ -269,7 +269,7 @@
                 <th:block th:each="announce : ${latest5Announces}">
                     <div class="ip-item">
                         <div class="ip-pic">
-                            <img th:src="@{${'/' + announce.image.imagePath}}" alt="programming">
+                            <img th:src="@{${announce.imagePath}}" alt="SkillSwap">
                         </div>
                         <div class="ip-text">
                             <div class="label"><span>NOU</span></div>

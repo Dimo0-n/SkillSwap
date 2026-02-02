@@ -1,8 +1,5 @@
 package com.example.skillswap.dto;
 
-import com.example.skillswap.entity.AnnounceImage;
-import com.example.skillswap.entity.User;
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,6 +22,8 @@ public class AnnounceDto {
     private String categoryRequired;
 
     private String imageKey;
+
+    private String imagePath;
 
     private String additionalInfo;
 

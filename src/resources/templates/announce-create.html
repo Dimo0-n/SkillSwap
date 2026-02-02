@@ -270,7 +270,7 @@
     function updateImages() {
         // opțional: dacă vrei default fix până scrie user ceva
         if (!offerInput.value.trim()) {
-            const dk = pickRandom(defaultImageKeys);
+            const dk = "default1";
             mainPreviewImage.src = imageKeyToPath[dk];
             sidebarPreviewImage.src = imageKeyToPath[dk];
             if (imageKeyInput) imageKeyInput.value = dk;

@@ -12,7 +12,7 @@ import java.util.List;
 @Controller
 public class HomeController {
 
-    //TODO de adaugat o validare de schiluri
+    //TODO de adaugat o validare de skill-uri
 
     @Autowired
     private AnnounceService announceService;
