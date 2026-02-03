@@ -5,9 +5,12 @@ import com.example.skillswap.entity.Announce;
 import com.example.skillswap.entity.User;
 import com.example.skillswap.repository.AnnounceRepository;
 import com.example.skillswap.repository.UserRepository;
+import com.example.skillswap.security.CustomUserDetails;
+import com.example.skillswap.security.CustomUserDetailsService;
 import com.example.skillswap.service.AnnounceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -57,6 +60,11 @@ public class AnnounceServiceImpl implements AnnounceService {
 
         announceRepository.save(announce);
 
+    }
+
+    @Override
+    public List<Announce> getAnnouncesListByEmail(Long id) {
+        return announceRepository.getAnnouncesListByEmail(id);
     }
 
 

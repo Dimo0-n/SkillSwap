@@ -13,4 +13,8 @@ public interface AnnounceService {
     List<Announce> getAnnouncesList();
 
     void save(AnnounceDto announceDto, Authentication auth);
+
+//    List<Announce> getAnnouncesListByEmail(String email);
+
+    List<Announce> getAnnouncesListByEmail(Long id);
 }

@@ -30,14 +30,6 @@ public class HomeController {
         return "404";
     }
 
-    @GetMapping("/user-announces-list")
-    public String userAnnouncesList(Model model){
-        List<Announce> announcesList = announceService.getAnnouncesList();
-        model.addAttribute("announcesList", announcesList);
-        model.addAttribute("page", "announces-list" );
-        return "user-announces-list";
-    }
-
     @GetMapping("/chat")
     public String chat(Model model){
         model.addAttribute("page", "chat" );

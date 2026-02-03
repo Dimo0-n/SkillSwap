@@ -1,6 +1,10 @@
 package com.example.skillswap.controller;
 
 import com.example.skillswap.dto.ProfilDto;
+import com.example.skillswap.entity.Announce;
+import com.example.skillswap.entity.User;
+import com.example.skillswap.security.CustomUserDetails;
+import com.example.skillswap.service.AnnounceService;
 import com.example.skillswap.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
@@ -15,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URLConnection;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Controller
@@ -23,6 +28,9 @@ public class ProfileController {
 
     @Autowired
     private ProfileService profileService;
+
+    @Autowired
+    private AnnounceService announceService;
 
     @GetMapping("")
     public String profilePage(Model model, Authentication auth) {
@@ -101,5 +109,20 @@ public class ProfileController {
         return MediaType.IMAGE_JPEG;
     }
 
+    //Afisarea anunturilor care le-a postat user-ul
+    //logica se duce la AnnounceService
+    @GetMapping("/user-announces-list")
+    public String userAnnouncesList(Authentication auth, Model model) {
+
+        CustomUserDetails cud = (CustomUserDetails) auth.getPrincipal();
+        Long userId = cud.getId();
+
+        System.out.println(userId);
+
+        List<Announce> announcesList = announceService.getAnnouncesListByEmail(userId);
+        model.addAttribute("announcesList", announcesList);
+
+        return "user-announces-list";
+    }
 }
 
