@@ -17,54 +17,51 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final UserDetailsService userDetailsService;
+        private final UserDetailsService userDetailsService;
 
-    public SecurityConfig(UserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
-    }
+        public SecurityConfig(UserDetailsService userDetailsService) {
+                this.userDetailsService = userDetailsService;
+        }
 
-    @Bean
-    public static BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+        @Bean
+        public static BCryptPasswordEncoder passwordEncoder() {
+                return new BCryptPasswordEncoder();
+        }
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests((authorize) ->
-                                authorize
-                                        .requestMatchers(
-                                                "/css/**", "/js/**", "/img/**", "/fonts/**", "/Source",
+        @Bean
+        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+                http.authorizeHttpRequests((authorize) -> authorize
+                                .requestMatchers(
+                                                "/css/**", "/js/**", "/img/**", "/fonts/**", "/Source/**",
                                                 "/index", "/contact", "/register", "/login", "/error/**",
-                                                "/announce", "/profile", "/chat-history", "/meeting",
-                                                "/announces-list", "/**"
-                                        ).permitAll()
-                                        .anyRequest().authenticated()
-                )
-                .formLogin(
-                form -> form
-                        .loginPage("/login")
-                        .defaultSuccessUrl("/index", true)
-                        .failureUrl("/login?error")
-                        .permitAll()
-        ).logout(
-                logout -> logout
-                        .logoutUrl("/logout")
-                        .invalidateHttpSession(true)  // Închide sesiunea curentă
-                        .deleteCookies("JSESSIONID")  // Șterge cookie-ul sesiunii
-                        .logoutSuccessUrl("/login?logout=true")
-                        .permitAll()
-        ).exceptionHandling(ex -> ex
-                .accessDeniedPage("/error/403")
-        );
-        return http.build();
-    }
+                                                "/announces-list", "/announce-details", "/meeting")
+                                .permitAll()
+                                .requestMatchers("/register/save").permitAll() // Allow registration
+                                .anyRequest().authenticated())
+                                .formLogin(
+                                                form -> form
+                                                                .loginPage("/login")
+                                                                .defaultSuccessUrl("/index", true)
+                                                                .failureUrl("/login?error")
+                                                                .permitAll())
+                                .logout(
+                                                logout -> logout
+                                                                .logoutUrl("/logout")
+                                                                .invalidateHttpSession(true) // Închide sesiunea curentă
+                                                                .deleteCookies("JSESSIONID") // Șterge cookie-ul
+                                                                                             // sesiunii
+                                                                .logoutSuccessUrl("/login?logout=true")
+                                                                .permitAll())
+                                .exceptionHandling(ex -> ex
+                                                .accessDeniedPage("/error/403"));
+                return http.build();
+        }
 
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-                .userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder());
-    }
+        @Autowired
+        public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+                auth
+                                .userDetailsService(userDetailsService)
+                                .passwordEncoder(passwordEncoder());
+        }
 
 }

@@ -3,9 +3,11 @@ package com.example.skillswap.controller;
 import com.example.skillswap.entity.User;
 import com.example.skillswap.repository.UserRepository;
 import com.example.skillswap.service.impl.AuthServiceImpl;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -21,30 +23,33 @@ public class AuthController {
     private UserRepository userRepository;
 
     @GetMapping("/register")
-    public String register(){
+    public String register() {
         return "register";
     }
 
     @PostMapping("/register/save")
-    @ResponseBody
-    public ResponseEntity<String> registerUser(@RequestParam Map<String, String> allRequestParams) {
-        Optional<User> user = authService.searchUserByEmail(allRequestParams.get("email"));
+    public String registerUser(@Valid @ModelAttribute User user, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "register";
+        }
 
-        if (user.isPresent()) {
-            return ResponseEntity.badRequest().body("Acest email deja este înregistrat!");
+        Optional<User> existingUser = authService.searchUserByEmail(user.getEmail());
+
+        if (existingUser.isPresent()) {
+            model.addAttribute("error", "Acest email deja este înregistrat!");
+            return "register";
         }
 
         authService.saveUser(
-                allRequestParams.get("email"),
-                allRequestParams.get("password"),
-                allRequestParams.get("fullName")
-        );
+                user.getEmail(),
+                user.getPassword(),
+                user.getFullName());
 
-        return ResponseEntity.ok("Cont creat cu succes!");
+        return "redirect:/login?success";
     }
 
     @GetMapping("/login")
-    public String login(){
+    public String login() {
         return "login";
     }
 

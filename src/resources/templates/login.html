@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="ro">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Skill Swap</title>
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800,900&display=swap"
-          rel="stylesheet">
+        rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Cinzel:400,700,900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -175,87 +176,94 @@
         }
     </style>
 </head>
+
 <body>
-<div class="login-container">
-    <button class="close-btn" onclick="window.location.href='/index'">&times;</button>
+    <div class="login-container">
+        <button class="close-btn" onclick="window.location.href='/index'">&times;</button>
 
-    <h2 class="login-title">Login</h2>
+        <h2 class="login-title">Login</h2>
 
-    <form method="POST" action="/login" id="loginForm">
-        <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="username" placeholder="Introduceți adresa de email" required>
-        </div>
+        <form method="POST" th:action="@{/login}" id="loginForm">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="username" placeholder="Introduceți adresa de email" required>
+            </div>
 
-        <div class="form-group">
-            <label for="password">Parolă</label>
-            <input type="password" id="password" name="password" placeholder="Introduceți parola" required>
-        </div>
+            <div class="form-group">
+                <label for="password">Parolă</label>
+                <input type="password" id="password" name="password" placeholder="Introduceți parola" required>
+            </div>
 
-        <button type="submit" class="login-btn">Conectează-te</button>
+            <button type="submit" class="login-btn">Conectează-te</button>
 
-        <div class="login-link">
-            Nu ai cont? <a th:href="@{/register}">Înregistrează-te</a>
-        </div>
-    </form>
-</div>
+            <div class="login-link">
+                Nu ai cont? <a th:href="@{/register}">Înregistrează-te</a>
+            </div>
+        </form>
+    </div>
 
-<div id="message" class="message"></div>
+    <div id="message" class="message"></div>
 
-<script>
-    const urlParams = new URLSearchParams(window.location.search);
-    if(urlParams.has('error')) {
-        showMessage('Email sau parola incorectă!', 'error');
-    }
-    if(urlParams.has('logout')) {
-        showMessage('Te-ai deconectat cu succes!', 'success');
-    }
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('error')) {
+            showMessage('Email sau parola incorectă!', 'error');
+        }
+        if (urlParams.has('logout')) {
+            showMessage('Te-ai deconectat cu succes!', 'success');
+        }
 
-    function showMessage(text, type='error') {
-        const messageDiv = document.getElementById('message');
-        messageDiv.textContent = text;
-        messageDiv.className = `message ${type} show`;
-        setTimeout(() => messageDiv.classList.remove('show'), 4000);
-    }
-</script>
+        function showMessage(text, type = 'error') {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type} show`;
+            setTimeout(() => messageDiv.classList.remove('show'), 4000);
+        }
+    </script>
 
-<style>
-    /* Stil pentru mesaj exact ca la register */
-    .message {
-        position: fixed;
-        top: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        padding: 15px 30px;
-        border-radius: 10px;
-        color: white;
-        font-weight: 500;
-        z-index: 1000;
-        opacity: 0;
-        transition: all 0.3s ease;
-        min-width: 300px;
-        text-align: center;
-    }
+    <style>
+        /* Stil pentru mesaj exact ca la register */
+        .message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 15px 30px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            opacity: 0;
+            transition: all 0.3s ease;
+            min-width: 300px;
+            text-align: center;
+        }
 
-    .message.show {
-        opacity: 1;
-        animation: slideDown 0.3s ease;
-    }
+        .message.show {
+            opacity: 1;
+            animation: slideDown 0.3s ease;
+        }
 
-    .message.success {
-        background: linear-gradient(135deg,#10b981,#059669);
-        border: 1px solid #34d399;
-    }
+        .message.success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            border: 1px solid #34d399;
+        }
 
-    .message.error {
-        background: linear-gradient(135deg,#ef4444,#dc2626);
-        border: 1px solid #f87171;
-    }
+        .message.error {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            border: 1px solid #f87171;
+        }
 
-    @keyframes slideDown {
-        from { transform: translateX(-50%) translateY(-100%); }
-        to { transform: translateX(-50%) translateY(0); }
-    }
-</style>
+        @keyframes slideDown {
+            from {
+                transform: translateX(-50%) translateY(-100%);
+            }
+
+            to {
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+    </style>
 </body>
+
 </html>

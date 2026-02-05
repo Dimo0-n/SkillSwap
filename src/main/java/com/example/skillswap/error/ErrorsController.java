@@ -13,7 +13,7 @@ public class ErrorsController {
         return "404";
     }
 
-    @RequestMapping(value = "/error/403", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping("/error/403")
     public String accessDenied() {
         return "403";
     }

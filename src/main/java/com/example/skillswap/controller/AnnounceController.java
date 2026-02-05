@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import jakarta.validation.Valid;
+import org.springframework.validation.BindingResult;
+
 import java.util.List;
 
 @Controller
@@ -24,27 +27,31 @@ class AnnounceController {
     private AnnounceImageService announceImageService;
 
     @GetMapping("/announces-list")
-    public String categoryGrid(Model model){
+    public String categoryGrid(Model model) {
         List<Announce> announcesList = announceService.getAnnouncesList();
         model.addAttribute("announcesList", announcesList);
-        model.addAttribute("page", "announces-list" );
+        model.addAttribute("page", "announces-list");
         return "announces-list";
     }
 
     @GetMapping("/announces/new")
-    public String addAnnounce(Model model){
+    public String addAnnounce(Model model) {
         AnnounceDto announce = new AnnounceDto();
         model.addAttribute("announce", announce);
         return "announce-create";
     }
 
     @PostMapping("/announce/save")
-    public String saveAnnounce(@ModelAttribute("announce")AnnounceDto announceDto, Authentication auth){
+    public String saveAnnounce(@Valid @ModelAttribute("announce") AnnounceDto announceDto, BindingResult bindingResult,
+            Authentication auth, Model model) {
+
+        if (bindingResult.hasErrors()) {
+            return "announce-create";
+        }
 
         String safePath = announceImageService.safePath(
-             announceDto.getCategoryOffered(),
-             announceDto.getImageKey()
-        );
+                announceDto.getCategoryOffered(),
+                announceDto.getImageKey());
         announceDto.setImagePath(safePath);
 
         announceService.save(announceDto, auth);
@@ -53,7 +60,7 @@ class AnnounceController {
     }
 
     @GetMapping("/announce-details")
-    public String postDetails(){
+    public String postDetails() {
         return "announce-details";
     }
 

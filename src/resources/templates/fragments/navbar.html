@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
     <meta charset="UTF-8">
     <title>NavBar</title>
@@ -17,139 +17,148 @@
         .nav-menu ul li.active a {
             background: linear-gradient(to bottom, #c77dff, #9d4edd);
         }
-
     </style>
 
 </head>
+
 <body>
 
-<div th:fragment="navbar">
-<!-- Header Section Begin -->
-<header class="header-section">
-    <div class="ht-options">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-6 col-md-8">
-                    <div class="ht-widget">
+    <div th:fragment="navbar">
+        <!-- Header Section Begin -->
+        <header class="header-section">
+            <div class="ht-options">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-8">
+                            <div class="ht-widget">
 
-                        <ul sec:authorize="!isAuthenticated()">
-                            <li><i class="fa fa-clock-o"></i> <span id="current-date1"></span></li>
-                            <li>
-                                <a th:href="@{/login}"><i class="fa fa-sign-in"></i> Login</a>
-                            </li>
-                            <li>
-                                <a th:href="@{/register}"><i class="fa fa-user-plus"></i> Sign up</a>
-                            </li>
-                        </ul>
+                                <ul sec:authorize="!isAuthenticated()">
+                                    <li><i class="fa fa-clock-o"></i> <span id="current-date1"></span></li>
+                                    <li>
+                                        <a th:href="@{/login}"><i class="fa fa-sign-in"></i> Login</a>
+                                    </li>
+                                    <li>
+                                        <a th:href="@{/register}"><i class="fa fa-user-plus"></i> Sign up</a>
+                                    </li>
+                                </ul>
 
-                        <ul sec:authorize="isAuthenticated()">
-                            <li><i class="fa fa-clock-o"></i> <span id="current-date2"></span></li>
-                            <li>
-                                <a th:href="@{/logout}"><i class="fa fa-power-off"></i> Logout</a>
-                            </li>
-                            <li>
-                                <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/admin}"><i class="fa fa-shield"></i> Admin</a>
-                            </li>
-                        </ul>
+                                <ul sec:authorize="isAuthenticated()">
+                                    <li><i class="fa fa-clock-o"></i> <span id="current-date2"></span></li>
+                                    <li>
+                                        <a href="#"
+                                            onclick="event.preventDefault(); document.getElementById('logoutForm').submit();"><i
+                                                class="fa fa-power-off"></i> Logout</a>
+                                    </li>
+                                    <li>
+                                        <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/admin}"><i
+                                                class="fa fa-shield"></i> Admin</a>
+                                    </li>
+                                </ul>
+                                <form id="logoutForm" th:action="@{/logout}" method="post" style="display: none;">
+                                </form>
 
-                    </div>
-                </div>
+                            </div>
+                        </div>
 
-                <script>
-                    document.addEventListener('DOMContentLoaded', function () {
-                        const today = new Date();
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function () {
+                                const today = new Date();
 
-                        // Formatează data (ex: Aug 16, 2025)
-                        const options = { month: 'short', day: '2-digit', year: 'numeric' };
-                        const formattedDate = today.toLocaleDateString('en-US', options);
+                                // Formatează data (ex: Aug 16, 2025)
+                                const options = { month: 'short', day: '2-digit', year: 'numeric' };
+                                const formattedDate = today.toLocaleDateString('en-US', options);
 
-                        // Afișează în span-uri doar dacă există
-                        const date1 = document.getElementById('current-date1');
-                        const date2 = document.getElementById('current-date2');
+                                // Afișează în span-uri doar dacă există
+                                const date1 = document.getElementById('current-date1');
+                                const date2 = document.getElementById('current-date2');
 
-                        if (date1) date1.textContent = formattedDate;
-                        if (date2) date2.textContent = formattedDate;
-                    });
-                </script>
+                                if (date1) date1.textContent = formattedDate;
+                                if (date2) date2.textContent = formattedDate;
+                            });
+                        </script>
 
-                <!-- Notifications JS -->
-                <script src="/js/notifications.js"></script>
+                        <!-- Notifications JS -->
+                        <script src="/js/notifications.js"></script>
 
-                <div class="col-lg-6 col-md-4">
-                    <div class="ht-social">
-                        <a href="#"><i class="fa fa-facebook"></i></a>
-                        <a href="#"><i class="fa fa-twitter"></i></a>
-                        <a href="#"><i class="fa fa-youtube-play"></i></a>
-                        <a href="#"><i class="fa fa-instagram"></i></a>
-                        <a href="#"><i class="fa fa-envelope-o"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="nav-options">
-        <div class="container">
-                        <div class="nav-bar">
-                <div class="nav-left">
-<!--                    <button class="humberger-menu humberger-open" type="button" aria-label="Deschide meniul">-->
-<!--                        <i class="fa fa-bars"></i>-->
-<!--                    </button>-->
-                    <a href="/index" class="nav-logo">
-                        <img class="site-logo" src="/img/skill-swap-logo-cameleon.png" alt="SkillSwap logo">
-                    </a>
-                </div>
-                <div class="nav-center">
-                    <div class="nav-menu">
-                        <ul>
-                            <li><a th:href="@{/index}"><span>Acasă</span></a></li>
-                            <li><a th:href="@{/announces-list}"><span>Anunțuri</span></a></li>
-<!--                    <li><a sec:authorize="isAuthenticated()" th:href="@{/chat}"><span>Chat</i></span></a></li>-->
-                            <li><a th:href="@{/contact}">Contact</a></li>
-                            <li><a sec:authorize="isAuthenticated()" th:href="@{/profile}">Profil</a></li>
-                        </ul>
-                    </div>
-                    <a th:href="@{/announces/new}" class="btn-create-announce"><span>+ Creează anunț</span></a>
-                    <div class="nav-right">
-                        <!-- Conversations Button -->
-                        <a th:href="@{/chat-history}" class="btn-conversations" sec:authorize="isAuthenticated()" aria-label="Conversații">
-                            <i class="fa fa-comments"></i>
-                            <span class="conversation-badge" id="conversationBadge">2</span>
-                        </a>
-                        
-                        <!-- Notifications Button -->
-                        <div class="notifications-wrapper" sec:authorize="isAuthenticated()">
-                            <button class="btn-notifications" type="button" id="notificationsButton" aria-label="Notificări">
-                                <i class="fa fa-bell"></i>
-                                <span class="notification-badge" id="notificationBadge">3</span>
-                            </button>
-                            <!-- Notifications Dropdown -->
-                            <div class="notifications-dropdown" id="notificationsDropdown">
-                                <div class="notifications-header">
-                                    <h6>Notificări</h6>
-                                </div>
-                                <div class="notifications-list" id="notificationsList">
-                                    <!-- Notification items will be dynamically inserted here -->
-                                </div>
+                        <div class="col-lg-6 col-md-4">
+                            <div class="ht-social">
+                                <a href="#"><i class="fa fa-facebook"></i></a>
+                                <a href="#"><i class="fa fa-twitter"></i></a>
+                                <a href="#"><i class="fa fa-youtube-play"></i></a>
+                                <a href="#"><i class="fa fa-instagram"></i></a>
+                                <a href="#"><i class="fa fa-envelope-o"></i></a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="navbar-search-panel" id="navbarSearchPanel">
-                <form class="navbar-search-form" th:action="@{/announces-list}" method="get">
-                    <!-- Folosește același endpoint de filtrare ca bara principală de căutare -->
-                    <input type="text" id="navbar-search-input" name="query" placeholder="Caută un skill sau anunț" aria-label="Caută">
-                    <button type="submit" aria-label="Trimite căutare">
-                        <i class="fa fa-search"></i>
-                    </button>
-                </form>
+            <div class="nav-options">
+                <div class="container">
+                    <div class="nav-bar">
+                        <div class="nav-left">
+                            <!--                    <button class="humberger-menu humberger-open" type="button" aria-label="Deschide meniul">-->
+                            <!--                        <i class="fa fa-bars"></i>-->
+                            <!--                    </button>-->
+                            <a href="/index" class="nav-logo">
+                                <img class="site-logo" src="/img/skill-swap-logo-cameleon.png" alt="SkillSwap logo">
+                            </a>
+                        </div>
+                        <div class="nav-center">
+                            <div class="nav-menu">
+                                <ul>
+                                    <li><a th:href="@{/index}"><span>Acasă</span></a></li>
+                                    <li><a th:href="@{/announces-list}"><span>Anunțuri</span></a></li>
+                                    <!--                    <li><a sec:authorize="isAuthenticated()" th:href="@{/chat}"><span>Chat</i></span></a></li>-->
+                                    <li><a th:href="@{/contact}">Contact</a></li>
+                                    <li><a sec:authorize="isAuthenticated()" th:href="@{/profile}">Profil</a></li>
+                                </ul>
+                            </div>
+                            <a th:href="@{/announces/new}" class="btn-create-announce"><span>+ Creează anunț</span></a>
+                            <div class="nav-right">
+                                <!-- Conversations Button -->
+                                <a th:href="@{/chat-history}" class="btn-conversations"
+                                    sec:authorize="isAuthenticated()" aria-label="Conversații">
+                                    <i class="fa fa-comments"></i>
+                                    <span class="conversation-badge" id="conversationBadge">2</span>
+                                </a>
+
+                                <!-- Notifications Button -->
+                                <div class="notifications-wrapper" sec:authorize="isAuthenticated()">
+                                    <button class="btn-notifications" type="button" id="notificationsButton"
+                                        aria-label="Notificări">
+                                        <i class="fa fa-bell"></i>
+                                        <span class="notification-badge" id="notificationBadge">3</span>
+                                    </button>
+                                    <!-- Notifications Dropdown -->
+                                    <div class="notifications-dropdown" id="notificationsDropdown">
+                                        <div class="notifications-header">
+                                            <h6>Notificări</h6>
+                                        </div>
+                                        <div class="notifications-list" id="notificationsList">
+                                            <!-- Notification items will be dynamically inserted here -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="navbar-search-panel" id="navbarSearchPanel">
+                    <form class="navbar-search-form" th:action="@{/announces-list}" method="get">
+                        <!-- Folosește același endpoint de filtrare ca bara principală de căutare -->
+                        <input type="text" id="navbar-search-input" name="query" placeholder="Caută un skill sau anunț"
+                            aria-label="Caută">
+                        <button type="submit" aria-label="Trimite căutare">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </form>
+                </div>
             </div>
-        </div>
     </div>
-</header>
-<!-- Header End -->
-</div>
+    </header>
+    <!-- Header End -->
+    </div>
 
 </body>
+
 </html>
