@@ -52,7 +52,7 @@ public class AnnounceServiceImpl implements AnnounceService {
         announce.setTitle(announceDto.getTitle());
         announce.setDescription(announceDto.getDescription());
         announce.setAuthor(announceDto.getAuthor());
-        announce.setCategoryOffered(announce.getCategoryOffered());
+        announce.setCategoryOffered(announceDto.getCategoryOffered());
         announce.setCategoryRequired(announceDto.getCategoryRequired());
         announce.setImageKey(announceDto.getImageKey());
         announce.setImagePath(announceDto.getImagePath());
