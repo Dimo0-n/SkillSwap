@@ -25,11 +25,6 @@ public class HomeController {
         return "index";
     }
 
-    @GetMapping("/404")
-    public String error404(){
-        return "404";
-    }
-
     @GetMapping("/chat")
     public String chat(Model model){
         model.addAttribute("page", "chat" );

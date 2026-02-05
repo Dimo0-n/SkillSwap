@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -13,6 +14,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
@@ -33,7 +35,9 @@ public class SecurityConfig {
                                 authorize
                                         .requestMatchers(
                                                 "/css/**", "/js/**", "/img/**", "/fonts/**", "/Source",
-                                                "/index", "/**"
+                                                "/index", "/contact", "/register", "/login", "/error/**",
+                                                "/announce", "/profile", "/chat-history", "/meeting",
+                                                "/announces-list", "/**"
                                         ).permitAll()
                                         .anyRequest().authenticated()
                 )
@@ -50,6 +54,8 @@ public class SecurityConfig {
                         .deleteCookies("JSESSIONID")  // Șterge cookie-ul sesiunii
                         .logoutSuccessUrl("/login?logout=true")
                         .permitAll()
+        ).exceptionHandling(ex -> ex
+                .accessDeniedPage("/error/403")
         );
         return http.build();
     }

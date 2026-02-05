@@ -13,6 +13,8 @@ public class AnnounceSecurity {
         this.announceRepository = announceRepository;
     }
 
+    //functie de securitate pentru a afla daca user-ul
+    // cu adevarat este proprietarul anuntului inainte de stergere
     public boolean isOwner(Long announceId, Authentication auth) {
 
         CustomUserDetails cud = (CustomUserDetails) auth.getPrincipal();
