@@ -33,12 +33,14 @@ public class AnnounceServiceImpl implements AnnounceService {
         return latest5Announces.subList(0, Math.min(5, latest5Announces.size()));
     }
 
+    //lista cu toate anunturile care sunt afisate din DB
     @Override
     public List<Announce> getAnnouncesList() {
         List<Announce> announceList = announceRepository.findAll();
         return announceList;
     }
 
+    //Crearea unui anunt nou de catre user-ul logat
     @Override
     public void save(AnnounceDto announceDto, Authentication auth) {
 
@@ -59,12 +61,17 @@ public class AnnounceServiceImpl implements AnnounceService {
         announce.setUser(user);
 
         announceRepository.save(announce);
-
     }
 
+    //afisarea anunturilor pe care le-a publicat user-ul
     @Override
     public List<Announce> getAnnouncesListByEmail(Long id) {
         return announceRepository.getAnnouncesListByEmail(id);
+    }
+
+    @Override
+    public void deleteAnnounceById(Long id) {
+        announceRepository.deleteById(id);
     }
 
 

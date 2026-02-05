@@ -98,11 +98,8 @@
                     <th:block th:each="announce : ${announcesList}">
                         <div class="cl-item">
                             <div class="cl-pic">
-                                <form th:action="@{/announces/delete/{id}(id=${announce.id})}"
-                                      method="post"
-                                      class="delete-overlay-form"
-                                      onsubmit="return confirm('Sigur vrei să ștergi acest anunț?');">
-
+                                <form th:action="@{/profile/user-announces-list/delete/{id}(id=${announce.id})}"
+                                      method="post" class="delete-overlay-form">
                                     <button type="submit" class="delete-overlay-btn">
                                         <i class="fa fa-trash"></i>
                                     </button>

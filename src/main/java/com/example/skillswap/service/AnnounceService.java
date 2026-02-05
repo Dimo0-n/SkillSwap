@@ -14,7 +14,7 @@ public interface AnnounceService {
 
     void save(AnnounceDto announceDto, Authentication auth);
 
-//    List<Announce> getAnnouncesListByEmail(String email);
-
     List<Announce> getAnnouncesListByEmail(Long id);
+
+    void deleteAnnounceById(Long id);
 }

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -124,5 +125,14 @@ public class ProfileController {
 
         return "user-announces-list";
     }
+
+    //Stergerea unui anunt de catre user dupa id-ul la anunt
+    @PreAuthorize("@announceSecurity.isOwner(#id, authentication)")
+    @PostMapping("/user-announces-list/delete/{id}")
+    public String deleteAnnounceById(@PathVariable Long id) {
+        announceService.deleteAnnounceById(id);
+        return "redirect:/profile/user-announces-list";
+    }
+
 }
 
