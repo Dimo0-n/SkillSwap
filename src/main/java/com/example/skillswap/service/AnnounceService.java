@@ -17,4 +17,7 @@ public interface AnnounceService {
     List<Announce> getAnnouncesListByEmail(Long id);
 
     void deleteAnnounceById(Long id);
+
+    AnnounceDto getAnnounceById(Long id);
+
 }

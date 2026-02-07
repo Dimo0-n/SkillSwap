@@ -66,6 +66,7 @@
         <div class="row" id="items-container">
             <th:block th:each="announce : ${announcesList}">
                 <div class="col-lg-4 col-md-6 mb-4">
+                    <a th:href="@{/announce-details/{id}(id=${announce.id})}" class="announce-link">
                     <div class="cg-item" data-skill="reviews">
                         <div class="cg-pic set-bg" th:attr="data-setbg=@{${announce.imagePath}}">
                             <div class="label"><span th:text="${announce.categoryOffered}"></span></div>
@@ -82,6 +83,7 @@
                             <p class="announce-desc" th:text="${announce.description}"></p>
                         </div>
                     </div>
+                    </a>
                 </div>
             </th:block>
         </div>

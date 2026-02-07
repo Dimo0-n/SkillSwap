@@ -36,6 +36,6 @@ public class AnnounceDto {
 
     private LocalDateTime date;
 
-    private int userId;
+    private Long userId;
 
 }

@@ -73,6 +73,26 @@ public class AnnounceServiceImpl implements AnnounceService {
         announceRepository.deleteById(id);
     }
 
+    @Override
+    public AnnounceDto getAnnounceById(Long id) {
+
+        Optional<Announce> announce = announceRepository.findById(id);
+        AnnounceDto announceDto = new AnnounceDto();
+
+        announceDto.setTitle(announce.get().getTitle());
+        announceDto.setDescription(announce.get().getDescription());
+        announceDto.setAuthor(announce.get().getAuthor());
+        announceDto.setCategoryOffered(announce.get().getCategoryOffered());
+        announceDto.setCategoryRequired(announce.get().getCategoryRequired());
+        announceDto.setImageKey(announce.get().getImageKey());
+        announceDto.setImagePath(announce.get().getImagePath());
+        announceDto.setAdditionalInfo(announce.get().getAdditionalInfo());
+        announceDto.setDate(LocalDateTime.now());
+        announceDto.setUserId(announce.get().getUser().getId());
+
+        return announceDto;
+    }
+
 
 }
 

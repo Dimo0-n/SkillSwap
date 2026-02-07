@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import jakarta.validation.Valid;
@@ -59,8 +60,13 @@ class AnnounceController {
         return "redirect:/index";
     }
 
-    @GetMapping("/announce-details")
-    public String postDetails() {
+    @GetMapping("/announce-details/{id}")
+    public String postDetails(@PathVariable Long id, Model model) {
+
+        AnnounceDto announceDto = announceService.getAnnounceById(id);
+
+        model.addAttribute("announce", announceDto);
+
         return "announce-details";
     }
 
