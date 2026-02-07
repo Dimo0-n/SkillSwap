@@ -5793,5 +5793,16 @@ li a:hover {
     box-shadow: 0 6px 18px rgba(220, 38, 38, 0.6);
 }
 
+/*pentru afisarea descrierii din anunt*/
+.announce-desc {
+	display: -webkit-box;
+	-webkit-line-clamp: 3;      /* NUMĂRUL DE RÂNDURI */
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+
+	line-height: 1.5em;         /* important pt calc corect */
+	max-height: calc(1.5em * 3);
+}
+
 
 

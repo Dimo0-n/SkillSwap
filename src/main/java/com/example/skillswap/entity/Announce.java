@@ -23,6 +23,8 @@ public class Announce {
 
     private String title;
 
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     private String author;
