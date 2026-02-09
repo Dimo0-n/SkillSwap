@@ -98,18 +98,26 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
 
+    @Override
+    public ProfilDto getAuthorByUserId(Long userId) {
+        ProfilDto dto = new ProfilDto();
 
-//    //pentru citire Availability
-//public Set<Availability> getAvailability() {
-//    Set<Availability> result = EnumSet.noneOf(Availability.class);
-//
-//    for (Availability a : Availability.values()) {
-//        if ((availability & a.getBit()) != 0) {
-//            result.add(a);
-//        }
-//    }
-//    return result;
-//}
+        Optional<Profil> profil = profileRepository.findById(userId);
 
+        dto.setId(profil.get().getId());
+        dto.setName(profil.get().getName());
+        dto.setProfession(profil.get().getProfession());
+
+        System.out.println("PROFILE: " + dto.toString());
+
+        // TODO
+        //  1. de adaugat ratingul la user
+        //  2. cand a fost activ
+        //  3. cat tip sta online
+        //  4. cate schimburi finalizate are
+        //  5. de extras initialele din nume pentru a fi afisate in loc de imagine
+
+        return dto;
+    }
 
 }

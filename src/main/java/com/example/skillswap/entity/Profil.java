@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 
@@ -65,5 +66,21 @@ public class Profil {
         }
     }
 
+    @Override
+    public String toString() {
+        return "Profil{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", profession='" + profession + '\'' +
+                ", bioShort='" + bioShort + '\'' +
+                ", completeDescription='" + completeDescription + '\'' +
+                ", availabilityMask=" + availabilityMask +
+                ", limits='" + limits + '\'' +
+                ", competences='" + competences + '\'' +
+                ", strengths='" + strengths + '\'' +
+                ", image=" + Arrays.toString(image) +
+                ", user=" + user +
+                '}';
+    }
 }
 

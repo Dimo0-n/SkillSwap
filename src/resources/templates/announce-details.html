@@ -88,7 +88,7 @@
                         <div class="announce-detail-item">
                             <label class="announce-detail-label">Categoria căutată</label>
                             <div class="announce-detail-content">
-                                <div class="announce-category-badge seek">
+                                <div class="announce-category-badge offer">
                                     <i class="fa fa-search"></i>
                                     <span th:text="${announce.categoryRequired}"></span>
                                 </div>
@@ -117,8 +117,8 @@
                 <!-- User Card -->
                 <div class="announce-user-card">
                     <div class="announce-user-avatar">AP</div>
-                    <h3 class="announce-user-name">Andrei Popescu</h3>
-                    <p class="announce-user-title">5 ani programare Java | Backend Developer</p>
+                    <h3 th:text="${profile.name}" class="announce-user-name"></h3>
+                    <p th:text="${profile.profession}" class="announce-user-title"></p>
                     
                     <div class="announce-user-rating">
                         <div class="announce-rating-stars">

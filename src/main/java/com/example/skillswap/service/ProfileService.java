@@ -12,4 +12,6 @@ public interface ProfileService {
     ProfilDto getProfileForView(String email);
 
     byte[] getProfileImageByEmail(String email) throws IOException;
+
+    ProfilDto getAuthorByUserId(Long userId);
 }

@@ -102,5 +102,20 @@ public class ProfilDto {
         return sb.toString().trim();
     }
 
+    @Override
+    public String toString() {
+        return "ProfilDto{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", profession='" + profession + '\'' +
+                ", bioShort='" + bioShort + '\'' +
+                ", competences='" + competences + '\'' +
+                ", completeDescription='" + completeDescription + '\'' +
+                ", availabilityMask=" + availabilityMask +
+                ", limits='" + limits + '\'' +
+                ", strengths='" + strengths + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                '}';
+    }
 }
 

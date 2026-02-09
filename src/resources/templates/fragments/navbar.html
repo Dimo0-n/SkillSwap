@@ -31,27 +31,29 @@
                     <div class="row">
                         <div class="col-lg-6 col-md-8">
                             <div class="ht-widget">
-
                                 <ul sec:authorize="!isAuthenticated()">
                                     <li><i class="fa fa-clock-o"></i> <span id="current-date1"></span></li>
+                                <li class="sep">/</li>
                                     <li>
                                         <a th:href="@{/login}"><i class="fa fa-sign-in"></i> Login</a>
                                     </li>
+                                <li class="sep">/</li>
                                     <li>
                                         <a th:href="@{/register}"><i class="fa fa-user-plus"></i> Sign up</a>
                                     </li>
                                 </ul>
-
                                 <ul sec:authorize="isAuthenticated()">
                                     <li><i class="fa fa-clock-o"></i> <span id="current-date2"></span></li>
+                                    <li class="sep">/</li>
                                     <li>
                                         <a href="#"
                                             onclick="event.preventDefault(); document.getElementById('logoutForm').submit();"><i
                                                 class="fa fa-power-off"></i> Logout</a>
                                     </li>
+                                <li class="sep" sec:authorize="hasRole('ROLE_ADMIN')">/</li>
                                     <li>
                                         <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/admin}"><i
-                                                class="fa fa-shield"></i> Admin</a>
+                                                class="fa fa-shield"></i>Admin</a>
                                     </li>
                                 </ul>
                                 <form id="logoutForm" th:action="@{/logout}" method="post" style="display: none;">

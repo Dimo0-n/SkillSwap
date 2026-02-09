@@ -1,8 +1,10 @@
 package com.example.skillswap.controller;
 
 import com.example.skillswap.dto.AnnounceDto;
+import com.example.skillswap.dto.ProfilDto;
 import com.example.skillswap.entity.Announce;
 import com.example.skillswap.service.AnnounceService;
+import com.example.skillswap.service.ProfileService;
 import com.example.skillswap.service.impl.AnnounceImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -26,6 +28,9 @@ class AnnounceController {
 
     @Autowired
     private AnnounceImageService announceImageService;
+
+    @Autowired
+    private ProfileService profileService;
 
     @GetMapping("/announces-list")
     public String categoryGrid(Model model) {
@@ -65,7 +70,11 @@ class AnnounceController {
 
         AnnounceDto announceDto = announceService.getAnnounceById(id);
 
+        Long userId = announceDto.getUserId();
+        ProfilDto profilDto = profileService.getAuthorByUserId(userId);
+
         model.addAttribute("announce", announceDto);
+        model.addAttribute("profile", profilDto);
 
         return "announce-details";
     }

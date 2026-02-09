@@ -79,9 +79,6 @@ public class AnnounceServiceImpl implements AnnounceService {
         Optional<Announce> announce = announceRepository.findById(id);
         AnnounceDto announceDto = new AnnounceDto();
 
-        System.out.println("ANNOUNCE ENTITY");
-        System.out.println(announce.toString());
-
         announceDto.setId(announce.get().getId());
         announceDto.setTitle(announce.get().getTitle());
         announceDto.setDescription(announce.get().getDescription());
@@ -93,9 +90,6 @@ public class AnnounceServiceImpl implements AnnounceService {
         announceDto.setAdditionalInfo(announce.get().getAdditionalInfo());
         announceDto.setDate(announce.get().getDate());
         announceDto.setUserId(announce.get().getUser().getId());
-
-        System.out.println("ANNOUNCE DTO ENTITY");
-        System.out.println(announceDto.toString());
 
         return announceDto;
     }
