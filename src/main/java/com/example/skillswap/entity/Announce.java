@@ -45,5 +45,21 @@ public class Announce {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Override
+    public String toString() {
+        return "Announce{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", author='" + author + '\'' +
+                ", categoryOffered='" + categoryOffered + '\'' +
+                ", categoryRequired='" + categoryRequired + '\'' +
+                ", imageKey='" + imageKey + '\'' +
+                ", imagePath='" + imagePath + '\'' +
+                ", additionalInfo='" + additionalInfo + '\'' +
+                ", date=" + date +
+                ", user=" + user +
+                '}';
+    }
 }
 

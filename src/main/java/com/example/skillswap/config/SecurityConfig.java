@@ -44,6 +44,9 @@ public class SecurityConfig {
                                                                 .defaultSuccessUrl("/index", true)
                                                                 .failureUrl("/login?error")
                                                                 .permitAll())
+                                .sessionManagement(session -> session
+                                        .invalidSessionUrl("/login?expired=true")
+                                )
                                 .logout(
                                                 logout -> logout
                                                                 .logoutUrl("/logout")

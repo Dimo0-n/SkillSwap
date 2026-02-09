@@ -38,4 +38,20 @@ public class AnnounceDto {
 
     private Long userId;
 
+    @Override
+    public String toString() {
+        return "AnnounceDto{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", author='" + author + '\'' +
+                ", categoryOffered='" + categoryOffered + '\'' +
+                ", categoryRequired='" + categoryRequired + '\'' +
+                ", imageKey='" + imageKey + '\'' +
+                ", imagePath='" + imagePath + '\'' +
+                ", additionalInfo='" + additionalInfo + '\'' +
+                ", date=" + date +
+                ", userId=" + userId +
+                '}';
+    }
 }

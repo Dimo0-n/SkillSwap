@@ -18,619 +18,7 @@
     <link rel="stylesheet" href="/css/magnific-popup.css" type="text/css">
     <link rel="stylesheet" href="/css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="/css/style.css" type="text/css">
-    <style>
-        /* Announce Details Page - Refactored Layout */
-        :root {
-            --announce-primary: var(--brand-primary, #812acf);
-            --announce-primary-light: var(--brand-primary-light, #a78bfa);
-            --announce-bg: var(--bg-dark, #000000);
-            --announce-card-bg: var(--card-bg, #0a0a0a);
-            --announce-text: var(--text-primary, #ffffff);
-            --announce-text-secondary: var(--text-secondary, #c4c4c4);
-            --announce-muted: var(--muted, #a0a0b8);
-            --announce-border: var(--border-muted, rgba(129,42,207,0.12));
-        }
-
-        html, body {
-            background: var(--announce-bg) !important;
-            color: var(--announce-text) !important;
-        }
-
-        .announce-details-section {
-            padding: 60px 0 80px;
-            min-height: 100vh;
-        }
-
-        .announce-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        /* Header Section - Conditional Image Display */
-        .announce-header-section {
-            margin-bottom: 3rem;
-        }
-
-        .announce-header-image {
-            width: 100%;
-            height: 300px;
-            object-fit: cover;
-            border-radius: 16px;
-            margin-bottom: 2rem;
-            display: block;
-        }
-
-        .announce-header-image.hidden {
-            display: none;
-        }
-
-        .announce-header-fallback {
-            display: none;
-            width: 100%;
-            height: 200px;
-            background: linear-gradient(135deg, rgba(129, 42, 207, 0.2), rgba(109, 40, 217, 0.1));
-            border-radius: 16px;
-            margin-bottom: 2rem;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid var(--announce-border);
-        }
-
-        .announce-header-fallback.visible {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .announce-header-fallback::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: repeating-linear-gradient(
-                45deg,
-                transparent,
-                transparent 20px,
-                rgba(129, 42, 207, 0.05) 20px,
-                rgba(129, 42, 207, 0.05) 40px
-            );
-            animation: slide 20s linear infinite;
-        }
-
-        @keyframes slide {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(40px, 40px); }
-        }
-
-        .announce-header-fallback-icon {
-            position: relative;
-            z-index: 1;
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, var(--announce-primary), var(--announce-primary-dark));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 36px;
-            color: var(--announce-text);
-            box-shadow: 0 8px 24px rgba(129, 42, 207, 0.3);
-        }
-
-        .announce-header-fallback-text {
-            position: relative;
-            z-index: 1;
-            font-family: "Space Grotesk", sans-serif;
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--announce-text);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* Main Layout: 70% Content + 30% Sidebar */
-        .announce-main-layout {
-            display: grid;
-            grid-template-columns: 1fr 380px;
-            gap: 3rem;
-            align-items: start;
-        }
-
-        /* Main Content Column (70%) */
-        .announce-content-column {
-            display: flex;
-            flex-direction: column;
-            gap: 2.5rem;
-        }
-
-        /* Title Section */
-        .announce-title-section {
-            margin-bottom: 0.5rem;
-        }
-
-        .announce-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, var(--announce-primary), var(--announce-primary-dark));
-            color: var(--announce-text);
-            padding: 6px 14px;
-            font-size: 12px;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 1rem;
-            border-radius: 6px;
-            font-family: "Space Grotesk", sans-serif;
-        }
-
-        .announce-title {
-            font-family: "Space Grotesk", sans-serif;
-            font-size: 36px;
-            font-weight: 700;
-            color: var(--announce-text);
-            margin-bottom: 1rem;
-            line-height: 1.25;
-            letter-spacing: -0.02em;
-        }
-
-        .announce-meta {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-            margin-bottom: 1.5rem;
-            font-family: "Space Grotesk", sans-serif;
-            font-size: 14px;
-            color: var(--announce-muted);
-        }
-
-        .announce-meta-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .announce-meta-item i {
-            color: var(--announce-primary);
-            font-size: 12px;
-        }
-
-        .announce-meta-separator {
-            color: var(--announce-muted);
-        }
-
-
-        /* Content Sections */
-        .announce-section {
-            background: var(--announce-card-bg);
-            border: 1px solid var(--announce-border);
-            border-radius: 24px;
-            padding: 2.5rem;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .announce-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--announce-primary), var(--announce-primary-light));
-        }
-
-        .announce-section:hover {
-            border-color: rgba(129, 42, 207, 0.2);
-            box-shadow: var(--shadow-md);
-        }
-
-        .announce-section-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 24px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid var(--announce-border);
-        }
-
-        .announce-section-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, var(--announce-primary), var(--announce-primary-dark));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            color: var(--announce-text);
-            box-shadow: 0 0 30px rgba(129, 42, 207, 0.3);
-        }
-
-        .announce-section-title {
-            font-family: "Space Grotesk", sans-serif;
-            font-size: 20px;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            color: var(--announce-text);
-            margin: 0;
-            line-height: 1.3;
-        }
-
-        .announce-details-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 24px;
-        }
-
-        .announce-detail-item {
-            margin-bottom: 0;
-        }
-
-        .announce-detail-label {
-            display: block;
-            margin-bottom: 10px;
-            font-family: "Space Grotesk", sans-serif;
-            font-weight: 600;
-            font-size: 14px;
-            color: var(--announce-text);
-            letter-spacing: 0.3px;
-        }
-
-        .announce-detail-content {
-            font-family: "Montserrat", sans-serif;
-            font-size: 15px;
-            line-height: 1.8;
-            color: var(--announce-text-secondary);
-        }
-
-        .announce-detail-content p {
-            margin-bottom: 1rem;
-            line-height: 1.7;
-        }
-
-        .announce-detail-content p:last-child {
-            margin-bottom: 0;
-        }
-
-        .announce-category-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: var(--announce-primary);
-            border: none;
-            padding: 10px 16px;
-            border-radius: 0;
-            font-size: 13px;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            transform: skewX(-10deg);
-            color: var(--announce-text);
-            font-family: "Space Grotesk", sans-serif;
-        }
-
-        .announce-category-badge span,
-        .announce-category-badge i {
-            transform: skewX(10deg);
-        }
-
-        .announce-category-badge i {
-            font-size: 14px;
-        }
-
-        .announce-category-badge.seek {
-            background: var(--announce-primary-light);
-        }
-
-        /* Sidebar (30% - Sticky) */
-        .announce-sidebar {
-            position: sticky;
-            top: 60px;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        /* User Card */
-        .announce-user-card {
-            background: var(--announce-card-bg);
-            border: 1px solid var(--announce-border);
-            border-radius: 16px;
-            padding: 2rem;
-            text-align: center;
-        }
-
-        .announce-user-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--announce-primary), var(--announce-primary-dark));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--announce-text);
-            font-size: 32px;
-            font-weight: 600;
-            margin: 0 auto 1rem;
-            box-shadow: 0 4px 16px rgba(129, 42, 207, 0.3);
-        }
-
-        .announce-user-name {
-            font-family: "Space Grotesk", sans-serif;
-            font-size: 20px;
-            font-weight: 600;
-            color: var(--announce-text);
-            margin-bottom: 0.5rem;
-            letter-spacing: -0.02em;
-            line-height: 1.3;
-        }
-
-        .announce-user-title {
-            font-family: "Space Grotesk", sans-serif;
-            font-size: 14px;
-            color: var(--announce-muted);
-            margin-bottom: 1rem;
-        }
-
-        .announce-user-rating {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-            padding: 0.75rem;
-            background: rgba(129, 42, 207, 0.05);
-            border-radius: 8px;
-        }
-
-        .announce-rating-stars {
-            color: #fbbf24;
-            font-size: 16px;
-        }
-
-        .announce-rating-text {
-            font-family: "Space Grotesk", sans-serif;
-            font-size: 14px;
-            color: var(--announce-text-secondary);
-        }
-
-        .announce-user-status {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 6px 12px;
-            background: rgba(34, 197, 94, 0.1);
-            color: #22c55e;
-            border-radius: 6px;
-            font-family: "Space Grotesk", sans-serif;
-            font-size: 12px;
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-
-        .announce-user-status i {
-            font-size: 10px;
-        }
-
-        .announce-user-meta {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid var(--announce-border);
-        }
-
-        .announce-user-meta-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-family: "Space Grotesk", sans-serif;
-            font-size: 13px;
-            color: var(--announce-text-secondary);
-        }
-
-        .announce-user-meta-label {
-            color: var(--announce-muted);
-        }
-
-        .announce-user-meta-value {
-            color: var(--announce-text);
-            font-weight: 600;
-        }
-
-        /* CTA Buttons */
-        .announce-cta-section {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .announce-btn {
-            width: 100%;
-            padding: 14px 24px;
-            border-radius: 12px;
-            font-family: "Space Grotesk", sans-serif;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            border: none;
-            text-decoration: none;
-        }
-
-        .announce-btn-primary {
-            background: linear-gradient(135deg, var(--announce-primary), var(--announce-primary-dark));
-            color: var(--announce-text);
-            box-shadow: 0 4px 12px rgba(129, 42, 207, 0.3);
-        }
-
-        .announce-btn-primary:hover {
-            background: linear-gradient(135deg, var(--announce-primary-light), var(--announce-primary));
-            transform: translateY(-2px);
-            box-shadow: 0 6px 18px rgba(129, 42, 207, 0.4);
-        }
-
-        .announce-btn-secondary {
-            background: transparent;
-            color: var(--announce-primary);
-            border: 2px solid var(--announce-primary);
-        }
-
-        .announce-btn-secondary:hover {
-            background: rgba(129, 42, 207, 0.1);
-            border-color: var(--announce-primary-light);
-            color: var(--announce-primary-light);
-        }
-
-        .announce-btn-icon {
-            width: 48px;
-            height: 48px;
-            background: var(--announce-card-bg);
-            border: 1px solid var(--announce-border);
-            border-radius: 12px;
-            color: var(--announce-text-secondary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            transition: all 0.3s ease;
-        }
-
-        .announce-btn-icon:hover {
-            background: rgba(129, 42, 207, 0.1);
-            border-color: var(--announce-primary);
-            color: var(--announce-primary);
-        }
-
-        .announce-btn-icon.saved {
-            color: var(--announce-primary);
-            border-color: var(--announce-primary);
-        }
-
-        /* Responsive */
-        @media (max-width: 1200px) {
-            .announce-main-layout {
-                grid-template-columns: 1fr 320px;
-                gap: 2rem;
-            }
-        }
-
-        @media (max-width: 992px) {
-            .announce-main-layout {
-                grid-template-columns: 1fr;
-            }
-
-            .announce-sidebar {
-                position: static;
-                order: -1;
-            }
-
-            .announce-title {
-                font-size: 28px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            /* Mobile optimizations - Desktop unchanged */
-            body, html {
-                overflow-x: hidden;
-                width: 100%;
-            }
-            
-            * {
-                max-width: 100%;
-                box-sizing: border-box;
-            }
-            
-            .announce-details-section {
-                padding: 24px 0 40px;
-            }
-
-            .announce-container {
-                padding: 0 16px;
-            }
-
-            .announce-title {
-                font-size: 22px;
-                line-height: 1.3;
-            }
-
-            .announce-section {
-                padding: 20px 16px;
-                margin-bottom: 20px;
-                border-radius: 16px;
-            }
-
-            .announce-section-title {
-                font-size: 18px;
-            }
-
-            .announce-details-grid {
-                grid-template-columns: 1fr;
-                gap: 16px;
-            }
-            
-            .announce-main-layout {
-                flex-direction: column;
-                gap: 1.5rem;
-            }
-            
-            .announce-sidebar {
-                position: static;
-                margin-top: 24px;
-            }
-            
-            .announce-header-image {
-                display: none;
-            }
-            
-            .announce-header-fallback {
-                height: 120px;
-                margin-bottom: 24px;
-            }
-            
-            .announce-user-card {
-                padding: 20px 16px;
-            }
-            
-            .announce-btn {
-                width: 100%;
-                padding: 14px 20px;
-                min-height: 44px;
-                font-size: 16px;
-                margin-bottom: 12px;
-            }
-            
-            /* Prevent overflow */
-            .announce-details-section,
-            .announce-container,
-            .announce-main-layout {
-                overflow-x: hidden;
-            }
-        }
-
-            .announce-section-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 12px;
-            }
-
-            .announce-detail-item {
-                margin-bottom: 20px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="/css/announce-details.css" type="text/css">
 </head>
 
 <body>
@@ -640,46 +28,22 @@
 
 <section class="announce-details-section">
     <div class="announce-container">
-        <!-- Header Section - Conditional Image -->
-        <div class="announce-header-section">
-            <!-- Image will be shown only if user uploaded one -->
-            <img id="announceHeaderImage" 
-                 class="announce-header-image" 
-                 src="" 
-                 alt="Announce image"
-                 style="display: none;">
-            
-            <!-- Fallback header with gradient and skill icon -->
-            <div id="announceHeaderFallback" class="announce-header-fallback visible">
-                <div class="announce-header-fallback-icon">
-                    <i class="fa fa-code"></i>
-                </div>
-                <div class="announce-header-fallback-text">Programare Java</div>
-            </div>
-        </div>
-
         <!-- Main Layout: Content + Sidebar -->
         <div class="announce-main-layout">
             <!-- Main Content Column (70%) -->
             <div class="announce-content-column">
                 <!-- Title Section -->
                 <div class="announce-title-section">
-                    <span class="announce-badge">NOU</span>
-                    <h1 class="announce-title">Ofer lecții de programare Java în schimb de design grafic</h1>
+                    <h1 th:text="${announce.title}" class="announce-title"></h1>
                     <div class="announce-meta">
                         <div class="announce-meta-item">
                             <i class="fa fa-user"></i>
-                            <span>Andrei Popescu</span>
+                            <span th:text="${announce.author}"></span>
                         </div>
                         <span class="announce-meta-separator">•</span>
                         <div class="announce-meta-item">
                             <i class="fa fa-calendar"></i>
-                            <span>17 August 2025</span>
-                        </div>
-                        <span class="announce-meta-separator">•</span>
-                        <div class="announce-meta-item">
-                            <i class="fa fa-clock-o"></i>
-                            <span>Anunț activ de 3 zile</span>
+                            <span th:text="${#temporals.format(announce.date, 'dd.MM.yyyy HH:mm')}"></span>
                         </div>
                     </div>
                 </div>
@@ -696,8 +60,7 @@
                     <div class="announce-detail-item">
                         <label class="announce-detail-label">Descriere detaliată</label>
                         <div class="announce-detail-content">
-                            <p>Programez de 5 ani în Java și am experiență solidă în dezvoltarea aplicațiilor backend. Caut pe cineva să mă învețe Photoshop și design grafic pentru a-mi îmbunătăți abilitățile de creare a interfețelor utilizator.</p>
-                            <p>Ofer lecții practice de Java, de la baze până la concepte avansate, inclusiv Spring Framework, Hibernate și arhitectură de aplicații. În schimb, aș dori să învăț cum să creez design-uri atractive, să lucrez cu straturi în Photoshop și să înțeleg principiile de design UI/UX.</p>
+                            <p th:text="${announce.description}"></p>
                         </div>
                     </div>
                 </div>
@@ -708,7 +71,7 @@
                         <div class="announce-section-icon">
                             <i class="fa fa-exchange"></i>
                         </div>
-                        <h2 class="announce-section-title">Ce oferți și ce cauți</h2>
+                        <h2 class="announce-section-title">Ce oferți și ce căuți</h2>
                     </div>
 
                     <div class="announce-details-grid">
@@ -717,7 +80,7 @@
                             <div class="announce-detail-content">
                                 <div class="announce-category-badge offer">
                                     <i class="fa fa-star"></i>
-                                    <span>Programare Java</span>
+                                    <span th:text="${announce.categoryOffered}"></span>
                                 </div>
                             </div>
                         </div>
@@ -727,7 +90,7 @@
                             <div class="announce-detail-content">
                                 <div class="announce-category-badge seek">
                                     <i class="fa fa-search"></i>
-                                    <span>Design grafic</span>
+                                    <span th:text="${announce.categoryRequired}"></span>
                                 </div>
                             </div>
                         </div>
@@ -735,14 +98,14 @@
                         <div class="announce-detail-item">
                             <label class="announce-detail-label">Nume autor</label>
                             <div class="announce-detail-content">
-                                <p>Andrei Popescu</p>
+                                <p th:text="${announce.author}"></p>
                             </div>
                         </div>
 
                         <div class="announce-detail-item">
                             <label class="announce-detail-label">Notă secundară (opțional)</label>
                             <div class="announce-detail-content">
-                                <p>Disponibil pentru sesiuni online sau offline, flexibil în funcție de preferințe. Accept începători în design, ofer lecții pentru toate nivelurile în Java.</p>
+                                <p th:text="${announce.additionalInfo}"></p>
                             </div>
                         </div>
                     </div>
