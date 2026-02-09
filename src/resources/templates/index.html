@@ -267,6 +267,7 @@
 <!--                img 370 x 247-->
 
                 <th:block th:each="announce : ${latest5Announces}">
+                    <a th:href="@{/announce-details/{id}(id=${announce.id})}" class="announce-link">
                     <div class="ip-item">
                         <div class="ip-pic">
                             <img th:src="@{${announce.imagePath}}" alt="SkillSwap">
@@ -283,9 +284,10 @@
                                     <span th:text="${#temporals.format(announce.date, 'dd MMMM HH:mm')}"></span>
                                 </li>
                             </ul>
-                            <p th:text="${announce.description}"></p>
+                            <p class="announce-desc" th:text="${announce.description}"></p>
                         </div>
                     </div>
+                    </a>
                 </th:block>
 
             </div>
