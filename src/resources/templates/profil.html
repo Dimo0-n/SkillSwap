@@ -210,9 +210,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="dt-desc-more" th:if="${!#strings.isEmpty(profile.bioShort)}">
-                            <p th:text="${profile.bioShort}"></p>
-                        </div>
                         <div class="dt-tags">
                             <a href="#" th:each="skill : ${profile.competenceList}">
                                 <span th:text="${skill}">Skill</span>

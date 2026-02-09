@@ -66,21 +66,5 @@ public class Profil {
         }
     }
 
-    @Override
-    public String toString() {
-        return "Profil{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", profession='" + profession + '\'' +
-                ", bioShort='" + bioShort + '\'' +
-                ", completeDescription='" + completeDescription + '\'' +
-                ", availabilityMask=" + availabilityMask +
-                ", limits='" + limits + '\'' +
-                ", competences='" + competences + '\'' +
-                ", strengths='" + strengths + '\'' +
-                ", image=" + Arrays.toString(image) +
-                ", user=" + user +
-                '}';
-    }
 }
 
