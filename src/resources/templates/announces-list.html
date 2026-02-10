@@ -109,6 +109,15 @@
 <script src="/js/categories-list.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+
+        function debounce(fn, delay = 300) {
+            let timeout;
+            return function (...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => fn.apply(this, args), delay);
+            };
+        }
+
         const mainSearchForm = document.getElementById('announces-main-search');
         const mainSearchInput = document.getElementById('skill-search');
         const navbarSearchForm = document.querySelector('.navbar-search-form');
@@ -122,17 +131,27 @@
             }
         };
 
-        if (mainSearchForm && mainSearchInput) {
-            mainSearchForm.addEventListener('submit', function (e) {
-                e.preventDefault();
-                syncSearch(mainSearchInput.value);
+        const debouncedSyncSearch = debounce(syncSearch, 300);
+
+        if (mainSearchInput) {
+            mainSearchInput.addEventListener('input', e => {
+                debouncedSyncSearch(e.target.value);
             });
         }
 
-        if (navbarSearchForm && navbarSearchInput) {
+        if (navbarSearchInput) {
+            navbarSearchInput.addEventListener('input', e => {
+                debouncedSyncSearch(e.target.value);
+            });
+        }
+
+        if (mainSearchForm) {
+            mainSearchForm.addEventListener('submit', e => e.preventDefault());
+        }
+
+        if (navbarSearchForm) {
             navbarSearchForm.addEventListener('submit', function (e) {
                 e.preventDefault();
-                syncSearch(navbarSearchInput.value);
                 if (navbarSearchPanel) {
                     navbarSearchPanel.classList.remove('is-open');
                 }
@@ -140,6 +159,7 @@
         }
     });
 </script>
+
 
 <style>
     /* Stiluri pentru paginare */

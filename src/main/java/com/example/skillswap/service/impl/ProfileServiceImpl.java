@@ -97,7 +97,6 @@ public class ProfileServiceImpl implements ProfileService {
         return dto;
     }
 
-
     @Override
     public ProfilDto getAuthorByUserId(Long userId) {
         ProfilDto dto = new ProfilDto();
@@ -107,8 +106,6 @@ public class ProfileServiceImpl implements ProfileService {
         dto.setId(profil.get().getId());
         dto.setName(profil.get().getName());
         dto.setProfession(profil.get().getProfession());
-
-        System.out.println("PROFILE: " + dto.toString());
 
         // TODO
         //  1. de adaugat ratingul la user
