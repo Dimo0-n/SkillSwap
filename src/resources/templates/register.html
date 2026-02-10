@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - Skill Swap</title>
-    <meta name="_csrf" th:content="${_csrf.token}"/>
-    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800,900&display=swap"
           rel="stylesheet">
@@ -140,19 +138,12 @@
             return;
         }
 
-        // Get CSRF token
-        const token = document.querySelector('meta[name="_csrf"]').getAttribute('content');
-        const header = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
-
         // Trimitere la backend
         const formData = new FormData(this);
 
         try {
             const response = await fetch('/register/save', {
                 method: 'POST',
-                headers: {
-                    [header]: token
-                },
                 body: formData
             });
 

@@ -35,6 +35,8 @@ public class AuthController {
 
         Optional<User> existingUser = authService.searchUserByEmail(user.getEmail());
 
+        // TODO + de verificat daca emailul este valid
+
         if (existingUser.isPresent()) {
             model.addAttribute("error", "Acest email deja este înregistrat!");
             return "register";

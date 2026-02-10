@@ -2,8 +2,10 @@ package com.example.skillswap.security;
 
 import com.example.skillswap.entity.Role;
 import com.example.skillswap.entity.User;
+import com.example.skillswap.enums.AuthProvider;
 import com.example.skillswap.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,6 +34,12 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .orElseThrow(() ->
                         new UsernameNotFoundException("User not found with email: " + email)
                 );
+
+        if (user.getProvider() == AuthProvider.GOOGLE) {
+            throw new BadCredentialsException(
+                    "Cont creat cu Google. Autentifică-te folosind Google."
+            );
+        }
 
         return new CustomUserDetails(
                 user.getId(),

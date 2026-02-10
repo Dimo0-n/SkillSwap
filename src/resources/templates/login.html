@@ -52,9 +52,16 @@
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.has('error')) {
+
+        if (urlParams.has('errorMessage')) {
+            // Mesaj custom (ex: user Google încearcă login clasic)
+            showMessage(urlParams.get('errorMessage'), 'error');
+
+        } else if (urlParams.has('error')) {
+            // Mesaj generic (parolă greșită etc.)
             showMessage('Email sau parola incorectă!', 'error');
         }
+
         if (urlParams.has('logout')) {
             showMessage('Te-ai deconectat cu succes!', 'success');
         }
@@ -66,6 +73,7 @@
             setTimeout(() => messageDiv.classList.remove('show'), 4000);
         }
     </script>
+
 </body>
 
 </html>
