@@ -11,7 +11,7 @@
 
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800,900&display=swap"
-          rel="stylesheet">
+        rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Cinzel:400,700,900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 
@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="/css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="/css/style.css" type="text/css">
     <link rel="stylesheet" href="/css/chat-history.css" type="text/css">
+    <link rel="stylesheet" href="/css/chat-reactions.css" type="text/css">
 </head>
 
 <body>
@@ -49,17 +50,17 @@
                             <div class="chat-search-wrapper">
                                 <div class="chat-search-input-wrapper">
                                     <i class="fa fa-search chat-search-icon"></i>
-                                    <input type="text" 
-                                           id="conversationSearch" 
-                                           class="chat-search-input" 
-                                           placeholder="Search conversations…">
+                                    <input type="text" id="conversationSearch" class="chat-search-input"
+                                        placeholder="Search conversations…">
                                 </div>
                             </div>
 
                             <!-- Conversations List -->
                             <div class="conversations-list" id="conversationsList">
                                 <!-- Conversation Item 1 -->
-                                <div class="conversation-item active" data-conversation-id="1" data-user-name="Maria Popescu" data-user-avatar="/img/details/comment/comment-1.jpg" data-user-status="online">
+                                <div class="conversation-item active" data-conversation-id="1"
+                                    data-user-name="Maria Popescu" data-user-avatar="/img/details/comment/comment-1.jpg"
+                                    data-user-status="online">
                                     <div class="conversation-avatar">
                                         <img src="/img/details/comment/comment-1.jpg" alt="Maria Popescu">
                                         <span class="status-indicator status-online"></span>
@@ -69,13 +70,15 @@
                                             <span class="conversation-name">Maria Popescu</span>
                                             <span class="conversation-time">14:32</span>
                                         </div>
-                                        <div class="conversation-preview">Mulțumesc pentru ajutor! Totul e clar acum.</div>
+                                        <div class="conversation-preview">Mulțumesc pentru ajutor! Totul e clar acum.
+                                        </div>
                                     </div>
                                     <span class="unread-badge">2</span>
                                 </div>
 
                                 <!-- Conversation Item 2 -->
-                                <div class="conversation-item" data-conversation-id="2" data-user-name="Ion Ionescu" data-user-avatar="/img/details/comment/comment-2.jpg" data-user-status="offline">
+                                <div class="conversation-item" data-conversation-id="2" data-user-name="Ion Ionescu"
+                                    data-user-avatar="/img/details/comment/comment-2.jpg" data-user-status="offline">
                                     <div class="conversation-avatar">
                                         <img src="/img/details/comment/comment-2.jpg" alt="Ion Ionescu">
                                         <span class="status-indicator status-offline"></span>
@@ -85,12 +88,14 @@
                                             <span class="conversation-name">Ion Ionescu</span>
                                             <span class="conversation-time">Ieri</span>
                                         </div>
-                                        <div class="conversation-preview">Poți să-mi explici cum funcționează Spring Boot?</div>
+                                        <div class="conversation-preview">Poți să-mi explici cum funcționează Spring
+                                            Boot?</div>
                                     </div>
                                 </div>
 
                                 <!-- Conversation Item 3 -->
-                                <div class="conversation-item" data-conversation-id="3" data-user-name="Ana Dumitrescu" data-user-avatar="/img/details/comment/comment-3.jpg" data-user-status="online">
+                                <div class="conversation-item" data-conversation-id="3" data-user-name="Ana Dumitrescu"
+                                    data-user-avatar="/img/details/comment/comment-3.jpg" data-user-status="online">
                                     <div class="conversation-avatar">
                                         <img src="/img/details/comment/comment-3.jpg" alt="Ana Dumitrescu">
                                         <span class="status-indicator status-online"></span>
@@ -105,7 +110,9 @@
                                 </div>
 
                                 <!-- Conversation Item 4 -->
-                                <div class="conversation-item" data-conversation-id="4" data-user-name="George Marinescu" data-user-avatar="/img/details/comment/comment-1.jpg" data-user-status="offline">
+                                <div class="conversation-item" data-conversation-id="4"
+                                    data-user-name="George Marinescu"
+                                    data-user-avatar="/img/details/comment/comment-1.jpg" data-user-status="offline">
                                     <div class="conversation-avatar">
                                         <img src="/img/details/comment/comment-1.jpg" alt="George Marinescu">
                                         <span class="status-indicator status-offline"></span>
@@ -121,7 +128,9 @@
                                 </div>
 
                                 <!-- Conversation Item 5 -->
-                                <div class="conversation-item" data-conversation-id="5" data-user-name="Elena Constantinescu" data-user-avatar="/img/details/comment/comment-2.jpg" data-user-status="online">
+                                <div class="conversation-item" data-conversation-id="5"
+                                    data-user-name="Elena Constantinescu"
+                                    data-user-avatar="/img/details/comment/comment-2.jpg" data-user-status="online">
                                     <div class="conversation-avatar">
                                         <img src="/img/details/comment/comment-2.jpg" alt="Elena Constantinescu">
                                         <span class="status-indicator status-online"></span>
@@ -136,7 +145,8 @@
                                 </div>
 
                                 <!-- Conversation Item 6 -->
-                                <div class="conversation-item" data-conversation-id="6" data-user-name="Mihai Radu" data-user-avatar="/img/details/comment/comment-3.jpg" data-user-status="offline">
+                                <div class="conversation-item" data-conversation-id="6" data-user-name="Mihai Radu"
+                                    data-user-avatar="/img/details/comment/comment-3.jpg" data-user-status="offline">
                                     <div class="conversation-avatar">
                                         <img src="/img/details/comment/comment-3.jpg" alt="Mihai Radu">
                                         <span class="status-indicator status-offline"></span>
@@ -146,12 +156,14 @@
                                             <span class="conversation-name">Mihai Radu</span>
                                             <span class="conversation-time">Săptămâna trecută</span>
                                         </div>
-                                        <div class="conversation-preview">Poți să-mi recomanzi niște resurse pentru JavaScript?</div>
+                                        <div class="conversation-preview">Poți să-mi recomanzi niște resurse pentru
+                                            JavaScript?</div>
                                     </div>
                                 </div>
 
                                 <!-- Conversation Item 7 -->
-                                <div class="conversation-item" data-conversation-id="7" data-user-name="Andreea Stan" data-user-avatar="/img/details/comment/comment-1.jpg" data-user-status="online">
+                                <div class="conversation-item" data-conversation-id="7" data-user-name="Andreea Stan"
+                                    data-user-avatar="/img/details/comment/comment-1.jpg" data-user-status="online">
                                     <div class="conversation-avatar">
                                         <img src="/img/details/comment/comment-1.jpg" alt="Andreea Stan">
                                         <span class="status-indicator status-online"></span>
@@ -161,7 +173,8 @@
                                             <span class="conversation-name">Andreea Stan</span>
                                             <span class="conversation-time">Săptămâna trecută</span>
                                         </div>
-                                        <div class="conversation-preview">Excelent! Chiar am nevoie de ajutor cu CSS.</div>
+                                        <div class="conversation-preview">Excelent! Chiar am nevoie de ajutor cu CSS.
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -199,7 +212,8 @@
                                         </div>
                                         <div class="message-content">
                                             <div class="message-bubble">
-                                                <p>Salut! Ai putea să-mi explici cum funcționează autentificarea în Spring Security?</p>
+                                                <p>Salut! Ai putea să-mi explici cum funcționează autentificarea în
+                                                    Spring Security?</p>
                                             </div>
                                             <div class="message-time">10:15</div>
                                         </div>
@@ -209,7 +223,8 @@
                                     <div class="message message-outgoing">
                                         <div class="message-content">
                                             <div class="message-bubble">
-                                                <p>Desigur! Îți pot explica pas cu pas. Ai deja un proiect Spring Boot configurat?</p>
+                                                <p>Desigur! Îți pot explica pas cu pas. Ai deja un proiect Spring Boot
+                                                    configurat?</p>
                                             </div>
                                             <div class="message-time">10:18</div>
                                         </div>
@@ -232,7 +247,8 @@
                                     <div class="message message-outgoing">
                                         <div class="message-content">
                                             <div class="message-bubble">
-                                                <p>Perfect! Primul pas este să adaugi dependența Spring Security în pom.xml. Dorești să discutăm mai multe detalii?</p>
+                                                <p>Perfect! Primul pas este să adaugi dependența Spring Security în
+                                                    pom.xml. Dorești să discutăm mai multe detalii?</p>
                                             </div>
                                             <div class="message-time">10:22</div>
                                         </div>
@@ -257,10 +273,8 @@
                             <div class="message-input-area">
                                 <form id="messageForm" class="message-form">
                                     <div class="message-input-wrapper">
-                                        <input type="text" 
-                                               id="messageInput" 
-                                               class="message-input" 
-                                               placeholder="Type a message…">
+                                        <input type="text" id="messageInput" class="message-input"
+                                            placeholder="Type a message…">
                                         <button type="submit" class="message-send-btn">
                                             <i class="fa fa-paper-plane"></i>
                                         </button>
@@ -287,6 +301,8 @@
     <!-- Search model end -->
 
     <!-- Js Plugins -->
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
     <script src="/js/jquery-3.3.1.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/jquery.magnific-popup.min.js"></script>
@@ -295,9 +311,8 @@
     <script src="/js/jquery.slicknav.js"></script>
     <script src="/js/owl.carousel.min.js"></script>
     <script src="/js/main.js"></script>
+    <script src="/js/chat-websocket.js"></script>
     <script src="/js/chat-history.js"></script>
 </body>
 
 </html>
-
-

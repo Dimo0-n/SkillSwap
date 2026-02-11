@@ -41,55 +41,50 @@ public class SecurityConfig {
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
                 http
-                        .csrf(AbstractHttpConfigurer::disable)
-                        .authorizeHttpRequests(authorize -> authorize
-                                .requestMatchers(
-                                        "/css/**", "/js/**", "/img/**", "/fonts/**", "/Source/**",
-                                        "/index", "/contact",
-                                        "/oauth2/**",
-                                        "/register", "/register/**",
-                                        "/login",
-                                        "/error/**",
-                                        "/announces-list", "/announce-details", "/meeting"
-                                ).permitAll()
-                                .anyRequest().authenticated()
-                        )
-                        .formLogin(form -> form
-                                .loginPage("/login")
-                                .failureHandler((request, response, exception) -> {
+                                .csrf(AbstractHttpConfigurer::disable)
+                                .authorizeHttpRequests(authorize -> authorize
+                                                .requestMatchers(
+                                                                "/css/**", "/js/**", "/img/**", "/fonts/**",
+                                                                "/Source/**",
+                                                                "/index", "/contact",
+                                                                "/oauth2/**",
+                                                                "/register", "/register/**",
+                                                                "/login",
+                                                                "/error/**",
+                                                                "/ws/**", "/api/chat/**",
+                                                                "/announces-list", "/announce-details", "/meeting")
+                                                .permitAll()
+                                                .anyRequest().authenticated())
+                                .formLogin(form -> form
+                                                .loginPage("/login")
+                                                .failureHandler((request, response, exception) -> {
 
-                                        String message = "Email sau parola incorectă";
+                                                        String message = "Email sau parola incorectă";
 
-                                        if (exception instanceof BadCredentialsException &&
-                                                exception.getMessage().contains("Google")) {
-                                                message = exception.getMessage();
-                                        }
+                                                        if (exception instanceof BadCredentialsException &&
+                                                                        exception.getMessage().contains("Google")) {
+                                                                message = exception.getMessage();
+                                                        }
 
-                                        response.sendRedirect(
-                                                "/login?errorMessage=" +
-                                                        URLEncoder.encode(message, StandardCharsets.UTF_8)
-                                        );
-                                })
-                                .defaultSuccessUrl("/index", true)
-                                .permitAll()
-                        )
-                        .logout(logout -> logout
-                                .logoutUrl("/logout")
-                                .invalidateHttpSession(true)
-                                .deleteCookies("JSESSIONID")
-                                .logoutSuccessUrl("/login?logout=true")
-                                .permitAll()
-                        )
-                        .oauth2Login(oauth2 -> oauth2
-                                .loginPage("/login")
-                                .userInfoEndpoint(userInfo -> userInfo
-                                        .userService(customOAuth2UserService)
-                                )
-                                .defaultSuccessUrl("/index", true)
-                        )
-                        .exceptionHandling(ex ->
-                                ex.accessDeniedPage("/error/403")
-                        );
+                                                        response.sendRedirect(
+                                                                        "/login?errorMessage=" +
+                                                                                        URLEncoder.encode(message,
+                                                                                                        StandardCharsets.UTF_8));
+                                                })
+                                                .defaultSuccessUrl("/index", true)
+                                                .permitAll())
+                                .logout(logout -> logout
+                                                .logoutUrl("/logout")
+                                                .invalidateHttpSession(true)
+                                                .deleteCookies("JSESSIONID")
+                                                .logoutSuccessUrl("/login?logout=true")
+                                                .permitAll())
+                                .oauth2Login(oauth2 -> oauth2
+                                                .loginPage("/login")
+                                                .userInfoEndpoint(userInfo -> userInfo
+                                                                .userService(customOAuth2UserService))
+                                                .defaultSuccessUrl("/index", true))
+                                .exceptionHandling(ex -> ex.accessDeniedPage("/error/403"));
 
                 return http.build();
         }
@@ -97,7 +92,7 @@ public class SecurityConfig {
         @Autowired
         public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
                 auth
-                        .userDetailsService(userDetailsService)
-                        .passwordEncoder(passwordEncoder());
+                                .userDetailsService(userDetailsService)
+                                .passwordEncoder(passwordEncoder());
         }
 }

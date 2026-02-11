@@ -7,7 +7,7 @@
     <title>SkillSwap – Detalii anunț</title>
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800,900&display=swap"
-          rel="stylesheet">
+        rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Cinzel:400,700,900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/font-awesome.min.css" type="text/css">
@@ -23,202 +23,225 @@
 
 <body>
 
-<div th:replace="~{fragments/lateral-menu :: lateral-menu}"></div>
-<div th:replace="~{/fragments/navbar :: navbar}"></div>
+    <div th:replace="~{fragments/lateral-menu :: lateral-menu}"></div>
+    <div th:replace="~{/fragments/navbar :: navbar}"></div>
 
-<section class="announce-details-section">
-    <div class="announce-container">
-        <!-- Main Layout: Content + Sidebar -->
-        <div class="announce-main-layout">
-            <!-- Main Content Column (70%) -->
-            <div class="announce-content-column">
-                <!-- Title Section -->
-                <div class="announce-title-section">
-                    <h1 th:text="${announce.title}" class="announce-title"></h1>
-                    <div class="announce-meta">
-                        <div class="announce-meta-item">
-                            <i class="fa fa-user"></i>
-                            <span th:text="${announce.author}"></span>
-                        </div>
-                        <span class="announce-meta-separator">•</span>
-                        <div class="announce-meta-item">
-                            <i class="fa fa-calendar"></i>
-                            <span th:text="${#temporals.format(announce.date, 'dd.MM.yyyy HH:mm')}"></span>
+    <section class="announce-details-section">
+        <div class="announce-container">
+            <!-- Main Layout: Content + Sidebar -->
+            <div class="announce-main-layout">
+                <!-- Main Content Column (70%) -->
+                <div class="announce-content-column">
+                    <!-- Title Section -->
+                    <div class="announce-title-section">
+                        <h1 th:text="${announce.title}" class="announce-title"></h1>
+                        <div class="announce-meta">
+                            <div class="announce-meta-item">
+                                <i class="fa fa-user"></i>
+                                <span th:text="${announce.author}"></span>
+                            </div>
+                            <span class="announce-meta-separator">•</span>
+                            <div class="announce-meta-item">
+                                <i class="fa fa-calendar"></i>
+                                <span th:text="${#temporals.format(announce.date, 'dd.MM.yyyy HH:mm')}"></span>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Main Details Section -->
-                <div class="announce-section">
-                    <div class="announce-section-header">
-                        <div class="announce-section-icon">
-                            <i class="fa fa-file-text"></i>
+                    <!-- Main Details Section -->
+                    <div class="announce-section">
+                        <div class="announce-section-header">
+                            <div class="announce-section-icon">
+                                <i class="fa fa-file-text"></i>
+                            </div>
+                            <h2 class="announce-section-title">Detalii principale</h2>
                         </div>
-                        <h2 class="announce-section-title">Detalii principale</h2>
-                    </div>
-                    
-                    <div class="announce-detail-item">
-                        <label class="announce-detail-label">Descriere detaliată</label>
-                        <div class="announce-detail-content">
-                            <p th:text="${announce.description}"></p>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Exchange Details Section -->
-                <div class="announce-section">
-                    <div class="announce-section-header">
-                        <div class="announce-section-icon">
-                            <i class="fa fa-exchange"></i>
-                        </div>
-                        <h2 class="announce-section-title">Ce oferți și ce căuți</h2>
-                    </div>
-
-                    <div class="announce-details-grid">
                         <div class="announce-detail-item">
-                            <label class="announce-detail-label">Categoria oferită</label>
+                            <label class="announce-detail-label">Descriere detaliată</label>
                             <div class="announce-detail-content">
-                                <div class="announce-category-badge offer">
-                                    <i class="fa fa-star"></i>
-                                    <span th:text="${announce.categoryOffered}"></span>
+                                <p th:text="${announce.description}"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Exchange Details Section -->
+                    <div class="announce-section">
+                        <div class="announce-section-header">
+                            <div class="announce-section-icon">
+                                <i class="fa fa-exchange"></i>
+                            </div>
+                            <h2 class="announce-section-title">Ce oferți și ce căuți</h2>
+                        </div>
+
+                        <div class="announce-details-grid">
+                            <div class="announce-detail-item">
+                                <label class="announce-detail-label">Categoria oferită</label>
+                                <div class="announce-detail-content">
+                                    <div class="announce-category-badge offer">
+                                        <i class="fa fa-star"></i>
+                                        <span th:text="${announce.categoryOffered}"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="announce-detail-item">
+                                <label class="announce-detail-label">Categoria căutată</label>
+                                <div class="announce-detail-content">
+                                    <div class="announce-category-badge offer">
+                                        <i class="fa fa-search"></i>
+                                        <span th:text="${announce.categoryRequired}"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="announce-detail-item">
+                                <label class="announce-detail-label">Nume autor</label>
+                                <div class="announce-detail-content">
+                                    <p th:text="${announce.author}"></p>
+                                </div>
+                            </div>
+
+                            <div class="announce-detail-item">
+                                <label class="announce-detail-label">Notă secundară (opțional)</label>
+                                <div class="announce-detail-content">
+                                    <p th:text="${announce.additionalInfo}"></p>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="announce-detail-item">
-                            <label class="announce-detail-label">Categoria căutată</label>
-                            <div class="announce-detail-content">
-                                <div class="announce-category-badge offer">
-                                    <i class="fa fa-search"></i>
-                                    <span th:text="${announce.categoryRequired}"></span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="announce-detail-item">
-                            <label class="announce-detail-label">Nume autor</label>
-                            <div class="announce-detail-content">
-                                <p th:text="${announce.author}"></p>
-                            </div>
-                        </div>
-
-                        <div class="announce-detail-item">
-                            <label class="announce-detail-label">Notă secundară (opțional)</label>
-                            <div class="announce-detail-content">
-                                <p th:text="${announce.additionalInfo}"></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Sidebar (30% - Sticky) -->
-            <div class="announce-sidebar">
-                <!-- User Card -->
-                <div class="announce-user-card">
-                    <div class="announce-user-avatar">AP</div>
-                    <h3 th:text="${profile.name}" class="announce-user-name"></h3>
-                    <p th:text="${profile.profession}" class="announce-user-title"></p>
-                    
-                    <div class="announce-user-rating">
-                        <div class="announce-rating-stars">
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                        </div>
-                        <span class="announce-rating-text">4.8 (12 evaluări)</span>
-                    </div>
-
-                    <div class="announce-user-status">
-                        <i class="fa fa-circle"></i>
-                        <span>Activ recent</span>
-                    </div>
-
-                    <div class="announce-user-meta">
-                        <div class="announce-user-meta-item">
-                            <span class="announce-user-meta-label">Răspunde de obicei în</span>
-                            <span class="announce-user-meta-value">2-4 ore</span>
-                        </div>
-                        <div class="announce-user-meta-item">
-                            <span class="announce-user-meta-label">Schimburi finalizate</span>
-                            <span class="announce-user-meta-value">8</span>
-                        </div>
                     </div>
                 </div>
 
-                <!-- CTA Section -->
-                <div class="announce-cta-section">
-                    <button class="announce-btn announce-btn-primary" id="sendMessageBtn">
-                        <i class="fa fa-envelope"></i>
-                        <span>Trimite mesaj</span>
-                    </button>
-                    <button class="announce-btn announce-btn-secondary" id="proposeSwapBtn">
-                        <i class="fa fa-handshake-o"></i>
-                        <span>Propune schimb</span>
-                    </button>
-                    <button class="announce-btn announce-btn-icon" id="saveBtn">
-                        <i class="fa fa-bookmark-o"></i>
-                    </button>
+                <!-- Sidebar (30% - Sticky) -->
+                <div class="announce-sidebar">
+                    <!-- User Card -->
+                    <div class="announce-user-card">
+                        <div class="announce-user-avatar">AP</div>
+                        <h3 th:text="${profile.name}" class="announce-user-name"></h3>
+                        <p th:text="${profile.profession}" class="announce-user-title"></p>
+
+                        <div class="announce-user-rating">
+                            <div class="announce-rating-stars">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                            </div>
+                            <span class="announce-rating-text">4.8 (12 evaluări)</span>
+                        </div>
+
+                        <div class="announce-user-status">
+                            <i class="fa fa-circle"></i>
+                            <span>Activ recent</span>
+                        </div>
+
+                        <div class="announce-user-meta">
+                            <div class="announce-user-meta-item">
+                                <span class="announce-user-meta-label">Răspunde de obicei în</span>
+                                <span class="announce-user-meta-value">2-4 ore</span>
+                            </div>
+                            <div class="announce-user-meta-item">
+                                <span class="announce-user-meta-label">Schimburi finalizate</span>
+                                <span class="announce-user-meta-value">8</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CTA Section -->
+                    <div class="announce-cta-section">
+                        <button class="announce-btn announce-btn-primary" id="sendMessageBtn">
+                            <i class="fa fa-envelope"></i>
+                            <span>Trimite mesaj</span>
+                        </button>
+                        <button class="announce-btn announce-btn-secondary" id="proposeSwapBtn">
+                            <i class="fa fa-handshake-o"></i>
+                            <span>Propune schimb</span>
+                        </button>
+                        <button class="announce-btn announce-btn-icon" id="saveBtn">
+                            <i class="fa fa-bookmark-o"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<div th:replace="~{/fragments/about :: about}"></div>
+    <div th:replace="~{/fragments/about :: about}"></div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Handle image display logic
-        const headerImage = document.getElementById('announceHeaderImage');
-        const headerFallback = document.getElementById('announceHeaderFallback');
-        
-        // Check if image exists (in real app, this would check if user uploaded image)
-        // For now, we'll hide the image and show fallback
-        // To show image: set headerImage.src to actual image URL and remove 'hidden' class
-        const hasUserImage = false; // Change to true if user uploaded image
-        
-        if (hasUserImage && headerImage.src) {
-            headerImage.style.display = 'block';
-            headerFallback.classList.remove('visible');
-        } else {
-            headerImage.style.display = 'none';
-            headerFallback.classList.add('visible');
-        }
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Handle image display logic
+            const headerImage = document.getElementById('announceHeaderImage');
+            const headerFallback = document.getElementById('announceHeaderFallback');
 
-        // Save button toggle
-        const saveBtn = document.getElementById('saveBtn');
-        const saveIcon = saveBtn.querySelector('i');
+            // Check if image exists (in real app, this would check if user uploaded image)
+            // For now, we'll hide the image and show fallback
+            // To show image: set headerImage.src to actual image URL and remove 'hidden' class
+            const hasUserImage = false; // Change to true if user uploaded image
 
-        saveBtn.addEventListener('click', function() {
-            if (saveIcon.classList.contains('fa-bookmark-o')) {
-                saveIcon.classList.remove('fa-bookmark-o');
-                saveIcon.classList.add('fa-bookmark');
-                saveBtn.classList.add('saved');
+            if (hasUserImage && headerImage.src) {
+                headerImage.style.display = 'block';
+                headerFallback.classList.remove('visible');
             } else {
-                saveIcon.classList.remove('fa-bookmark');
-                saveIcon.classList.add('fa-bookmark-o');
-                saveBtn.classList.remove('saved');
+                headerImage.style.display = 'none';
+                headerFallback.classList.add('visible');
             }
-        });
 
-        // CTA buttons
-        const sendMessageBtn = document.getElementById('sendMessageBtn');
-        const proposeSwapBtn = document.getElementById('proposeSwapBtn');
+            // Save button toggle
+            const saveBtn = document.getElementById('saveBtn');
+            const saveIcon = saveBtn.querySelector('i');
 
-        sendMessageBtn.addEventListener('click', function() {
-            console.log('Trimite mesaj clicked');
-            // TODO: Implement message functionality
-        });
+            saveBtn.addEventListener('click', function () {
+                if (saveIcon.classList.contains('fa-bookmark-o')) {
+                    saveIcon.classList.remove('fa-bookmark-o');
+                    saveIcon.classList.add('fa-bookmark');
+                    saveBtn.classList.add('saved');
+                } else {
+                    saveIcon.classList.remove('fa-bookmark');
+                    saveIcon.classList.add('fa-bookmark-o');
+                    saveBtn.classList.remove('saved');
+                }
+            });
 
-        proposeSwapBtn.addEventListener('click', function() {
-            console.log('Propune schimb clicked');
-            // TODO: Implement swap proposal functionality
+            // CTA buttons
+            const sendMessageBtn = document.getElementById('sendMessageBtn');
+            const proposeSwapBtn = document.getElementById('proposeSwapBtn');
+
+            sendMessageBtn.addEventListener('click', function () {
+                console.log('Trimite mesaj clicked');
+
+                // Get announce author ID (you'll need to pass this from backend)
+                const announceAuthorId = this.dataset.authorId || 1; // TODO: Get from Thymeleaf
+
+                // Create or get chat room
+                fetch('/api/chat/create?otherUserId=' + announceAuthorId, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Redirect to chat-history with the chat room ID
+                            window.location.href = '/chat-history?roomId=' + data.chatRoomId;
+                        } else {
+                            alert('Eroare la crearea conversației: ' + (data.error || 'Unknown error'));
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error creating chat room:', error);
+                        alert('Eroare la crearea conversației. Vă rugăm să încercați din nou.');
+                    });
+            });
+
+            proposeSwapBtn.addEventListener('click', function () {
+                console.log('Propune schimb clicked');
+                // TODO: Implement swap proposal functionality
+            });
         });
-    });
-</script>
+    </script>
 
 </body>
 
