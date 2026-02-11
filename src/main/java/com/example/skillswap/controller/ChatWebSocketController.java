@@ -81,9 +81,20 @@ public class ChatWebSocketController {
 
     @MessageMapping("/chat.typing")
     public void sendTypingIndicator(@Payload TypingIndicatorDTO typingDTO, Principal principal) {
-        // No persistence needed, just broadcast
-        messagingTemplate.convertAndSend(
-                "/topic/chat/typing/" + typingDTO.getChatRoomId(),
-                typingDTO);
+        try {
+            // Populate user info from principal
+            if (principal != null) {
+                var user = chatService.getUserByEmail(principal.getName());
+                typingDTO.setUserId(user.getId());
+                typingDTO.setUserName(user.getFullName());
+            }
+            
+            // No persistence needed, just broadcast
+            messagingTemplate.convertAndSend(
+                    "/topic/chat/typing/" + typingDTO.getChatRoomId(),
+                    typingDTO);
+        } catch (Exception e) {
+            System.err.println("Error sending typing indicator: " + e.getMessage());
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.example.skillswap.controller;
 
 import com.example.skillswap.dto.ChatMessageDTO;
 import com.example.skillswap.entity.ChatRoom;
+import com.example.skillswap.entity.User;
 import com.example.skillswap.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -81,10 +82,25 @@ public class ChatController {
         }
     }
 
-    // Helper method - you may need to adjust this based on your UserService
+    @GetMapping("/current-user")
+    public ResponseEntity<Map<String, Object>> getCurrentUser(Principal principal) {
+        try {
+            Long userId = getCurrentUserId(principal);
+            Map<String, Object> response = new HashMap<>();
+            response.put("userId", userId);
+            response.put("email", principal.getName());
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    // Helper method to get current user ID from Principal
     private Long getCurrentUserId(Principal principal) {
-        // This is a placeholder - implement based on your user service
-        // You might want to inject UserService and get user by email
-        return 1L; // TODO: Implement proper user ID retrieval
+        if (principal == null) {
+            throw new RuntimeException("User not authenticated");
+        }
+        User user = chatService.getUserByEmail(principal.getName());
+        return user.getId();
     }
 }

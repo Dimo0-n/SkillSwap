@@ -58,6 +58,12 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.reaction-emoji.user-reacted {
+    background: rgba(67, 160, 71, 0.2);
+    border-color: rgba(67, 160, 71, 0.5);
+    font-weight: 600;
+}
+
 /* Typing Indicator */
 .typing-indicator {
     animation: fadeIn 0.3s ease-in;

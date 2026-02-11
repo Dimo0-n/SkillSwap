@@ -143,6 +143,23 @@ function displayMessage(message) {
     messageDiv.innerHTML = messageHTML;
     messagesContainer.appendChild(messageDiv);
 
+    // Display existing reactions if any
+    if (message.reactions && message.reactions.length > 0) {
+        const reactionsContainer = document.getElementById('reactions-' + message.id);
+        message.reactions.forEach(reaction => {
+            const emojiSpan = document.createElement('span');
+            emojiSpan.className = 'reaction-emoji';
+            emojiSpan.dataset.emoji = reaction.emoji;
+            emojiSpan.dataset.count = reaction.count;
+            emojiSpan.textContent = reaction.emoji + ' ' + reaction.count;
+            emojiSpan.title = 'Click to react';
+            if (reaction.currentUserReacted) {
+                emojiSpan.classList.add('user-reacted');
+            }
+            reactionsContainer.appendChild(emojiSpan);
+        });
+    }
+
     // Scroll to bottom
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
@@ -178,12 +195,30 @@ function updateMessageReaction(reaction) {
     const reactionsContainer = document.getElementById('reactions-' + reaction.messageId);
     if (!reactionsContainer) return;
 
-    // For simplicity, just add the emoji (in production, aggregate by emoji type)
-    const emojiSpan = document.createElement('span');
-    emojiSpan.className = 'reaction-emoji';
-    emojiSpan.textContent = reaction.emoji;
-    emojiSpan.title = reaction.userName;
-    reactionsContainer.appendChild(emojiSpan);
+    // Find existing emoji or create new one
+    const existingEmoji = Array.from(reactionsContainer.children).find(
+        span => span.dataset.emoji === reaction.emoji
+    );
+
+    if (existingEmoji) {
+        // Update count
+        const currentCount = parseInt(existingEmoji.dataset.count) || 1;
+        existingEmoji.dataset.count = currentCount + 1;
+        existingEmoji.textContent = reaction.emoji + ' ' + (currentCount + 1);
+        
+        // Add username to title
+        const currentTitle = existingEmoji.title || '';
+        existingEmoji.title = currentTitle ? currentTitle + ', ' + reaction.userName : reaction.userName;
+    } else {
+        // Create new emoji span with aggregation support
+        const emojiSpan = document.createElement('span');
+        emojiSpan.className = 'reaction-emoji';
+        emojiSpan.dataset.emoji = reaction.emoji;
+        emojiSpan.dataset.count = '1';
+        emojiSpan.textContent = reaction.emoji + ' 1';
+        emojiSpan.title = reaction.userName;
+        reactionsContainer.appendChild(emojiSpan);
+    }
 }
 
 // Show typing indicator
@@ -279,9 +314,17 @@ function formatTime(timestamp) {
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function () {
-    // Get current user ID from page data or API
-    // TODO: Set currentUserId from authenticated user
-    currentUserId = 1; // Placeholder
+    // Get current user ID from backend API
+    fetch('/api/chat/current-user')
+        .then(response => response.json())
+        .then(data => {
+            currentUserId = data.userId;
+            console.log('Current user ID:', currentUserId);
+        })
+        .catch(error => {
+            console.error('Error fetching current user:', error);
+            currentUserId = null;
+        });
 
     // Connect to WebSocket
     connectWebSocket();
@@ -322,6 +365,19 @@ document.addEventListener('DOMContentLoaded', function () {
             loadChatRoom(chatRoomId);
         });
     });
+
+    // Check if roomId is in URL (coming from announce-details)
+    const urlParams = new URLSearchParams(window.location.search);
+    const roomIdFromUrl = urlParams.get('roomId');
+    if (roomIdFromUrl) {
+        // Wait for WebSocket to connect, then load the room
+        const checkConnection = setInterval(() => {
+            if (stompClient && stompClient.connected && currentUserId) {
+                clearInterval(checkConnection);
+                loadChatRoom(roomIdFromUrl);
+            }
+        }, 100);
+    }
 });
 
 // Load chat room

@@ -148,6 +148,12 @@ public class ChatService {
         return chatRoomRepository.findAllByUser(user);
     }
 
+    @Transactional(readOnly = true)
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
     private ChatMessageDTO convertToDTO(Message message, Long currentUserId) {
         ChatMessageDTO dto = new ChatMessageDTO();
         dto.setId(message.getId());

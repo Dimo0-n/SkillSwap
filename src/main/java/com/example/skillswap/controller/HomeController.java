@@ -32,6 +32,16 @@ public class HomeController {
         return "chat";
     }
 
+    @GetMapping("/chat-history")
+    public String chatHistory(Model model, java.security.Principal principal) {
+        model.addAttribute("page", "chat-history");
+        // Pass current user info to frontend for WebSocket
+        if (principal != null) {
+            model.addAttribute("currentUserEmail", principal.getName());
+        }
+        return "chat-history";
+    }
+
     @GetMapping("/post-details")
     public String detailsPostGallery() {
         return "announce-details";
@@ -45,12 +55,6 @@ public class HomeController {
     @GetMapping("/meeting")
     public String meeting() {
         return "jitsi-meet";
-    }
-
-    @GetMapping("/chat-history")
-    public String chatHistory(Model model) {
-        model.addAttribute("page", "chat-history");
-        return "chat-history";
     }
 
 }

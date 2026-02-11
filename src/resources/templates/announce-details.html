@@ -150,7 +150,8 @@
 
                     <!-- CTA Section -->
                     <div class="announce-cta-section">
-                        <button class="announce-btn announce-btn-primary" id="sendMessageBtn">
+                        <button class="announce-btn announce-btn-primary" id="sendMessageBtn"
+                                th:attr="data-author-id=${announce.userId}">
                             <i class="fa fa-envelope"></i>
                             <span>Trimite mesaj</span>
                         </button>
@@ -170,76 +171,88 @@
     <div th:replace="~{/fragments/about :: about}"></div>
 
     <script>
+        console.log('Script started loading...');
+
         document.addEventListener('DOMContentLoaded', function () {
-            // Handle image display logic
-            const headerImage = document.getElementById('announceHeaderImage');
-            const headerFallback = document.getElementById('announceHeaderFallback');
-
-            // Check if image exists (in real app, this would check if user uploaded image)
-            // For now, we'll hide the image and show fallback
-            // To show image: set headerImage.src to actual image URL and remove 'hidden' class
-            const hasUserImage = false; // Change to true if user uploaded image
-
-            if (hasUserImage && headerImage.src) {
-                headerImage.style.display = 'block';
-                headerFallback.classList.remove('visible');
-            } else {
-                headerImage.style.display = 'none';
-                headerFallback.classList.add('visible');
-            }
-
-            // Save button toggle
-            const saveBtn = document.getElementById('saveBtn');
-            const saveIcon = saveBtn.querySelector('i');
-
-            saveBtn.addEventListener('click', function () {
-                if (saveIcon.classList.contains('fa-bookmark-o')) {
-                    saveIcon.classList.remove('fa-bookmark-o');
-                    saveIcon.classList.add('fa-bookmark');
-                    saveBtn.classList.add('saved');
-                } else {
-                    saveIcon.classList.remove('fa-bookmark');
-                    saveIcon.classList.add('fa-bookmark-o');
-                    saveBtn.classList.remove('saved');
-                }
-            });
+            console.log('DOM loaded');
 
             // CTA buttons
             const sendMessageBtn = document.getElementById('sendMessageBtn');
             const proposeSwapBtn = document.getElementById('proposeSwapBtn');
+            const saveBtn = document.getElementById('saveBtn');
 
-            sendMessageBtn.addEventListener('click', function () {
-                console.log('Trimite mesaj clicked');
+            console.log('sendMessageBtn found:', !!sendMessageBtn);
 
-                // Get announce author ID (you'll need to pass this from backend)
-                const announceAuthorId = this.dataset.authorId || 1; // TODO: Get from Thymeleaf
+            // Send message button
+            if (sendMessageBtn) {
+                console.log('Author ID on button:', sendMessageBtn.dataset.authorId);
 
-                // Create or get chat room
-                fetch('/api/chat/create?otherUserId=' + announceAuthorId, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
+                sendMessageBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    console.log('=== BUTTON CLICKED ===');
+
+                    const announceAuthorId = this.dataset.authorId;
+                    console.log('Author ID:', announceAuthorId);
+
+                    if (!announceAuthorId) {
+                        alert('Eroare: ID-ul autorului nu este disponibil.');
+                        return;
                     }
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            // Redirect to chat-history with the chat room ID
-                            window.location.href = '/chat-history?roomId=' + data.chatRoomId;
-                        } else {
-                            alert('Eroare la crearea conversației: ' + (data.error || 'Unknown error'));
+
+                    const url = '/api/chat/create?otherUserId=' + announceAuthorId;
+                    console.log('Fetching:', url);
+
+                    fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
                         }
                     })
-                    .catch(error => {
-                        console.error('Error creating chat room:', error);
-                        alert('Eroare la crearea conversației. Vă rugăm să încercați din nou.');
-                    });
-            });
+                        .then(response => {
+                            console.log('Response received:', response.status);
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log('Data received:', data);
+                            if (data.success) {
+                                const redirectUrl = '/chat-history?roomId=' + data.chatRoomId;
+                                console.log('Redirecting to:', redirectUrl);
+                                window.location.href = redirectUrl;
+                            } else {
+                                alert('Eroare: ' + (data.error || 'Unknown error'));
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Fetch error:', error);
+                            alert('Eroare la crearea conversației: ' + error.message);
+                        });
+                });
+            } else {
+                console.error('sendMessageBtn NOT FOUND!');
+            }
 
-            proposeSwapBtn.addEventListener('click', function () {
-                console.log('Propune schimb clicked');
-                // TODO: Implement swap proposal functionality
-            });
+            // Propose swap button
+            if (proposeSwapBtn) {
+                proposeSwapBtn.addEventListener('click', function () {
+                    console.log('Propune schimb clicked');
+                });
+            }
+
+            // Save button
+            if (saveBtn) {
+                const saveIcon = saveBtn.querySelector('i');
+                saveBtn.addEventListener('click', function () {
+                    if (saveIcon && saveIcon.classList.contains('fa-bookmark-o')) {
+                        saveIcon.classList.remove('fa-bookmark-o');
+                        saveIcon.classList.add('fa-bookmark');
+                        saveBtn.classList.add('saved');
+                    } else if (saveIcon) {
+                        saveIcon.classList.remove('fa-bookmark');
+                        saveIcon.classList.add('fa-bookmark-o');
+                        saveBtn.classList.remove('saved');
+                    }
+                });
+            }
         });
     </script>
 
