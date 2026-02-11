@@ -3,6 +3,7 @@ let stompClient = null;
 let currentChatRoomId = null;
 let currentUserId = null;
 let typingTimeout = null;
+let subscriptions = {}; // Track active subscriptions to prevent duplicates
 
 // Initialize WebSocket connection
 function connectWebSocket() {
@@ -25,11 +26,17 @@ function connectWebSocket() {
 
 // Subscribe to chat room topics
 function subscribeToChat(chatRoomId) {
+    // Unsubscribe from previous subscriptions to prevent duplicates
+    unsubscribeFromAll();
+    
     currentChatRoomId = chatRoomId;
 
+    console.log('Subscribing to chat room:', chatRoomId);
+
     // Subscribe to chat messages
-    stompClient.subscribe('/topic/chat/' + chatRoomId, function (message) {
+    subscriptions.messages = stompClient.subscribe('/topic/chat/' + chatRoomId, function (message) {
         const chatMessage = JSON.parse(message.body);
+        console.log('Message received:', chatMessage);
         displayMessage(chatMessage);
 
         // Mark as delivered if it's not our message
@@ -39,24 +46,37 @@ function subscribeToChat(chatRoomId) {
     });
 
     // Subscribe to message status updates
-    stompClient.subscribe('/topic/chat/status/*', function (statusUpdate) {
+    subscriptions.status = stompClient.subscribe('/topic/chat/status/*', function (statusUpdate) {
         const status = JSON.parse(statusUpdate.body);
         updateMessageStatus(status.messageId, status.status);
     });
 
     // Subscribe to reactions
-    stompClient.subscribe('/topic/chat/reactions/*', function (reactionUpdate) {
+    subscriptions.reactions = stompClient.subscribe('/topic/chat/reactions/*', function (reactionUpdate) {
         const reaction = JSON.parse(reactionUpdate.body);
         updateMessageReaction(reaction);
     });
 
     // Subscribe to typing indicators
-    stompClient.subscribe('/topic/chat/typing/' + chatRoomId, function (typingData) {
+    subscriptions.typing = stompClient.subscribe('/topic/chat/typing/' + chatRoomId, function (typingData) {
         const typing = JSON.parse(typingData.body);
         if (typing.userId !== currentUserId) {
             showTypingIndicator(typing);
         }
     });
+
+    console.log('Active subscriptions:', Object.keys(subscriptions).length);
+}
+
+// Unsubscribe from all active subscriptions
+function unsubscribeFromAll() {
+    console.log('Unsubscribing from all topics');
+    Object.keys(subscriptions).forEach(key => {
+        if (subscriptions[key]) {
+            subscriptions[key].unsubscribe();
+        }
+    });
+    subscriptions = {};
 }
 
 // Send message
