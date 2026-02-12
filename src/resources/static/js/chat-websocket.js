@@ -145,6 +145,29 @@ function getCurrentChatPartnerAvatar() {
     return window.currentChatPartnerAvatar || '/img/default-avatar.png';
 }
 
+function getStatusLabel(status) {
+    switch (status) {
+        case 'SEEN':
+            return 'Vazut';
+        case 'DELIVERED':
+            return 'livrat';
+        case 'SENT':
+        default:
+            return 'trimis';
+    }
+}
+
+function refreshOwnMessageStatusVisibility() {
+    const ownStatusLines = document.querySelectorAll('.message-outgoing .message-status-line');
+    if (!ownStatusLines.length) {
+        return;
+    }
+
+    ownStatusLines.forEach((line, index) => {
+        line.style.display = index === ownStatusLines.length - 1 ? 'block' : 'none';
+    });
+}
+
 // Display message in UI
 function displayMessage(message) {
     const messagesContainer = document.getElementById('messagesContainer');
@@ -167,7 +190,10 @@ function displayMessage(message) {
     messageHTML += `
         <div class="message-content">
             <div class="message-bubble">
-                <p>${escapeHtml(message.content)}</p>
+                <div class="message-main-row">
+                    <p>${escapeHtml(message.content)}</p>
+                    <span class="message-time">${formatTime(message.timestamp)}</span>
+                </div>
                 <div class="reaction-picker" id="reaction-picker-${message.id}">
                     ${REACTION_OPTIONS.map(emoji => `
                         <button type="button" class="emoji-option ${emoji === REACTION_OPTIONS[0] ? 'emoji-option-heart' : ''}" onclick="selectReaction(event, ${message.id}, '${emoji}')">
@@ -178,17 +204,17 @@ function displayMessage(message) {
                 <button type="button" class="reaction-trigger" onclick="toggleReactionPicker(event, ${message.id})" aria-label="React">
                     <i class="fa fa-heart"></i>
                 </button>
+            </div>
+            <div class="message-reactions-row">
                 <div class="message-reactions" id="reactions-${message.id}"></div>
             </div>
-            <div class="message-time">
-                ${formatTime(message.timestamp)}
-                ${isOwnMessage ? '<span class="message-status" id="status-' + message.id + '">✓</span>' : ''}
-            </div>
+            ${isOwnMessage ? '<div class="message-status-line" id="status-' + message.id + '">' + getStatusLabel(message.status) + '</div>' : ''}
         </div>
     `;
 
     messageDiv.innerHTML = messageHTML;
     messagesContainer.appendChild(messageDiv);
+    refreshOwnMessageStatusVisibility();
 
     // Display existing reactions if any
     if (message.reactions && message.reactions.length > 0) {
@@ -237,20 +263,14 @@ function updateMessageStatus(messageId, status) {
     const statusElement = document.getElementById('status-' + messageId);
     if (!statusElement) return;
 
-    switch (status) {
-        case 'SENT':
-            statusElement.innerHTML = '✓';
-            statusElement.style.color = '#999';
-            break;
-        case 'DELIVERED':
-            statusElement.innerHTML = '✓✓';
-            statusElement.style.color = '#999';
-            break;
-        case 'SEEN':
-            statusElement.innerHTML = '✓✓';
-            statusElement.style.color = '#4CAF50';
-            break;
-    }
+    statusElement.textContent = getStatusLabel(status);
+    statusElement.style.color = status === 'SEEN'
+        ? '#7fd4ff'
+        : status === 'DELIVERED'
+            ? 'rgba(176, 220, 255, 0.82)'
+            : 'rgba(236, 242, 255, 0.65)';
+
+    refreshOwnMessageStatusVisibility();
 }
 
 // Update message reactions
