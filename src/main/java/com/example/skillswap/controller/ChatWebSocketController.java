@@ -79,6 +79,19 @@ public class ChatWebSocketController {
         }
     }
 
+    @MessageMapping("/chat.unreact")
+    public void removeReaction(@Payload MessageReactionDTO reactionDTO, Principal principal) {
+        try {
+            MessageReactionDTO removedReaction = chatService.removeReaction(reactionDTO, principal);
+
+            messagingTemplate.convertAndSend(
+                    "/topic/chat/reactions/" + reactionDTO.getMessageId(),
+                    removedReaction);
+        } catch (Exception e) {
+            System.err.println("Error removing reaction: " + e.getMessage());
+        }
+    }
+
     @MessageMapping("/chat.typing")
     public void sendTypingIndicator(@Payload TypingIndicatorDTO typingDTO, Principal principal) {
         try {

@@ -123,6 +123,13 @@ function addReaction(messageId, emoji) {
     stompClient.send("/app/chat.react", {}, JSON.stringify(reaction));
 }
 
+function removeReaction(messageId) {
+    const reaction = {
+        messageId: messageId
+    };
+    stompClient.send("/app/chat.unreact", {}, JSON.stringify(reaction));
+}
+
 // Send typing indicator
 function sendTypingIndicator(isTyping) {
     if (!currentChatRoomId) return;
@@ -189,6 +196,16 @@ function displayMessage(message) {
             emojiSpan.dataset.count = reaction.count;
             emojiSpan.textContent = reaction.emoji + ' ' + reaction.count;
             emojiSpan.title = 'Click to react';
+            emojiSpan.addEventListener('click', function () {
+                const messageIdKey = String(message.id);
+                const currentUserKey = currentUserId != null ? String(currentUserId) : null;
+                if (!currentUserKey) {
+                    return;
+                }
+                if (messageUserReactions[messageIdKey] && messageUserReactions[messageIdKey][currentUserKey] === reaction.emoji) {
+                    removeReaction(message.id);
+                }
+            });
             if (reaction.currentUserReacted) {
                 emojiSpan.classList.add('user-reacted');
                 if (currentUserId) {
@@ -246,6 +263,32 @@ function updateMessageReaction(reaction) {
     const previousEmoji = userIdKey ? messageUserReactions[messageIdKey][userIdKey] : null;
     const userIsCurrent = currentUserId != null && userIdKey === String(currentUserId);
 
+    if (reaction.removed === true) {
+        const removedEmoji = reaction.emoji || previousEmoji;
+        if (removedEmoji) {
+            const removedEmojiSpan = Array.from(reactionsContainer.children).find(
+                span => span.dataset.emoji === removedEmoji
+            );
+            if (removedEmojiSpan) {
+                const currentCount = parseInt(removedEmojiSpan.dataset.count, 10) || 1;
+                const nextCount = currentCount - 1;
+                if (nextCount <= 0) {
+                    removedEmojiSpan.remove();
+                } else {
+                    removedEmojiSpan.dataset.count = String(nextCount);
+                    removedEmojiSpan.textContent = removedEmoji + ' ' + nextCount;
+                }
+                if (userIsCurrent) {
+                    removedEmojiSpan.classList.remove('user-reacted');
+                }
+            }
+        }
+        if (userIdKey && messageUserReactions[messageIdKey]) {
+            delete messageUserReactions[messageIdKey][userIdKey];
+        }
+        return;
+    }
+
     if (previousEmoji && previousEmoji !== reaction.emoji) {
         const previousEmojiSpan = Array.from(reactionsContainer.children).find(
             span => span.dataset.emoji === previousEmoji
@@ -294,6 +337,15 @@ function updateMessageReaction(reaction) {
         emojiSpan.dataset.count = '1';
         emojiSpan.textContent = reaction.emoji + ' 1';
         emojiSpan.title = reaction.userName;
+        emojiSpan.addEventListener('click', function () {
+            const currentUserKey = currentUserId != null ? String(currentUserId) : null;
+            if (!currentUserKey) {
+                return;
+            }
+            if (messageUserReactions[messageIdKey] && messageUserReactions[messageIdKey][currentUserKey] === reaction.emoji) {
+                removeReaction(reaction.messageId);
+            }
+        });
         if (userIsCurrent) {
             emojiSpan.classList.add('user-reacted');
         }
@@ -373,7 +425,17 @@ function toggleReactionPicker(event, messageId) {
 function selectReaction(event, messageId, emoji) {
     event.preventDefault();
     event.stopPropagation();
-    addReaction(messageId, emoji);
+    const messageIdKey = String(messageId);
+    const currentUserKey = currentUserId != null ? String(currentUserId) : null;
+    const previousEmoji = currentUserKey && messageUserReactions[messageIdKey]
+        ? messageUserReactions[messageIdKey][currentUserKey]
+        : null;
+
+    if (previousEmoji && previousEmoji === emoji) {
+        removeReaction(messageId);
+    } else {
+        addReaction(messageId, emoji);
+    }
     closeAllReactionPickers();
 }
 

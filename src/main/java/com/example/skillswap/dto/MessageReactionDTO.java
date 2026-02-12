@@ -12,4 +12,5 @@ public class MessageReactionDTO {
     private Long userId;
     private String userName;
     private String emoji;
+    private Boolean removed;
 }

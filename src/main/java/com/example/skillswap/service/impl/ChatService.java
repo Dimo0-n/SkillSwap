@@ -112,6 +112,27 @@ public class ChatService {
 
         dto.setUserId(user.getId());
         dto.setUserName(user.getFullName());
+        dto.setRemoved(false);
+        return dto;
+    }
+
+    @Transactional
+    public MessageReactionDTO removeReaction(MessageReactionDTO dto, Principal principal) {
+        User user = userRepository.findByEmail(principal.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Message message = messageRepository.findById(dto.getMessageId())
+                .orElseThrow(() -> new RuntimeException("Message not found"));
+
+        MessageReaction reaction = reactionRepository.findByMessageAndUser(message, user)
+                .orElseThrow(() -> new RuntimeException("Reaction not found"));
+
+        dto.setEmoji(reaction.getEmoji());
+        reactionRepository.delete(reaction);
+
+        dto.setUserId(user.getId());
+        dto.setUserName(user.getFullName());
+        dto.setRemoved(true);
         return dto;
     }
 
