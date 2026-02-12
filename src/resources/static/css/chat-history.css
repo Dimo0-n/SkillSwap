@@ -362,7 +362,7 @@
     align-items: flex-end;
     gap: 0;
     max-width: 70%;
-    margin-top: 4px;
+    margin-top: 0;
 }
 
 .message-incoming {
@@ -447,7 +447,7 @@
     margin-top: -2px;
     display: flex;
     align-items: center;
-    min-height: 16px;
+    min-height: 3px;
 }
 
 .message-outgoing .message-reactions-row {
@@ -468,17 +468,17 @@
 }
 
 .message + .message {
-    margin-top: 4px;
+    margin-top: 0;
 }
 
 .message-incoming + .message-incoming,
 .message-outgoing + .message-outgoing {
-    margin-top: 1px;
+    margin-top: 0;
 }
 
 .message-incoming + .message-outgoing,
 .message-outgoing + .message-incoming {
-    margin-top: 8px;
+    margin-top: 0;
 }
 
 /* Message Input Area */
