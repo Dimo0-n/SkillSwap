@@ -4,6 +4,10 @@ let currentChatRoomId = null;
 let currentUserId = null;
 let typingTimeout = null;
 let subscriptions = {}; // Track active subscriptions to prevent duplicates
+let currentUserReadyResolve;
+window.currentUserReadyPromise = new Promise(resolve => {
+    currentUserReadyResolve = resolve;
+});
 
 // Initialize WebSocket connection
 function connectWebSocket() {
@@ -340,10 +344,12 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(data => {
             currentUserId = data.userId;
             console.log('Current user ID:', currentUserId);
+            currentUserReadyResolve(true);
         })
         .catch(error => {
             console.error('Error fetching current user:', error);
             currentUserId = null;
+            currentUserReadyResolve(false);
         });
 
     // Connect to WebSocket
@@ -377,14 +383,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }, 2000);
         });
     }
-
-    // Handle conversation selection
-    document.querySelectorAll('.conversation-item').forEach(item => {
-        item.addEventListener('click', function () {
-            const chatRoomId = this.dataset.conversationId;
-            loadChatRoom(chatRoomId);
-        });
-    });
 
     // Check if roomId is in URL (coming from announce-details)
     const urlParams = new URLSearchParams(window.location.search);
@@ -425,7 +423,10 @@ function loadChatRoom(chatRoomId) {
     document.querySelectorAll('.conversation-item').forEach(item => {
         item.classList.remove('active');
     });
-    document.querySelector(`[data-conversation-id="${chatRoomId}"]`).classList.add('active');
+    const activeConversation = document.querySelector(`[data-conversation-id="${chatRoomId}"]`);
+    if (activeConversation) {
+        activeConversation.classList.add('active');
+    }
 }
 
 // Show welcome message for new conversations

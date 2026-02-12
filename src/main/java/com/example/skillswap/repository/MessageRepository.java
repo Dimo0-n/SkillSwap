@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Long> {
@@ -19,6 +20,8 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     List<Message> findByChatRoomOrderByCreatedAtAsc(ChatRoom chatRoom);
 
     Page<Message> findByChatRoomOrderByCreatedAtDesc(ChatRoom chatRoom, Pageable pageable);
+
+    Optional<Message> findTopByChatRoomOrderByCreatedAtDesc(ChatRoom chatRoom);
 
     @Query("SELECT COUNT(m) FROM Message m WHERE m.chatRoom.id = :chatRoomId AND m.sender.id != :userId AND m.status != 'SEEN'")
     Long countUnreadMessages(@Param("chatRoomId") Long chatRoomId, @Param("userId") Long userId);

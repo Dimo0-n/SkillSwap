@@ -1,6 +1,7 @@
 package com.example.skillswap.controller;
 
 import com.example.skillswap.dto.ChatMessageDTO;
+import com.example.skillswap.dto.ConversationSummaryDTO;
 import com.example.skillswap.entity.ChatRoom;
 import com.example.skillswap.entity.User;
 import com.example.skillswap.service.ChatService;
@@ -59,10 +60,10 @@ public class ChatController {
     }
 
     @GetMapping("/rooms")
-    public ResponseEntity<List<ChatRoom>> getUserChatRooms(Principal principal) {
+    public ResponseEntity<List<ConversationSummaryDTO>> getUserChatRooms(Principal principal) {
         try {
-            List<ChatRoom> chatRooms = chatService.getUserChatRooms(principal);
-            return ResponseEntity.ok(chatRooms);
+            List<ConversationSummaryDTO> conversations = chatService.getConversationSummaries(principal);
+            return ResponseEntity.ok(conversations);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }

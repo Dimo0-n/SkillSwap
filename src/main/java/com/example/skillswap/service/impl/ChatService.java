@@ -1,6 +1,7 @@
 package com.example.skillswap.service;
 
 import com.example.skillswap.dto.ChatMessageDTO;
+import com.example.skillswap.dto.ConversationSummaryDTO;
 import com.example.skillswap.dto.MessageReactionDTO;
 import com.example.skillswap.entity.*;
 import com.example.skillswap.enums.MessageStatus;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -146,6 +148,37 @@ public class ChatService {
         User user = userRepository.findByEmail(principal.getName())
                 .orElseThrow(() -> new RuntimeException("User not found"));
         return chatRoomRepository.findAllByUser(user);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ConversationSummaryDTO> getConversationSummaries(Principal principal) {
+        User currentUser = userRepository.findByEmail(principal.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<ChatRoom> chatRooms = chatRoomRepository.findAllByUser(currentUser);
+
+        return chatRooms.stream()
+                .map(chatRoom -> {
+                    User otherUser = chatRoom.getUser1().getId().equals(currentUser.getId())
+                            ? chatRoom.getUser2()
+                            : chatRoom.getUser1();
+
+                    Message lastMessage = messageRepository.findTopByChatRoomOrderByCreatedAtDesc(chatRoom)
+                            .orElse(null);
+
+                    Long unreadCount = messageRepository.countUnreadMessages(chatRoom.getId(), currentUser.getId());
+
+                    return new ConversationSummaryDTO(
+                            chatRoom.getId(),
+                            otherUser.getId(),
+                            otherUser.getFullName(),
+                            lastMessage != null ? lastMessage.getContent() : "",
+                            lastMessage != null ? lastMessage.getCreatedAt() : chatRoom.getCreatedAt(),
+                            unreadCount
+                    );
+                })
+                .sorted(Comparator.comparing(ConversationSummaryDTO::getLastMessageTime).reversed())
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
