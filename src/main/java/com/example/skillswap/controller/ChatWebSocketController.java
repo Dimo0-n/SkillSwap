@@ -5,7 +5,7 @@ import com.example.skillswap.dto.MessageReactionDTO;
 import com.example.skillswap.dto.MessageStatusDTO;
 import com.example.skillswap.dto.TypingIndicatorDTO;
 import com.example.skillswap.enums.MessageStatus;
-import com.example.skillswap.service.ChatService;
+import com.example.skillswap.service.impl.ChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;

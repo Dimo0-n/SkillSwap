@@ -1,4 +1,4 @@
-package com.example.skillswap.service;
+package com.example.skillswap.service.impl;
 
 import com.example.skillswap.dto.ChatMessageDTO;
 import com.example.skillswap.dto.ConversationSummaryDTO;
@@ -21,7 +21,6 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service

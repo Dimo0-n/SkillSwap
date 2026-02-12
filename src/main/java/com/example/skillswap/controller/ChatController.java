@@ -4,7 +4,7 @@ import com.example.skillswap.dto.ChatMessageDTO;
 import com.example.skillswap.dto.ConversationSummaryDTO;
 import com.example.skillswap.entity.ChatRoom;
 import com.example.skillswap.entity.User;
-import com.example.skillswap.service.ChatService;
+import com.example.skillswap.service.impl.ChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

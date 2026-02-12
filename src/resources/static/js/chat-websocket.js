@@ -5,6 +5,7 @@ let currentUserId = null;
 let typingTimeout = null;
 let subscriptions = {}; // Track active subscriptions to prevent duplicates
 let currentUserReadyResolve;
+const REACTION_OPTIONS = ['\uD83D\uDC9C', '\uD83D\uDE02', '\uD83D\uDE2D', '\uD83D\uDE21', '\uD83D\uDD25', '\uD83D\uDC4D'];
 window.currentUserReadyPromise = new Promise(resolve => {
     currentUserReadyResolve = resolve;
 });
@@ -153,8 +154,18 @@ function displayMessage(message) {
 
     messageHTML += `
         <div class="message-content">
-            <div class="message-bubble" oncontextmenu="showReactionMenu(event, ${message.id})">
+            <div class="message-bubble">
                 <p>${escapeHtml(message.content)}</p>
+                <div class="reaction-picker" id="reaction-picker-${message.id}">
+                    ${REACTION_OPTIONS.map(emoji => `
+                        <button type="button" class="emoji-option ${emoji === REACTION_OPTIONS[0] ? 'emoji-option-heart' : ''}" onclick="selectReaction(event, ${message.id}, '${emoji}')">
+                            ${emoji === REACTION_OPTIONS[0] ? '<i class="fa fa-heart"></i>' : emoji}
+                        </button>
+                    `).join('')}
+                </div>
+                <button type="button" class="reaction-trigger" onclick="toggleReactionPicker(event, ${message.id})" aria-label="React">
+                    <i class="fa fa-heart"></i>
+                </button>
                 <div class="message-reactions" id="reactions-${message.id}"></div>
             </div>
             <div class="message-time">
@@ -287,39 +298,34 @@ function showTypingIndicator(typing) {
     }
 }
 
-// Show reaction menu (emoji picker)
-function showReactionMenu(event, messageId) {
-    event.preventDefault();
-
-    // Remove existing menu
-    const existingMenu = document.querySelector('.reaction-menu');
-    if (existingMenu) existingMenu.remove();
-
-    const menu = document.createElement('div');
-    menu.className = 'reaction-menu';
-    menu.style.position = 'fixed';
-    menu.style.left = event.clientX + 'px';
-    menu.style.top = event.clientY + 'px';
-
-    const emojis = ['❤️', '😂', '😭', '😡', '🔥', '👍'];
-    menu.innerHTML = emojis.map(emoji =>
-        `<span class="emoji-option" onclick="selectReaction(${messageId}, '${emoji}')">${emoji}</span>`
-    ).join('');
-
-    document.body.appendChild(menu);
-
-    // Close menu on click outside
-    setTimeout(() => {
-        document.addEventListener('click', function closeMenu() {
-            menu.remove();
-            document.removeEventListener('click', closeMenu);
-        });
-    }, 100);
+function closeAllReactionPickers(exceptMessageId = null) {
+    document.querySelectorAll('.reaction-picker.open').forEach(picker => {
+        if (exceptMessageId && picker.id === `reaction-picker-${exceptMessageId}`) {
+            return;
+        }
+        picker.classList.remove('open');
+    });
 }
 
-// Select reaction
-function selectReaction(messageId, emoji) {
+function toggleReactionPicker(event, messageId) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const picker = document.getElementById(`reaction-picker-${messageId}`);
+    if (!picker) {
+        return;
+    }
+
+    const willOpen = !picker.classList.contains('open');
+    closeAllReactionPickers(messageId);
+    picker.classList.toggle('open', willOpen);
+}
+
+function selectReaction(event, messageId, emoji) {
+    event.preventDefault();
+    event.stopPropagation();
     addReaction(messageId, emoji);
+    closeAllReactionPickers();
 }
 
 // Utility functions
@@ -338,6 +344,10 @@ function formatTime(timestamp) {
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('click', function () {
+        closeAllReactionPickers();
+    });
+
     // Get current user ID from backend API
     fetch('/api/chat/current-user')
         .then(response => response.json())
