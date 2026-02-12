@@ -6,6 +6,7 @@ let typingTimeout = null;
 let subscriptions = {}; // Track active subscriptions to prevent duplicates
 let currentUserReadyResolve;
 const REACTION_OPTIONS = ['\uD83D\uDC9C', '\uD83D\uDE02', '\uD83D\uDE2D', '\uD83D\uDE21', '\uD83D\uDD25', '\uD83D\uDC4D'];
+let messageUserReactions = {};
 window.currentUserReadyPromise = new Promise(resolve => {
     currentUserReadyResolve = resolve;
 });
@@ -190,6 +191,12 @@ function displayMessage(message) {
             emojiSpan.title = 'Click to react';
             if (reaction.currentUserReacted) {
                 emojiSpan.classList.add('user-reacted');
+                if (currentUserId) {
+                    if (!messageUserReactions[message.id]) {
+                        messageUserReactions[message.id] = {};
+                    }
+                    messageUserReactions[message.id][String(currentUserId)] = reaction.emoji;
+                }
             }
             reactionsContainer.appendChild(emojiSpan);
         });
@@ -230,29 +237,71 @@ function updateMessageReaction(reaction) {
     const reactionsContainer = document.getElementById('reactions-' + reaction.messageId);
     if (!reactionsContainer) return;
 
-    // Find existing emoji or create new one
+    const messageIdKey = String(reaction.messageId);
+    const userIdKey = reaction.userId != null ? String(reaction.userId) : null;
+    if (!messageUserReactions[messageIdKey]) {
+        messageUserReactions[messageIdKey] = {};
+    }
+
+    const previousEmoji = userIdKey ? messageUserReactions[messageIdKey][userIdKey] : null;
+    const userIsCurrent = currentUserId != null && userIdKey === String(currentUserId);
+
+    if (previousEmoji && previousEmoji !== reaction.emoji) {
+        const previousEmojiSpan = Array.from(reactionsContainer.children).find(
+            span => span.dataset.emoji === previousEmoji
+        );
+        if (previousEmojiSpan) {
+            const previousCount = parseInt(previousEmojiSpan.dataset.count, 10) || 1;
+            const nextCount = previousCount - 1;
+            if (nextCount <= 0) {
+                previousEmojiSpan.remove();
+            } else {
+                previousEmojiSpan.dataset.count = String(nextCount);
+                previousEmojiSpan.textContent = previousEmoji + ' ' + nextCount;
+            }
+            if (userIsCurrent) {
+                previousEmojiSpan.classList.remove('user-reacted');
+            }
+        }
+    } else if (previousEmoji && previousEmoji === reaction.emoji) {
+        const sameEmojiSpan = Array.from(reactionsContainer.children).find(
+            span => span.dataset.emoji === reaction.emoji
+        );
+        if (sameEmojiSpan && userIsCurrent) {
+            sameEmojiSpan.classList.add('user-reacted');
+        }
+        return;
+    }
+
     const existingEmoji = Array.from(reactionsContainer.children).find(
         span => span.dataset.emoji === reaction.emoji
     );
 
     if (existingEmoji) {
-        // Update count
-        const currentCount = parseInt(existingEmoji.dataset.count) || 1;
-        existingEmoji.dataset.count = currentCount + 1;
+        const currentCount = parseInt(existingEmoji.dataset.count, 10) || 1;
+        existingEmoji.dataset.count = String(currentCount + 1);
         existingEmoji.textContent = reaction.emoji + ' ' + (currentCount + 1);
         
-        // Add username to title
         const currentTitle = existingEmoji.title || '';
         existingEmoji.title = currentTitle ? currentTitle + ', ' + reaction.userName : reaction.userName;
+        if (userIsCurrent) {
+            existingEmoji.classList.add('user-reacted');
+        }
     } else {
-        // Create new emoji span with aggregation support
         const emojiSpan = document.createElement('span');
         emojiSpan.className = 'reaction-emoji';
         emojiSpan.dataset.emoji = reaction.emoji;
         emojiSpan.dataset.count = '1';
         emojiSpan.textContent = reaction.emoji + ' 1';
         emojiSpan.title = reaction.userName;
+        if (userIsCurrent) {
+            emojiSpan.classList.add('user-reacted');
+        }
         reactionsContainer.appendChild(emojiSpan);
+    }
+
+    if (userIdKey) {
+        messageUserReactions[messageIdKey][userIdKey] = reaction.emoji;
     }
 }
 
@@ -411,6 +460,7 @@ document.addEventListener('DOMContentLoaded', function () {
 // Load chat room
 function loadChatRoom(chatRoomId) {
     currentChatRoomId = chatRoomId;
+    messageUserReactions = {};
 
     // Clear current messages
     const messagesContainer = document.getElementById('messagesContainer');

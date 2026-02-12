@@ -39,15 +39,16 @@
 
 .reaction-picker {
     position: absolute;
-    right: 6px;
-    bottom: 38px;
+    right: 0;
+    top: -36px;
     display: none;
     align-items: center;
-    gap: 10px;
-    padding: 8px 14px;
+    gap: 6px;
+    padding: 4px 8px;
     border-radius: 999px;
-    background: #ffffff;
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+    background: #1f232b;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4);
     z-index: 20;
     animation: reactionMenuSlide 0.18s ease-out;
 }
@@ -71,15 +72,22 @@
 .emoji-option {
     border: none;
     background: transparent;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
     padding: 0;
-    font-size: 30px;
+    font-size: 24px;
     line-height: 1;
     cursor: pointer;
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     transition: transform 0.16s ease;
 }
 
 .emoji-option:hover {
-    transform: translateY(-1px) scale(1.12);
+    transform: translateY(-1px) scale(1.08);
 }
 
 .emoji-option-heart {
@@ -87,7 +95,13 @@
 }
 
 .emoji-option-heart i {
-    font-size: 26px;
+    font-size: 20px;
+}
+
+.emoji-option.is-active {
+    border: 2px solid #4da3ff;
+    border-radius: 6px;
+    background: rgba(77, 163, 255, 0.12);
 }
 
 /* Message Reactions */
