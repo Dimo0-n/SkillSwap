@@ -11,6 +11,7 @@ public class ConversationSummaryDTO {
     private Long chatRoomId;
     private Long otherUserId;
     private String otherUserName;
+    private String otherUserAvatarUrl;
     private String lastMessage;
     private LocalDateTime lastMessageTime;
     private Long unreadCount;

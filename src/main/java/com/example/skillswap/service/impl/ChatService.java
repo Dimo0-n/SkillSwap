@@ -8,6 +8,7 @@ import com.example.skillswap.enums.MessageStatus;
 import com.example.skillswap.repository.ChatRoomRepository;
 import com.example.skillswap.repository.MessageReactionRepository;
 import com.example.skillswap.repository.MessageRepository;
+import com.example.skillswap.repository.ProfileRepository;
 import com.example.skillswap.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -31,6 +32,7 @@ public class ChatService {
     private final MessageRepository messageRepository;
     private final MessageReactionRepository reactionRepository;
     private final UserRepository userRepository;
+    private final ProfileRepository profileRepository;
 
     @Transactional
     public ChatRoom createOrGetChatRoom(Long user1Id, Long user2Id) {
@@ -187,11 +189,15 @@ public class ChatService {
                             .orElse(null);
 
                     Long unreadCount = messageRepository.countUnreadMessages(chatRoom.getId(), currentUser.getId());
+                    String avatarUrl = profileRepository.findFirstByUserEmailOrderByIdDesc(otherUser.getEmail())
+                            .map(p -> "/profile/image/" + otherUser.getEmail())
+                            .orElse("/img/default-avatar.png");
 
                     return new ConversationSummaryDTO(
                             chatRoom.getId(),
                             otherUser.getId(),
                             otherUser.getFullName(),
+                            avatarUrl,
                             lastMessage != null ? lastMessage.getContent() : "",
                             lastMessage != null ? lastMessage.getCreatedAt() : chatRoom.getCreatedAt(),
                             unreadCount

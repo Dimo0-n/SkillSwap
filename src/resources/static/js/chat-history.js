@@ -32,9 +32,9 @@ function renderEmptyConversationsState() {
         <div class="conversation-item">
             <div class="conversation-content">
                 <div class="conversation-header">
-                    <span class="conversation-name">Nu ai conversații încă</span>
+                    <span class="conversation-name">Nu ai conversatii inca</span>
                 </div>
-                <div class="conversation-preview">Începe un chat dintr-un anunț pentru a vedea istoricul aici.</div>
+                <div class="conversation-preview">Incepe un chat dintr-un anunt pentru a vedea istoricul aici.</div>
             </div>
         </div>
     `;
@@ -44,14 +44,16 @@ function buildConversationItem(conversation) {
     const unreadBadge = conversation.unreadCount > 0
         ? `<span class="unread-badge">${conversation.unreadCount}</span>`
         : '';
+    const avatarUrl = conversation.otherUserAvatarUrl || '/img/default-avatar.png';
 
     return `
         <div class="conversation-item"
              data-conversation-id="${conversation.chatRoomId}"
              data-user-name="${escapeHtmlForSidebar(conversation.otherUserName)}"
+             data-user-avatar="${escapeHtmlForSidebar(avatarUrl)}"
              data-user-status="offline">
             <div class="conversation-avatar">
-                <img src="/img/default-avatar.png" alt="${escapeHtmlForSidebar(conversation.otherUserName)}">
+                <img src="${escapeHtmlForSidebar(avatarUrl)}" alt="${escapeHtmlForSidebar(conversation.otherUserName)}">
                 <span class="status-indicator status-offline"></span>
             </div>
             <div class="conversation-content">
@@ -67,7 +69,8 @@ function buildConversationItem(conversation) {
 }
 
 function updateChatHeaderFromConversation(item) {
-    const userName = item.dataset.userName || 'Conversație';
+    const userName = item.dataset.userName || 'Conversa?ie';
+    const avatarUrl = item.dataset.userAvatar || '/img/default-avatar.png';
     const status = item.dataset.userStatus || 'offline';
 
     const chatHeaderName = document.getElementById('chatHeaderName');
@@ -80,9 +83,15 @@ function updateChatHeaderFromConversation(item) {
     }
 
     if (chatHeaderAvatar) {
-        chatHeaderAvatar.src = '/img/default-avatar.png';
+        chatHeaderAvatar.src = avatarUrl;
         chatHeaderAvatar.alt = userName;
     }
+
+    window.currentChatPartnerAvatar = avatarUrl;
+    document.querySelectorAll('.message-incoming .message-avatar img').forEach(img => {
+        img.src = avatarUrl;
+        img.alt = userName;
+    });
 
     if (chatHeaderStatus) {
         chatHeaderStatus.classList.remove('status-online', 'status-offline');
@@ -184,4 +193,3 @@ document.addEventListener('DOMContentLoaded', function () {
         loadConversations();
     });
 });
-

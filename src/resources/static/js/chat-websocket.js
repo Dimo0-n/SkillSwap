@@ -141,6 +141,10 @@ function sendTypingIndicator(isTyping) {
     stompClient.send("/app/chat.typing", {}, JSON.stringify(typing));
 }
 
+function getCurrentChatPartnerAvatar() {
+    return window.currentChatPartnerAvatar || '/img/default-avatar.png';
+}
+
 // Display message in UI
 function displayMessage(message) {
     const messagesContainer = document.getElementById('messagesContainer');
@@ -155,7 +159,7 @@ function displayMessage(message) {
     if (!isOwnMessage) {
         messageHTML += `
             <div class="message-avatar">
-                <img src="/img/details/comment/comment-1.jpg" alt="${message.senderName}">
+                <img src="${getCurrentChatPartnerAvatar()}" alt="${message.senderName}">
             </div>
         `;
     }
@@ -370,7 +374,7 @@ function showTypingIndicator(typing) {
             typingIndicator.innerHTML = `
                 <div class="message message-incoming">
                     <div class="message-avatar">
-                        <img src="/img/details/comment/comment-1.jpg" alt="User">
+                        <img src="${getCurrentChatPartnerAvatar()}" alt="User">
                     </div>
                     <div class="message-content">
                         <div class="message-bubble">
