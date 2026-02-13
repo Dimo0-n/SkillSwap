@@ -49,7 +49,7 @@
                     </div>
 
                     <!-- Main Details Section -->
-                    <div class="announce-section">
+                    <div class="announce-section announce-section-main">
                         <div class="announce-section-header">
                             <div class="announce-section-icon">
                                 <i class="fa fa-file-text"></i>
@@ -59,7 +59,7 @@
 
                         <div class="announce-detail-item">
                             <label class="announce-detail-label">Descriere detaliată</label>
-                            <div class="announce-detail-content">
+                            <div class="announce-detail-content description-text">
                                 <p th:text="${announce.description}"></p>
                             </div>
                         </div>
@@ -74,39 +74,32 @@
                             <h2 class="announce-section-title">Ce oferți și ce căuți</h2>
                         </div>
 
-                        <div class="announce-details-grid">
-                            <div class="announce-detail-item">
-                                <label class="announce-detail-label">Categoria oferită</label>
-                                <div class="announce-detail-content">
-                                    <div class="announce-category-badge offer">
-                                        <i class="fa fa-star"></i>
-                                        <span th:text="${announce.categoryOffered}"></span>
-                                    </div>
+                        <div class="category-highlight-zone">
+                            <div class="category-mini-card offer">
+                                <div class="category-mini-label">Ofer</div>
+                                <div class="category-mini-value">
+                                    <i class="fa fa-star"></i>
+                                    <span th:text="${announce.categoryOffered}"></span>
                                 </div>
                             </div>
 
-                            <div class="announce-detail-item">
-                                <label class="announce-detail-label">Categoria căutată</label>
-                                <div class="announce-detail-content">
-                                    <div class="announce-category-badge offer">
-                                        <i class="fa fa-search"></i>
-                                        <span th:text="${announce.categoryRequired}"></span>
-                                    </div>
+                            <div class="category-mini-card seek">
+                                <div class="category-mini-label">Caut</div>
+                                <div class="category-mini-value">
+                                    <i class="fa fa-search"></i>
+                                    <span th:text="${announce.categoryRequired}"></span>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="announce-detail-item">
-                                <label class="announce-detail-label">Nume autor</label>
-                                <div class="announce-detail-content">
-                                    <p th:text="${announce.author}"></p>
-                                </div>
+                        <div class="announce-secondary-meta">
+                            <div class="announce-secondary-meta-item">
+                                <span class="announce-secondary-meta-label">Autor</span>
+                                <span class="announce-secondary-meta-value" th:text="${announce.author}"></span>
                             </div>
-
-                            <div class="announce-detail-item">
-                                <label class="announce-detail-label">Notă secundară (opțional)</label>
-                                <div class="announce-detail-content">
-                                    <p th:text="${announce.additionalInfo}"></p>
-                                </div>
+                            <div class="announce-secondary-meta-item" th:if="${announce.additionalInfo != null and !#strings.isEmpty(announce.additionalInfo)}">
+                                <span class="announce-secondary-meta-label">Notă</span>
+                                <span class="announce-secondary-meta-value" th:text="${announce.additionalInfo}"></span>
                             </div>
                         </div>
                     </div>
