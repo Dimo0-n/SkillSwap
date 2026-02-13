@@ -11,6 +11,9 @@
     <!-- Humberger Menu Begin -->
     <div class="humberger-menu-overlay"></div>
     <div class="humberger-menu-wrapper">
+        <button class="humberger-close" type="button" aria-label="Închide meniul">
+            <i class="fa fa-times"></i>
+        </button>
         <div class="hw-logo">
             <a href="/index"><img class="site-logo" src="/img/skill-swap-logo-cameleon.png" alt="SkillSwap logo"></a>
         </div>
@@ -18,9 +21,10 @@
             <ul>
                 <li class="active"><a th:href="@{/index}"><span>Acasă</span></a></li>
                 <li><a th:href="@{/announces-list}"><span>Anunțuri</span></a></li>
+                <li><a th:href="@{/announces/new}"><span>Creează anunț</span></a></li>
 <!--                <li><a th:href="@{/chat}"><span>Chat</i></span></a></li>-->
                 <li><a th:href="@{/contact}">Contact</a></li>
-                <li><a sec:authorize="isAuthenticated()" th:href="@{/profil}">Profil</a></li>
+                <li><a sec:authorize="isAuthenticated()" th:href="@{/profile}">Profil</a></li>
             </ul>
         </div>
         <div id="mobile-menu-wrap"></div>

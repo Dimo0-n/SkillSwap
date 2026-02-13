@@ -32,19 +32,13 @@
                         <div class="col-lg-6 col-md-8">
                             <div class="ht-widget">
                                 <ul sec:authorize="!isAuthenticated()">
-                                    <li><i class="fa fa-clock-o"></i> <span id="current-date1"></span></li>
-                                <li class="sep">/</li>
-                                    <li>
-                                        <a th:href="@{/login}"><i class="fa fa-sign-in"></i> Login</a>
-                                    </li>
+                                    <a th:href="@{/login}"><i class="fa fa-sign-in"></i> Login</a>
                                 <li class="sep">/</li>
                                     <li>
                                         <a th:href="@{/register}"><i class="fa fa-user-plus"></i> Sign up</a>
                                     </li>
                                 </ul>
                                 <ul sec:authorize="isAuthenticated()">
-                                    <li><i class="fa fa-clock-o"></i> <span id="current-date2"></span></li>
-                                    <li class="sep">/</li>
                                     <li>
                                         <a href="#"
                                             onclick="event.preventDefault(); document.getElementById('logoutForm').submit();"><i
@@ -61,23 +55,6 @@
 
                             </div>
                         </div>
-
-                        <script>
-                            document.addEventListener('DOMContentLoaded', function () {
-                                const today = new Date();
-
-                                // Formatează data (ex: Aug 16, 2025)
-                                const options = { month: 'short', day: '2-digit', year: 'numeric' };
-                                const formattedDate = today.toLocaleDateString('en-US', options);
-
-                                // Afișează în span-uri doar dacă există
-                                const date1 = document.getElementById('current-date1');
-                                const date2 = document.getElementById('current-date2');
-
-                                if (date1) date1.textContent = formattedDate;
-                                if (date2) date2.textContent = formattedDate;
-                            });
-                        </script>
 
                         <!-- Notifications JS -->
                         <script src="/js/notifications.js"></script>
@@ -98,9 +75,9 @@
                 <div class="container">
                     <div class="nav-bar">
                         <div class="nav-left">
-                            <!--                    <button class="humberger-menu humberger-open" type="button" aria-label="Deschide meniul">-->
-                            <!--                        <i class="fa fa-bars"></i>-->
-                            <!--                    </button>-->
+                            <button class="humberger-menu humberger-open" type="button" aria-label="Deschide meniul">
+                                <i class="fa fa-bars"></i>
+                            </button>
                             <a href="/index" class="nav-logo">
                                 <img class="site-logo" src="/img/skill-swap-logo-cameleon.png" alt="SkillSwap logo">
                             </a>

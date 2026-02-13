@@ -577,6 +577,36 @@ ol {
 	-o-transition: all 0.3s;
 	transition: all 0.3s;
 	padding: 50px;
+	position: fixed;
+}
+
+.humberger-menu-wrapper .humberger-close {
+	position: absolute;
+	top: 18px;
+	right: 18px;
+	width: 40px;
+	height: 40px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	background: linear-gradient(135deg, #b66dff 0%, #8c48e8 100%);
+	color: #ffffff;
+	border: 1px solid rgba(227, 178, 255, 0.55);
+	border-radius: 10px;
+	cursor: pointer;
+	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.28);
+	transition: all 0.25s ease;
+	z-index: 5;
+}
+
+.humberger-menu-wrapper .humberger-close i {
+	font-size: 16px;
+}
+
+.humberger-menu-wrapper .humberger-close:hover {
+	background: linear-gradient(135deg, #d197ff 0%, #a05cff 100%);
+	box-shadow: 0 10px 20px rgba(0, 0, 0, 0.35);
+	transform: translateY(-1px);
 }
 
 .humberger-menu-wrapper.show-humberger-menu {
@@ -5800,6 +5830,84 @@ li a:hover {
 
 	line-height: 1.5em;         /* important pt calc corect */
 	max-height: calc(1.5em * 3);
+}
+
+/* =================================
+   NAVBAR RESPONSIVE BEHAVIOR
+================================= */
+
+@media only screen and (min-width: 1200px) {
+	.nav-options .humberger-menu {
+		display: none !important;
+	}
+
+	.nav-options .nav-center .nav-menu {
+		display: block !important;
+	}
+
+	.nav-options .nav-center .btn-create-announce {
+		display: inline-flex !important;
+	}
+
+	.nav-options .nav-logo {
+		display: flex !important;
+	}
+}
+
+@media only screen and (max-width: 1199px) {
+	.nav-options .nav-bar {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		flex-wrap: nowrap;
+		gap: 10px;
+	}
+
+	.nav-options .nav-left {
+		display: flex;
+		align-items: center;
+		gap: 0;
+		flex: 0 0 auto;
+		order: 1;
+		margin-left: 0;
+		transform: translateX(-15px);
+	}
+
+	.nav-options .humberger-menu {
+		display: inline-flex !important;
+	}
+
+	.nav-options .nav-logo {
+		display: none !important;
+	}
+
+	.nav-options .nav-center {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		margin-left: auto;
+		flex: 0 0 auto;
+		width: auto;
+		order: 2;
+	}
+
+	.nav-options .nav-center .nav-menu,
+	.nav-options .nav-center .btn-create-announce {
+		display: none !important;
+	}
+
+	.nav-options .nav-center .nav-right {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 8px;
+		margin-left: 0;
+		transform: translateX(-15px);
+	}
+
+	.nav-options .nav-center .nav-right .admin-link {
+		display: none !important;
+	}
 }
 
 

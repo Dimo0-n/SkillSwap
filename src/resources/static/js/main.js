@@ -40,6 +40,12 @@
         $(".nav-options").removeClass("humberger-change");
     });
 
+    $(".humberger-close").on('click', function () {
+        $(".humberger-menu-wrapper").removeClass("show-humberger-menu");
+        $(".humberger-menu-overlay").removeClass("active");
+        $(".nav-options").removeClass("humberger-change");
+    });
+
     // Navbar search panel
     const $navbarSearchPanel = $('.navbar-search-panel');
     const $navbarSearchInput = $('#navbar-search-input');
