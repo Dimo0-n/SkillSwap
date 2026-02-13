@@ -15,4 +15,6 @@ public interface AnnounceRepository extends JpaRepository<Announce, Long> {
     List<Announce> getAnnouncesListByEmail(@Param("userId") Long userId);
 
     boolean existsByIdAndUserId(Long id, Long user_id);
+
+    List<Announce> findAllByOrderByIdDesc();
 }

@@ -36,7 +36,7 @@ public class AnnounceServiceImpl implements AnnounceService {
     //lista cu toate anunturile care sunt afisate din DB
     @Override
     public List<Announce> getAnnouncesList() {
-        return announceRepository.findAll();
+        return announceRepository.findAllByOrderByIdDesc();
     }
 
     //Crearea unui anunt nou de catre user-ul logat
