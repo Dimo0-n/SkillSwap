@@ -836,6 +836,15 @@ ol {
 	margin-right: 5px;
 }
 
+.ht-options .ht-widget ul li a {
+	color: #ffffff;
+	transition: color 0.3s ease;
+}
+
+.ht-options .ht-widget ul li a:hover {
+	color: #8b45c3;
+}
+
 .ht-options .ht-widget ul li span {
 	font-size: 14px;
 	color: #eaeaea;
