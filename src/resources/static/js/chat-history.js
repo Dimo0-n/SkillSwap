@@ -221,7 +221,7 @@ function attachConversationHandlers() {
 }
 
 function attachConversationSearch() {
-    const searchInput = document.getElementById('conversationSearch');
+    const searchInput = document.getElementById('inputBox');
     if (!searchInput) {
         return;
     }

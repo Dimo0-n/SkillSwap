@@ -517,10 +517,12 @@ document.addEventListener('DOMContentLoaded', function () {
         const paddingHeight = (parseFloat(computed.paddingTop) || 0) + (parseFloat(computed.paddingBottom) || 0);
         const minHeight = lineHeight + borderHeight + paddingHeight;
         const maxHeight = (lineHeight * 5) + borderHeight + paddingHeight;
-        const nextHeight = Math.max(minHeight, Math.min(messageInput.scrollHeight, maxHeight));
+        const isEmpty = messageInput.value.trim().length === 0;
+        const contentHeight = isEmpty ? minHeight : messageInput.scrollHeight;
+        const nextHeight = Math.max(minHeight, Math.min(contentHeight, maxHeight));
 
         messageInput.style.height = `${nextHeight}px`;
-        messageInput.style.overflowY = messageInput.scrollHeight > maxHeight ? 'auto' : 'hidden';
+        messageInput.style.overflowY = !isEmpty && messageInput.scrollHeight > maxHeight ? 'auto' : 'hidden';
     }
 
     if (messageForm) {
