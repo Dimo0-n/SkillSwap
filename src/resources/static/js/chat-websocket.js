@@ -504,6 +504,25 @@ document.addEventListener('DOMContentLoaded', function () {
     const messageForm = document.getElementById('messageForm');
     const messageInput = document.getElementById('messageInput');
 
+    function autoResizeMessageInput() {
+        if (!messageInput) {
+            return;
+        }
+
+        messageInput.style.height = 'auto';
+
+        const computed = window.getComputedStyle(messageInput);
+        const lineHeight = parseFloat(computed.lineHeight) || 22;
+        const borderHeight = (parseFloat(computed.borderTopWidth) || 0) + (parseFloat(computed.borderBottomWidth) || 0);
+        const paddingHeight = (parseFloat(computed.paddingTop) || 0) + (parseFloat(computed.paddingBottom) || 0);
+        const minHeight = lineHeight + borderHeight + paddingHeight;
+        const maxHeight = (lineHeight * 5) + borderHeight + paddingHeight;
+        const nextHeight = Math.max(minHeight, Math.min(messageInput.scrollHeight, maxHeight));
+
+        messageInput.style.height = `${nextHeight}px`;
+        messageInput.style.overflowY = messageInput.scrollHeight > maxHeight ? 'auto' : 'hidden';
+    }
+
     if (messageForm) {
         messageForm.addEventListener('submit', function (e) {
             e.preventDefault();
@@ -511,6 +530,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (content) {
                 sendMessage(content);
                 messageInput.value = '';
+                autoResizeMessageInput();
                 sendTypingIndicator(false);
             }
         });
@@ -520,6 +540,8 @@ document.addEventListener('DOMContentLoaded', function () {
     if (messageInput) {
         let typingTimer;
         messageInput.addEventListener('input', function () {
+            autoResizeMessageInput();
+
             clearTimeout(typingTimer);
             sendTypingIndicator(true);
 
@@ -527,6 +549,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 sendTypingIndicator(false);
             }, 2000);
         });
+
+        autoResizeMessageInput();
+        window.addEventListener('resize', autoResizeMessageInput);
     }
 
     // Check if roomId is in URL (coming from announce-details)

@@ -26,6 +26,17 @@
     <link rel="stylesheet" href="/css/style.css" type="text/css">
     <link rel="stylesheet" href="/css/chat-history.css" type="text/css">
     <link rel="stylesheet" href="/css/chat-reactions.css" type="text/css">
+
+    <style>
+        @media (max-width: 768px) {
+            .search-model-form input {
+                height: 50px;
+                padding: 0 20px;
+                line-height: 50px;
+                box-sizing: border-box;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -105,8 +116,8 @@
                             <div class="message-input-area">
                                 <form id="messageForm" class="message-form">
                                     <div class="message-input-wrapper">
-                                        <input type="text" id="messageInput" class="message-input"
-                                            placeholder="Type a message…">
+                                        <textarea id="messageInput" class="message-input"
+                                            placeholder="Type a message…" rows="1"></textarea>
                                         <button type="submit" class="message-send-btn">
                                             <i class="fa fa-paper-plane"></i>
                                         </button>
