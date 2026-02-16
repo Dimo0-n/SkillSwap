@@ -429,6 +429,7 @@ function closeAllReactionPickers(exceptMessageId = null) {
             return;
         }
         picker.classList.remove('open');
+        picker.classList.remove('reaction-picker-below');
         picker.style.left = '';
         picker.style.right = '';
         picker.style.transform = '';
@@ -444,6 +445,7 @@ function positionReactionPicker(picker) {
     const isOutgoing = messageElement && messageElement.classList.contains('message-outgoing');
     const messagesContainer = picker.closest('.messages-container');
 
+    picker.classList.remove('reaction-picker-below');
     picker.style.left = isOutgoing ? 'auto' : '0';
     picker.style.right = isOutgoing ? '0' : 'auto';
     picker.style.transform = 'translate(0, 0)';
@@ -466,6 +468,15 @@ function positionReactionPicker(picker) {
     }
 
     picker.style.transform = `translate(${offsetX}px, 0)`;
+
+    const positionedRect = picker.getBoundingClientRect();
+    const minTop = messagesContainer
+        ? Math.max(boundsRect.top + viewportPadding, viewportPadding)
+        : viewportPadding;
+
+    if (positionedRect.top < minTop) {
+        picker.classList.add('reaction-picker-below');
+    }
 }
 
 function toggleReactionPicker(event, messageId) {

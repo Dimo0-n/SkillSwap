@@ -86,6 +86,11 @@
     display: flex;
 }
 
+.reaction-picker.reaction-picker-below {
+    top: calc(100% + 8px);
+    bottom: auto;
+}
+
 @keyframes reactionMenuSlide {
     from {
         opacity: 0;
