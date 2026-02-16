@@ -566,7 +566,11 @@ ol {
 	background: #080808;
 	width: 410px;
 	height: 100%;
+	max-height: 100dvh;
 	overflow-y: auto;
+	overflow-x: hidden;
+	-webkit-overflow-scrolling: touch;
+	overscroll-behavior: contain;
 	position: fixed;
 	left: -410px;
 	top: 0;
@@ -5513,6 +5517,7 @@ ol {
 @media only screen and (max-width: 479px) {
 	.humberger-menu-wrapper {
 		width: 300px;
+		height: 100dvh;
 		padding: 30px;
 	}
 	.trending-post {
