@@ -444,9 +444,9 @@ function positionReactionPicker(picker) {
     const isOutgoing = messageElement && messageElement.classList.contains('message-outgoing');
     const messagesContainer = picker.closest('.messages-container');
 
-    picker.style.left = isOutgoing ? 'auto' : 'calc(100% + 8px)';
-    picker.style.right = isOutgoing ? 'calc(100% + 8px)' : 'auto';
-    picker.style.transform = 'translate(0, -50%)';
+    picker.style.left = isOutgoing ? 'auto' : '0';
+    picker.style.right = isOutgoing ? '0' : 'auto';
+    picker.style.transform = 'translate(0, 0)';
 
     const viewportPadding = 8;
     const rect = picker.getBoundingClientRect();
@@ -465,7 +465,7 @@ function positionReactionPicker(picker) {
         offsetX += minLeft - rect.left;
     }
 
-    picker.style.transform = `translate(${offsetX}px, -50%)`;
+    picker.style.transform = `translate(${offsetX}px, 0)`;
 }
 
 function toggleReactionPicker(event, messageId) {
