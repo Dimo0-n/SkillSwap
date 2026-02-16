@@ -202,7 +202,7 @@ function displayMessage(message) {
                     `).join('')}
                 </div>
                 <button type="button" class="reaction-trigger" onclick="toggleReactionPicker(event, ${message.id})" aria-label="React">
-                    <i class="fa fa-heart"></i>
+                    <i class="fa fa-smile-o"></i>
                 </button>
             </div>
             <div class="message-reactions-row">
