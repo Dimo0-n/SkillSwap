@@ -61,7 +61,10 @@
     top: 50%;
     left: calc(100% + 8px);
     display: none;
+    width: max-content;
+    min-width: max-content;
     align-items: center;
+    flex-wrap: nowrap;
     gap: 8px;
     padding: 7px 12px;
     border-radius: 999px;
