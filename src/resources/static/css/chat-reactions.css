@@ -47,8 +47,7 @@
     left: auto;
 }
 
-.message-bubble:hover .reaction-trigger,
-.reaction-picker.open ~ .reaction-trigger {
+.message:hover .reaction-trigger {
     opacity: 1;
     transform: translateY(-50%) scale(1);
 }

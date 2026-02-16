@@ -429,7 +429,43 @@ function closeAllReactionPickers(exceptMessageId = null) {
             return;
         }
         picker.classList.remove('open');
+        picker.style.left = '';
+        picker.style.right = '';
+        picker.style.transform = '';
     });
+}
+
+function positionReactionPicker(picker) {
+    if (!picker) {
+        return;
+    }
+
+    const messageElement = picker.closest('.message');
+    const isOutgoing = messageElement && messageElement.classList.contains('message-outgoing');
+    const messagesContainer = picker.closest('.messages-container');
+
+    picker.style.left = isOutgoing ? 'auto' : 'calc(100% + 8px)';
+    picker.style.right = isOutgoing ? 'calc(100% + 8px)' : 'auto';
+    picker.style.transform = 'translate(0, -50%)';
+
+    const viewportPadding = 8;
+    const rect = picker.getBoundingClientRect();
+    const boundsRect = messagesContainer
+        ? messagesContainer.getBoundingClientRect()
+        : { left: 0, right: window.innerWidth };
+    const minLeft = Math.max(boundsRect.left + viewportPadding, viewportPadding);
+    const maxRight = Math.min(boundsRect.right - viewportPadding, window.innerWidth - viewportPadding);
+    let offsetX = 0;
+
+    if (rect.right > maxRight) {
+        offsetX -= rect.right - maxRight;
+    }
+
+    if (rect.left < minLeft) {
+        offsetX += minLeft - rect.left;
+    }
+
+    picker.style.transform = `translate(${offsetX}px, -50%)`;
 }
 
 function toggleReactionPicker(event, messageId) {
@@ -444,6 +480,10 @@ function toggleReactionPicker(event, messageId) {
     const willOpen = !picker.classList.contains('open');
     closeAllReactionPickers(messageId);
     picker.classList.toggle('open', willOpen);
+
+    if (willOpen) {
+        requestAnimationFrame(() => positionReactionPicker(picker));
+    }
 }
 
 function selectReaction(event, messageId, emoji) {
@@ -481,6 +521,10 @@ function formatTime(timestamp) {
 document.addEventListener('DOMContentLoaded', function () {
     document.addEventListener('click', function () {
         closeAllReactionPickers();
+    });
+
+    window.addEventListener('resize', function () {
+        document.querySelectorAll('.reaction-picker.open').forEach(positionReactionPicker);
     });
 
     // Get current user ID from backend API
