@@ -570,7 +570,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const lineHeight = parseFloat(computed.lineHeight) || 22;
         const borderHeight = (parseFloat(computed.borderTopWidth) || 0) + (parseFloat(computed.borderBottomWidth) || 0);
         const paddingHeight = (parseFloat(computed.paddingTop) || 0) + (parseFloat(computed.paddingBottom) || 0);
-        const minHeight = lineHeight + borderHeight + paddingHeight;
+        const cssMinHeight = parseFloat(computed.minHeight) || 0;
+        const minHeight = Math.max(cssMinHeight, lineHeight + borderHeight + paddingHeight);
         const maxHeight = (lineHeight * 5) + borderHeight + paddingHeight;
         const isEmpty = messageInput.value.trim().length === 0;
         const contentHeight = isEmpty ? minHeight : messageInput.scrollHeight;
