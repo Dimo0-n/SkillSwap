@@ -1310,8 +1310,10 @@ ol {
 	color: #ffffff;
 	font-family: "Space Grotesk", sans-serif;
 	text-transform: uppercase;
-	padding: 13px 15px 9px 30px;
-	display: inline-block;
+	padding: 12px 22px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
 	background: linear-gradient(135deg, #b66dff 0%, #8c48e8 100%);
 	-webkit-transform: skewX(-15deg);
 	-ms-transform: skewX(-15deg);
@@ -1322,6 +1324,7 @@ ol {
 	border-radius: 10px;
 	box-shadow: 0 8px 14px rgba(0, 0, 0, 0.2);
 	font-weight: 600;
+	line-height: 1;
 }
 
 .nav-options .nav-menu ul li a span {
