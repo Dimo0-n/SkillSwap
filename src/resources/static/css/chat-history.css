@@ -7,6 +7,10 @@
     background: var(--bg-dark);
 }
 
+.mobile-chat-header {
+    display: none;
+}
+
 .chat-history-container {
     display: flex;
     height: calc(100vh - 143px);
@@ -548,6 +552,15 @@
     transform: translateY(0);
 }
 
+.chat-sidebar.hidden,
+.chat-window.hidden {
+    display: none !important;
+}
+
+.mobile-chat-header.active {
+    display: flex;
+}
+
 /* Responsive Adjustments */
 @media (max-width: 992px) {
     .chat-sidebar {
@@ -561,22 +574,170 @@
 }
 
 @media (max-width: 768px) {
+    .chat-history-section {
+        padding-top: 0;
+        min-height: calc(100vh - 90px);
+    }
+
+    .chat-history-section .container-fluid,
+    .chat-history-section .row,
+    .chat-history-section .col-12 {
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: 0;
+        margin-right: 0;
+    }
+
     .chat-history-container {
         flex-direction: column;
-        height: auto;
+        width: 100%;
+        height: calc(100vh - 90px);
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
         max-height: none;
     }
-    
-    .chat-sidebar {
+
+    .chat-sidebar,
+    .chat-window {
         width: 100%;
         min-width: 100%;
-        height: 300px;
-        border-right: none;
-        border-bottom: 1px solid var(--border-muted);
+        height: 100%;
     }
-    
-    .chat-area {
-        height: 500px;
+
+    .chat-sidebar {
+        border-right: none;
+        border-bottom: none;
+    }
+
+    .chat-search-wrapper {
+        padding: 14px 14px 12px;
+    }
+
+    .conversation-item {
+        padding: 14px 14px;
+    }
+
+    .chat-window {
+        position: fixed;
+        top: calc(var(--navbar-mobile-height, 96px) + 64px);
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--bg-dark);
+        z-index: 12;
+    }
+
+    .chat-window .chat-header {
+        display: none;
+    }
+
+    .mobile-chat-header {
+        position: fixed;
+        top: var(--navbar-mobile-height, 96px);
+        left: 0;
+        right: 0;
+        height: 64px;
+        padding: 10px 12px;
+        display: none;
+        align-items: center;
+        gap: 10px;
+        background: var(--card-bg);
+        border-bottom: 1px solid var(--border-muted);
+        z-index: 13;
+    }
+
+    .back-btn {
+        width: 36px;
+        height: 36px;
+        border: none;
+        border-radius: 10px;
+        background: rgba(129, 42, 207, 0.16);
+        color: var(--text-primary);
+        font-size: 22px;
+        line-height: 1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        flex-shrink: 0;
+    }
+
+    .mobile-chat-header .chat-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--border-muted);
+        flex-shrink: 0;
+    }
+
+    .chat-user-info {
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .chat-name {
+        font-family: "Montserrat", sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-primary);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .chat-status {
+        font-family: "Montserrat", sans-serif;
+        font-size: 11px;
+        color: var(--text-secondary);
+    }
+
+    .chat-actions {
+        margin-left: auto;
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        color: var(--text-primary);
+        font-size: 16px;
+    }
+
+    .chat-actions i {
+        color: var(--text-primary);
+        opacity: 0.9;
+    }
+
+    .messages-container {
+        padding: 14px 12px 88px;
+    }
+
+    .message {
+        max-width: 75%;
+    }
+
+    .message-input-area {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+        border-top: 1px solid var(--border-muted);
+        z-index: 14;
+    }
+
+    .message-input-wrapper {
+        gap: 8px;
+    }
+
+    .message-input {
+        min-height: 44px;
+    }
+
+    .message-send-btn {
+        width: 44px;
+        height: 44px;
     }
 }
 

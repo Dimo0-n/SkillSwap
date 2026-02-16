@@ -77,6 +77,9 @@ function updateChatHeaderFromConversation(item) {
     const chatHeaderStatus = document.getElementById('chatHeaderStatus');
     const chatHeaderStatusText = document.getElementById('chatHeaderStatusText');
     const chatHeaderAvatar = document.getElementById('chatHeaderAvatar');
+    const mobileChatName = document.getElementById('mobileChatName');
+    const mobileChatStatus = document.getElementById('mobileChatStatus');
+    const mobileChatAvatar = document.getElementById('mobileChatAvatar');
 
     if (chatHeaderName) {
         chatHeaderName.textContent = userName;
@@ -85,6 +88,11 @@ function updateChatHeaderFromConversation(item) {
     if (chatHeaderAvatar) {
         chatHeaderAvatar.src = avatarUrl;
         chatHeaderAvatar.alt = userName;
+    }
+
+    if (mobileChatAvatar) {
+        mobileChatAvatar.src = avatarUrl;
+        mobileChatAvatar.alt = userName;
     }
 
     window.currentChatPartnerAvatar = avatarUrl;
@@ -101,6 +109,98 @@ function updateChatHeaderFromConversation(item) {
     if (chatHeaderStatusText) {
         chatHeaderStatusText.textContent = status === 'online' ? 'Online' : 'Offline';
     }
+
+    if (mobileChatName) {
+        mobileChatName.textContent = userName;
+    }
+
+    if (mobileChatStatus) {
+        mobileChatStatus.textContent = status === 'online' ? 'Online' : 'Offline';
+    }
+}
+
+function isMobileChatView() {
+    return window.matchMedia('(max-width: 768px)').matches;
+}
+
+function syncMobileNavbarOffset() {
+    const headerSection = document.querySelector('.header-section');
+    const headerHeight = headerSection ? Math.ceil(headerSection.getBoundingClientRect().height) : 96;
+    document.documentElement.style.setProperty('--navbar-mobile-height', `${headerHeight}px`);
+}
+
+function openChat(conversationId) {
+    const item = document.querySelector(`#conversationsList .conversation-item[data-conversation-id="${conversationId}"]`);
+    if (!item) {
+        return;
+    }
+
+    updateChatHeaderFromConversation(item);
+    loadChatRoom(conversationId);
+
+    if (!isMobileChatView()) {
+        return;
+    }
+
+    const chatSidebar = document.querySelector('.chat-sidebar');
+    const chatWindow = document.getElementById('chatWindow');
+    const mobileChatHeader = document.getElementById('mobileChatHeader');
+
+    if (chatSidebar) {
+        chatSidebar.classList.add('hidden');
+    }
+
+    if (chatWindow) {
+        chatWindow.classList.remove('hidden');
+        chatWindow.classList.add('active');
+    }
+
+    if (mobileChatHeader) {
+        mobileChatHeader.classList.add('active');
+    }
+}
+
+function goBackToList() {
+    if (!isMobileChatView()) {
+        return;
+    }
+
+    const chatSidebar = document.querySelector('.chat-sidebar');
+    const chatWindow = document.getElementById('chatWindow');
+    const mobileChatHeader = document.getElementById('mobileChatHeader');
+
+    if (chatSidebar) {
+        chatSidebar.classList.remove('hidden');
+    }
+
+    if (chatWindow) {
+        chatWindow.classList.add('hidden');
+        chatWindow.classList.remove('active');
+    }
+
+    if (mobileChatHeader) {
+        mobileChatHeader.classList.remove('active');
+    }
+}
+
+function syncChatViewForBreakpoint() {
+    const chatSidebar = document.querySelector('.chat-sidebar');
+    const chatWindow = document.getElementById('chatWindow');
+    const mobileChatHeader = document.getElementById('mobileChatHeader');
+
+    if (!chatSidebar || !chatWindow || !mobileChatHeader) {
+        return;
+    }
+
+    if (isMobileChatView()) {
+        if (!currentChatRoomId) {
+            goBackToList();
+        }
+    } else {
+        chatSidebar.classList.remove('hidden');
+        chatWindow.classList.remove('hidden');
+        mobileChatHeader.classList.remove('active');
+    }
 }
 
 function attachConversationHandlers() {
@@ -116,8 +216,7 @@ function attachConversationHandlers() {
         }
 
         const chatRoomId = item.dataset.conversationId;
-        updateChatHeaderFromConversation(item);
-        loadChatRoom(chatRoomId);
+        openChat(chatRoomId);
     });
 }
 
@@ -173,8 +272,16 @@ function loadConversations() {
             const initialItem = conversationsList.querySelector(`[data-conversation-id="${initialRoomId}"]`);
 
             if (initialItem) {
-                updateChatHeaderFromConversation(initialItem);
-                loadChatRoom(initialRoomId);
+                if (isMobileChatView()) {
+                    if (roomIdFromUrl) {
+                        openChat(initialRoomId);
+                    } else {
+                        updateChatHeaderFromConversation(initialItem);
+                        goBackToList();
+                    }
+                } else {
+                    openChat(initialRoomId);
+                }
             }
         })
         .catch(error => {
@@ -184,12 +291,22 @@ function loadConversations() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+    window.openChat = openChat;
+    window.goBackToList = goBackToList;
+
+    syncMobileNavbarOffset();
     clearDefaultMessages();
     attachConversationHandlers();
     attachConversationSearch();
 
+    window.addEventListener('resize', function () {
+        syncMobileNavbarOffset();
+        syncChatViewForBreakpoint();
+    });
+
     const readyPromise = window.currentUserReadyPromise || Promise.resolve(true);
     readyPromise.finally(() => {
         loadConversations();
+        syncChatViewForBreakpoint();
     });
 });

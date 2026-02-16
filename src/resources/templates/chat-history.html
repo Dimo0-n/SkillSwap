@@ -38,6 +38,20 @@
 
     <div th:replace="~{/fragments/navbar :: navbar}"></div>
 
+    <div class="mobile-chat-header" id="mobileChatHeader">
+        <button class="back-btn" type="button" onclick="goBackToList()" aria-label="Înapoi la conversații">←</button>
+        <img class="chat-avatar" id="mobileChatAvatar" src="/img/default-avatar.png" alt="User avatar">
+        <div class="chat-user-info">
+            <span class="chat-name" id="mobileChatName">Selectează o conversație</span>
+            <span class="chat-status" id="mobileChatStatus">Offline</span>
+        </div>
+        <div class="chat-actions">
+            <i class="fa fa-video-camera video-icon" aria-hidden="true"></i>
+            <i class="fa fa-phone phone-icon" aria-hidden="true"></i>
+            <i class="fa fa-ellipsis-v details-icon" aria-hidden="true"></i>
+        </div>
+    </div>
+
     <!-- Chat History Section Begin -->
     <section class="chat-history-section spad">
         <div class="container-fluid">
@@ -62,7 +76,7 @@
                         </div>
 
                         <!-- Chat Area -->
-                        <div class="chat-area">
+                        <div class="chat-area chat-window" id="chatWindow">
                             <!-- Chat Header -->
                             <div class="chat-header" id="chatHeader">
                                 <div class="chat-header-user">
