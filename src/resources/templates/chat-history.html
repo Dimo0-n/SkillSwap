@@ -60,9 +60,16 @@
             <button class="chat-action-btn call-action-btn" type="button" aria-label="Apelează">
                 <i class="fa fa-phone" aria-hidden="true"></i>
             </button>
-            <button class="chat-action-btn settings-action-btn" type="button" aria-label="Setări conversație">
-                <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-            </button>
+            <div class="chat-settings-wrapper">
+                <button class="chat-action-btn settings-action-btn" type="button" aria-label="Setări conversație" aria-expanded="false">
+                    <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                </button>
+                <div class="chat-settings-dropdown" role="menu" aria-label="Setări conversație">
+                    <button type="button" class="chat-settings-item" data-chat-action="mute" role="menuitem">Mute</button>
+                    <button type="button" class="chat-settings-item" data-chat-action="block" role="menuitem">Block</button>
+                    <button type="button" class="chat-settings-item" data-chat-action="report" role="menuitem">Report</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -108,9 +115,16 @@
                                     <button class="chat-action-btn call-action-btn" id="startCallButton" type="button" title="Apelează">
                                         <i class="fa fa-phone"></i>
                                     </button>
-                                    <button class="chat-action-btn settings-action-btn" type="button" title="Setări conversație" aria-label="Setări conversație">
-                                        <i class="fa fa-ellipsis-v"></i>
-                                    </button>
+                                    <div class="chat-settings-wrapper">
+                                        <button class="chat-action-btn settings-action-btn" type="button" title="Setări conversație" aria-label="Setări conversație" aria-expanded="false">
+                                            <i class="fa fa-ellipsis-v"></i>
+                                        </button>
+                                        <div class="chat-settings-dropdown" role="menu" aria-label="Setări conversație">
+                                            <button type="button" class="chat-settings-item" data-chat-action="mute" role="menuitem">Mute</button>
+                                            <button type="button" class="chat-settings-item" data-chat-action="block" role="menuitem">Block</button>
+                                            <button type="button" class="chat-settings-item" data-chat-action="report" role="menuitem">Report</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 

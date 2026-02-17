@@ -247,6 +247,90 @@ function clearDefaultMessages() {
     }
 }
 
+function closeAllChatSettingsDropdowns(exceptWrapper = null) {
+    document.querySelectorAll('.chat-settings-wrapper.is-open').forEach(wrapper => {
+        if (exceptWrapper && wrapper === exceptWrapper) {
+            return;
+        }
+
+        wrapper.classList.remove('is-open');
+        const trigger = wrapper.querySelector('.settings-action-btn');
+        if (trigger) {
+            trigger.setAttribute('aria-expanded', 'false');
+        }
+    });
+}
+
+function handleChatSettingsAction(action) {
+    const chatPartnerName = document.getElementById('chatHeaderName')?.textContent?.trim() || 'utilizator';
+
+    if (action === 'mute') {
+        window.alert(`Conversația cu ${chatPartnerName} a fost pusă pe mute.`);
+        return;
+    }
+
+    if (action === 'block') {
+        const confirmed = window.confirm(`Sigur vrei să blochezi utilizatorul ${chatPartnerName}?`);
+        if (confirmed) {
+            window.alert(`${chatPartnerName} a fost blocat.`);
+        }
+        return;
+    }
+
+    if (action === 'report') {
+        window.alert(`Conversația cu ${chatPartnerName} a fost raportată.`);
+    }
+}
+
+function attachChatSettingsDropdowns() {
+    const settingsWrappers = document.querySelectorAll('.chat-settings-wrapper');
+    if (!settingsWrappers.length) {
+        return;
+    }
+
+    settingsWrappers.forEach(wrapper => {
+        const trigger = wrapper.querySelector('.settings-action-btn');
+        const dropdown = wrapper.querySelector('.chat-settings-dropdown');
+        if (!trigger || !dropdown) {
+            return;
+        }
+
+        trigger.addEventListener('click', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            const willOpen = !wrapper.classList.contains('is-open');
+            closeAllChatSettingsDropdowns(wrapper);
+
+            wrapper.classList.toggle('is-open', willOpen);
+            trigger.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+        });
+
+        dropdown.addEventListener('click', function (event) {
+            const actionButton = event.target.closest('.chat-settings-item[data-chat-action]');
+            if (!actionButton) {
+                return;
+            }
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            handleChatSettingsAction(actionButton.dataset.chatAction);
+            closeAllChatSettingsDropdowns();
+        });
+    });
+
+    document.addEventListener('click', function () {
+        closeAllChatSettingsDropdowns();
+    });
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+            closeAllChatSettingsDropdowns();
+        }
+    });
+}
+
 function loadConversations() {
     const conversationsList = document.getElementById('conversationsList');
     if (!conversationsList) {
@@ -300,6 +384,7 @@ document.addEventListener('DOMContentLoaded', function () {
     clearDefaultMessages();
     attachConversationHandlers();
     attachConversationSearch();
+    attachChatSettingsDropdowns();
 
     window.addEventListener('resize', function () {
         syncMobileNavbarOffset();
