@@ -558,6 +558,31 @@ document.addEventListener('DOMContentLoaded', function () {
     // Handle message form submission
     const messageForm = document.getElementById('messageForm');
     const messageInput = document.getElementById('messageInput');
+    const messageInputArea = document.querySelector('.message-input-area');
+
+    function syncMobileComposerOffset() {
+        if (!messageInputArea) {
+            return;
+        }
+
+        const composerHeight = Math.ceil(messageInputArea.getBoundingClientRect().height);
+        if (composerHeight <= 0) {
+            return;
+        }
+        document.documentElement.style.setProperty('--chat-mobile-input-height', `${composerHeight}px`);
+    }
+
+    window.addEventListener('chat:window-opened', function () {
+        requestAnimationFrame(() => {
+            autoResizeMessageInput();
+            syncMobileComposerOffset();
+
+            const messagesContainer = document.getElementById('messagesContainer');
+            if (messagesContainer) {
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+        });
+    });
 
     function autoResizeMessageInput() {
         if (!messageInput) {
@@ -589,6 +614,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 sendMessage(content);
                 messageInput.value = '';
                 autoResizeMessageInput();
+                syncMobileComposerOffset();
                 sendTypingIndicator(false);
             }
         });
@@ -599,6 +625,7 @@ document.addEventListener('DOMContentLoaded', function () {
         let typingTimer;
         messageInput.addEventListener('input', function () {
             autoResizeMessageInput();
+            syncMobileComposerOffset();
 
             clearTimeout(typingTimer);
             sendTypingIndicator(true);
@@ -609,7 +636,9 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         autoResizeMessageInput();
+        syncMobileComposerOffset();
         window.addEventListener('resize', autoResizeMessageInput);
+        window.addEventListener('resize', syncMobileComposerOffset);
     }
 
     // Check if roomId is in URL (coming from announce-details)

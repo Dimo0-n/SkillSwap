@@ -158,6 +158,8 @@ function openChat(conversationId) {
     if (mobileChatHeader) {
         mobileChatHeader.classList.add('active');
     }
+
+    window.dispatchEvent(new Event('chat:window-opened'));
 }
 
 function goBackToList() {
