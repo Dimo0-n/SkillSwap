@@ -557,6 +557,10 @@
         gap: 24px;
     }
 
+    .preview-sidebar {
+        display: none;
+    }
+
     .input-grid {
         grid-template-columns: 1fr;
         gap: 16px;
