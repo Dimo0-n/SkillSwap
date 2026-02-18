@@ -4,6 +4,13 @@
     box-sizing: border-box;
 }
 
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
 body {
     font-family: 'Arial', sans-serif;
     background: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #533483 50%, #7b4397 75%, #dc2430 100%);
