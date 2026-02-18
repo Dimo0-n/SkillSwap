@@ -47,6 +47,8 @@ body::after {
     padding: 34px;
     width: 100%;
     max-width: 420px;
+    transform: translateY(-24px) scale(0.85);
+    transform-origin: center;
     position: relative;
     z-index: 10;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
@@ -315,6 +317,7 @@ body::after {
         margin: 0 16px;
         padding: 30px 22px;
         border-radius: 16px;
+        transform: scale(0.85);
     }
 
     .register-title {
