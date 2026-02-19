@@ -97,7 +97,8 @@ public class ChatWebSocketController {
         try {
             // Populate user info from principal
             if (principal != null) {
-                var user = chatService.getUserByEmail(principal.getName());
+                Long currentUserId = chatService.getCurrentUserId(principal);
+                var user = chatService.getUserById(currentUserId);
                 typingDTO.setUserId(user.getId());
                 typingDTO.setUserName(user.getFullName());
             }

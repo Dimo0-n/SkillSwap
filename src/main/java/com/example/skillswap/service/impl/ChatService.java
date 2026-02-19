@@ -10,11 +10,14 @@ import com.example.skillswap.repository.MessageReactionRepository;
 import com.example.skillswap.repository.MessageRepository;
 import com.example.skillswap.repository.ProfileRepository;
 import com.example.skillswap.repository.UserRepository;
+import com.example.skillswap.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,7 +55,8 @@ public class ChatService {
 
     @Transactional
     public ChatMessageDTO sendMessage(ChatMessageDTO dto, Principal principal) {
-        User sender = userRepository.findByEmail(principal.getName())
+                Long currentUserId = extractCurrentUserId(principal);
+                User sender = userRepository.findById(currentUserId)
                 .orElseThrow(() -> new RuntimeException("Sender not found"));
 
         ChatRoom chatRoom = chatRoomRepository.findById(dto.getChatRoomId())
@@ -82,7 +86,8 @@ public class ChatService {
 
     @Transactional
     public void markAsSeen(Long messageId, Principal principal) {
-        User user = userRepository.findByEmail(principal.getName())
+                Long currentUserId = extractCurrentUserId(principal);
+                User user = userRepository.findById(currentUserId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         Message message = messageRepository.findById(messageId)
@@ -96,7 +101,8 @@ public class ChatService {
 
     @Transactional
     public MessageReactionDTO addReaction(MessageReactionDTO dto, Principal principal) {
-        User user = userRepository.findByEmail(principal.getName())
+                Long currentUserId = extractCurrentUserId(principal);
+                User user = userRepository.findById(currentUserId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         Message message = messageRepository.findById(dto.getMessageId())
@@ -120,7 +126,8 @@ public class ChatService {
 
     @Transactional
     public MessageReactionDTO removeReaction(MessageReactionDTO dto, Principal principal) {
-        User user = userRepository.findByEmail(principal.getName())
+                Long currentUserId = extractCurrentUserId(principal);
+                User user = userRepository.findById(currentUserId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         Message message = messageRepository.findById(dto.getMessageId())
@@ -140,7 +147,8 @@ public class ChatService {
 
     @Transactional(readOnly = true)
     public List<ChatMessageDTO> getChatHistory(Long chatRoomId, Principal principal, int page, int size) {
-        User user = userRepository.findByEmail(principal.getName())
+                Long currentUserId = extractCurrentUserId(principal);
+                User user = userRepository.findById(currentUserId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
@@ -167,14 +175,16 @@ public class ChatService {
 
     @Transactional(readOnly = true)
     public List<ChatRoom> getUserChatRooms(Principal principal) {
-        User user = userRepository.findByEmail(principal.getName())
+                Long currentUserId = extractCurrentUserId(principal);
+                User user = userRepository.findById(currentUserId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         return chatRoomRepository.findAllByUser(user);
     }
 
     @Transactional(readOnly = true)
     public List<ConversationSummaryDTO> getConversationSummaries(Principal principal) {
-        User currentUser = userRepository.findByEmail(principal.getName())
+                Long currentUserId = extractCurrentUserId(principal);
+                User currentUser = userRepository.findById(currentUserId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         List<ChatRoom> chatRooms = chatRoomRepository.findAllByUser(currentUser);
@@ -207,11 +217,37 @@ public class ChatService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
-    public User getUserByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-    }
+        @Transactional(readOnly = true)
+        public User getUserById(Long userId) {
+                return userRepository.findById(userId)
+                                .orElseThrow(() -> new RuntimeException("User not found"));
+        }
+
+        @Transactional(readOnly = true)
+        public Long getCurrentUserId(Principal principal) {
+                return extractCurrentUserId(principal);
+        }
+
+        private Long extractCurrentUserId(Principal principal) {
+                if (!(principal instanceof Authentication authentication)) {
+                        throw new RuntimeException("User not authenticated");
+                }
+
+                Object authPrincipal = authentication.getPrincipal();
+
+                if (authPrincipal instanceof CustomUserDetails customUserDetails) {
+                        return customUserDetails.getId();
+                }
+
+                if (authPrincipal instanceof OAuth2User oauth2User) {
+                        Object userId = oauth2User.getAttribute("userId");
+                        if (userId instanceof Number number) {
+                                return number.longValue();
+                        }
+                }
+
+                throw new RuntimeException("Unable to resolve current user id");
+        }
 
     private ChatMessageDTO convertToDTO(Message message, Long currentUserId) {
         ChatMessageDTO dto = new ChatMessageDTO();

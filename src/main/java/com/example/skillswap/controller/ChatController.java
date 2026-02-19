@@ -3,7 +3,6 @@ package com.example.skillswap.controller;
 import com.example.skillswap.dto.ChatMessageDTO;
 import com.example.skillswap.dto.ConversationSummaryDTO;
 import com.example.skillswap.entity.ChatRoom;
-import com.example.skillswap.entity.User;
 import com.example.skillswap.service.impl.ChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -98,10 +97,6 @@ public class ChatController {
 
     // Helper method to get current user ID from Principal
     private Long getCurrentUserId(Principal principal) {
-        if (principal == null) {
-            throw new RuntimeException("User not authenticated");
-        }
-        User user = chatService.getUserByEmail(principal.getName());
-        return user.getId();
+        return chatService.getCurrentUserId(principal);
     }
 }
