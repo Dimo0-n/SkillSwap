@@ -15,6 +15,8 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 @Service
@@ -37,11 +39,14 @@ public class CustomOAuth2UserService
         User user = userRepository.findByEmail(email)
             .orElseGet(() -> registerNewUser(email, name));
 
+        Map<String, Object> attributes = new HashMap<>(oauthUser.getAttributes());
+        attributes.put("userId", user.getId());
+
         return new DefaultOAuth2User(
                 user.getRoles().stream()
                         .map(r -> new SimpleGrantedAuthority(r.getName()))
                         .toList(),
-                oauthUser.getAttributes(),
+            attributes,
                 "email"
         );
     }

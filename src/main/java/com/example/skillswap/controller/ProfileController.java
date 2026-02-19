@@ -2,7 +2,6 @@ package com.example.skillswap.controller;
 
 import com.example.skillswap.dto.ProfilDto;
 import com.example.skillswap.entity.Announce;
-import com.example.skillswap.entity.User;
 import com.example.skillswap.security.CustomUserDetails;
 import com.example.skillswap.service.AnnounceService;
 import com.example.skillswap.service.ProfileService;
@@ -12,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +21,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URLConnection;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @Controller
 @RequestMapping("/profile")
@@ -115,10 +114,11 @@ public class ProfileController {
     @GetMapping("/user-announces-list")
     public String userAnnouncesList(Authentication auth, Model model) {
 
-        CustomUserDetails cud = (CustomUserDetails) auth.getPrincipal();
-        Long userId = cud.getId();
+        if (auth == null) {
+            return "redirect:/login";
+        }
 
-        System.out.println(userId);
+        Long userId = extractCurrentUserId(auth);
 
         List<Announce> announcesList = announceService.getAnnouncesListByEmail(userId);
         model.addAttribute("announcesList", announcesList);
@@ -132,6 +132,23 @@ public class ProfileController {
     public String deleteAnnounceById(@PathVariable Long id) {
         announceService.deleteAnnounceById(id);
         return "redirect:/profile/user-announces-list";
+    }
+
+    private Long extractCurrentUserId(Authentication auth) {
+        Object principal = auth.getPrincipal();
+
+        if (principal instanceof CustomUserDetails customUserDetails) {
+            return customUserDetails.getId();
+        }
+
+        if (principal instanceof OAuth2User oauth2User) {
+            Object userId = oauth2User.getAttribute("userId");
+            if (userId instanceof Number number) {
+                return number.longValue();
+            }
+        }
+
+        throw new RuntimeException("Unable to resolve current user id");
     }
 
 }
