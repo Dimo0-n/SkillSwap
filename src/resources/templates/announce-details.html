@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ro">
+<html lang="ro" xmlns:th="http://www.thymeleaf.org" th:attr="lang=${#locale.language}">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SkillSwap – Detalii anunț</title>
+    <title th:text="#{announce.details.title}">SkillSwap – Detalii anunț</title>
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800,900&display=swap"
         rel="stylesheet">
@@ -54,11 +54,11 @@
                             <div class="announce-section-icon">
                                 <i class="fa fa-file-text"></i>
                             </div>
-                            <h2 class="announce-section-title">Detalii principale</h2>
+                            <h2 class="announce-section-title" th:text="#{announce.details.main}">Detalii principale</h2>
                         </div>
 
                         <div class="announce-detail-item">
-                            <label class="announce-detail-label">Descriere detaliată</label>
+                            <label class="announce-detail-label" th:text="#{announce.details.description}">Descriere detaliată</label>
                             <div class="announce-detail-content description-text">
                                 <p th:text="${announce.description}"></p>
                             </div>
@@ -71,12 +71,12 @@
                             <div class="announce-section-icon">
                                 <i class="fa fa-exchange"></i>
                             </div>
-                            <h2 class="announce-section-title">Ce oferți și ce căuți</h2>
+                            <h2 class="announce-section-title" th:text="#{announce.details.exchange}">Ce oferți și ce căuți</h2>
                         </div>
 
                         <div class="category-highlight-zone">
                             <div class="category-mini-card offer">
-                                <div class="category-mini-label">Ofer</div>
+                                <div class="category-mini-label" th:text="#{announce.details.offer}">Ofer</div>
                                 <div class="category-mini-value">
                                     <i class="fa fa-star"></i>
                                     <span th:text="${announce.categoryOffered}"></span>
@@ -84,7 +84,7 @@
                             </div>
 
                             <div class="category-mini-card seek">
-                                <div class="category-mini-label">Caut</div>
+                                <div class="category-mini-label" th:text="#{announce.details.seek}">Caut</div>
                                 <div class="category-mini-value">
                                     <i class="fa fa-search"></i>
                                     <span th:text="${announce.categoryRequired}"></span>
@@ -94,11 +94,11 @@
 
                         <div class="announce-secondary-meta">
                             <div class="announce-secondary-meta-item">
-                                <span class="announce-secondary-meta-label">Autor</span>
+                                <span class="announce-secondary-meta-label" th:text="#{announce.details.author}">Autor</span>
                                 <span class="announce-secondary-meta-value" th:text="${announce.author}"></span>
                             </div>
                             <div class="announce-secondary-meta-item" th:if="${announce.additionalInfo != null and !#strings.isEmpty(announce.additionalInfo)}">
-                                <span class="announce-secondary-meta-label">Notă</span>
+                                <span class="announce-secondary-meta-label" th:text="#{announce.details.note}">Notă</span>
                                 <span class="announce-secondary-meta-value" th:text="${announce.additionalInfo}"></span>
                             </div>
                         </div>
@@ -121,21 +121,21 @@
                                 <i class="fa fa-star"></i>
                                 <i class="fa fa-star"></i>
                             </div>
-                            <span class="announce-rating-text">4.8 (12 evaluări)</span>
+                            <span class="announce-rating-text" th:text="#{announce.details.rating}">4.8 (12 evaluări)</span>
                         </div>
 
                         <div class="announce-user-status">
                             <i class="fa fa-circle"></i>
-                            <span>Activ recent</span>
+                            <span th:text="#{announce.details.active}">Activ recent</span>
                         </div>
 
                         <div class="announce-user-meta">
                             <div class="announce-user-meta-item">
-                                <span class="announce-user-meta-label">Răspunde de obicei în</span>
+                                <span class="announce-user-meta-label" th:text="#{announce.details.responds}">Răspunde de obicei în</span>
                                 <span class="announce-user-meta-value">2-4 ore</span>
                             </div>
                             <div class="announce-user-meta-item">
-                                <span class="announce-user-meta-label">Schimburi finalizate</span>
+                                <span class="announce-user-meta-label" th:text="#{announce.details.swaps}">Schimburi finalizate</span>
                                 <span class="announce-user-meta-value">8</span>
                             </div>
                         </div>
@@ -146,11 +146,11 @@
                         <button class="announce-btn announce-btn-primary" id="sendMessageBtn"
                                 th:attr="data-author-id=${announce.userId}">
                             <i class="fa fa-envelope"></i>
-                            <span>Trimite mesaj</span>
+                            <span th:text="#{announce.details.send}">Trimite mesaj</span>
                         </button>
                         <button class="announce-btn announce-btn-secondary" id="proposeSwapBtn">
                             <i class="fa fa-handshake-o"></i>
-                            <span>Propune schimb</span>
+                            <span th:text="#{announce.details.propose}">Propune schimb</span>
                         </button>
                         <button class="announce-btn announce-btn-icon" id="saveBtn">
                             <i class="fa fa-bookmark-o"></i>
@@ -163,7 +163,10 @@
 
     <div th:replace="~{/fragments/about :: about}"></div>
 
-    <script>
+    <script th:inline="javascript">
+        const msgNoAuthor = [[#{announce.details.error.noauthor}]];
+        const msgCreateChat = [[#{announce.details.error.createchat}]];
+
         console.log('Script started loading...');
 
         document.addEventListener('DOMContentLoaded', function () {
@@ -188,7 +191,7 @@
                     console.log('Author ID:', announceAuthorId);
 
                     if (!announceAuthorId) {
-                        alert('Eroare: ID-ul autorului nu este disponibil.');
+                        alert(msgNoAuthor);
                         return;
                     }
 
@@ -212,12 +215,12 @@
                                 console.log('Redirecting to:', redirectUrl);
                                 window.location.href = redirectUrl;
                             } else {
-                                alert('Eroare: ' + (data.error || 'Unknown error'));
+                                alert(msgCreateChat + ' ' + (data.error || 'Unknown error'));
                             }
                         })
                         .catch(error => {
                             console.error('Fetch error:', error);
-                            alert('Eroare la crearea conversației: ' + error.message);
+                            alert(msgCreateChat + ' ' + error.message);
                         });
                 });
             } else {

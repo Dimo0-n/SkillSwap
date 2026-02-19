@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zxx">
+<html lang="ro" xmlns:th="http://www.thymeleaf.org" th:attr="lang=${#locale.language}">
 
 <head>
     <meta charset="UTF-8">
@@ -43,8 +43,8 @@
                 <div class="col-lg-12">
                     <div class="text-404">
                         <h1>404</h1>
-                        <h3>Opps! Aici e nimic.</h3>
-                        <p>Sorry pagina pe care o cauți nu există.</p>
+                        <h3 th:text="#{error.404.title}">Opps! Aici e nimic.</h3>
+                        <p th:text="#{error.404.message}">Sorry pagina pe care o cauți nu există.</p>
                     </div>
                 </div>
             </div>

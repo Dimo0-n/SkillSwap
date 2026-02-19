@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zxx">
+<html lang="ro" xmlns:th="http://www.thymeleaf.org" th:attr="lang=${#locale.language}">
 
 <head>
     <meta charset="UTF-8">
@@ -42,7 +42,7 @@
         <div class="row mb-4">
             <div class="col-12">
                 <div class="section-title">
-                    <h5>Hai cu un nou skill. Cauta chiar aici</h5>
+                    <h5 th:text="#{announces.list.title}">Hai cu un nou skill. Cauta chiar aici</h5>
                 </div>
                 <div class="main-search-bar">
                     <form id="announces-main-search" class="main-search-form" th:action="@{/announces-list}" method="get">
@@ -52,10 +52,10 @@
                                    id="skill-search"
                                    name="query"
                                    class="main-search-field"
-                                   placeholder="Cauta un skill sau un anunt"
-                                   aria-label="Cauta un anunt">
+                                   th:attr="placeholder=#{announces.list.placeholder}"
+                                   th:attrappend="aria-label=#{announces.list.placeholder}">
                             <button type="submit" class="main-search-submit">
-                                <span>Cauta</span>
+                                <span th:text="#{announces.list.search}">Cauta</span>
                             </button>
                         </div>
                     </form>
@@ -74,7 +74,7 @@
                         <div class="cg-text">
                             <h5><a th:text="${announce.title}" href="#"></a></h5>
                             <ul>
-                                <li>by <span th:text="${announce.author}"></span></li>
+                                <li><span th:text="#{index.by}">de</span> <span th:text="${announce.author}"></span></li>
                                 <li>
                                     <i class="fa fa-clock-o"></i>
                                     <span th:text="${#temporals.format(announce.date, 'dd MMMM HH:mm')}"></span>

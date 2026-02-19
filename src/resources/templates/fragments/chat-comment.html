@@ -8,7 +8,7 @@
 
 <div th:fragment="comment">
     <div class="dt-comment">
-        <h4>3 comment</h4>
+        <h4 th:text="#{chat.comment.count}">3 comment</h4>
         <div class="dc-item">
             <div class="dc-pic">
                 <img src="/img/details/comment/comment-1.jpg" alt="">
@@ -19,7 +19,7 @@
                 <p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur,
                     adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et
                     dolore magnam.</p>
-                <a href="#" class="reply-btn"><span>Reply</span></a>
+                <a href="#" class="reply-btn"><span th:text="#{chat.comment.reply}">Reply</span></a>
             </div>
         </div>
         <div class="dc-item reply-item">
@@ -32,7 +32,7 @@
                 <p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur,
                     adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et
                     dolore magnam.</p>
-                <a href="#" class="reply-btn"><span>Reply</span></a>
+                <a href="#" class="reply-btn"><span th:text="#{chat.comment.reply}">Reply</span></a>
             </div>
         </div>
         <div class="dc-item">
@@ -45,15 +45,15 @@
                 <p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur,
                     adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et
                     dolore magnam.</p>
-                <a href="#" class="reply-btn"><span>Reply</span></a>
+                <a href="#" class="reply-btn"><span th:text="#{chat.comment.reply}">Reply</span></a>
             </div>
         </div>
     </div>
     <div class="dt-leave-comment">
-        <h4>Leave a comment</h4>
+        <h4 th:text="#{chat.comment.leave}">Leave a comment</h4>
         <form action="#">
-            <textarea placeholder="Message"></textarea>
-            <button type="submit">Submit</button>
+            <textarea th:attr="placeholder=#{chat.comment.message}"></textarea>
+            <button type="submit" th:text="#{chat.comment.submit}">Submit</button>
         </form>
     </div>
 </div>

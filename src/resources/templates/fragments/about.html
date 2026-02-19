@@ -17,9 +17,7 @@
                         <div class="fa-logo">
                             <a href="#"><img src="/img/skill-swap-logo-cameleon.png" alt="Skill Swap Logo" style="width:458px;height:115px;max-width:100%;"></a>
                         </div>
-                        <p>Skill Swap este comunitatea unde oamenii fac schimb de cunoștințe și abilități.
-                            Învață ceva nou sau ajută pe altcineva să crească, fără bătăi de cap.
-                            Împreună facem schimbul de skill-uri mai valoros decât banii.</p>
+                        <p th:text="#{about.description}">Skill Swap este comunitatea unde oamenii fac schimb de cunoștințe și abilități.</p>
                         <div class="fa-social">
                             <a href="#"><i class="fa fa-facebook"></i></a>
                             <a href="#"><i class="fa fa-twitter"></i></a>
@@ -33,14 +31,14 @@
                 <div class="col-lg-4 col-md-6">
                     <div class="editor-choice">
                         <div class="section-title">
-                            <h5>Păreri</h5>
+                            <h5 th:text="#{about.feedback}">Păreri</h5>
                         </div>
                         <div class="ec-item">
                             <div class="ec-pic">
                                 <img src="/img/skill/editor-1.jpg" alt="">
                             </div>
                             <div class="ec-text">
-                                <h6><a href="#">Schimbul de skill-uri chiar funcționează! Am învățat Photoshop fără să dau un leu.</a>
+                                <h6><a href="#" th:text="#{about.feedback.1}">Schimbul de skill-uri chiar funcționează! Am învățat Photoshop fără să dau un leu.</a>
                                 </h6>
                                 <ul>
                                     <li><i class="fa fa-clock-o"></i>11 August 2025</li>
@@ -52,7 +50,7 @@
                                 <img src="/img/skill/editor-2.jpg" alt="">
                             </div>
                             <div class="ec-text">
-                                <h6><a href="#">Mulțumesc pentru lecțiile de Java, mi-au prins mai bine decât 3 cafele.</a>
+                                <h6><a href="#" th:text="#{about.feedback.2}">Mulțumesc pentru lecțiile de Java, mi-au prins mai bine decât 3 cafele.</a>
                                 </h6>
                                 <ul>
                                     <li><i class="fa fa-clock-o"></i>10 August 2025</li>
@@ -66,20 +64,20 @@
                 <div class="col-lg-4 col-md-6">
                     <div class="tags-cloud">
                         <div class="section-title">
-                            <h5>Categorii populare</h5>
+                            <h5 th:text="#{about.popular}">Categorii populare</h5>
                         </div>
                         <div class="tag-list">
-                            <a href="#"><span>Programare</span></a>
-                            <a href="#"><span>Design</span></a>
-                            <a href="#"><span>Fotografie</span></a>
-                            <a href="#"><span>Scriere</span></a>
-                            <a href="#"><span>Marketing</span></a>
-                            <a href="#"><span>Limbi străine</span></a>
-                            <a href="#"><span>Business</span></a>
-                            <a href="#"><span>Coaching</span></a>
-                            <a href="#"><span>DIY</span></a>
-                            <a href="#"><span>Artă</span></a>
-                            <a href="#"><span>Muzică</span></a>
+                            <a href="#"><span th:text="#{about.cat.programming}">Programare</span></a>
+                            <a href="#"><span th:text="#{about.cat.design}">Design</span></a>
+                            <a href="#"><span th:text="#{about.cat.photography}">Fotografie</span></a>
+                            <a href="#"><span th:text="#{about.cat.writing}">Scriere</span></a>
+                            <a href="#"><span th:text="#{about.cat.marketing}">Marketing</span></a>
+                            <a href="#"><span th:text="#{about.cat.languages}">Limbi străine</span></a>
+                            <a href="#"><span th:text="#{about.cat.business}">Business</span></a>
+                            <a href="#"><span th:text="#{about.cat.coaching}">Coaching</span></a>
+                            <a href="#"><span th:text="#{about.cat.diy}">DIY</span></a>
+                            <a href="#"><span th:text="#{about.cat.art}">Artă</span></a>
+                            <a href="#"><span th:text="#{about.cat.music}">Muzică</span></a>
                         </div>
                     </div>
                 </div>
@@ -92,15 +90,15 @@
                         <div class="ca-text">
                             <p>
                                 Copyright &copy;<script>document.write(new Date().getFullYear());</script>
-                                Skill Swap 💜 | Toate drepturile rezervate
+                                Skill Swap 💜 | <span th:text="#{about.copyright}">Toate drepturile rezervate</span>
                             </p>
                         </div>
                     </div>
                     <div class="col-lg-6">
                         <div class="ca-links">
-                            <a href="#">Despre noi</a>
-                            <a href="#">Înscrie-te</a>
-                            <a href="#">Contact</a>
+                            <a href="#" th:text="#{about.link.about}">Despre noi</a>
+                            <a href="#" th:text="#{about.link.signup}">Înscrie-te</a>
+                            <a href="#" th:text="#{about.link.contact}">Contact</a>
                         </div>
                     </div>
                 </div>

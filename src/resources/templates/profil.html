@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="ro" xmlns:th="http://www.thymeleaf.org">
+<html lang="ro" xmlns:th="http://www.thymeleaf.org" th:attr="lang=${#locale.language}">
 
 <head>
     <meta charset="UTF-8">
@@ -44,14 +44,14 @@
                     <a th:href="@{/profile/user-announces-list}">
                         <button class="btn-profile-edit">
                             <i class="fa fa-list"></i>
-                            <span>Anunturile mele</span>
+                            <span th:text="#{profile.my.announces}">Anunturile mele</span>
                         </button>
                     </a>
 
                     <a th:href="@{/profile/complete}">
                         <button class="btn-profile-edit">
                             <i class="fa fa-pencil"></i>
-                            <span>Edit</span>
+                            <span th:text="#{profile.edit}">Edit</span>
                         </button>
                     </a>
                 </div>
@@ -137,13 +137,11 @@
                 <div class="col-lg-8 p-0">
                     <div class="details-text">
                         <div class="dt-desc">
-                            <h4>Descriere completă</h4>
+                            <h4 th:text="#{profile.full.description}">Descriere completă</h4>
                             <p th:if="${!#strings.isEmpty(profile.completeDescription)}"
                                th:text="${profile.completeDescription}"
                                style="white-space: pre-line;"></p>
-                            <p th:if="${#strings.isEmpty(profile.completeDescription)}">
-                                Utilizatorul nu a adăugat încă o descriere detaliată.
-                            </p>
+                            <p th:if="${#strings.isEmpty(profile.completeDescription)}" th:text="#{profile.full.description.empty}">Utilizatorul nu a adăugat încă o descriere detaliată.</p>
                         </div>
                         <!-- secțiunea de rating păstrată neschimbată -->
                         <div class="dt-overall-rating">
@@ -162,7 +160,7 @@
                                         </div>
                                     </div>
                                     <div class="or-text">
-                                        <h5>Overall rating</h5>
+                                        <h5 th:text="#{profile.overall.rating}">Overall rating</h5>
                                         <p>Holistic content e-tailers niches proactive blogospheres Cluetrain,
                                             interfaces eyeballs, engage, e-business! Semantic–utilize mindshare, B2C
                                             viral technologies functionalities intuitive real-time. Generate global
@@ -174,7 +172,7 @@
                             </div>
                             <div class="or-qualities">
                                 <div class="qualities-item">
-                                    <p>Puncte forte</p>
+                                    <p th:text="#{profile.strengths}">Puncte forte</p>
                                     <ul>
                                         <li th:each="strength : ${profile.strengthsDisplayList}">
                                             <i class="fa fa-check"></i>
@@ -182,12 +180,12 @@
                                         </li>
                                         <li th:if="${#lists.isEmpty(profile.strengthsDisplayList)}">
                                             <i class="fa fa-minus"></i>
-                                            <span>Nu au fost adăugate puncte forte.</span>
+                                            <span th:text="#{profile.strengths.empty}">Nu au fost adăugate puncte forte.</span>
                                         </li>
                                     </ul>
                                 </div>
                                 <div class="qualities-item bad-item">
-                                    <p>Limitări</p>
+                                    <p th:text="#{profile.limits}">Limitări</p>
                                     <ul>
                                         <li th:each="limit : ${profile.limitsList}">
                                             <i class="fa fa-close"></i>
@@ -195,7 +193,7 @@
                                         </li>
                                         <li th:if="${#lists.isEmpty(profile.limitsList)}">
                                             <i class="fa fa-minus"></i>
-                                            <span>Nu sunt specificate limitări.</span>
+                                            <span th:text="#{profile.limits.empty}">Nu sunt specificate limitări.</span>
                                         </li>
                                     </ul>
                                 </div>
@@ -206,12 +204,12 @@
                                 <span th:text="${skill}">Skill</span>
                             </a>
                             <span th:if="${#lists.isEmpty(profile.competenceList)}">
-                                Adaugă competențe pentru a fi afișate aici.
+                                <span th:text="#{profile.skills.empty}">Adaugă competențe pentru a fi afișate aici.</span>
                             </span>
                         </div>
 <!--                        share profil page-->
                         <div class="dt-share">
-                            <div class="ds-title">Share</div>
+                            <div class="ds-title" th:text="#{profile.share}">Share</div>
                             <div class="ds-links">
                                 <a href="#" class="wide"><i class="fa fa-heart-o"></i><span>120</span></a>
                                 <a href="#"><i class="fa fa-facebook"></i></a>
@@ -222,7 +220,7 @@
                             </div>
                         </div>
                         <div class="dt-comment">
-                            <h4>Feedback-uri</h4>
+                            <h4 th:text="#{profile.feedback}">Feedback-uri</h4>
                             <div class="dc-item">
                                 <div class="dc-pic">
                                     <img src="/img/details/comment/comment-1.jpg" alt="">
@@ -251,10 +249,10 @@
                             </div>
                         </div>
                         <div class="dt-leave-comment">
-                            <h4>LASĂ UN COMENTARIU</h4>
+                            <h4 th:text="#{profile.leave.comment}">LASĂ UN COMENTARIU</h4>
                             <form action="#">
-                                <textarea placeholder="Message"></textarea>
-                                <button type="submit">Trimite</button>
+                                <textarea th:attr="placeholder=#{profile.message.placeholder}"></textarea>
+                                <button type="submit" th:text="#{profile.send}">Trimite</button>
                             </form>
                         </div>
                     </div>
@@ -284,7 +282,7 @@
         <div class="h-100 d-flex align-items-center justify-content-center">
             <div class="search-close-switch">+</div>
             <form class="search-model-form">
-                <input type="text" id="search-input" placeholder="Search here.....">
+                <input type="text" id="search-input" th:attr="placeholder=#{common.search.placeholder}">
             </form>
         </div>
     </div>

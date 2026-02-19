@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="ro">
+<html lang="ro" xmlns:th="http://www.thymeleaf.org" th:attr="lang=${#locale.language}">
 <head>
     <meta charset="UTF-8">
     <meta name="description" content="SkillSwap Create Announce">
     <meta name="keywords" content="SkillSwap, announce, create, form">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>SkillSwap | Creează anunț</title>
+    <title th:text="#{announce.create.page.title}">SkillSwap | Creează anunț</title>
 
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800,900&display=swap"
@@ -42,28 +42,28 @@
                         <div class="section-icon">
                             <i class="fa fa-file-text"></i>
                         </div>
-                        <h2 class="section-title-announce-create text-white">Detalii principale</h2>
+                        <h2 class="section-title-announce-create text-white" th:text="#{announce.create.main}">Detalii principale</h2>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">Titlul anunțului</label>
+                        <label class="form-label" th:text="#{announce.create.title.label}">Titlul anunțului</label>
                         <div class="input-wrapper">
-                            <input th:field="*{title}" type="text" id="announce-title" class="form-input" placeholder="Ex: Predau programare Python în schimbul lecții de chitară">
+                            <input th:field="*{title}" type="text" id="announce-title" class="form-input" th:attr="placeholder=#{announce.create.title.placeholder}">
                         </div>
                         <div class="form-hint">
                             <i class="fa fa-lightbulb-o"></i>
-                            <span>Un titlu clar și descriptiv ajută utilizatorii să înțeleagă rapid oferta ta</span>
+                            <span th:text="#{announce.create.title.hint}">Un titlu clar și descriptiv ajută utilizatorii să înțeleagă rapid oferta ta</span>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">Descriere detaliată</label>
+                        <label class="form-label" th:text="#{announce.create.description.label}">Descriere detaliată</label>
                         <div class="input-wrapper">
-                            <textarea th:field="*{description}" id="announce-description" class="form-textarea" placeholder="Descrie experiența ta, nivelul pe care îl predai și ce anume cauți în schimb..."></textarea>
+                            <textarea th:field="*{description}" id="announce-description" class="form-textarea" th:attr="placeholder=#{announce.create.description.placeholder}"></textarea>
                         </div>
                         <div class="form-hint">
                             <i class="fa fa-info-circle"></i>
-                            <span>Adaugă detalii despre experiența ta și așteptări</span>
+                            <span th:text="#{announce.create.description.hint}">Adaugă detalii despre experiența ta și așteptări</span>
                         </div>
                     </div>
                 </div>
@@ -74,38 +74,38 @@
                         <div class="section-icon">
                             <i class="fa fa-exchange"></i>
                         </div>
-                        <h2 class="section-title-announce-create text-white">Ce oferți și ce cauți</h2>
+                        <h2 class="section-title-announce-create text-white" th:text="#{announce.create.exchange}">Ce oferți și ce cauți</h2>
                     </div>
 
                     <div class="input-grid">
                         <div class="form-group">
-                            <label class="form-label">Categoria oferită</label>
-                            <input th:field="*{categoryOffered}" type="text" id="category-offer" class="form-input" placeholder="Ex: Programare">
+                            <label class="form-label" th:text="#{announce.create.category.offer}">Categoria oferită</label>
+                            <input th:field="*{categoryOffered}" type="text" id="category-offer" class="form-input" th:attr="placeholder=#{announce.create.category.offer.placeholder}">
                             <div class="form-hint">
                                 <i class="fa fa-star"></i>
-                                <span>Skill-ul pe care îl oferi</span>
+                                <span th:text="#{announce.create.category.offer.hint}">Skill-ul pe care îl oferi</span>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">Categoria căutată</label>
-                            <input th:field="*{categoryRequired}" type="text" id="category-want" class="form-input" placeholder="Ex: Chitară">
+                            <label class="form-label" th:text="#{announce.create.category.seek}">Categoria căutată</label>
+                            <input th:field="*{categoryRequired}" type="text" id="category-want" class="form-input" th:attr="placeholder=#{announce.create.category.seek.placeholder}">
                             <div class="form-hint">
                                 <i class="fa fa-search"></i>
-                                <span>Skill-ul pe care îl dorești</span>
+                                <span th:text="#{announce.create.category.seek.hint}">Skill-ul pe care îl dorești</span>
                             </div>
                         </div>
                     </div>
 
                     <div class="input-grid">
                         <div class="form-group">
-                            <label class="form-label">Nume autor</label>
-                            <input th:field="*{author}" type="text" id="author-name" class="form-input" placeholder="Numele tău">
+                            <label class="form-label" th:text="#{announce.create.author}">Nume autor</label>
+                            <input th:field="*{author}" type="text" id="author-name" class="form-input" th:attr="placeholder=#{announce.create.author.placeholder}">
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">Notă secundară (opțional)</label>
-                            <input th:field="*{additionalInfo}" type="text" id="secondary-note" class="form-input" placeholder="Detalii suplimentare">
+                            <label class="form-label" th:text="#{announce.create.note}">Notă secundară (opțional)</label>
+                            <input th:field="*{additionalInfo}" type="text" id="secondary-note" class="form-input" th:attr="placeholder=#{announce.create.note.placeholder}">
                         </div>
                     </div>
                 </div>
@@ -116,7 +116,7 @@
                         <div class="section-icon">
                             <i class="fa fa-image"></i>
                         </div>
-                        <h2 class="section-title-announce-create text-white">Imaginea anunțului</h2>
+                        <h2 class="section-title-announce-create text-white" th:text="#{announce.create.image}">Imaginea anunțului</h2>
                     </div>
 
                     <div class="image-preview-section">
@@ -125,7 +125,7 @@
                         </div>
                         <div class="auto-select-badge">
                             <i class="fa fa-magic"></i>
-                            <span>Imaginea se selectează automat în funcție de categoria aleasă</span>
+                            <span th:text="#{announce.create.image.auto}">Imaginea se selectează automat în funcție de categoria aleasă</span>
                         </div>
                     </div>
                 </div>
@@ -135,7 +135,7 @@
                     <div class="info-alert">
                         <i class="fa fa-check-circle"></i>
                         <div class="info-alert-content">
-                            <p>Verifică toate detaliile înainte de publicare. Anunțul tău va fi vizibil imediat în comunitate!</p>
+                            <p th:text="#{announce.create.submit.hint}">Verifică toate detaliile înainte de publicare. Anunțul tău va fi vizibil imediat în comunitate!</p>
                         </div>
                     </div>
 
@@ -144,7 +144,7 @@
                     <div class="submit-section">
                         <button type="submit" class="btn btn-primary">
                             <i class="fa fa-paper-plane"></i>
-                            <span>Publică anunțul</span>
+                            <span th:text="#{announce.create.publish}">Publică anunțul</span>
                         </button>
                     </div>
                 </div>
@@ -158,22 +158,22 @@
                     <div class="preview-icon">
                         <i class="fa fa-eye"></i>
                     </div>
-                    <h3 class="section-title text-white">Preview Live</h3>
+                    <h3 class="section-title text-white" th:text="#{announce.create.preview}">Preview Live</h3>
                 </div>
 
                 <div class="preview-badges">
                     <div class="preview-badge">
                         <i class="fa fa-star"></i>
-                        <span id="preview-offer">Categoria oferită</span>
+                        <span id="preview-offer" th:text="#{announce.create.preview.offer}">Categoria oferită</span>
                     </div>
                     <div class="preview-badge">
                         <i class="fa fa-exchange"></i>
-                        <span id="preview-want">Categoria căutată</span>
+                        <span id="preview-want" th:text="#{announce.create.preview.seek}">Categoria căutată</span>
                     </div>
                 </div>
 
-                <h4 class="preview-title" id="preview-title">Titlul anunțului tău</h4>
-                <p class="preview-description" id="preview-description">Descrierea va apărea aici imediat ce o completezi. Adaugă informații relevante pentru a atrage persoanele potrivite.</p>
+                <h4 class="preview-title" id="preview-title" th:text="#{announce.create.preview.title}">Titlul anunțului tău</h4>
+                <p class="preview-description" id="preview-description" th:text="#{announce.create.preview.description}">Descrierea va apărea aici imediat ce o completezi. Adaugă informații relevante pentru a atrage persoanele potrivite.</p>
 
                 <div class="preview-image">
                     <img id="sidebar-preview-image" src="/img/skill/skill-programming.png" alt="Preview">
@@ -185,7 +185,12 @@
 
 <div th:replace="~{/fragments/about :: about}"></div>
 
-<script>
+<script th:inline="javascript">
+
+    const previewDefaultTitle = [[#{announce.create.preview.title}]];
+    const previewDefaultDescription = [[#{announce.create.preview.description}]];
+    const previewDefaultOffer = [[#{announce.create.preview.offer}]];
+    const previewDefaultSeek = [[#{announce.create.preview.seek}]];
 
     const categoryImageKeys = {
         programming: ["prog1", "prog2", "prog3"],
@@ -301,10 +306,10 @@
 
     // Update Preview Text
     function updatePreview() {
-        previewTitle.textContent = titleInput.value.trim() || 'Titlul anunțului tău';
-        previewDesc.textContent = descInput.value.trim() || 'Descrierea va apărea aici imediat ce o completezi. Adaugă informații relevante pentru a atrage persoanele potrivite.';
-        previewOffer.textContent = offerInput.value.trim() || 'Categoria oferită';
-        previewWant.textContent = wantInput.value.trim() || 'Categoria căutată';
+        previewTitle.textContent = titleInput.value.trim() || previewDefaultTitle;
+        previewDesc.textContent = descInput.value.trim() || previewDefaultDescription;
+        previewOffer.textContent = offerInput.value.trim() || previewDefaultOffer;
+        previewWant.textContent = wantInput.value.trim() || previewDefaultSeek;
     }
 
     // Event Listeners

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ro">
+<html lang="ro" xmlns:th="http://www.thymeleaf.org" th:attr="lang=${#locale.language}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - Skill Swap</title>
+    <title th:text="#{register.title} + ' - Skill Swap'">Register - Skill Swap</title>
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800,900&display=swap"
           rel="stylesheet">
@@ -13,54 +13,60 @@
 </head>
 <body>
 <div class="register-container">
+    <div style="text-align:right; margin-bottom:10px;">
+        <a href="?lang=ro" th:text="#{lang.ro}">RO</a> |
+        <a href="?lang=en" th:text="#{lang.en}">EN</a> |
+        <a href="?lang=fr" th:text="#{lang.fr}">FR</a> |
+        <a href="?lang=ru" th:text="#{lang.ru}">RU</a>
+    </div>
     <button class="close-btn" onclick="window.location.href='/index'">&times;</button>
 
-    <h2 class="register-title">Register</h2>
+    <h2 class="register-title" th:text="#{register.title}">Register</h2>
     <div th:if="${error}" class="message error" th:text="${error}"></div>
     <div th:if="${success}" class="message success" th:text="${success}"></div>
     <form th:action="@{register/save}" id="registerForm">
         <div class="form-group">
-            <label for="fullName">Nume Complet</label>
-            <input type="text" id="fullName" name="fullName" placeholder="Introduceți numele complet" required>
+            <label for="fullName" th:text="#{register.fullname}">Nume Complet</label>
+            <input type="text" id="fullName" name="fullName" th:attr="placeholder=#{register.fullname.placeholder}" required>
         </div>
 
         <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" placeholder="Introduceți adresa de email" required>
+            <label for="email" th:text="#{register.email}">Email</label>
+            <input type="email" id="email" name="email" th:attr="placeholder=#{register.email.placeholder}" required>
         </div>
 
         <div class="form-group">
-            <label for="password">Parolă</label>
-            <input type="password" id="password" name="password" placeholder="Introduceți parola" required>
+            <label for="password" th:text="#{register.password}">Parolă</label>
+            <input type="password" id="password" name="password" th:attr="placeholder=#{register.password.placeholder}" required>
         </div>
 
         <div class="form-group">
-            <label for="confirmPassword">Confirmați Parola</label>
-            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirmați parola" required>
+            <label for="confirmPassword" th:text="#{register.confirm}">Confirmați Parola</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" th:attr="placeholder=#{register.confirm.placeholder}" required>
         </div>
 
         <div class="checkbox-group">
             <input type="checkbox" id="terms" name="terms" required>
             <label for="terms">
-                Accept <a href="#" onclick="showTerms()">termenii și condițiile</a>
+                <span th:text="#{register.accept}">Accept</span> <a href="#" onclick="showTerms()" th:text="#{register.terms}">termenii și condițiile</a>
             </label>
         </div>
 
-        <button type="submit" class="register-btn">Creează Cont</button>
+        <button type="submit" class="register-btn" th:text="#{register.submit}">Creează Cont</button>
 
         <!-- Separator -->
         <div class="divider">
-            <span>sau</span>
+            <span th:text="#{register.or}">sau</span>
         </div>
 
         <!-- Google Register -->
         <a href="/oauth2/authorization/google" class="google-btn">
             <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google">
-            Continuă cu Google
+            <span th:text="#{register.google}">Continuă cu Google</span>
         </a>
 
         <div class="login-link">
-            Ai deja un cont? <a th:href="@{/login}" onclick="goToLogin()">Conectează-te</a>
+            <span th:text="#{register.have.account}">Ai deja un cont?</span> <a th:href="@{/login}" onclick="goToLogin()" th:text="#{register.login.link}">Conectează-te</a>
         </div>
     </form>
 </div>

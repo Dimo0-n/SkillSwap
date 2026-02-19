@@ -11,7 +11,7 @@
     <!-- Humberger Menu Begin -->
     <div class="humberger-menu-overlay"></div>
     <div class="humberger-menu-wrapper">
-        <button class="humberger-close" type="button" aria-label="Închide meniul">
+        <button class="humberger-close" type="button" th:attr="aria-label=#{navbar.close.menu}">
             <i class="fa fa-times"></i>
         </button>
         <div class="hw-logo">
@@ -19,17 +19,17 @@
         </div>
         <div class="hw-menu mobile-menu">
             <ul>
-                <li class="active"><a th:href="@{/index}"><span>Acasă</span></a></li>
-                <li><a th:href="@{/announces-list}"><span>Anunțuri</span></a></li>
-                <li><a th:href="@{/announces/new}"><span>Creează anunț</span></a></li>
-                <li><a th:href="@{/contact}">Contact</a></li>
-                <li><a sec:authorize="isAuthenticated()" th:href="@{/profile}">Profil</a></li>
+                <li class="active"><a th:href="@{/index}"><span th:text="#{lateral.home}">Acasă</span></a></li>
+                <li><a th:href="@{/announces-list}"><span th:text="#{lateral.announces}">Anunțuri</span></a></li>
+                <li><a th:href="@{/announces/new}"><span th:text="#{lateral.create}">Creează anunț</span></a></li>
+                <li><a th:href="@{/contact}" th:text="#{lateral.contact}">Contact</a></li>
+                <li><a sec:authorize="isAuthenticated()" th:href="@{/profile}" th:text="#{lateral.profile}">Profil</a></li>
             </ul>
         </div>
         <div id="mobile-menu-wrap"></div>
         <div class="hw-copyright">
             Copyright &copy;<script>document.write(new Date().getFullYear());</script>
-            Skill Swap | Toate drepturile rezervate
+            Skill Swap | <span th:text="#{lateral.copyright}">Toate drepturile rezervate</span>
         </div>
         <div class="hw-social">
             <a href="#"><i class="fa fa-facebook"></i></a>

@@ -33,23 +33,23 @@
                             <div class="ht-widget">
                                 <ul sec:authorize="!isAuthenticated()">
                                     <li>
-                                        <a th:href="@{/login}"><i class="fa fa-sign-in"></i> Login</a>
+                                        <a th:href="@{/login}"><i class="fa fa-sign-in"></i> <span th:text="#{navbar.login}">Login</span></a>
                                     </li>
                                 <li class="sep">/</li>
                                     <li>
-                                        <a th:href="@{/register}"><i class="fa fa-user-plus"></i> Sign up</a>
+                                        <a th:href="@{/register}"><i class="fa fa-user-plus"></i> <span th:text="#{navbar.register}">Sign up</span></a>
                                     </li>
                                 </ul>
                                 <ul sec:authorize="isAuthenticated()">
                                     <li>
                                         <a href="#"
                                             onclick="event.preventDefault(); document.getElementById('logoutForm').submit();"><i
-                                                class="fa fa-power-off"></i> Logout</a>
+                                                class="fa fa-power-off"></i> <span th:text="#{navbar.logout}">Logout</span></a>
                                     </li>
                                 <li class="sep" sec:authorize="hasRole('ROLE_ADMIN')">/</li>
                                     <li>
                                         <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/admin}"><i
-                                                class="fa fa-shield"></i>Admin</a>
+                                                class="fa fa-shield"></i><span th:text="#{navbar.admin}">Admin</span></a>
                                     </li>
                                 </ul>
                                 <form id="logoutForm" th:action="@{/logout}" method="post" style="display: none;">
@@ -68,6 +68,11 @@
                                 <a href="#"><i class="fa fa-youtube-play"></i></a>
                                 <a href="#"><i class="fa fa-instagram"></i></a>
                                 <a href="#"><i class="fa fa-envelope-o"></i></a>
+                                <span class="sep">/</span>
+                                <a href="?lang=ro" th:text="#{lang.ro}">RO</a>
+                                <a href="?lang=en" th:text="#{lang.en}">EN</a>
+                                <a href="?lang=fr" th:text="#{lang.fr}">FR</a>
+                                <a href="?lang=ru" th:text="#{lang.ru}">RU</a>
                             </div>
                         </div>
                     </div>
@@ -77,7 +82,7 @@
                 <div class="container">
                     <div class="nav-bar">
                         <div class="nav-left">
-                            <button class="humberger-menu humberger-open" type="button" aria-label="Deschide meniul">
+                            <button class="humberger-menu humberger-open" type="button" th:attr="aria-label=#{navbar.open.menu}">
                                 <i class="fa fa-bars"></i>
                             </button>
                             <a href="/index" class="nav-logo">
@@ -87,18 +92,18 @@
                         <div class="nav-center">
                             <div class="nav-menu">
                                 <ul>
-                                    <li><a th:href="@{/index}"><span>Acasă</span></a></li>
-                                    <li><a th:href="@{/announces-list}"><span>Anunțuri</span></a></li>
+                                    <li><a th:href="@{/index}"><span th:text="#{navbar.home}">Acasă</span></a></li>
+                                    <li><a th:href="@{/announces-list}"><span th:text="#{navbar.announces}">Anunțuri</span></a></li>
                                     <!--                    <li><a sec:authorize="isAuthenticated()" th:href="@{/chat}"><span>Chat</i></span></a></li>-->
-                                    <li><a th:href="@{/contact}"><span>Contact</span></a></li>
-                                    <li><a sec:authorize="isAuthenticated()" th:href="@{/profile}"><span>Profil</span></a></li>
+                                    <li><a th:href="@{/contact}"><span th:text="#{navbar.contact}">Contact</span></a></li>
+                                    <li><a sec:authorize="isAuthenticated()" th:href="@{/profile}"><span th:text="#{navbar.profile}">Profil</span></a></li>
                                 </ul>
                             </div>
-                            <a th:href="@{/announces/new}" class="btn-create-announce"><span>+ Creează anunț</span></a>
+                            <a th:href="@{/announces/new}" class="btn-create-announce"><span th:text="#{navbar.create}">+ Creează anunț</span></a>
                             <div class="nav-right">
                                 <!-- Conversations Button -->
                                 <a th:href="@{/chat-history}" class="btn-conversations"
-                                    sec:authorize="isAuthenticated()" aria-label="Conversații">
+                                    sec:authorize="isAuthenticated()" th:attr="aria-label=#{navbar.conversations}">
                                     <i class="fa fa-comments"></i>
                                     <span class="conversation-badge" id="conversationBadge">2</span>
                                 </a>
@@ -106,14 +111,14 @@
                                 <!-- Notifications Button -->
                                 <div class="notifications-wrapper" sec:authorize="isAuthenticated()">
                                     <button class="btn-notifications" type="button" id="notificationsButton"
-                                        aria-label="Notificări">
+                                        th:attr="aria-label=#{navbar.notifications}">
                                         <i class="fa fa-bell"></i>
                                         <span class="notification-badge" id="notificationBadge">3</span>
                                     </button>
                                     <!-- Notifications Dropdown -->
                                     <div class="notifications-dropdown" id="notificationsDropdown">
                                         <div class="notifications-header">
-                                            <h6>Notificări</h6>
+                                            <h6 th:text="#{navbar.notifications}">Notificări</h6>
                                         </div>
                                         <div class="notifications-list" id="notificationsList">
                                             <!-- Notification items will be dynamically inserted here -->
@@ -127,9 +132,9 @@
                 <div class="navbar-search-panel" id="navbarSearchPanel">
                     <form class="navbar-search-form" th:action="@{/announces-list}" method="get">
                         <!-- Folosește același endpoint de filtrare ca bara principală de căutare -->
-                        <input type="text" id="navbar-search-input" name="query" placeholder="Caută un skill sau anunț"
-                            aria-label="Caută">
-                        <button type="submit" aria-label="Trimite căutare">
+                        <input type="text" id="navbar-search-input" name="query" th:attr="placeholder=#{navbar.search.placeholder}"
+                            th:attrappend="aria-label=#{navbar.search.placeholder}">
+                        <button type="submit" th:attr="aria-label=#{navbar.search.submit}">
                             <i class="fa fa-search"></i>
                         </button>
                     </form>

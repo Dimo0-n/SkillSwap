@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="ro" xmlns:th="http://www.thymeleaf.org"
+    th:attr="lang=${#locale.language}"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="UTF-8">
     <meta name="description" content="Completează-ți profilul SkillSwap">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Completează-ți profilul - SkillSwap</title>
+    <title th:text="#{profile.complete.title} + ' - SkillSwap'">Completează-ți profilul - SkillSwap</title>
 
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800,900&display=swap"
@@ -38,36 +39,36 @@
             <!-- LEFT SIDEBAR - STEP NAVIGATION (STICKY) -->
             <aside class="step-navigation">
                 <div class="step-nav-inner">
-                    <h3 class="step-nav-title">Progres</h3>
+                    <h3 class="step-nav-title" th:text="#{profile.complete.progress}">Progres</h3>
                     <nav class="step-list">
                         <a href="#section-identity" class="step-item" data-section="identity">
                             <span class="step-number">1</span>
-                            <span class="step-label">Identitate</span>
+                            <span class="step-label" th:text="#{profile.complete.identity}">Identitate</span>
                             <i class="fa fa-check step-check" style="display: none;"></i>
                         </a>
                         <a href="#section-bio" class="step-item" data-section="bio">
                             <span class="step-number">2</span>
-                            <span class="step-label">Bio</span>
+                            <span class="step-label" th:text="#{profile.complete.bio}">Bio</span>
                             <i class="fa fa-check step-check" style="display: none;"></i>
                         </a>
                         <a href="#section-skills" class="step-item" data-section="skills">
                             <span class="step-number">3</span>
-                            <span class="step-label">Skill-uri</span>
+                            <span class="step-label" th:text="#{profile.complete.skills}">Skill-uri</span>
                             <i class="fa fa-check step-check" style="display: none;"></i>
                         </a>
                         <a href="#section-description" class="step-item" data-section="description">
                             <span class="step-number">4</span>
-                            <span class="step-label">Descriere</span>
+                            <span class="step-label" th:text="#{profile.complete.description}">Descriere</span>
                             <i class="fa fa-check step-check" style="display: none;"></i>
                         </a>
                         <a href="#section-availability" class="step-item" data-section="availability">
                             <span class="step-number">5</span>
-                            <span class="step-label">Disponibilitate</span>
+                            <span class="step-label" th:text="#{profile.complete.availability}">Disponibilitate</span>
                             <i class="fa fa-check step-check" style="display: none;"></i>
                         </a>
                         <a href="#section-strengths" class="step-item" data-section="strengths">
                             <span class="step-number">6</span>
-                            <span class="step-label">Trăsături</span>
+                            <span class="step-label" th:text="#{profile.complete.traits}">Trăsături</span>
                             <i class="fa fa-check step-check" style="display: none;"></i>
                         </a>
                     </nav>
@@ -80,7 +81,7 @@
                 
                 <!-- Introduction Header -->
                 <div class="intro-header">
-                    <h1 class="page-title">Completează-ți profilul</h1>
+                    <h1 class="page-title" th:text="#{profile.complete.title}">Completează-ți profilul</h1>
                     <p class="page-subtitle">
                         Profilul tău reprezintă identitatea ta profesională pe SkillSwap. 
                         Fiecare secțiune te ajută să te prezinti clar și autentic.
@@ -89,11 +90,11 @@
 
                 <!-- 1. BASIC IDENTITY - LARGE CARD -->
                 <section id="section-identity" class="profile-card card-large">
-                    <h2 class="card-title">Identitate de bază</h2>
+                    <h2 class="card-title" th:text="#{profile.complete.identity.card}">Identitate de bază</h2>
                     <p class="card-help">Cine ești tu? Definește-te în mod clar și autentic.</p>
                     
                     <div class="form-group">
-                        <label for="profilePicture" class="form-label">Fotografie de profil</label>
+                        <label for="profilePicture" class="form-label" th:text="#{profile.complete.photo}">Fotografie de profil</label>
                         <div class="picture-upload-area">
                             <input type="file" name="profilePicture" id="profilePicture" accept="image/*" class="picture-input">
                             <div class="picture-preview" id="picturePreview">
@@ -104,14 +105,14 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="displayName" class="form-label">Nume de afișare</label>
+                        <label for="displayName" class="form-label" th:text="#{profile.complete.display.name}">Nume de afișare</label>
                         <input name="name" th:field="*{name}" type="text" id="displayName" class="form-control"
                                placeholder="Ex: Alex M. sau Alex Mihai">
                         <small class="form-help">Poți folosi inițiale sau nume complet. Alege ce te reprezintă.</small>
                     </div>
 
                     <div class="form-group">
-                        <label for="professionalTitle" class="form-label">Titlu profesional</label>
+                        <label for="professionalTitle" class="form-label" th:text="#{profile.complete.profession}">Titlu profesional</label>
                         <input name="profession" th:field="*{profession}" type="text" id="professionalTitle" class="form-control"
                                placeholder="Ex: Frontend Developer & UI Enthusiast">
                         <small class="form-help">O descriere scurtă și clară a rolului tău.</small>
@@ -120,11 +121,11 @@
 
                 <!-- 2. SHORT BIO - MEDIUM CARD -->
                 <section id="section-bio" class="profile-card card-medium">
-                    <h2 class="card-title">Bio scurt</h2>
+                    <h2 class="card-title" th:text="#{profile.complete.short.bio}">Bio scurt</h2>
                     <p class="card-help">Cum te prezinți? Acest text va apărea direct sub numele tău în profil.</p>
                     
                     <div class="form-group">
-                        <label for="shortBio" class="form-label">Descriere scurtă</label>
+                        <label for="shortBio" class="form-label" th:text="#{profile.complete.short.description}">Descriere scurtă</label>
                         <textarea name="bioShort" th:field="*{bioShort}" id="shortBio" class="form-control" rows="3"
                                   maxlength="200" placeholder="2-3 propoziții, personale dar profesionale..."></textarea>
                         <div class="char-counter">
@@ -136,16 +137,16 @@
 
                 <!-- 3. CORE SKILLS - MEDIUM CARD -->
                 <section id="section-skills" class="profile-card card-medium">
-                    <h2 class="card-title">Competențe principale</h2>
+                    <h2 class="card-title" th:text="#{profile.complete.main.skills}">Competențe principale</h2>
                     <p class="card-help">Ce oferi? Selectează doar competențele principale, relevante.</p>
                     <div class="form-group">
-                        <label for="skillInput" class="form-label">Adaugă competențe</label>
+                        <label for="skillInput" class="form-label" th:text="#{profile.complete.add.skills}">Adaugă competențe</label>
                         <div class="skill-input-group">
                             <input type="text" id="skillInput" class="form-control"
                                    placeholder="Ex: JavaScript, Design UI/UX, Marketing Digital">
 
                             <button type="button" id="addSkillBtn" class="btn-add-skill">
-                                <i class="fa fa-plus"></i> Adaugă
+                                <i class="fa fa-plus"></i> <span th:text="#{profile.complete.add}">Adaugă</span>
                             </button>
                         </div>
                         <input name="competences" type="hidden" th:field="*{competences}" id="competencesHidden">
@@ -160,7 +161,7 @@
                 <section id="section-description" class="profile-card card-extra-large">
                     <div class="card-header-wrapper">
                         <div class="card-header-content">
-                            <h2 class="card-title">Descriere detaliată</h2>
+                            <h2 class="card-title" th:text="#{profile.complete.details}">Descriere detaliată</h2>
                             <p class="card-help">Stilul tău de lucru. Descrie ce oferi, cum lucrezi, pentru cine ești potrivit.</p>
                         </div>
                         <button type="button" class="btn-ai-generate" id="aiGenerateBtn" aria-label="Generare AI">
@@ -169,7 +170,7 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="detailedDescription" class="form-label">Descriere completă</label>
+                        <label for="detailedDescription" class="form-label" th:text="#{profile.complete.full.description}">Descriere completă</label>
                         <textarea name="completeDescription" th:field="*{completeDescription}" id="detailedDescription" class="form-control" rows="10"
                                   placeholder="Poți completa descrierea în două moduri:
 
@@ -188,11 +189,11 @@ Include (indiferent de variantă):
 
                 <!-- 5. AVAILABILITY & LIMITATIONS - MEDIUM CARD -->
                 <section id="section-availability" class="profile-card card-medium">
-                    <h2 class="card-title">Disponibilitate și limitări</h2>
+                    <h2 class="card-title" th:text="#{profile.complete.availability.limits}">Disponibilitate și limitări</h2>
                     <p class="card-help">Când și în ce condiții lucrezi? Este esențial și normal să ai limitări.</p>
 
                     <div class="form-group">
-                        <label class="form-label">Disponibilitate</label>
+                        <label class="form-label" th:text="#{profile.complete.availability}">Disponibilitate</label>
                         <div class="availability-options">
                             <label class="checkbox-label">
                                 <input type="checkbox" class="availability-checkbox" data-bit="1">
@@ -215,12 +216,12 @@ Include (indiferent de variantă):
                     </div>
 
                     <div class="form-group">
-                        <label for="limitationsInput" class="form-label">Limitări</label>
+                        <label for="limitationsInput" class="form-label" th:text="#{profile.complete.limits}">Limitări</label>
                         <div class="limitations-input-group">
                             <input type="text" id="limitationsInput" class="form-control"
                                    placeholder="Ex: Nu ofer lecții avansate">
                             <button type="button" id="addLimitationBtn" class="btn-add-skill">
-                                <i class="fa fa-plus"></i> Adaugă
+                                <i class="fa fa-plus"></i> <span th:text="#{profile.complete.add}">Adaugă</span>
                             </button>
                         </div>
                         <input type="hidden" th:field="*{limits}" id="limitsHidden">
@@ -232,11 +233,11 @@ Include (indiferent de variantă):
 
                 <!-- 6. STRENGTHS / WORK TRAITS - MEDIUM CARD -->
                 <section id="section-strengths" class="profile-card card-medium">
-                    <h2 class="card-title">Puncte forte / Trăsături de lucru</h2>
+                    <h2 class="card-title" th:text="#{profile.complete.strengths}">Puncte forte / Trăsături de lucru</h2>
                     <p class="card-help">Cum ești perceput? Acestea vor apărea ca evidențieri pozitive pe profil.</p>
                     
                     <div class="form-group">
-                        <label class="form-label">Selectează din opțiuni</label>
+                        <label class="form-label" th:text="#{profile.complete.select.options}">Selectează din opțiuni</label>
                         <div class="strengths-options">
                             <label class="checkbox-label">
                                 <input type="checkbox" class="strength-checkbox" value="clear-communication">
@@ -266,12 +267,12 @@ Include (indiferent de variantă):
                     </div>
 
                     <div class="form-group">
-                        <label for="customStrengthInput" class="form-label">Adaugă trăsătură personalizată</label>
+                        <label for="customStrengthInput" class="form-label" th:text="#{profile.complete.custom.trait}">Adaugă trăsătură personalizată</label>
                         <div class="skill-input-group">
                             <input type="text" id="customStrengthInput" class="form-control" 
                                    placeholder="Ex: Răspund rapid la mesaje">
                             <button type="button" id="addCustomStrengthBtn" class="btn-add-skill">
-                                <i class="fa fa-plus"></i> Adaugă
+                                <i class="fa fa-plus"></i> <span th:text="#{profile.complete.add}">Adaugă</span>
                             </button>
                         </div>
                         <div class="custom-strengths-container" id="customStrengthsContainer">
@@ -286,7 +287,7 @@ Include (indiferent de variantă):
                 <section class="profile-card card-actions">
                     <div class="form-actions">
                         <button type="submit" id="saveProfileBtn" class="btn-primary">
-                            <i class="fa fa-save"></i> Salvează profilul
+                            <i class="fa fa-save"></i> <span th:text="#{profile.complete.save}">Salvează profilul</span>
                         </button>
                     </div>
                     <p class="reassurance-text">
@@ -304,9 +305,9 @@ Include (indiferent de variantă):
     <div th:if="${param.success}" id="successModal" class="modal-overlay">
         <div class="modal-content">
             <i class="fa fa-check-circle"></i>
-            <h3>Profil salvat cu succes!</h3>
-            <p>Datele tale au fost salvate. Poți edita profilul oricând.</p>
-            <a href="/profile" class="btn-primary">Înțeles</a>
+            <h3 th:text="#{profile.complete.saved}">Profil salvat cu succes!</h3>
+            <p th:text="#{profile.complete.saved.desc}">Datele tale au fost salvate. Poți edita profilul oricând.</p>
+            <a href="/profile" class="btn-primary" th:text="#{profile.complete.ok}">Înțeles</a>
         </div>
     </div>
 

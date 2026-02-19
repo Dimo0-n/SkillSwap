@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zxx">
+<html lang="ro" xmlns:th="http://www.thymeleaf.org" th:attr="lang=${#locale.language}">
 
 <head>
     <meta charset="UTF-8">
@@ -44,10 +44,10 @@
                     <div class="details-text typography-page">
                         <div class="dt-breadcrumb">
                             <div class="dt-bread-option">
-                                <a href="#">Home</a>
-                                <span>Typography</span>
+                                <a href="#" th:text="#{navbar.home}">Home</a>
+                                <span th:text="#{typography.breadcrumb}">Typography</span>
                             </div>
-                            <h3>TYPOGRAPHY</h3>
+                            <h3 th:text="#{typography.title}">TYPOGRAPHY</h3>
                         </div>
                         <div class="dt-desc">
                             <p>Dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
@@ -79,7 +79,7 @@
                                 impenetrable foliage xcepteur sint occaecat cupidatat non proident.</p>
                         </div>
                         <div class="dt-heading-tags">
-                            <h3 class="title">Heading tags</h3>
+                            <h3 class="title" th:text="#{typography.heading.tags}">Heading tags</h3>
                             <p>Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos
                                 himenaeos. Suspen potenti. Pellentesque massa enim, fringilla ut ullamcorper sit amet,
                                 ornare at ipsum.</p>
@@ -97,7 +97,7 @@
                                 diam id neque feugiat.</p>
                         </div>
                         <div class="dt-listing unorder-list">
-                            <h3>Unordered List</h3>
+                            <h3 th:text="#{typography.unordered}">Unordered List</h3>
                             <p>Totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae
                                 vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut
                                 odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi
@@ -117,7 +117,7 @@
                                 tempor incididunt ut labore et dolore.</p>
                         </div>
                         <div class="dt-listing order-list">
-                            <h3>Ordered List</h3>
+                            <h3 th:text="#{typography.ordered}">Ordered List</h3>
                             <p>Integer vel commodo erat. Mauris dun fringilla eleifend lobortis. Aenean idas venenatis
                                 ligula. Cras indo nibh facilisis, tincidunt quamto nec, fringilla neque. Morbi ornare in
                                 nisi atc cond mentum. Interdum etc malesuada fames ate ipsum primis in faucibus. Nullam
@@ -139,7 +139,7 @@
                             </p>
                         </div>
                         <div class="dt-share">
-                            <div class="ds-title">Share</div>
+                            <div class="ds-title" th:text="#{profile.share}">Share</div>
                             <div class="ds-links">
                                 <a href="#" class="wide"><i class="fa fa-heart-o"></i><span>120</span></a>
                                 <a href="#"><i class="fa fa-facebook"></i></a>
@@ -155,7 +155,7 @@
                     <div class="sidebar-option">
                         <div class="social-media">
                             <div class="section-title">
-                                <h5>Social media</h5>
+                                <h5 th:text="#{social.title}">Social media</h5>
                             </div>
                             <ul>
                                 <li>
@@ -182,7 +182,7 @@
                         </div>
                         <div class="hardware-guides">
                             <div class="section-title">
-                                <h5>Hardware guides</h5>
+                                <h5 th:text="#{typography.hardware}">Hardware guides</h5>
                             </div>
                             <div class="trending-item">
                                 <div class="ti-pic">
@@ -237,7 +237,7 @@
                         </div>
                         <div class="insta-media">
                             <div class="section-title">
-                                <h5>Instagram</h5>
+                                <h5 th:text="#{typography.instagram}">Instagram</h5>
                             </div>
                             <div class="insta-pic">
                                 <img src="/img/instagram/ip-1.jpg" alt="">
@@ -248,7 +248,7 @@
                         </div>
                         <div class="best-of-post">
                             <div class="section-title">
-                                <h5>Best of</h5>
+                                <h5 th:text="#{typography.bestof}">Best of</h5>
                             </div>
                             <div class="bp-item">
                                 <div class="bp-loader">
@@ -340,7 +340,7 @@
         <div class="h-100 d-flex align-items-center justify-content-center">
             <div class="search-close-switch">+</div>
             <form class="search-model-form">
-                <input type="text" id="search-input" placeholder="Search here.....">
+                <input type="text" id="search-input" th:attr="placeholder=#{common.search.placeholder}">
             </form>
         </div>
     </div>

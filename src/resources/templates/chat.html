@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zxx">
+<html lang="ro" xmlns:th="http://www.thymeleaf.org" th:attr="lang=${#locale.language}">
 
 <head>
     <meta charset="UTF-8">
@@ -42,13 +42,13 @@
             <div class="row">
                 <div class="col-lg-6">
                     <div class="details-hero-text">
-                        <div class="label"><span>Discută</span></div>
-                        <div class="label"><span>chiar</span></div>
-                        <div class="label"><span>aici</span></div>
-                        <h3>Conectează-te instant cu mentori și membri ai comunității</h3>
+                        <div class="label"><span th:text="#{chat.page.badge.1}">Discută</span></div>
+                        <div class="label"><span th:text="#{chat.page.badge.2}">chiar</span></div>
+                        <div class="label"><span th:text="#{chat.page.badge.3}">aici</span></div>
+                        <h3 th:text="#{chat.page.title}">Conectează-te instant cu mentori și membri ai comunității</h3>
                         <ul>
-                            <li>by <span>Admin</span></li>
-                            <li>Online acum: <span>247 utilizatori</span></li>
+                            <li><span th:text="#{index.by}">de</span> <span>Admin</span></li>
+                            <li><span th:text="#{chat.page.online}">Online acum:</span> <span>247 utilizatori</span></li>
                         </ul>
                     </div>
                 </div>
@@ -64,7 +64,7 @@
                 <div class="col-lg-8 p-0">
                     <div class="details-text">
                         <div class="dt-comment">
-                            <h4>Live chat</h4>
+                            <h4 th:text="#{chat.page.live}">Live chat</h4>
                             <div class="dc-item">
                                 <div class="dc-pic">
                                     <img src="/img/details/comment/comment-1.jpg" alt="">
@@ -119,10 +119,10 @@
                             </div>
                         </div>
                         <div class="dt-leave-comment">
-                            <h4>Lasă un comentariu</h4>
+                            <h4 th:text="#{chat.page.leave.comment}">Lasă un comentariu</h4>
                             <form action="#">
-                                <textarea placeholder="Message"></textarea>
-                                <button type="submit">Trimite</button>
+                                <textarea th:attr="placeholder=#{chat.page.message.placeholder}"></textarea>
+                                <button type="submit" th:text="#{chat.page.send}">Trimite</button>
                             </form>
                         </div>
                     </div>
@@ -151,7 +151,7 @@
         <div class="h-100 d-flex align-items-center justify-content-center">
             <div class="search-close-switch">+</div>
             <form class="search-model-form">
-                <input type="text" id="search-input" placeholder="Search here.....">
+                <input type="text" id="search-input" th:attr="placeholder=#{common.search.placeholder}">
             </form>
         </div>
     </div>

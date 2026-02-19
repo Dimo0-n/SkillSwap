@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zxx" xmlns:th="http://www.thymeleaf.org">
+<html lang="ro" xmlns:th="http://www.thymeleaf.org" th:attr="lang=${#locale.language}">
 
 <head>
     <meta charset="UTF-8">
@@ -7,7 +7,7 @@
     <meta name="keywords" content="chat, messages, skillswap">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Chat History - SkillSwap</title>
+    <title th:text="#{chat.history.title}">Chat History - SkillSwap</title>
 
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800,900&display=swap"
@@ -50,24 +50,24 @@
     <div th:replace="~{/fragments/navbar :: navbar}"></div>
 
     <div class="mobile-chat-header" id="mobileChatHeader">
-        <button class="back-btn" type="button" onclick="goBackToList()" aria-label="Înapoi la conversații">←</button>
+        <button class="back-btn" type="button" onclick="goBackToList()" th:attr="aria-label=#{chat.history.back}">←</button>
         <img class="chat-avatar" id="mobileChatAvatar" src="/img/default-avatar.png" alt="User avatar">
         <div class="chat-user-info">
-            <span class="chat-name" id="mobileChatName">Selectează o conversație</span>
-            <span class="chat-status" id="mobileChatStatus">Offline</span>
+            <span class="chat-name" id="mobileChatName" th:text="#{chat.history.select}">Selectează o conversație</span>
+            <span class="chat-status" id="mobileChatStatus" th:text="#{chat.history.offline}">Offline</span>
         </div>
         <div class="chat-actions">
-            <button class="chat-action-btn call-action-btn" type="button" aria-label="Apelează">
+            <button class="chat-action-btn call-action-btn" type="button" th:attr="aria-label=#{chat.history.call}">
                 <i class="fa fa-phone" aria-hidden="true"></i>
             </button>
             <div class="chat-settings-wrapper">
-                <button class="chat-action-btn settings-action-btn" type="button" aria-label="Setări conversație" aria-expanded="false">
+                <button class="chat-action-btn settings-action-btn" type="button" th:attr="aria-label=#{chat.history.settings}" aria-expanded="false">
                     <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
                 </button>
-                <div class="chat-settings-dropdown" role="menu" aria-label="Setări conversație">
-                    <button type="button" class="chat-settings-item" data-chat-action="mute" role="menuitem">Mute</button>
-                    <button type="button" class="chat-settings-item" data-chat-action="block" role="menuitem">Block</button>
-                    <button type="button" class="chat-settings-item" data-chat-action="report" role="menuitem">Report</button>
+                <div class="chat-settings-dropdown" role="menu" th:attr="aria-label=#{chat.history.settings}">
+                    <button type="button" class="chat-settings-item" data-chat-action="mute" role="menuitem" th:text="#{chat.history.mute}">Mute</button>
+                    <button type="button" class="chat-settings-item" data-chat-action="block" role="menuitem" th:text="#{chat.history.block}">Block</button>
+                    <button type="button" class="chat-settings-item" data-chat-action="report" role="menuitem" th:text="#{chat.history.report}">Report</button>
                 </div>
             </div>
         </div>
@@ -87,7 +87,7 @@
                                     <svg class="search_icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" alt="search icon">
                                         <path d="M46.599 46.599a4.498 4.498 0 0 1-6.363 0l-7.941-7.941C29.028 40.749 25.167 42 21 42 9.402 42 0 32.598 0 21S9.402 0 21 0s21 9.402 21 21c0 4.167-1.251 8.028-3.342 11.295l7.941 7.941a4.498 4.498 0 0 1 0 6.363zM21 6C12.717 6 6 12.714 6 21s6.717 15 15 15c8.286 0 15-6.714 15-15S29.286 6 21 6z"></path>
                                     </svg>
-                                    <input class="inputBox" id="inputBox" type="text" placeholder="Cauta conversatii">
+                                    <input class="inputBox" id="inputBox" type="text" th:attr="placeholder=#{chat.history.search}">
                                 </div>
                             </div>
 
@@ -107,22 +107,22 @@
                                         <span class="status-indicator status-offline" id="chatHeaderStatus"></span>
                                     </div>
                                     <div class="chat-header-info">
-                                        <h5 class="chat-header-name" id="chatHeaderName">Selectează o conversație</h5>
-                                        <span class="chat-header-status-text" id="chatHeaderStatusText">Offline</span>
+                                        <h5 class="chat-header-name" id="chatHeaderName" th:text="#{chat.history.select}">Selectează o conversație</h5>
+                                        <span class="chat-header-status-text" id="chatHeaderStatusText" th:text="#{chat.history.offline}">Offline</span>
                                     </div>
                                 </div>
                                 <div class="chat-header-actions">
-                                    <button class="chat-action-btn call-action-btn" id="startCallButton" type="button" title="Apelează">
+                                    <button class="chat-action-btn call-action-btn" id="startCallButton" type="button" th:attr="title=#{chat.history.call}">
                                         <i class="fa fa-phone"></i>
                                     </button>
                                     <div class="chat-settings-wrapper">
-                                        <button class="chat-action-btn settings-action-btn" type="button" title="Setări conversație" aria-label="Setări conversație" aria-expanded="false">
+                                        <button class="chat-action-btn settings-action-btn" type="button" th:attr="title=#{chat.history.settings}" th:attrappend="aria-label=#{chat.history.settings}" aria-expanded="false">
                                             <i class="fa fa-ellipsis-v"></i>
                                         </button>
-                                        <div class="chat-settings-dropdown" role="menu" aria-label="Setări conversație">
-                                            <button type="button" class="chat-settings-item" data-chat-action="mute" role="menuitem">Mute</button>
-                                            <button type="button" class="chat-settings-item" data-chat-action="block" role="menuitem">Block</button>
-                                            <button type="button" class="chat-settings-item" data-chat-action="report" role="menuitem">Report</button>
+                                        <div class="chat-settings-dropdown" role="menu" th:attr="aria-label=#{chat.history.settings}">
+                                            <button type="button" class="chat-settings-item" data-chat-action="mute" role="menuitem" th:text="#{chat.history.mute}">Mute</button>
+                                            <button type="button" class="chat-settings-item" data-chat-action="block" role="menuitem" th:text="#{chat.history.block}">Block</button>
+                                            <button type="button" class="chat-settings-item" data-chat-action="report" role="menuitem" th:text="#{chat.history.report}">Report</button>
                                         </div>
                                     </div>
                                 </div>
@@ -138,7 +138,7 @@
                                 <form id="messageForm" class="message-form">
                                     <div class="message-input-wrapper">
                                         <textarea id="messageInput" class="message-input"
-                                            placeholder="Type a message…" rows="1"></textarea>
+                                            th:attr="placeholder=#{chat.history.type}" rows="1"></textarea>
                                         <button type="submit" class="message-send-btn">
                                             <i class="fa fa-paper-plane"></i>
                                         </button>

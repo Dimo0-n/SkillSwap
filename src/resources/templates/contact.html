@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zxx">
+<html lang="ro" xmlns:th="http://www.thymeleaf.org" th:attr="lang=${#locale.language}">
 
 <head>
     <meta charset="UTF-8">
@@ -43,19 +43,18 @@
                 <div class="col-lg-12">
                     <div class="contact-text">
                         <div class="contact-title">
-                            <h3>Contact us</h3>
-                            <p>My experience with Realy is absolutely positive. The themes are beautifully<br />
-                                designed and well documented. Realy theme provides quick support.</p>
+                            <h3 th:text="#{contact.title}">Contact us</h3>
+                            <p th:text="#{contact.subtitle}">My experience with Realy is absolutely positive.</p>
                         </div>
                         <div class="contact-form">
                             <div class="dt-leave-comment">
                                 <form th:action="@{/contact/faq}" method="post" th:object="${contact}">
                                     <div class="input-list">
-                                        <input th:field="*{fullName}" type="text" placeholder="Full Name" name="fullName">
-                                        <input th:field="*{email}" type="text" placeholder="Email" name="email">
+                                        <input th:field="*{fullName}" type="text" th:attr="placeholder=#{contact.fullname}" name="fullName">
+                                        <input th:field="*{email}" type="text" th:attr="placeholder=#{contact.email}" name="email">
                                     </div>
-                                    <textarea th:field="*{message}" placeholder="Message"></textarea>
-                                    <button type="submit">Submit</button>
+                                    <textarea th:field="*{message}" th:attr="placeholder=#{contact.message}"></textarea>
+                                    <button type="submit" th:text="#{contact.submit}">Submit</button>
                                 </form>
                             </div>
                         </div>
@@ -73,7 +72,7 @@
         <div class="h-100 d-flex align-items-center justify-content-center">
             <div class="search-close-switch">+</div>
             <form class="search-model-form">
-                <input type="text" id="search-input" placeholder="Search here.....">
+                <input type="text" id="search-input" th:attr="placeholder=#{common.search.placeholder}">
             </form>
         </div>
     </div>

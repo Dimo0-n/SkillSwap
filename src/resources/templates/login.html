@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ro">
+<html lang="ro" xmlns:th="http://www.thymeleaf.org" th:attr="lang=${#locale.language}">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Skill Swap</title>
+    <title th:text="#{login.title} + ' - Skill Swap'">Login - Skill Swap</title>
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800,900&display=swap"
         rel="stylesheet">
@@ -15,42 +15,48 @@
 
 <body>
     <div class="login-container">
+        <div style="text-align:right; margin-bottom:10px;">
+            <a href="?lang=ro" th:text="#{lang.ro}">RO</a> |
+            <a href="?lang=en" th:text="#{lang.en}">EN</a> |
+            <a href="?lang=fr" th:text="#{lang.fr}">FR</a> |
+            <a href="?lang=ru" th:text="#{lang.ru}">RU</a>
+        </div>
         <button class="close-btn" onclick="window.location.href='/index'">&times;</button>
 
-        <h2 class="login-title">Login</h2>
+        <h2 class="login-title" th:text="#{login.title}">Login</h2>
 
         <form method="POST" th:action="@{/login}" id="loginForm">
             <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="username" placeholder="Introduceți adresa de email" required>
+                <label for="email" th:text="#{login.email}">Email</label>
+                <input type="email" id="email" name="username" th:attr="placeholder=#{login.email.placeholder}" required>
             </div>
 
             <div class="form-group">
-                <label for="password">Parolă</label>
-                <input type="password" id="password" name="password" placeholder="Introduceți parola" required>
+                <label for="password" th:text="#{login.password}">Parolă</label>
+                <input type="password" id="password" name="password" th:attr="placeholder=#{login.password.placeholder}" required>
             </div>
 
-            <button type="submit" class="login-btn">Conectează-te</button>
+            <button type="submit" class="login-btn" th:text="#{login.submit}">Conectează-te</button>
 
             <div class="divider">
-                <span>sau</span>
+                <span th:text="#{login.or}">sau</span>
             </div>
 
             <!-- Google Login -->
             <a href="/oauth2/authorization/google" class="google-btn">
                 <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google">
-                Conectează-te cu Google
+                <span th:text="#{login.google}">Conectează-te cu Google</span>
             </a>
 
             <div class="login-link">
-                Nu ai cont? <a th:href="@{/register}">Înregistrează-te</a>
+                <span th:text="#{login.no.account}">Nu ai cont?</span> <a th:href="@{/register}" th:text="#{login.register.link}">Înregistrează-te</a>
             </div>
         </form>
     </div>
 
     <div id="message" class="message"></div>
 
-    <script>
+    <script th:inline="javascript">
         const urlParams = new URLSearchParams(window.location.search);
 
         if (urlParams.has('errorMessage')) {
@@ -59,11 +65,11 @@
 
         } else if (urlParams.has('error')) {
             // Mesaj generic (parolă greșită etc.)
-            showMessage('Email sau parola incorectă!', 'error');
+            showMessage(/*[[#{login.error.invalid}]]*/ 'Email sau parola incorectă!', 'error');
         }
 
         if (urlParams.has('logout')) {
-            showMessage('Te-ai deconectat cu succes!', 'success');
+            showMessage(/*[[#{login.success.logout}]]*/ 'Te-ai deconectat cu succes!', 'success');
         }
 
         function showMessage(text, type = 'error') {
