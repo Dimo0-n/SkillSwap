@@ -69,10 +69,14 @@
                                 <a href="#"><i class="fa fa-instagram"></i></a>
                                 <a href="#"><i class="fa fa-envelope-o"></i></a>
                                 <span class="sep">/</span>
-                                <a href="?lang=ro" th:text="#{lang.ro}">RO</a>
-                                <a href="?lang=en" th:text="#{lang.en}">EN</a>
-                                <a href="?lang=fr" th:text="#{lang.fr}">FR</a>
-                                <a href="?lang=ru" th:text="#{lang.ru}">RU</a>
+                                <select class="form-control form-control-sm d-inline-block w-auto"
+                                        onchange="window.location.search='?lang=' + this.value;"
+                                        aria-label="Language selector">
+                                    <option value="ro" th:selected="${#locale.language == 'ro'}" th:text="#{lang.ro}">RO</option>
+                                    <option value="en" th:selected="${#locale.language == 'en'}" th:text="#{lang.en}">EN</option>
+                                    <option value="fr" th:selected="${#locale.language == 'fr'}" th:text="#{lang.fr}">FR</option>
+                                    <option value="ru" th:selected="${#locale.language == 'ru'}" th:text="#{lang.ru}">RU</option>
+                                </select>
                             </div>
                         </div>
                     </div>
