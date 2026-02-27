@@ -46,7 +46,7 @@ public class SecurityConfig {
                                                 .requestMatchers(
                                                                 "/css/**", "/js/**", "/img/**", "/fonts/**",
                                                                 "/Source/**",
-                                                                "/index", "/contact",
+                                                                "/index", "/contact", "/ws-native/**",
                                                                 "/oauth2/**",
                                                                 "/register", "/register/**",
                                                                 "/login",
@@ -54,6 +54,8 @@ public class SecurityConfig {
                                                                 "/ws/**", "/api/chat/**",
                                                                 "/announces-list", "/announce-details", "/meeting")
                                                 .permitAll()
+                                                .requestMatchers("/ws-native/**").permitAll()
+                                                .requestMatchers("/ws/**").permitAll()
                                                 .anyRequest().authenticated())
                                 .formLogin(form -> form
                                                 .loginPage("/login")
