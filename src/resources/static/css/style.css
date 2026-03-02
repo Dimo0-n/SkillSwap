@@ -880,6 +880,10 @@ ol {
 	font-family: "Space Grotesk", sans-serif;
 }
 
+.ht-options .ht-widget .mobile-lang-wrap {
+	display: none;
+}
+
 .ht-widget .sep {
 	margin-left: 1px;
 	margin-right: 1px;
@@ -5922,6 +5926,48 @@ li a:hover {
 	}
 
 	.nav-options .nav-center .nav-right .admin-link {
+		display: none !important;
+	}
+}
+
+@media only screen and (max-width: 991px) {
+	.ht-options .ht-widget {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 10px;
+		text-align: left;
+		margin-bottom: 0;
+	}
+
+	.ht-options .ht-widget ul {
+		margin-bottom: 0;
+	}
+
+	.ht-options .ht-widget .mobile-lang-wrap {
+		display: block;
+		margin-left: auto;
+		flex-shrink: 0;
+	}
+
+	/* Reset mobile global select overrides so Bootstrap form-control-sm takes over */
+	.ht-options .ht-widget .mobile-lang-wrap .lang-select-mobile {
+		width: auto !important;
+		min-width: 0 !important;
+		height: auto !important;
+		min-height: 0 !important;
+		padding: .15rem .4rem !important;
+		font-size: .75rem !important;
+		line-height: 1.4 !important;
+		font-family: inherit !important;
+		color: #212529 !important;
+		background-color: #fff !important;
+		border: 1px solid #ced4da !important;
+		border-radius: .2rem !important;
+		box-shadow: none !important;
+	}
+
+	.ht-options .ht-social {
 		display: none !important;
 	}
 }
