@@ -5947,16 +5947,30 @@ li a:hover {
 	.ht-options .ht-widget .mobile-lang-wrap {
 		display: block;
 		margin-left: auto;
+		flex-shrink: 0;
 	}
 
 	.ht-options .ht-widget .mobile-lang-wrap .lang-select-mobile {
 		display: inline-block;
 		width: auto !important;
-		min-width: 64px;
-		height: 30px;
-		padding: 2px 8px !important;
+		min-width: 68px;
+		height: 34px;
+		padding: 6px 30px 6px 10px !important;
 		font-size: 12px;
+		font-weight: 600;
+		font-family: "Space Grotesk", sans-serif;
 		line-height: 1.2;
+		text-transform: uppercase;
+		color: #111111;
+		background-color: #ffffff;
+		border: 1px solid #d9d9d9;
+		border-radius: 10px;
+		box-shadow: 0 6px 14px rgba(0, 0, 0, 0.18);
+	}
+
+	.ht-options .ht-widget .mobile-lang-wrap .lang-select-mobile:focus {
+		border-color: #9d4edd;
+		box-shadow: 0 0 0 0.12rem rgba(157, 78, 221, 0.2), 0 6px 14px rgba(0, 0, 0, 0.18);
 	}
 
 	.ht-options .ht-social {
