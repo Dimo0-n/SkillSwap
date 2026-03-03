@@ -1562,7 +1562,7 @@ ol {
     position: absolute;
 
     top: calc(100% + 12px); /* sub buton, mereu */
-    right: -120px;
+    right: 0;
 
     width: 360px;
     max-width: calc(100vw - 40px);
@@ -1600,6 +1600,160 @@ ol {
     letter-spacing: -0.02em;
 
     color: var(--text-primary);
+}
+
+.notifications-mobile-btn,
+.notifications-mobile-title-wrap,
+.notifications-mobile-title,
+.notifications-mobile-unread-badge {
+	display: none;
+}
+
+.notifications-mobile-unread-badge.hidden {
+	display: none;
+}
+
+/* Mobile notifications overlay panel - placed at body level, no stacking context issues */
+.mobile-notifications-panel {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+    background: #060a12;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.mobile-notifications-panel.is-open {
+    display: flex;
+}
+
+.mobile-notifications-panel__header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    height: 56px;
+    flex-shrink: 0;
+    background: #060a12;
+    border-bottom: 1px solid rgba(129, 42, 207, 0.18);
+}
+
+.mnp-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: rgba(255, 255, 255, 0.04);
+    color: #ffffff;
+    font-size: 16px;
+    padding: 0;
+    cursor: pointer;
+}
+
+.mnp-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
+    padding-left: 4px;
+}
+
+.mnp-title {
+    font-family: "Montserrat", sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #ffffff;
+    white-space: nowrap;
+    line-height: 1.2;
+}
+
+.mnp-unread-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 9px;
+    background: #ff4444;
+    color: #ffffff;
+    font-family: "Montserrat", sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.mnp-unread-badge.hidden {
+    display: none;
+}
+
+.mobile-notifications-panel__list {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 6px 0 24px;
+}
+
+.mobile-notifications-panel__list .notification-item {
+    padding: 16px 14px;
+    gap: 14px;
+    border-bottom: none;
+    background: transparent;
+}
+
+.mobile-notifications-panel__list .notification-item.unread {
+    background: rgba(129, 42, 207, 0.07);
+}
+
+.mobile-notifications-panel__list .notification-item.unread::before {
+    width: 2px;
+}
+
+.mobile-notifications-panel__list .notification-item:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.mobile-notifications-panel__list .notification-icon {
+    width: 46px;
+    height: 46px;
+    font-size: 15px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.mobile-notifications-panel__list .notification-title {
+    font-size: 15px;
+    margin-bottom: 2px;
+}
+
+.mobile-notifications-panel__list .notification-item.unread .notification-title {
+    font-weight: 700;
+}
+
+.mobile-notifications-panel__list .notification-text {
+    font-size: 14px;
+    line-height: 1.45;
+    color: #d4d7e1;
+    margin-bottom: 4px;
+}
+
+.mobile-notifications-panel__list .notification-time {
+    font-size: 13px;
+    color: #8f94a3;
+}
+
+body.notifications-mobile-open {
+	overflow: hidden;
 }
 
 /* ===============================
@@ -5195,6 +5349,134 @@ ol {
 		min-width: 44px;
 		min-height: 44px;
 		padding: 12px;
+	}
+
+	/* Desktop dropdown is hidden on mobile — mobile panel (#mobileNotificationsPanel) is used instead */
+	.notifications-wrapper .notifications-dropdown {
+		display: none !important;
+	}
+
+	.notifications-header {
+		height: 64px;
+		padding: 10px 14px;
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		background: #060a12;
+		border-bottom: 1px solid var(--border-muted);
+	}
+
+	.notifications-header h6 {
+		display: none;
+	}
+
+	.notifications-mobile-btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 36px;
+		height: 36px;
+		border-radius: 50%;
+		border: 1px solid rgba(255, 255, 255, 0.14);
+		background: rgba(255, 255, 255, 0.03);
+		color: var(--text-primary);
+		font-size: 16px;
+		padding: 0;
+		flex-shrink: 0;
+		box-shadow: none;
+	}
+
+	.notifications-mobile-title-wrap {
+		display: inline-flex;
+		align-items: center;
+		justify-content: flex-start;
+		gap: 6px;
+		flex: 1;
+		min-width: 0;
+	}
+
+	.notifications-mobile-title {
+		display: block;
+		margin: 0;
+		font-family: "Montserrat", sans-serif;
+		font-size: 30px;
+		font-weight: 700;
+		color: var(--text-primary);
+		line-height: 1.2;
+		white-space: nowrap;
+	}
+
+	.notifications-mobile-unread-badge {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 18px;
+		height: 18px;
+		padding: 0 5px;
+		border-radius: 9px;
+		background: #ff4444;
+		color: #ffffff;
+		font-family: "Montserrat", sans-serif;
+		font-size: 10px;
+		font-weight: 700;
+		line-height: 1;
+	}
+
+	.notifications-list {
+		max-height: calc(100vh - var(--navbar-mobile-height, 96px) - 64px);
+		padding: 8px 0 16px;
+		background: #060a12;
+	}
+
+	.notification-item {
+		padding: 16px 14px;
+		gap: 14px;
+		border-bottom: none;
+		background: transparent;
+	}
+
+	.notification-icon {
+		width: 46px;
+		height: 46px;
+		font-size: 14px;
+		border-radius: 50%;
+		background: rgba(255, 255, 255, 0.02);
+		border: 1px solid rgba(255, 255, 255, 0.12);
+	}
+
+	.notification-title {
+		font-size: 17px;
+		margin-bottom: 2px;
+	}
+
+	.notification-item.unread .notification-title {
+		font-weight: 700;
+	}
+
+	.notification-text {
+		font-family: "Montserrat", sans-serif;
+		font-size: 14px;
+		line-height: 1.42;
+		margin-bottom: 4px;
+		color: #d4d7e1;
+		-webkit-line-clamp: 3;
+	}
+
+	.notification-time {
+		font-size: 14px;
+		color: #8f94a3;
+	}
+
+	.notification-item.unread {
+		background: rgba(129, 42, 207, 0.06);
+	}
+
+	.notification-item.unread::before {
+		width: 2px;
+	}
+
+	.notification-item:hover {
+		background: transparent;
 	}
 	
 	.btn-create-announce {

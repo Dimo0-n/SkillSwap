@@ -133,6 +133,16 @@
                                     <!-- Notifications Dropdown -->
                                     <div class="notifications-dropdown" id="notificationsDropdown">
                                         <div class="notifications-header">
+                                            <button class="notifications-mobile-btn notifications-mobile-back" id="notificationsMobileBack" type="button" th:attr="aria-label=#{chat.history.back}">
+                                                <i class="fa fa-arrow-left"></i>
+                                            </button>
+                                            <div class="notifications-mobile-title-wrap">
+                                                <h6 class="notifications-mobile-title">Notificări</h6>
+                                                <span class="notifications-mobile-unread-badge hidden" id="notificationsMobileUnreadBadge">0</span>
+                                            </div>
+                                            <button class="notifications-mobile-btn notifications-mobile-menu" type="button" th:attr="aria-label=#{chat.history.settings}">
+                                                <i class="fa fa-ellipsis-v"></i>
+                                            </button>
                                             <h6 th:text="#{navbar.notifications}">Notificări</h6>
                                         </div>
                                         <div class="notifications-list" id="notificationsList">
@@ -157,6 +167,23 @@
             </div>
     </div>
     </header>
+    <!-- Mobile Notifications Panel -->
+    <div class="mobile-notifications-panel" id="mobileNotificationsPanel" aria-hidden="true">
+        <div class="mobile-notifications-panel__header">
+            <button class="mnp-btn mnp-btn--back" id="mnpBackBtn" type="button" aria-label="Înapoi">
+                <i class="fa fa-arrow-left"></i>
+            </button>
+            <div class="mnp-title-wrap">
+                <span class="mnp-title">Notificări</span>
+                <span class="mnp-unread-badge hidden" id="mnpUnreadBadge">0</span>
+            </div>
+            <button class="mnp-btn mnp-btn--menu" id="mnpMenuBtn" type="button" aria-label="Opțiuni">
+                <i class="fa fa-ellipsis-v"></i>
+            </button>
+        </div>
+        <div class="mobile-notifications-panel__list" id="mobileNotificationsList">
+        </div>
+    </div>
     <!-- Header End -->
     </div>
 

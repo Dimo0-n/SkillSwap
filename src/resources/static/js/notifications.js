@@ -71,31 +71,94 @@ const mockNotifications = [
 ];
 
 /**
+ * Returns true when viewport is in mobile range
+ */
+function isMobileViewport() {
+    return window.innerWidth <= 767;
+}
+
+/**
+ * Ensures mobile notifications panel exists and is attached directly to body
+ * (avoids stacking/position issues when navbar is inside positioned containers)
+ */
+function ensureMobilePanel() {
+    let panel = document.getElementById('mobileNotificationsPanel');
+
+    if (!panel) {
+        const wrapper = document.createElement('div');
+        wrapper.innerHTML = `
+            <div class="mobile-notifications-panel" id="mobileNotificationsPanel" aria-hidden="true">
+                <div class="mobile-notifications-panel__header">
+                    <button class="mnp-btn mnp-btn--back" id="mnpBackBtn" type="button" aria-label="Înapoi">
+                        <i class="fa fa-arrow-left"></i>
+                    </button>
+                    <div class="mnp-title-wrap">
+                        <span class="mnp-title">Notificări</span>
+                        <span class="mnp-unread-badge hidden" id="mnpUnreadBadge">0</span>
+                    </div>
+                    <button class="mnp-btn mnp-btn--menu" id="mnpMenuBtn" type="button" aria-label="Opțiuni">
+                        <i class="fa fa-ellipsis-v"></i>
+                    </button>
+                </div>
+                <div class="mobile-notifications-panel__list" id="mobileNotificationsList"></div>
+            </div>`;
+        panel = wrapper.firstElementChild;
+        document.body.appendChild(panel);
+    } else if (panel.parentElement !== document.body) {
+        document.body.appendChild(panel);
+    }
+
+    return panel;
+}
+
+/**
  * Initializes the notifications dropdown
  */
 function initializeNotifications() {
     const notificationsButton = document.getElementById('notificationsButton');
     const notificationsDropdown = document.getElementById('notificationsDropdown');
     const notificationsList = document.getElementById('notificationsList');
-    const notificationBadge = document.getElementById('notificationBadge');
+    const mobilePanel = ensureMobilePanel();
+    const mnpBackBtn = mobilePanel ? mobilePanel.querySelector('#mnpBackBtn') : null;
 
     if (!notificationsButton || !notificationsDropdown || !notificationsList) {
         return;
     }
 
-    // Render notifications
+    // Render notifications into the desktop dropdown
     renderNotifications();
 
-    // Toggle dropdown on button click
+    // Toggle: use mobile panel on mobile, desktop dropdown on desktop
     notificationsButton.addEventListener('click', function(e) {
         e.stopPropagation();
-        toggleNotificationsDropdown();
+        if (isMobileViewport()) {
+            toggleMobilePanel();
+        } else {
+            toggleNotificationsDropdown();
+        }
     });
 
-    // Close dropdown when clicking outside
+    // Mobile panel back button
+    if (mnpBackBtn) {
+        mnpBackBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            closeMobilePanel();
+        });
+    }
+
+    // Close desktop dropdown when clicking outside
     document.addEventListener('click', function(e) {
-        if (!notificationsDropdown.contains(e.target) && 
+        if (!notificationsDropdown.contains(e.target) &&
             !notificationsButton.contains(e.target)) {
+            closeNotificationsDropdown();
+        }
+    });
+
+    // On resize to desktop, close mobile panel if open
+    window.addEventListener('resize', function() {
+        if (!isMobileViewport()) {
+            closeMobilePanel();
+        } else {
             closeNotificationsDropdown();
         }
     });
@@ -105,20 +168,17 @@ function initializeNotifications() {
 }
 
 /**
- * Toggles the notifications dropdown
+ * Toggles the desktop notifications dropdown (desktop only)
  */
 function toggleNotificationsDropdown() {
     const dropdown = document.getElementById('notificationsDropdown');
-    const button = document.getElementById('notificationsButton');
-    
-    if (dropdown && button) {
-        const isOpen = dropdown.classList.contains('is-open');
+    if (dropdown) {
         dropdown.classList.toggle('is-open');
     }
 }
 
 /**
- * Closes the notifications dropdown
+ * Closes the desktop notifications dropdown
  */
 function closeNotificationsDropdown() {
     const dropdown = document.getElementById('notificationsDropdown');
@@ -128,19 +188,71 @@ function closeNotificationsDropdown() {
 }
 
 /**
- * Renders notifications in the dropdown
+ * Opens the mobile full-screen notifications panel
+ */
+function openMobilePanel() {
+    const panel = ensureMobilePanel();
+    if (!panel) return;
+
+    // Position panel below the app navbar dynamically
+    const header = document.querySelector('.header-section') || document.querySelector('header');
+    if (header) {
+        const navBottom = header.getBoundingClientRect().bottom;
+        panel.style.top = navBottom + 'px';
+        panel.style.height = (window.innerHeight - navBottom) + 'px';
+    }
+
+    renderMobileNotifications();
+    panel.classList.add('is-open');
+    panel.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('notifications-mobile-open');
+}
+
+/**
+ * Closes the mobile full-screen notifications panel
+ */
+function closeMobilePanel() {
+    const panel = document.getElementById('mobileNotificationsPanel');
+    if (!panel) return;
+    panel.classList.remove('is-open');
+    panel.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('notifications-mobile-open');
+}
+
+/**
+ * Toggles the mobile panel
+ */
+function toggleMobilePanel() {
+    const panel = document.getElementById('mobileNotificationsPanel');
+    if (!panel) return;
+    if (panel.classList.contains('is-open')) {
+        closeMobilePanel();
+    } else {
+        openMobilePanel();
+    }
+}
+
+/**
+ * Renders notifications in the desktop dropdown
  */
 function renderNotifications() {
     const notificationsList = document.getElementById('notificationsList');
     if (!notificationsList) return;
-
-    // Clear existing notifications
     notificationsList.innerHTML = '';
-
-    // Render notifications (max 5 visible, but allow scroll for more)
     mockNotifications.forEach(notification => {
-        const notificationElement = createNotificationElement(notification);
-        notificationsList.appendChild(notificationElement);
+        notificationsList.appendChild(createNotificationElement(notification));
+    });
+}
+
+/**
+ * Renders notifications in the mobile panel
+ */
+function renderMobileNotifications() {
+    const list = document.getElementById('mobileNotificationsList');
+    if (!list) return;
+    list.innerHTML = '';
+    mockNotifications.forEach(notification => {
+        list.appendChild(createNotificationElement(notification));
     });
 }
 
@@ -223,15 +335,24 @@ function handleNotificationClick(notificationId) {
  */
 function updateNotificationBadge() {
     const badge = document.getElementById('notificationBadge');
+    const mnpBadge = document.getElementById('mnpUnreadBadge');
     if (!badge) return;
 
     const unreadCount = mockNotifications.filter(n => n.unread).length;
-    
+
     if (unreadCount > 0) {
-        badge.textContent = unreadCount > 99 ? '99+' : unreadCount.toString();
+        const displayValue = unreadCount > 99 ? '99+' : unreadCount.toString();
+        badge.textContent = displayValue;
         badge.classList.remove('hidden');
+        if (mnpBadge) {
+            mnpBadge.textContent = displayValue;
+            mnpBadge.classList.remove('hidden');
+        }
     } else {
         badge.classList.add('hidden');
+        if (mnpBadge) {
+            mnpBadge.classList.add('hidden');
+        }
     }
 }
 
