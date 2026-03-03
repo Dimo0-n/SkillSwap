@@ -4,6 +4,7 @@ let currentChatRoomId = null;
 let currentUserId = null;
 let typingTimeout = null;
 let subscriptions = {}; // Track active subscriptions to prevent duplicates
+let videoSubscriptions = {}; // Per-room video subscriptions, kept across conversation switches
 let currentUserReadyResolve;
 const REACTION_OPTIONS = ['\uD83D\uDC9C', '\uD83D\uDE02', '\uD83D\uDE2D', '\uD83D\uDE21', '\uD83D\uDD25', '\uD83D\uDC4D'];
 let messageUserReactions = {};
@@ -19,10 +20,16 @@ function connectWebSocket() {
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
 
+        // Reset video subscriptions on reconnect so they can be re-established
+        videoSubscriptions = {};
+
         // Subscribe to chat room messages if we have an active chat
         if (currentChatRoomId) {
             subscribeToChat(currentChatRoomId);
         }
+
+        // Subscribe to video topics for all conversations already in the DOM
+        subscribeVideoTopicsFromDOM();
     }, function (error) {
         console.error('WebSocket connection error:', error);
         // Retry connection after 5 seconds
@@ -74,6 +81,107 @@ function subscribeToChat(chatRoomId) {
     console.log('Active subscriptions:', Object.keys(subscriptions).length);
 }
 
+function showJoinCallSection(payload) {
+    console.log('[VIDEO] showJoinCallSection called, payload:', payload, 'currentUserId:', currentUserId);
+    const messagesContainer = document.getElementById('messagesContainer');
+    if (!messagesContainer) {
+        console.warn('[VIDEO] messagesContainer not found, cannot show join-call section');
+        return;
+    }
+
+    if (payload && payload.createdByUserId != null && String(payload.createdByUserId) === String(currentUserId)) {
+        console.log('[VIDEO] Suppressing join-call section for call initiator (userId=' + currentUserId + ')');
+        return;
+    }
+
+    const meetingUrl = payload && payload.meetingUrl ? payload.meetingUrl : null;
+    const message = 'Alătură-te apelului';
+
+    const existing = document.getElementById('join-call-section');
+    if (existing) {
+        existing.remove();
+    }
+
+    const section = document.createElement('div');
+    section.id = 'join-call-section';
+    section.className = 'join-call-section';
+
+    const text = document.createElement('span');
+    text.className = 'join-call-section__text';
+    text.textContent = message;
+    section.appendChild(text);
+
+    if (meetingUrl) {
+        const joinButton = document.createElement('button');
+        joinButton.type = 'button';
+        joinButton.className = 'join-call-section__btn';
+        joinButton.textContent = 'Alătură-te';
+        joinButton.addEventListener('click', function () {
+            const newWindow = window.open(meetingUrl, '_blank', 'noopener,noreferrer');
+            if (!newWindow) {
+                window.alert('Browserul a blocat pop-up-ul. Permite pop-up-uri pentru acest site si incearca din nou.');
+            }
+        });
+        section.appendChild(joinButton);
+    }
+
+    messagesContainer.appendChild(section);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+// Subscribe to video topic for a single conversation room (idempotent)
+function subscribeVideoRoom(roomId) {
+    const key = String(roomId);
+    if (videoSubscriptions[key]) return; // already subscribed
+    if (!stompClient || !stompClient.connected) return;
+
+    console.log('[VIDEO] Subscribing to /topic/chat/' + key + '/video');
+    videoSubscriptions[key] = stompClient.subscribe('/topic/chat/' + key + '/video', function (videoData) {
+        console.log('[VIDEO] Event received on room', key, videoData.body);
+        const payload = JSON.parse(videoData.body);
+        console.log('[VIDEO] Parsed payload:', payload, 'currentUserId:', currentUserId, 'currentChatRoomId:', currentChatRoomId);
+        handleVideoSessionReady(payload, key);
+    });
+}
+
+// Subscribe to video topics for ALL conversations visible in the sidebar
+function subscribeVideoTopicsFromDOM() {
+    if (!stompClient || !stompClient.connected) return;
+    document.querySelectorAll('[data-conversation-id]').forEach(function (item) {
+        const roomId = item.dataset.conversationId;
+        if (roomId) subscribeVideoRoom(roomId);
+    });
+}
+
+// Unsubscribe from all video subscriptions (call on logout / full reset only)
+function unsubscribeAllVideoTopics() {
+    Object.keys(videoSubscriptions).forEach(function (key) {
+        if (videoSubscriptions[key]) videoSubscriptions[key].unsubscribe();
+    });
+    videoSubscriptions = {};
+}
+
+// Handle incoming video session event
+function handleVideoSessionReady(payload, roomId) {
+    if (payload && payload.createdByUserId != null && String(payload.createdByUserId) === String(currentUserId)) {
+        console.log('[VIDEO] Suppressing notification for call initiator');
+        return;
+    }
+
+    if (String(roomId) === String(currentChatRoomId)) {
+        // User is already looking at this conversation – show inline section
+        showJoinCallSection(payload);
+    } else {
+        // Call is in a different conversation – highlight corresponding sidebar item
+        const convItem = document.querySelector('[data-conversation-id="' + roomId + '"]');
+        if (convItem) {
+            convItem.classList.add('has-incoming-call');
+            convItem.dataset.pendingVideoUrl = payload.meetingUrl || '';
+            console.log('[VIDEO] Highlighted sidebar item for conversation', roomId);
+        }
+    }
+}
+
 // Unsubscribe from all active subscriptions
 function unsubscribeFromAll() {
     console.log('Unsubscribing from all topics');
@@ -83,6 +191,7 @@ function unsubscribeFromAll() {
         }
     });
     subscriptions = {};
+    // NOTE: videoSubscriptions intentionally NOT cleared here – they survive conversation switches
 }
 
 // Send message
@@ -667,6 +776,8 @@ function loadChatRoom(chatRoomId) {
     // Subscribe to new chat room
     if (stompClient && stompClient.connected) {
         subscribeToChat(chatRoomId);
+        // Ensure video subscription for this room exists
+        subscribeVideoRoom(chatRoomId);
     }
 
     // Load chat history from API
@@ -684,6 +795,14 @@ function loadChatRoom(chatRoomId) {
     const activeConversation = document.querySelector(`[data-conversation-id="${chatRoomId}"]`);
     if (activeConversation) {
         activeConversation.classList.add('active');
+
+        // If there was a pending video call notification for this conversation, show it now
+        const pendingVideoUrl = activeConversation.dataset.pendingVideoUrl;
+        if (pendingVideoUrl) {
+            activeConversation.classList.remove('has-incoming-call');
+            delete activeConversation.dataset.pendingVideoUrl;
+            showJoinCallSection({ meetingUrl: pendingVideoUrl, createdByUserId: null });
+        }
     }
 }
 

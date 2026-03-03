@@ -1,1 +1,0 @@
-S-a facut sincronizarea github cu disa git nr 2

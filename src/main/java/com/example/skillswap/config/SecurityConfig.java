@@ -1,12 +1,14 @@
 package com.example.skillswap.config;
 
 import com.example.skillswap.service.impl.CustomOAuth2UserService;
+import com.example.skillswap.service.impl.CustomOidcUserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -26,10 +28,15 @@ public class SecurityConfig {
 
         private final UserDetailsService userDetailsService;
         private final CustomOAuth2UserService customOAuth2UserService;
+        private final CustomOidcUserService customOidcUserService;
 
-        public SecurityConfig(UserDetailsService userDetailsService, CustomOAuth2UserService customOAuth2UserService) {
+        public SecurityConfig(
+                        UserDetailsService userDetailsService,
+                        CustomOAuth2UserService customOAuth2UserService,
+                        CustomOidcUserService customOidcUserService) {
                 this.userDetailsService = userDetailsService;
                 this.customOAuth2UserService = customOAuth2UserService;
+                this.customOidcUserService = customOidcUserService;
         }
 
         @Bean
@@ -84,8 +91,10 @@ public class SecurityConfig {
                                 .oauth2Login(oauth2 -> oauth2
                                                 .loginPage("/login")
                                                 .userInfoEndpoint(userInfo -> userInfo
-                                                                .userService(customOAuth2UserService))
+                                                                .userService(customOAuth2UserService)
+                                                                .oidcUserService(customOidcUserService))
                                                 .defaultSuccessUrl("/index", true))
+                                .oauth2Client(Customizer.withDefaults())
                                 .exceptionHandling(ex -> ex.accessDeniedPage("/error/403"));
 
                 return http.build();

@@ -1,0 +1,16 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            scope:
+              - openid
+              - profile
+              - email
+              - https://www.googleapis.com/auth/meetings.space.created
+
+app:
+  google:
+    meet:
+      base-url: https://meet.googleapis.com

@@ -11,4 +11,6 @@ public interface ProfileRepository extends JpaRepository<Profil, Long> {
 
     Optional<Profil> findFirstByUserEmailOrderByIdDesc(String email);
 
+    Optional<Profil> findFirstByUserIdOrderByIdDesc(Long userId);
+
 }

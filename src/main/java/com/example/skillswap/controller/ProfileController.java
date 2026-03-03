@@ -2,6 +2,7 @@ package com.example.skillswap.controller;
 
 import com.example.skillswap.dto.ProfilDto;
 import com.example.skillswap.entity.Announce;
+import com.example.skillswap.repository.UserRepository;
 import com.example.skillswap.security.CustomUserDetails;
 import com.example.skillswap.service.AnnounceService;
 import com.example.skillswap.service.ProfileService;
@@ -31,6 +32,9 @@ public class ProfileController {
 
     @Autowired
     private AnnounceService announceService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping("")
     public String profilePage(Model model, Authentication auth) {
@@ -145,6 +149,13 @@ public class ProfileController {
             Object userId = oauth2User.getAttribute("userId");
             if (userId instanceof Number number) {
                 return number.longValue();
+            }
+
+            String email = oauth2User.getAttribute("email");
+            if (email != null && !email.isBlank()) {
+                return userRepository.findByEmail(email)
+                        .map(user -> user.getId())
+                        .orElseThrow(() -> new RuntimeException("User not found"));
             }
         }
 
