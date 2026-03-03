@@ -244,6 +244,13 @@ public class ChatService {
                         if (userId instanceof Number number) {
                                 return number.longValue();
                         }
+
+                        String email = oauth2User.getAttribute("email");
+                        if (email != null && !email.isBlank()) {
+                                return userRepository.findByEmail(email)
+                                                .map(User::getId)
+                                                .orElseThrow(() -> new RuntimeException("User not found"));
+                        }
                 }
 
                 throw new RuntimeException("Unable to resolve current user id");

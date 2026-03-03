@@ -331,6 +331,88 @@ function attachChatSettingsDropdowns() {
     });
 }
 
+let videoCallInProgress = false;
+
+function setVideoCallButtonsBusy(isBusy) {
+    document.querySelectorAll('[data-video-call-trigger="true"]').forEach(button => {
+        button.disabled = isBusy;
+        button.classList.toggle('is-busy', isBusy);
+        button.setAttribute('aria-busy', isBusy ? 'true' : 'false');
+    });
+}
+
+async function startConversationVideoCall() {
+    if (videoCallInProgress) {
+        return;
+    }
+
+    if (!currentChatRoomId) {
+        window.alert('Selecteaza mai intai o conversatie.');
+        return;
+    }
+
+    videoCallInProgress = true;
+    setVideoCallButtonsBusy(true);
+
+    try {
+        const response = await fetch(`/api/conversations/${currentChatRoomId}/video-room`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        let payload = null;
+        try {
+            payload = await response.json();
+        } catch (_) {
+            payload = null;
+        }
+
+        if (!response.ok) {
+            if (response.status === 401) {
+                window.location.href = '/login';
+                return;
+            }
+
+            const message = payload?.message || 'Nu am putut porni apelul video acum. Incearca din nou.';
+            window.alert(message);
+            return;
+        }
+
+        const meetingUrl = payload?.meetingUrl;
+        if (!meetingUrl) {
+            window.alert('Serverul nu a returnat un link valid pentru apel.');
+            return;
+        }
+
+        const newWindow = window.open(meetingUrl, '_blank', 'noopener,noreferrer');
+        if (!newWindow) {
+            window.alert('Browserul a blocat pop-up-ul. Permite pop-up-uri pentru acest site si incearca din nou.');
+        }
+    } catch (error) {
+        console.error('Error starting video call:', error);
+        window.alert('A aparut o eroare la pornirea apelului video.');
+    } finally {
+        videoCallInProgress = false;
+        setVideoCallButtonsBusy(false);
+    }
+}
+
+function attachVideoCallButtons() {
+    const callButtons = document.querySelectorAll('[data-video-call-trigger="true"]');
+    if (!callButtons.length) {
+        return;
+    }
+
+    callButtons.forEach(button => {
+        button.addEventListener('click', function (event) {
+            event.preventDefault();
+            startConversationVideoCall();
+        });
+    });
+}
+
 function loadConversations() {
     const conversationsList = document.getElementById('conversationsList');
     if (!conversationsList) {
@@ -352,6 +434,11 @@ function loadConversations() {
 
             conversationsList.innerHTML = conversations.map(buildConversationItem).join('');
 
+            // Subscribe to video call topics for ALL conversations so notifications
+            // are received regardless of which conversation is currently open.
+            if (typeof subscribeVideoTopicsFromDOM === 'function') {
+                subscribeVideoTopicsFromDOM();
+            }
             const urlParams = new URLSearchParams(window.location.search);
             const roomIdFromUrl = urlParams.get('roomId');
             const initialRoomId = roomIdFromUrl || String(conversations[0].chatRoomId);
@@ -385,6 +472,7 @@ document.addEventListener('DOMContentLoaded', function () {
     attachConversationHandlers();
     attachConversationSearch();
     attachChatSettingsDropdowns();
+    attachVideoCallButtons();
 
     window.addEventListener('resize', function () {
         syncMobileNavbarOffset();

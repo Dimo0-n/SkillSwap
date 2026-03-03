@@ -1,6 +1,7 @@
 package com.example.skillswap.security;
 
 import com.example.skillswap.repository.AnnounceRepository;
+import com.example.skillswap.repository.UserRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Component;
@@ -9,9 +10,11 @@ import org.springframework.stereotype.Component;
 public class AnnounceSecurity {
 
     private final AnnounceRepository announceRepository;
+    private final UserRepository userRepository;
 
-    public AnnounceSecurity(AnnounceRepository announceRepository) {
+    public AnnounceSecurity(AnnounceRepository announceRepository, UserRepository userRepository) {
         this.announceRepository = announceRepository;
+        this.userRepository = userRepository;
     }
 
     //functie de securitate pentru a afla daca user-ul
@@ -42,6 +45,13 @@ public class AnnounceSecurity {
             Object userId = oauth2User.getAttribute("userId");
             if (userId instanceof Number number) {
                 return number.longValue();
+            }
+
+            String email = oauth2User.getAttribute("email");
+            if (email != null && !email.isBlank()) {
+                return userRepository.findByEmail(email)
+                        .map(user -> user.getId())
+                        .orElse(null);
             }
         }
 

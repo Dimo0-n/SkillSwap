@@ -221,6 +221,59 @@
     background: var(--bg-dark);
 }
 
+.join-call-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: fit-content;
+    max-width: 92%;
+    margin: 10px auto;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(129, 42, 207, 0.45);
+    background: rgba(129, 42, 207, 0.12);
+    color: var(--text-primary);
+}
+
+/* Sidebar indicator – conversation has an active video call */
+.conversation-item.has-incoming-call {
+    outline: 2px solid rgba(129, 42, 207, 0.65);
+    outline-offset: -2px;
+    position: relative;
+}
+
+.conversation-item.has-incoming-call::after {
+    content: '📹';
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+}
+
+.join-call-section__text {
+    font-family: "Montserrat", sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.join-call-section__btn {
+    margin-left: 8px;
+    border: 0;
+    border-radius: 8px;
+    padding: 6px 10px;
+    background: var(--brand-primary);
+    color: var(--text-primary);
+    font-family: "Montserrat", sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.join-call-section__btn:hover {
+    filter: brightness(1.08);
+}
+
 /* Chat Header */
 .chat-header {
     padding: 20px 24px;

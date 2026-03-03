@@ -199,7 +199,8 @@ function openMobilePanel() {
     if (header) {
         const navBottom = header.getBoundingClientRect().bottom;
         panel.style.top = navBottom + 'px';
-        panel.style.height = (window.innerHeight - navBottom) + 'px';
+        panel.style.bottom = '0';
+        panel.style.height = 'auto';
     }
 
     renderMobileNotifications();

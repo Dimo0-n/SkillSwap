@@ -57,7 +57,11 @@
             <span class="chat-status" id="mobileChatStatus" th:text="#{chat.history.offline}">Offline</span>
         </div>
         <div class="chat-actions">
-            <button class="chat-action-btn call-action-btn" type="button" th:attr="aria-label=#{chat.history.call}">
+            <button class="chat-action-btn call-action-btn"
+                    id="mobileStartCallButton"
+                    data-video-call-trigger="true"
+                    type="button"
+                    th:attr="aria-label=#{chat.history.call}">
                 <i class="fa fa-phone" aria-hidden="true"></i>
             </button>
             <div class="chat-settings-wrapper">
@@ -112,7 +116,11 @@
                                     </div>
                                 </div>
                                 <div class="chat-header-actions">
-                                    <button class="chat-action-btn call-action-btn" id="startCallButton" type="button" th:attr="title=#{chat.history.call}">
+                                    <button class="chat-action-btn call-action-btn"
+                                            id="startCallButton"
+                                            data-video-call-trigger="true"
+                                            type="button"
+                                            th:attr="title=#{chat.history.call}">
                                         <i class="fa fa-phone"></i>
                                     </button>
                                     <div class="chat-settings-wrapper">

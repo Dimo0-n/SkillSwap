@@ -101,11 +101,21 @@ public class ProfileServiceImpl implements ProfileService {
     public ProfilDto getAuthorByUserId(Long userId) {
         ProfilDto dto = new ProfilDto();
 
-        Optional<Profil> profil = profileRepository.findById(userId);
+        Optional<Profil> profil = profileRepository.findFirstByUserIdOrderByIdDesc(userId);
 
-        dto.setId(profil.get().getId());
-        dto.setName(profil.get().getName());
-        dto.setProfession(profil.get().getProfession());
+        if (profil.isPresent()) {
+            dto.setId(profil.get().getId());
+            dto.setName(profil.get().getName());
+            dto.setProfession(profil.get().getProfession());
+            return dto;
+        }
+
+        User author = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Author not found"));
+
+        dto.setId(author.getId());
+        dto.setName(author.getFullName());
+        dto.setProfession("SkillSwap user");
 
         // TODO
         //  1. de adaugat ratingul la user

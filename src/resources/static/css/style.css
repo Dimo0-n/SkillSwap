@@ -1618,9 +1618,11 @@ ol {
     display: none;
     position: fixed;
     top: 0;
+	bottom: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
+	height: 100dvh;
     z-index: 9999;
     background: #060a12;
     flex-direction: column;
@@ -1700,7 +1702,7 @@ ol {
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 6px 0 24px;
+	padding: 6px 0 calc(24px + env(safe-area-inset-bottom, 0px));
 }
 
 .mobile-notifications-panel__list .notification-item {

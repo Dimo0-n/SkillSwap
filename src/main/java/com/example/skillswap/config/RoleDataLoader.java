@@ -14,11 +14,11 @@ public class RoleDataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        if (roleRepository.findByName("ROLE_ADMIN") == null) {
+        if (roleRepository.findByName("ROLE_ADMIN").isEmpty()) {
             roleRepository.save(new Role("ROLE_ADMIN"));
         }
 
-        if (roleRepository.findByName("ROLE_USER") == null) {
+        if (roleRepository.findByName("ROLE_USER").isEmpty()) {
             roleRepository.save(new Role("ROLE_USER"));
         }
     }

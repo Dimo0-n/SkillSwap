@@ -2,7 +2,9 @@ package com.example.skillswap.repository;
 
 import com.example.skillswap.entity.ChatRoom;
 import com.example.skillswap.entity.User;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -12,6 +14,10 @@ import java.util.Optional;
 
 @Repository
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT cr FROM ChatRoom cr WHERE cr.id = :id")
+    Optional<ChatRoom> findByIdForUpdate(@Param("id") Long id);
 
     @Query("SELECT cr FROM ChatRoom cr WHERE " +
             "(cr.user1 = :user1 AND cr.user2 = :user2) OR " +
