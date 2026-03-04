@@ -320,39 +320,60 @@ Include (indiferent de variantă):
     </div>
 
     <script>
-        const btn = document.getElementById("aiGenerateBtn")
+        const btn = document.getElementById("aiGenerateBtn");
+        const textarea = document.getElementById("detailedDescription");
+        const maxIdeasLength = 200;
 
-        btn.addEventListener("click", async () => {
+        if (btn && textarea) {
+            btn.addEventListener("click", async () => {
+                const ideas = textarea.value.trim();
 
-            const textarea = document.getElementById("detailedDescription")
+                if (!ideas) {
+                    alert("Scrie câteva idei mai întâi.");
+                    return;
+                }
 
-            const ideas = textarea.value
+                if (ideas.length > maxIdeasLength) {
+                    alert("Textul este prea lung. Te rog limitează ideile la maximum 200 de caractere.");
+                    return;
+                }
 
-            if(!ideas.trim()){
-                alert("Scrie cateva idei mai intai")
-                return
-            }
+                const previousText = textarea.value;
+                const originalBtnText = btn.innerHTML;
 
-            if (ideas.length() > 200) {
-                throw new IllegalArgumentException("Input too long");
-            }
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Generate...';
+                textarea.value = "Se generează descrierea...";
 
-            textarea.value = "AI is generating..."
+                try {
+                    const response = await fetch("/api/ai/generate-description", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            ideas: ideas
+                        })
+                    });
 
-            const response = await fetch("/api/ai/generate-description", {
-                method:"POST",
-                headers:{
-                    "Content-Type":"application/json"
-                },
-                body:JSON.stringify({
-                    ideas: ideas
-                })
-            })
+                    const text = await response.text();
 
-            const text = await response.text()
+                    if (!response.ok) {
+                        throw new Error(text || "Nu am putut genera descrierea momentan.");
+                    }
 
-            textarea.value = text
-        })
+                    textarea.value = (text || "").trim() || previousText;
+                    textarea.dispatchEvent(new Event('input'));
+                } catch (error) {
+                    console.error("AI generation error:", error);
+                    textarea.value = previousText;
+                    alert(error.message || "A apărut o eroare la generare. Încearcă din nou.");
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = originalBtnText;
+                }
+            });
+        }
     </script>
     
 

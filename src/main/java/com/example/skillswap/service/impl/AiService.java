@@ -1,7 +1,6 @@
 package com.example.skillswap.service.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -24,7 +23,11 @@ public class AiService {
 
     public String generateDescription(String ideas) {
 
-        String prompt = createPrompt(ideas);
+                if (ideas == null || ideas.trim().isEmpty()) {
+                        throw new IllegalArgumentException("Scrie câteva idei înainte de generare.");
+                }
+
+                String prompt = createPrompt(ideas.trim());
 
         Map<String, Object> body = Map.of(
                 "model", "deepseek-chat",
@@ -49,15 +52,18 @@ public class AiService {
                 .bodyValue(body)
                 .retrieve()
                 .bodyToMono(JsonNode.class)
-                .map(node ->
-                        node.get("choices")
-                                .get(0)
-                                .get("message")
-                                .get("content")
-                                .asText()
-                                .trim()
-                )
-                .block();
+                                .map(node -> {
+                                        JsonNode contentNode = node.path("choices").path(0).path("message").path("content");
+                                        String generated = contentNode.asText("").trim();
+
+                                        if (generated.isBlank()) {
+                                                throw new IllegalStateException("AI response was empty");
+                                        }
+
+                                        return generated;
+                                })
+                                .blockOptional()
+                                .orElseThrow(() -> new IllegalStateException("AI service did not return a response"));
     }
 
     private String createPrompt(String ideas) {
