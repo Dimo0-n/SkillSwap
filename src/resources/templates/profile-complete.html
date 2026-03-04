@@ -319,6 +319,41 @@ Include (indiferent de variantă):
         </div>
     </div>
 
+    <script>
+        const btn = document.getElementById("aiGenerateBtn")
+
+        btn.addEventListener("click", async () => {
+
+            const textarea = document.getElementById("detailedDescription")
+
+            const ideas = textarea.value
+
+            if(!ideas.trim()){
+                alert("Scrie cateva idei mai intai")
+                return
+            }
+
+            if (ideas.length() > 200) {
+                throw new IllegalArgumentException("Input too long");
+            }
+
+            textarea.value = "AI is generating..."
+
+            const response = await fetch("/api/ai/generate-description", {
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify({
+                    ideas: ideas
+                })
+            })
+
+            const text = await response.text()
+
+            textarea.value = text
+        })
+    </script>
     
 
     <!-- Js Plugins -->
