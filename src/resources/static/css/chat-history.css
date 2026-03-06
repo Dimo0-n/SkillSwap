@@ -1,10 +1,21 @@
 /* Chat History Styles - Respecting SkillSwap Theme */
 
+body {
+    background: var(--bg-dark);
+    overflow: hidden;
+}
+
 .chat-history-section {
     padding-top: 10px;
     padding-bottom: 0;
-    min-height: calc(100vh - 143px);
+    min-height: calc(100vh - 138px);
     background: var(--bg-dark);
+    overflow: hidden;
+}
+
+/* Chat history page only: make the top black strip a bit shorter */
+.header-section .ht-options {
+    padding: 8px 0;
 }
 
 .mobile-chat-header {
@@ -13,11 +24,12 @@
 
 .chat-history-container {
     display: flex;
-    height: calc(100vh - 143px);
+    height: calc(100vh - 138px);
     max-height: none;
     background: var(--card-bg);
     border-radius: 16px;
     overflow: hidden;
+    box-sizing: border-box;
     box-shadow: var(--shadow-md);
     border: 1px solid var(--border-muted);
 }
