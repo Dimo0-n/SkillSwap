@@ -2,6 +2,7 @@ package com.example.skillswap.config;
 
 import com.example.skillswap.service.impl.CustomOAuth2UserService;
 import com.example.skillswap.service.impl.CustomOidcUserService;
+import com.example.skillswap.service.impl.ChatService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,14 +30,17 @@ public class SecurityConfig {
         private final UserDetailsService userDetailsService;
         private final CustomOAuth2UserService customOAuth2UserService;
         private final CustomOidcUserService customOidcUserService;
+        private final ChatService chatService;
 
         public SecurityConfig(
                         UserDetailsService userDetailsService,
                         CustomOAuth2UserService customOAuth2UserService,
-                        CustomOidcUserService customOidcUserService) {
+                        CustomOidcUserService customOidcUserService,
+                        ChatService chatService) {
                 this.userDetailsService = userDetailsService;
                 this.customOAuth2UserService = customOAuth2UserService;
                 this.customOidcUserService = customOidcUserService;
+                this.chatService = chatService;
         }
 
         @Bean
@@ -86,7 +90,18 @@ public class SecurityConfig {
                                                 .logoutUrl("/logout")
                                                 .invalidateHttpSession(true)
                                                 .deleteCookies("JSESSIONID")
-                                                .logoutSuccessUrl("/login?logout=true")
+                                                .logoutSuccessHandler((request, response, authentication) -> {
+                                                        if (authentication != null) {
+                                                                try {
+                                                                        Long userId = chatService.getCurrentUserId(authentication);
+                                                                        chatService.setUserOffline(userId);
+                                                                } catch (Exception ignored) {
+                                                                        // Ignore principals that cannot be resolved to an application user.
+                                                                }
+                                                        }
+
+                                                        response.sendRedirect("/login?logout=true");
+                                                })
                                                 .permitAll())
                                 .oauth2Login(oauth2 -> oauth2
                                                 .loginPage("/login")

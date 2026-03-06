@@ -185,6 +185,60 @@
         </div>
     </div>
     <!-- Header End -->
+
+    <script sec:authorize="isAuthenticated()">
+        (function () {
+            const heartbeatIntervalMs = 20000;
+            let heartbeatTimer = null;
+
+            function sendPresenceHeartbeat() {
+                fetch('/api/presence/ping', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    credentials: 'same-origin',
+                    keepalive: true
+                }).catch(function () {
+                    // Ignore transient network errors.
+                });
+            }
+
+            function startHeartbeat() {
+                if (heartbeatTimer) {
+                    return;
+                }
+
+                sendPresenceHeartbeat();
+                heartbeatTimer = window.setInterval(sendPresenceHeartbeat, heartbeatIntervalMs);
+            }
+
+            function stopHeartbeat() {
+                if (!heartbeatTimer) {
+                    return;
+                }
+
+                window.clearInterval(heartbeatTimer);
+                heartbeatTimer = null;
+            }
+
+            document.addEventListener('visibilitychange', function () {
+                if (document.hidden) {
+                    stopHeartbeat();
+                } else {
+                    startHeartbeat();
+                }
+            });
+
+            window.addEventListener('focus', startHeartbeat);
+            window.addEventListener('blur', function () {
+                // Keep a small overlap; scheduler will move offline on inactivity.
+            });
+
+            startHeartbeat();
+        })();
+    </script>
     </div>
 
 </body>

@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>{
@@ -20,5 +22,7 @@ public interface UserRepository extends JpaRepository<User, Long>{
         WHERE u.email = :email
     """)
     Optional<User> findByEmailWithRoles(String email);
+
+    List<User> findByOnlineTrueAndLastActivityAtBefore(LocalDateTime cutoff);
 
 }

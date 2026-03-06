@@ -45,16 +45,18 @@ function buildConversationItem(conversation) {
         ? `<span class="unread-badge">${conversation.unreadCount}</span>`
         : '';
     const avatarUrl = conversation.otherUserAvatarUrl || '/img/default-avatar.png';
+    const status = conversation.otherUserOnline ? 'online' : 'offline';
 
     return `
         <div class="conversation-item"
              data-conversation-id="${conversation.chatRoomId}"
+             data-user-id="${conversation.otherUserId}"
              data-user-name="${escapeHtmlForSidebar(conversation.otherUserName)}"
              data-user-avatar="${escapeHtmlForSidebar(avatarUrl)}"
-             data-user-status="offline">
+             data-user-status="${status}">
             <div class="conversation-avatar">
                 <img src="${escapeHtmlForSidebar(avatarUrl)}" alt="${escapeHtmlForSidebar(conversation.otherUserName)}">
-                <span class="status-indicator status-offline"></span>
+                <span class="status-indicator ${status === 'online' ? 'status-online' : 'status-offline'}"></span>
             </div>
             <div class="conversation-content">
                 <div class="conversation-header">
@@ -116,6 +118,34 @@ function updateChatHeaderFromConversation(item) {
 
     if (mobileChatStatus) {
         mobileChatStatus.textContent = status === 'online' ? 'Online' : 'Offline';
+    }
+}
+
+function updateConversationPresence(userId, isOnline) {
+    if (userId === null || userId === undefined) {
+        return;
+    }
+
+    const targetUserId = String(userId);
+    const status = isOnline ? 'online' : 'offline';
+
+    document.querySelectorAll('#conversationsList .conversation-item[data-user-id]').forEach(item => {
+        if ((item.dataset.userId || '') !== targetUserId) {
+            return;
+        }
+
+        item.dataset.userStatus = status;
+
+        const indicator = item.querySelector('.conversation-avatar .status-indicator');
+        if (indicator) {
+            indicator.classList.remove('status-online', 'status-offline');
+            indicator.classList.add(isOnline ? 'status-online' : 'status-offline');
+        }
+    });
+
+    const activeItem = document.querySelector('#conversationsList .conversation-item.active[data-user-id]');
+    if (activeItem && (activeItem.dataset.userId || '') === targetUserId) {
+        updateChatHeaderFromConversation(activeItem);
     }
 }
 
@@ -464,6 +494,7 @@ function loadConversations() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+    window.updateConversationPresence = updateConversationPresence;
     window.openChat = openChat;
     window.goBackToList = goBackToList;
 

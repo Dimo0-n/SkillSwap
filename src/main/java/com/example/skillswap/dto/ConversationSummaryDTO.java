@@ -15,4 +15,6 @@ public class ConversationSummaryDTO {
     private String lastMessage;
     private LocalDateTime lastMessageTime;
     private Long unreadCount;
+    private Boolean otherUserOnline;
+    private LocalDateTime otherUserLastSeenAt;
 }
