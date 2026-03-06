@@ -24,6 +24,25 @@
     <link rel="stylesheet" href="/css/magnific-popup.css" type="text/css">
     <link rel="stylesheet" href="/css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+    <style>
+        .contact-message-group {
+            margin-bottom: 18px;
+        }
+
+        .contact-message-group textarea {
+            margin-bottom: 6px !important;
+        }
+
+        .contact-char-counter {
+            text-align: left;
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 12px;
+            color: #a0a0b8;
+            margin-top: 0;
+            padding-left: 2px;
+        }
+    </style>
 </head>
 
 <body>
@@ -53,7 +72,12 @@
                                         <input th:field="*{fullName}" type="text" th:attr="placeholder=#{contact.fullname}" name="fullName">
                                         <input th:field="*{email}" type="text" th:attr="placeholder=#{contact.email}" name="email">
                                     </div>
-                                    <textarea th:field="*{message}" th:attr="placeholder=#{contact.message}"></textarea>
+                                    <div class="contact-message-group">
+                                        <textarea th:field="*{message}" id="contactMessage" maxlength="300" th:attr="placeholder=#{contact.message}"></textarea>
+                                        <div class="contact-char-counter">
+                                            <span id="contactMessageCharCount">0</span> / 300 caractere
+                                        </div>
+                                    </div>
                                     <button type="submit" th:text="#{contact.submit}">Submit</button>
                                 </form>
                             </div>
@@ -86,6 +110,43 @@
     <script src="/js/jquery.barfiller.js"></script>
     <script src="/js/jquery.slicknav.js"></script>
     <script src="/js/owl.carousel.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const messageField = document.getElementById('contactMessage');
+            const messageCharCount = document.getElementById('contactMessageCharCount');
+
+            if (!messageField || !messageCharCount) {
+                return;
+            }
+
+            const maxLength = Number(messageField.getAttribute('maxlength')) || 300;
+
+            function updateMessageCharCount() {
+                if (messageField.value.length > maxLength) {
+                    messageField.value = messageField.value.substring(0, maxLength);
+                }
+
+                const count = messageField.value.length;
+                messageCharCount.textContent = String(count);
+
+                const counter = messageCharCount.closest('.contact-char-counter');
+                if (!counter) {
+                    return;
+                }
+
+                if (count > 270) {
+                    counter.style.color = '#ff6b6b';
+                } else if (count > 225) {
+                    counter.style.color = '#ffa500';
+                } else {
+                    counter.style.color = '#a0a0b8';
+                }
+            }
+
+            messageField.addEventListener('input', updateMessageCharCount);
+            updateMessageCharCount();
+        });
+    </script>
     <script src="/js/main.js"></script>
 </body>
 
