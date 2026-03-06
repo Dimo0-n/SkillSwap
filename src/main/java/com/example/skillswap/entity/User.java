@@ -39,6 +39,13 @@ public class User {
 
     private LocalDateTime registerData;
 
+    @Column(nullable = false)
+    private Boolean online = false;
+
+    private LocalDateTime lastActivityAt;
+
+    private LocalDateTime lastSeenAt;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles",

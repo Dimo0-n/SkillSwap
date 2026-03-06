@@ -21,6 +21,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -210,12 +211,46 @@ public class ChatService {
                             avatarUrl,
                             lastMessage != null ? lastMessage.getContent() : "",
                             lastMessage != null ? lastMessage.getCreatedAt() : chatRoom.getCreatedAt(),
-                            unreadCount
+                            unreadCount,
+                            Boolean.TRUE.equals(otherUser.getOnline()),
+                            otherUser.getLastSeenAt()
                     );
                 })
                 .sorted(Comparator.comparing(ConversationSummaryDTO::getLastMessageTime).reversed())
                 .collect(Collectors.toList());
     }
+
+    @Transactional
+        public boolean setUserOnline(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+                boolean alreadyOnline = Boolean.TRUE.equals(user.getOnline());
+        user.setOnline(true);
+                user.setLastActivityAt(LocalDateTime.now());
+        user.setLastSeenAt(null);
+                return !alreadyOnline;
+    }
+
+    @Transactional
+    public LocalDateTime setUserOffline(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        LocalDateTime now = LocalDateTime.now();
+        user.setOnline(false);
+                user.setLastActivityAt(null);
+        user.setLastSeenAt(now);
+        return now;
+    }
+
+        @Transactional(readOnly = true)
+        public List<Long> findInactiveOnlineUserIds(LocalDateTime cutoff) {
+                return userRepository.findByOnlineTrueAndLastActivityAtBefore(cutoff)
+                                .stream()
+                                .map(User::getId)
+                                .toList();
+        }
 
         @Transactional(readOnly = true)
         public User getUserById(Long userId) {

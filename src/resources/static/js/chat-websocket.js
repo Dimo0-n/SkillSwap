@@ -8,6 +8,7 @@ let videoSubscriptions = {}; // Per-room video subscriptions, kept across conver
 let currentUserReadyResolve;
 const REACTION_OPTIONS = ['\uD83D\uDC9C', '\uD83D\uDE02', '\uD83D\uDE2D', '\uD83D\uDE21', '\uD83D\uDD25', '\uD83D\uDC4D'];
 let messageUserReactions = {};
+let presenceSubscription = null;
 window.currentUserReadyPromise = new Promise(resolve => {
     currentUserReadyResolve = resolve;
 });
@@ -30,10 +31,29 @@ function connectWebSocket() {
 
         // Subscribe to video topics for all conversations already in the DOM
         subscribeVideoTopicsFromDOM();
+
+        subscribeToPresence();
     }, function (error) {
         console.error('WebSocket connection error:', error);
         // Retry connection after 5 seconds
         setTimeout(connectWebSocket, 5000);
+    });
+}
+
+function subscribeToPresence() {
+    if (!stompClient || !stompClient.connected) {
+        return;
+    }
+
+    if (presenceSubscription) {
+        presenceSubscription.unsubscribe();
+    }
+
+    presenceSubscription = stompClient.subscribe('/topic/presence', function (presenceEvent) {
+        const payload = JSON.parse(presenceEvent.body);
+        if (typeof window.updateConversationPresence === 'function') {
+            window.updateConversationPresence(payload.userId, payload.online === true);
+        }
     });
 }
 
