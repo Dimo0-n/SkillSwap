@@ -284,7 +284,7 @@
     margin-bottom: 0.75rem;
 }
 
-.form-control {
+.profile-complete-section .form-control {
     width: 100%;
     background: #0f0f0f;
     border: 1px solid rgba(129, 42, 207, 0.12);
@@ -296,18 +296,18 @@
     transition: all 0.3s ease;
 }
 
-.form-control:focus {
+.profile-complete-section .form-control:focus {
     outline: none;
     border-color: #7b2cbf;
     box-shadow: 0 0 0 3px rgba(129, 42, 207, 0.15);
     background: #0a0a0a;
 }
 
-.form-control::placeholder {
+.profile-complete-section .form-control::placeholder {
     color: #666;
 }
 
-textarea.form-control {
+.profile-complete-section textarea.form-control {
     resize: vertical;
     min-height: 100px;
 }
@@ -856,7 +856,7 @@ textarea.form-control {
         margin-bottom: 12px;
     }
     
-    .form-control {
+    .profile-complete-section .form-control {
         width: 100%;
         padding: 14px 16px;
         font-size: 16px;
