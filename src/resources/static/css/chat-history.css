@@ -13,11 +13,6 @@ body {
     overflow: hidden;
 }
 
-/* Chat history page only: make the top black strip a bit shorter */
-.header-section .ht-options {
-    padding: 8px 0;
-}
-
 .mobile-chat-header {
     display: none;
 }

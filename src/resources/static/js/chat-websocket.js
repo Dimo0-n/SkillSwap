@@ -72,6 +72,10 @@ function subscribeToChat(chatRoomId) {
         console.log('Message received:', chatMessage);
         displayMessage(chatMessage);
 
+        if (typeof window.updateConversationLastMessage === 'function') {
+            window.updateConversationLastMessage(chatMessage.chatRoomId, chatMessage.content, chatMessage.timestamp);
+        }
+
         // Mark as delivered if it's not our message
         if (chatMessage.senderId !== currentUserId) {
             markAsDelivered(chatMessage.id);
@@ -752,6 +756,31 @@ document.addEventListener('DOMContentLoaded', function () {
     // Handle typing indicator
     if (messageInput) {
         let typingTimer;
+
+        messageInput.addEventListener('keydown', function (event) {
+            if (event.key !== 'Enter') {
+                return;
+            }
+
+            // Enter sends the message, Shift+Enter keeps newline behavior.
+            if (event.shiftKey) {
+                return;
+            }
+
+            event.preventDefault();
+
+            const content = messageInput.value.trim();
+            if (!content) {
+                return;
+            }
+
+            sendMessage(content);
+            messageInput.value = '';
+            autoResizeMessageInput();
+            syncMobileComposerOffset();
+            sendTypingIndicator(false);
+        });
+
         messageInput.addEventListener('input', function () {
             autoResizeMessageInput();
             syncMobileComposerOffset();

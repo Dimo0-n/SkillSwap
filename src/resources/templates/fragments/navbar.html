@@ -120,7 +120,7 @@
                                 <a th:href="@{/chat-history}" class="btn-conversations"
                                     sec:authorize="isAuthenticated()" th:attr="aria-label=#{navbar.conversations}">
                                     <i class="fa fa-comments"></i>
-                                    <span class="conversation-badge" id="conversationBadge">2</span>
+                                    <span class="conversation-badge hidden" id="conversationBadge">0</span>
                                 </a>
 
                                 <!-- Notifications Button -->

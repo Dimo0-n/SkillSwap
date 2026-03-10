@@ -357,8 +357,98 @@ function updateNotificationBadge() {
     }
 }
 
+function setConversationBadgeCount(count) {
+    const badge = document.getElementById('conversationBadge');
+    if (!badge) {
+        return;
+    }
+
+    const normalizedCount = Number.isFinite(count) ? Math.max(0, Math.floor(count)) : 0;
+
+    if (normalizedCount > 0) {
+        badge.textContent = normalizedCount > 99 ? '99+' : String(normalizedCount);
+        badge.classList.remove('hidden');
+        return;
+    }
+
+    badge.textContent = '0';
+    badge.classList.add('hidden');
+}
+
+async function updateConversationBadge() {
+    const badge = document.getElementById('conversationBadge');
+    if (!badge) {
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/chat/rooms', {
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        if (response.status === 401 || response.status === 403) {
+            setConversationBadgeCount(0);
+            return;
+        }
+
+        if (!response.ok) {
+            return;
+        }
+
+        const conversations = await response.json();
+        if (!Array.isArray(conversations)) {
+            setConversationBadgeCount(0);
+            return;
+        }
+
+        const unreadTotal = conversations.reduce((sum, conversation) => {
+            const unread = Number(conversation && conversation.unreadCount);
+            return sum + (Number.isFinite(unread) && unread > 0 ? unread : 0);
+        }, 0);
+
+        setConversationBadgeCount(unreadTotal);
+    } catch (error) {
+        console.warn('Could not refresh conversation badge:', error);
+    }
+}
+
+function initializeConversationBadge() {
+    const badge = document.getElementById('conversationBadge');
+    if (!badge) {
+        return;
+    }
+
+    updateConversationBadge();
+
+    const refreshBadge = function () {
+        updateConversationBadge();
+    };
+
+    window.addEventListener('focus', refreshBadge);
+
+    document.addEventListener('visibilitychange', function () {
+        if (!document.hidden) {
+            refreshBadge();
+        }
+    });
+
+    window.addEventListener('chat:conversations-updated', function (event) {
+        const totalUnread = event && event.detail ? Number(event.detail.totalUnread) : NaN;
+        if (Number.isFinite(totalUnread)) {
+            setConversationBadgeCount(totalUnread);
+        } else {
+            refreshBadge();
+        }
+    });
+
+    window.setInterval(refreshBadge, 30000);
+}
+
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
     initializeNotifications();
+    initializeConversationBadge();
 });
 

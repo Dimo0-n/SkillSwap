@@ -51,6 +51,7 @@ function buildConversationItem(conversation) {
         <div class="conversation-item"
              data-conversation-id="${conversation.chatRoomId}"
              data-user-id="${conversation.otherUserId}"
+               data-unread-count="${Number.isFinite(Number(conversation.unreadCount)) && Number(conversation.unreadCount) > 0 ? Math.floor(Number(conversation.unreadCount)) : 0}"
              data-user-name="${escapeHtmlForSidebar(conversation.otherUserName)}"
              data-user-avatar="${escapeHtmlForSidebar(avatarUrl)}"
              data-user-status="${status}">
@@ -68,6 +69,67 @@ function buildConversationItem(conversation) {
             ${unreadBadge}
         </div>
     `;
+}
+
+function getTotalUnreadFromDOM() {
+    return Array.from(document.querySelectorAll('#conversationsList .conversation-item[data-conversation-id]'))
+        .reduce((sum, item) => {
+            const unread = Number(item.dataset.unreadCount || 0);
+            return sum + (Number.isFinite(unread) && unread > 0 ? unread : 0);
+        }, 0);
+}
+
+function emitUnreadTotalUpdate() {
+    window.dispatchEvent(new CustomEvent('chat:conversations-updated', {
+        detail: { totalUnread: getTotalUnreadFromDOM() }
+    }));
+}
+
+function markConversationAsRead(conversationId) {
+    const item = document.querySelector(`#conversationsList .conversation-item[data-conversation-id="${conversationId}"]`);
+    if (!item) {
+        return;
+    }
+
+    const unread = Number(item.dataset.unreadCount || 0);
+    if (!Number.isFinite(unread) || unread <= 0) {
+        return;
+    }
+
+    item.dataset.unreadCount = '0';
+    const unreadBadge = item.querySelector('.unread-badge');
+    if (unreadBadge) {
+        unreadBadge.remove();
+    }
+
+    emitUnreadTotalUpdate();
+}
+
+function updateConversationLastMessage(conversationId, messageContent, timestamp) {
+    const conversationsList = document.getElementById('conversationsList');
+    if (!conversationsList) {
+        return;
+    }
+
+    const item = conversationsList.querySelector(`.conversation-item[data-conversation-id="${conversationId}"]`);
+    if (!item) {
+        return;
+    }
+
+    const previewElement = item.querySelector('.conversation-preview');
+    if (previewElement) {
+        previewElement.textContent = messageContent || '';
+    }
+
+    const timeElement = item.querySelector('.conversation-time');
+    if (timeElement) {
+        timeElement.textContent = formatConversationTime(timestamp || new Date().toISOString());
+    }
+
+    // Keep the most recently active conversation at the top of the list.
+    if (conversationsList.firstElementChild !== item) {
+        conversationsList.prepend(item);
+    }
 }
 
 function updateChatHeaderFromConversation(item) {
@@ -166,6 +228,7 @@ function openChat(conversationId) {
     }
 
     updateChatHeaderFromConversation(item);
+    markConversationAsRead(conversationId);
     loadChatRoom(conversationId);
 
     if (!isMobileChatView()) {
@@ -459,10 +522,12 @@ function loadConversations() {
         .then(conversations => {
             if (!Array.isArray(conversations) || conversations.length === 0) {
                 renderEmptyConversationsState();
+                emitUnreadTotalUpdate();
                 return;
             }
 
             conversationsList.innerHTML = conversations.map(buildConversationItem).join('');
+            emitUnreadTotalUpdate();
 
             // Subscribe to video call topics for ALL conversations so notifications
             // are received regardless of which conversation is currently open.
@@ -495,6 +560,7 @@ function loadConversations() {
 
 document.addEventListener('DOMContentLoaded', function () {
     window.updateConversationPresence = updateConversationPresence;
+    window.updateConversationLastMessage = updateConversationLastMessage;
     window.openChat = openChat;
     window.goBackToList = goBackToList;
 
