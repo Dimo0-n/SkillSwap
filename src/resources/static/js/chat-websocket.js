@@ -72,6 +72,10 @@ function subscribeToChat(chatRoomId) {
         console.log('Message received:', chatMessage);
         displayMessage(chatMessage);
 
+        if (typeof window.updateConversationLastMessage === 'function') {
+            window.updateConversationLastMessage(chatMessage.chatRoomId, chatMessage.content, chatMessage.timestamp);
+        }
+
         // Mark as delivered if it's not our message
         if (chatMessage.senderId !== currentUserId) {
             markAsDelivered(chatMessage.id);

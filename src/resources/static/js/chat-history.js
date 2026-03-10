@@ -105,6 +105,33 @@ function markConversationAsRead(conversationId) {
     emitUnreadTotalUpdate();
 }
 
+function updateConversationLastMessage(conversationId, messageContent, timestamp) {
+    const conversationsList = document.getElementById('conversationsList');
+    if (!conversationsList) {
+        return;
+    }
+
+    const item = conversationsList.querySelector(`.conversation-item[data-conversation-id="${conversationId}"]`);
+    if (!item) {
+        return;
+    }
+
+    const previewElement = item.querySelector('.conversation-preview');
+    if (previewElement) {
+        previewElement.textContent = messageContent || '';
+    }
+
+    const timeElement = item.querySelector('.conversation-time');
+    if (timeElement) {
+        timeElement.textContent = formatConversationTime(timestamp || new Date().toISOString());
+    }
+
+    // Keep the most recently active conversation at the top of the list.
+    if (conversationsList.firstElementChild !== item) {
+        conversationsList.prepend(item);
+    }
+}
+
 function updateChatHeaderFromConversation(item) {
     const userName = item.dataset.userName || 'Conversa?ie';
     const avatarUrl = item.dataset.userAvatar || '/img/default-avatar.png';
@@ -533,6 +560,7 @@ function loadConversations() {
 
 document.addEventListener('DOMContentLoaded', function () {
     window.updateConversationPresence = updateConversationPresence;
+    window.updateConversationLastMessage = updateConversationLastMessage;
     window.openChat = openChat;
     window.goBackToList = goBackToList;
 
