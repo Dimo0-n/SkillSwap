@@ -224,3 +224,112 @@
         padding-top: 14px;
     }
 }
+
+.profile-feedback-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.profile-feedback-count {
+    min-width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 18px;
+    background: rgba(129, 42, 207, 0.16);
+    color: #d8b8ff;
+    font-weight: 700;
+}
+
+.comment-alert {
+    margin-bottom: 18px;
+}
+
+.profile-comment-meta {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.profile-comment-meta h5 a {
+    color: inherit;
+}
+
+.profile-comment-meta h5 a:hover {
+    color: #b78cff;
+}
+
+.profile-comment-delete-form {
+    margin: 0;
+}
+
+.profile-comment-delete-btn {
+    border: none;
+    background: transparent;
+    color: #d17bff;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 0;
+}
+
+.profile-comment-delete-btn:hover {
+    color: #ffffff;
+}
+
+.profile-comment-body {
+    white-space: pre-line;
+}
+
+.comment-empty-state {
+    padding: 18px 0 4px;
+    color: #bcbcbc;
+}
+
+.profile-comment-note {
+    color: #bcbcbc;
+    margin-bottom: 14px;
+}
+
+.profile-comment-form {
+    display: block;
+}
+
+.profile-comment-textarea {
+    min-height: 130px;
+}
+
+.profile-comment-form-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 10px;
+    margin-bottom: 14px;
+}
+
+.profile-comment-counter {
+    color: #bcbcbc;
+    font-size: 12px;
+}
+
+@media (max-width: 768px) {
+    .profile-feedback-header {
+        align-items: flex-start;
+    }
+
+    .profile-comment-meta {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .profile-comment-form-footer {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}

@@ -14,6 +14,7 @@ import java.util.stream.Stream;
 public class ProfilDto {
 
     private Long id;
+    private Long userId;
     private String name;
     private String profession;
     private String bioShort;

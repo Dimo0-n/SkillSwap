@@ -1,10 +1,12 @@
 package com.example.skillswap.controller;
 
+import com.example.skillswap.dto.CreateProfileCommentDto;
 import com.example.skillswap.dto.ProfilDto;
 import com.example.skillswap.entity.Announce;
 import com.example.skillswap.repository.UserRepository;
 import com.example.skillswap.security.CustomUserDetails;
 import com.example.skillswap.service.AnnounceService;
+import com.example.skillswap.service.ProfileCommentService;
 import com.example.skillswap.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
@@ -36,6 +38,9 @@ public class ProfileController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private ProfileCommentService profileCommentService;
+
     @GetMapping("")
     public String profilePage(Model model, Authentication auth) {
 
@@ -50,7 +55,19 @@ public class ProfileController {
             return "redirect:/profile/complete";
         }
 
-        model.addAttribute("profile", profile);
+        populateProfilePageModel(model, profile, extractCurrentUserId(auth));
+        return "profil";
+    }
+
+    @GetMapping("/{userId}")
+    public String publicProfilePage(@PathVariable Long userId, Model model, Authentication auth) {
+
+        if (auth == null) {
+            return "redirect:/login";
+        }
+
+        ProfilDto profile = profileService.getProfileForUserId(userId);
+        populateProfilePageModel(model, profile, extractCurrentUserId(auth));
         return "profil";
     }
 
@@ -136,6 +153,22 @@ public class ProfileController {
     public String deleteAnnounceById(@PathVariable Long id) {
         announceService.deleteAnnounceById(id);
         return "redirect:/profile/user-announces-list";
+    }
+
+    private void populateProfilePageModel(Model model, ProfilDto profile, Long currentUserId) {
+        Long profileOwnerId = profile.getUserId();
+        boolean isOwnProfile = profileOwnerId != null && profileOwnerId.equals(currentUserId);
+
+        model.addAttribute("profile", profile);
+        model.addAttribute("profileOwnerId", profileOwnerId);
+        model.addAttribute("isOwnProfile", isOwnProfile);
+        model.addAttribute("canLeaveComment", !isOwnProfile);
+        model.addAttribute("commentCount", profileCommentService.countCommentsForProfile(profileOwnerId));
+        model.addAttribute("comments", profileCommentService.getLatestCommentsForProfile(profileOwnerId, 20, currentUserId));
+
+        if (!model.containsAttribute("commentForm")) {
+            model.addAttribute("commentForm", new CreateProfileCommentDto());
+        }
     }
 
     private Long extractCurrentUserId(Authentication auth) {

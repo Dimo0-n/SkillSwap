@@ -143,6 +143,11 @@
 
                     <!-- CTA Section -->
                     <div class="announce-cta-section">
+                        <a class="announce-btn announce-btn-secondary"
+                           th:href="@{/profile/{userId}(userId=${announce.userId})}">
+                            <i class="fa fa-user"></i>
+                            <span th:text="#{announce.details.profile}">Vezi profil</span>
+                        </a>
                         <button class="announce-btn announce-btn-primary" id="sendMessageBtn"
                                 th:attr="data-author-id=${announce.userId}">
                             <i class="fa fa-envelope"></i>

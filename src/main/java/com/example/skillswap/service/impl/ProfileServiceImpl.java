@@ -60,25 +60,31 @@ public class ProfileServiceImpl implements ProfileService {
         return mapToDto(profil, username);
     }
 
+    @Override
+    public ProfilDto getProfileForUserId(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return profileRepository.findFirstByUserIdOrderByIdDesc(userId)
+                .map(profil -> mapToDto(profil, user.getEmail()))
+                .orElseGet(() -> mapUserToDto(user));
+    }
 
     public byte[] getProfileImageByEmail(String email) throws IOException {
-        Profil profil = profileRepository
-                .findFirstByUserEmailOrderByIdDesc(email)
-                .orElseThrow(() -> new RuntimeException("Profil not found"));
+        Optional<Profil> profil = profileRepository.findFirstByUserEmailOrderByIdDesc(email);
 
-        if (profil.getImage() == null) {
-            ClassPathResource resource = new ClassPathResource("static/img/default-avatar.png");
-            try (InputStream is = resource.getInputStream()) {
-                return is.readAllBytes();
-            }
+        if (profil.isPresent() && profil.get().getImage() != null) {
+            return profil.get().getImage();
         }
-        return profil.getImage();
+
+        return loadDefaultAvatar();
     }
 
     private ProfilDto mapToDto(Profil profil, String email) {
         ProfilDto dto = new ProfilDto();
 
         dto.setId(profil.getId());
+        dto.setUserId(profil.getUser().getId());
         dto.setName(profil.getName());
         dto.setProfession(profil.getProfession());
         dto.setBioShort(profil.getBioShort());
@@ -99,32 +105,23 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     public ProfilDto getAuthorByUserId(Long userId) {
+        return getProfileForUserId(userId);
+    }
+
+    private ProfilDto mapUserToDto(User user) {
         ProfilDto dto = new ProfilDto();
-
-        Optional<Profil> profil = profileRepository.findFirstByUserIdOrderByIdDesc(userId);
-
-        if (profil.isPresent()) {
-            dto.setId(profil.get().getId());
-            dto.setName(profil.get().getName());
-            dto.setProfession(profil.get().getProfession());
-            return dto;
-        }
-
-        User author = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Author not found"));
-
-        dto.setId(author.getId());
-        dto.setName(author.getFullName());
+        dto.setUserId(user.getId());
+        dto.setName(user.getFullName());
         dto.setProfession("SkillSwap user");
-
-        // TODO
-        //  1. de adaugat ratingul la user
-        //  2. cand a fost activ
-        //  3. cat tip sta online
-        //  4. cate schimburi finalizate are
-        //  5. de extras initialele din nume pentru a fi afisate in loc de imagine
-
+        dto.setImageUrl("/profile/image/" + user.getEmail());
         return dto;
+    }
+
+    private byte[] loadDefaultAvatar() throws IOException {
+        ClassPathResource resource = new ClassPathResource("static/img/default-avatar.png");
+        try (InputStream is = resource.getInputStream()) {
+            return is.readAllBytes();
+        }
     }
 
 }

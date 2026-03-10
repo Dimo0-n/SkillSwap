@@ -40,7 +40,7 @@
     <section class="profile-hero">
         <div class="container">
             <div class="profile-card">
-                <div class="profile-actions">
+                <div class="profile-actions" th:if="${isOwnProfile}">
                     <a th:href="@{/profile/user-announces-list}">
                         <button class="btn-profile-edit">
                             <i class="fa fa-list"></i>
@@ -216,38 +216,66 @@
                             </div>
                         </div>
                         <div class="dt-comment">
-                            <h4 th:text="#{profile.feedback}">Feedback-uri</h4>
-                            <div class="dc-item">
+                            <div class="profile-feedback-header">
+                                <h4 th:text="#{profile.feedback}">Feedback-uri</h4>
+                                <span class="profile-feedback-count" th:text="${commentCount}">0</span>
+                            </div>
+
+                            <div th:if="${commentSuccess}" class="alert alert-success comment-alert" th:text="${commentSuccess}"></div>
+                            <div th:if="${commentError}" class="alert alert-danger comment-alert" th:text="${commentError}"></div>
+
+                            <div class="dc-item" th:each="comment : ${comments}">
                                 <div class="dc-pic">
-                                    <img src="/img/details/comment/comment-1.jpg" alt="">
+                                    <a th:href="@{/profile/{userId}(userId=${comment.authorId})}">
+                                        <img th:src="${comment.authorImageUrl}" th:alt="${comment.authorName}">
+                                    </a>
                                 </div>
                                 <div class="dc-text">
-                                    <h5>BRANDON KELLEY</h5>
-                                    <span class="c-date">15 Aug 2017</span>
-                                    <p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur,
-                                        adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et
-                                        dolore magnam.</p>
-                                    <a href="#" class="reply-btn"><span>REPLY</span></a>
+                                    <div class="profile-comment-meta">
+                                        <div>
+                                            <h5>
+                                                <a th:href="@{/profile/{userId}(userId=${comment.authorId})}"
+                                                   th:text="${comment.authorName}">Nume utilizator</a>
+                                            </h5>
+                                            <span class="c-date"
+                                                  th:text="${#temporals.format(comment.createdAt, 'dd.MM.yyyy HH:mm')}">10.03.2026 15:00</span>
+                                        </div>
+                                        <form th:if="${comment.canDelete}"
+                                              th:action="@{/profile/{profileOwnerId}/comments/{commentId}/delete(profileOwnerId=${profileOwnerId}, commentId=${comment.id})}"
+                                              method="post"
+                                              class="profile-comment-delete-form">
+                                            <button type="submit" class="profile-comment-delete-btn"
+                                                    th:text="#{profile.comment.delete}">Sterge</button>
+                                        </form>
+                                    </div>
+                                    <p class="profile-comment-body" th:text="${comment.content}">Comentariu</p>
                                 </div>
                             </div>
-                            <div class="dc-item">
-                                <div class="dc-pic">
-                                    <img src="/img/details/comment/comment-3.jpg" alt="">
-                                </div>
-                                <div class="dc-text">
-                                    <h5>MATTHEW NELSON</h5>
-                                    <span class="c-date">15 Aug 2017</span>
-                                    <p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur,
-                                        adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et
-                                        dolore magnam.</p>
-                                    <a href="#" class="reply-btn"><span>REPLY</span></a>
-                                </div>
+
+                            <div th:if="${#lists.isEmpty(comments)}" class="comment-empty-state">
+                                <p th:text="#{profile.comment.none}">Acest profil nu are comentarii inca.</p>
                             </div>
                         </div>
                         <div class="dt-leave-comment">
                             <h4 th:text="#{profile.leave.comment}">LASĂ UN COMENTARIU</h4>
-                            <form action="#">
-                                <textarea th:attr="placeholder=#{profile.message.placeholder}"></textarea>
+                            <p th:if="${isOwnProfile}" class="profile-comment-note"
+                               th:text="#{profile.comment.own.note}">Pe profilul tau apar comentariile primite de la ceilalti utilizatori.</p>
+                            <form th:if="${canLeaveComment}"
+                                  th:object="${commentForm}"
+                                  th:action="@{/profile/{profileOwnerId}/comments(profileOwnerId=${profileOwnerId})}"
+                                  method="post"
+                                  class="profile-comment-form">
+                                <textarea id="profileCommentContent"
+                                          th:field="*{content}"
+                                          th:attr="placeholder=#{profile.message.placeholder}"
+                                          maxlength="200"
+                                          class="profile-comment-textarea"></textarea>
+                                <div class="profile-comment-form-footer">
+                                    <small class="text-danger"
+                                           th:if="${#fields.hasErrors('content')}"
+                                           th:errors="*{content}">Eroare validare</small>
+                                    <span class="profile-comment-counter"><span id="profileCommentCounter">0</span> / 200</span>
+                                </div>
                                 <button type="submit" th:text="#{profile.send}">Trimite</button>
                             </form>
                         </div>
@@ -297,6 +325,8 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const editProfileBtn = document.getElementById('editProfileBtn');
+            const commentTextarea = document.getElementById('profileCommentContent');
+            const commentCounter = document.getElementById('profileCommentCounter');
             
             if (editProfileBtn) {
                 editProfileBtn.addEventListener('click', function() {
@@ -304,6 +334,15 @@
                     // TODO: Navigate to profile edit page or open edit modal
                     // window.location.href = '/profile-complete';
                 });
+            }
+
+            if (commentTextarea && commentCounter) {
+                const updateCounter = function() {
+                    commentCounter.textContent = commentTextarea.value.length;
+                };
+
+                updateCounter();
+                commentTextarea.addEventListener('input', updateCounter);
             }
         });
     </script>
