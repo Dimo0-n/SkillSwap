@@ -1,74 +1,26 @@
 /**
  * Notifications Dropdown JavaScript
- * Handles notifications button toggle and dropdown functionality
+ * API-backed in-app notifications with polling and optional WebSocket realtime.
  */
 
-// Mock notifications data - ready for backend integration
-const mockNotifications = [
-    {
-        id: 1,
-        type: 'message',
-        icon: 'fa-comment',
-        title: 'Mesaj nou',
-        text: 'Maria Popescu ți-a trimis un mesaj nou',
-        time: 'Acum 5 minute',
-        unread: true
-    },
-    {
-        id: 2,
-        type: 'announce',
-        icon: 'fa-bullhorn',
-        title: 'Anunț nou',
-        text: 'Un anunț nou pentru skill-ul tău a fost publicat',
-        time: 'Acum 1 oră',
-        unread: true
-    },
-    {
-        id: 3,
-        type: 'request',
-        icon: 'fa-handshake-o',
-        title: 'Cerere nouă',
-        text: 'Ion Ionescu a trimis o cerere de schimb de skill-uri',
-        time: 'Ieri',
-        unread: true
-    },
-    {
-        id: 4,
-        type: 'message',
-        icon: 'fa-comment',
-        title: 'Mesaj nou',
-        text: 'Ana Dumitrescu ți-a răspuns la mesaj',
-        time: 'Acum 2 zile',
-        unread: false
-    },
-    {
-        id: 5,
-        type: 'system',
-        icon: 'fa-info-circle',
-        title: 'Actualizare sistem',
-        text: 'Platforma a fost actualizată cu noi funcționalități',
-        time: 'Acum 3 zile',
-        unread: false
-    },
-    {
-        id: 6,
-        type: 'announce',
-        icon: 'fa-bullhorn',
-        title: 'Anunț nou',
-        text: 'Un anunț nou pentru skill-ul tău a fost publicat',
-        time: 'Acum 4 zile',
-        unread: false
-    },
-    {
-        id: 7,
-        type: 'request',
-        icon: 'fa-handshake-o',
-        title: 'Cerere aprobată',
-        text: 'Cererea ta de schimb de skill-uri a fost aprobată',
-        time: 'Săptămâna trecută',
-        unread: false
-    }
-];
+const NOTIFICATION_LIMIT = 20;
+const NOTIFICATIONS_POLL_INTERVAL_MS = 20000;
+
+const NOTIFICATION_ICON_BY_TYPE = {
+    NEW_MESSAGE: 'fa-comment',
+    SKILL_REQUEST: 'fa-handshake-o',
+    REQUEST_ACCEPTED: 'fa-check-circle',
+    REQUEST_REJECTED: 'fa-times-circle',
+    NEW_REVIEW: 'fa-star',
+    SYSTEM: 'fa-info-circle'
+};
+
+const notificationsState = {
+    items: [],
+    pollingTimer: null,
+    stompClient: null,
+    realtimeConnected: false
+};
 
 /**
  * Returns true when viewport is in mobile range
@@ -125,8 +77,8 @@ function initializeNotifications() {
         return;
     }
 
-    // Render notifications into the desktop dropdown
     renderNotifications();
+    refreshNotifications();
 
     // Toggle: use mobile panel on mobile, desktop dropdown on desktop
     notificationsButton.addEventListener('click', function(e) {
@@ -135,6 +87,9 @@ function initializeNotifications() {
             toggleMobilePanel();
         } else {
             toggleNotificationsDropdown();
+            if (notificationsDropdown.classList.contains('is-open')) {
+                refreshNotifications();
+            }
         }
     });
 
@@ -163,8 +118,22 @@ function initializeNotifications() {
         }
     });
 
-    // Update badge count
-    updateNotificationBadge();
+    window.addEventListener('focus', refreshNotifications);
+    document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) {
+            refreshNotifications();
+        }
+    });
+
+    if (!notificationsState.pollingTimer) {
+        notificationsState.pollingTimer = window.setInterval(function() {
+            if (!document.hidden) {
+                refreshNotifications();
+            }
+        }, NOTIFICATIONS_POLL_INTERVAL_MS);
+    }
+
+    connectNotificationsRealtime();
 }
 
 /**
@@ -204,6 +173,7 @@ function openMobilePanel() {
     }
 
     renderMobileNotifications();
+    refreshNotifications();
     panel.classList.add('is-open');
     panel.setAttribute('aria-hidden', 'false');
     document.body.classList.add('notifications-mobile-open');
@@ -240,9 +210,13 @@ function renderNotifications() {
     const notificationsList = document.getElementById('notificationsList');
     if (!notificationsList) return;
     notificationsList.innerHTML = '';
-    mockNotifications.forEach(notification => {
+    notificationsState.items.forEach(notification => {
         notificationsList.appendChild(createNotificationElement(notification));
     });
+
+    if (!notificationsState.items.length) {
+        notificationsList.innerHTML = '<div class="notification-item"><div class="notification-content"><div class="notification-title">Nu ai notificari</div><div class="notification-text">Cand apare ceva nou, il vezi aici.</div></div></div>';
+    }
 }
 
 /**
@@ -252,9 +226,13 @@ function renderMobileNotifications() {
     const list = document.getElementById('mobileNotificationsList');
     if (!list) return;
     list.innerHTML = '';
-    mockNotifications.forEach(notification => {
+    notificationsState.items.forEach(notification => {
         list.appendChild(createNotificationElement(notification));
     });
+
+    if (!notificationsState.items.length) {
+        list.innerHTML = '<div class="notification-item"><div class="notification-content"><div class="notification-title">Nu ai notificari</div><div class="notification-text">Cand apare ceva nou, il vezi aici.</div></div></div>';
+    }
 }
 
 /**
@@ -273,7 +251,7 @@ function createNotificationElement(notification) {
     const icon = document.createElement('div');
     icon.className = 'notification-icon';
     const iconElement = document.createElement('i');
-    iconElement.className = `fa ${notification.icon}`;
+    iconElement.className = `fa ${NOTIFICATION_ICON_BY_TYPE[notification.type] || 'fa-bell-o'}`;
     icon.appendChild(iconElement);
 
     const content = document.createElement('div');
@@ -281,15 +259,15 @@ function createNotificationElement(notification) {
 
     const title = document.createElement('div');
     title.className = 'notification-title';
-    title.textContent = notification.title;
+    title.textContent = notification.title || 'Notificare';
 
     const text = document.createElement('div');
     text.className = 'notification-text';
-    text.textContent = notification.text;
+    text.textContent = notification.message || '';
 
     const time = document.createElement('div');
     time.className = 'notification-time';
-    time.textContent = notification.time;
+    time.textContent = formatNotificationTime(notification.createdAt);
 
     content.appendChild(title);
     content.appendChild(text);
@@ -300,7 +278,7 @@ function createNotificationElement(notification) {
 
     // Add click handler
     item.addEventListener('click', function() {
-        handleNotificationClick(notification.id);
+        handleNotificationClick(notification);
     });
 
     return item;
@@ -310,25 +288,21 @@ function createNotificationElement(notification) {
  * Handles notification click
  * @param {number} notificationId - ID of the clicked notification
  */
-function handleNotificationClick(notificationId) {
-    // Mark as read
-    const notification = mockNotifications.find(n => n.id === notificationId);
-    if (notification && notification.unread) {
-        notification.unread = false;
-        
-        // Update UI
-        const item = document.querySelector(`[data-notification-id="${notificationId}"]`);
-        if (item) {
-            item.classList.remove('unread');
-        }
-        
-        // Update badge
-        updateNotificationBadge();
+async function handleNotificationClick(notification) {
+    if (!notification) {
+        return;
     }
 
-    // In a real implementation, this would navigate to the relevant page
-    // or perform the appropriate action based on notification type
-    console.log('Notification clicked:', notificationId);
+    if (!notification.read) {
+        await markNotificationAsRead(notification.id);
+    }
+
+    closeNotificationsDropdown();
+    closeMobilePanel();
+
+    if (notification.targetUrl) {
+        window.location.href = notification.targetUrl;
+    }
 }
 
 /**
@@ -339,7 +313,7 @@ function updateNotificationBadge() {
     const mnpBadge = document.getElementById('mnpUnreadBadge');
     if (!badge) return;
 
-    const unreadCount = mockNotifications.filter(n => n.unread).length;
+    const unreadCount = notificationsState.items.filter(n => !n.read).length;
 
     if (unreadCount > 0) {
         const displayValue = unreadCount > 99 ? '99+' : unreadCount.toString();
@@ -354,6 +328,144 @@ function updateNotificationBadge() {
         if (mnpBadge) {
             mnpBadge.classList.add('hidden');
         }
+    }
+}
+
+function formatNotificationTime(timestamp) {
+    if (!timestamp) {
+        return '';
+    }
+
+    const date = new Date(timestamp);
+    if (Number.isNaN(date.getTime())) {
+        return '';
+    }
+
+    const now = Date.now();
+    const diffMs = Math.max(0, now - date.getTime());
+    const diffMinutes = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMinutes / 60);
+    const diffDays = Math.floor(diffHours / 24);
+
+    if (diffMinutes < 1) return 'Acum';
+    if (diffMinutes < 60) return `Acum ${diffMinutes} min`;
+    if (diffHours < 24) return `Acum ${diffHours} h`;
+    if (diffDays < 7) return `Acum ${diffDays} zile`;
+
+    return date.toLocaleDateString('ro-RO', { day: '2-digit', month: '2-digit' });
+}
+
+async function refreshNotifications() {
+    const notificationsButton = document.getElementById('notificationsButton');
+    if (!notificationsButton) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`/api/notifications?limit=${NOTIFICATION_LIMIT}`, {
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        if (response.status === 401 || response.status === 403) {
+            notificationsState.items = [];
+            renderNotifications();
+            renderMobileNotifications();
+            updateNotificationBadge();
+            return;
+        }
+
+        if (!response.ok) {
+            return;
+        }
+
+        const payload = await response.json();
+        notificationsState.items = Array.isArray(payload) ? payload : [];
+        renderNotifications();
+        renderMobileNotifications();
+        updateNotificationBadge();
+    } catch (error) {
+        console.warn('Could not refresh notifications:', error);
+    }
+}
+
+async function markNotificationAsRead(notificationId) {
+    try {
+        const response = await fetch(`/api/notifications/${notificationId}/read`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        if (!response.ok && response.status !== 404) {
+            return;
+        }
+
+        notificationsState.items = notificationsState.items.map(item => {
+            if (item.id === notificationId) {
+                return Object.assign({}, item, { read: true });
+            }
+            return item;
+        });
+
+        renderNotifications();
+        renderMobileNotifications();
+        updateNotificationBadge();
+    } catch (error) {
+        console.warn('Could not mark notification as read:', error);
+    }
+}
+
+function connectNotificationsRealtime() {
+    const notificationsButton = document.getElementById('notificationsButton');
+    if (!notificationsButton) {
+        return;
+    }
+
+    if (notificationsState.realtimeConnected) {
+        return;
+    }
+
+    if (typeof window.SockJS !== 'function' || !window.Stomp) {
+        return;
+    }
+
+    try {
+        const socket = new SockJS('/ws');
+        const stompClient = Stomp.over(socket);
+        stompClient.debug = null;
+
+        stompClient.connect({}, function() {
+            notificationsState.realtimeConnected = true;
+            notificationsState.stompClient = stompClient;
+
+            stompClient.subscribe('/user/queue/notifications', function(message) {
+                try {
+                    const notification = JSON.parse(message.body);
+                    if (!notification || !notification.id) {
+                        refreshNotifications();
+                        return;
+                    }
+
+                    notificationsState.items = [notification].concat(
+                        notificationsState.items.filter(item => item.id !== notification.id)
+                    ).slice(0, NOTIFICATION_LIMIT);
+
+                    renderNotifications();
+                    renderMobileNotifications();
+                    updateNotificationBadge();
+                } catch (_) {
+                    refreshNotifications();
+                }
+            });
+        }, function() {
+            notificationsState.realtimeConnected = false;
+            notificationsState.stompClient = null;
+        });
+    } catch (error) {
+        console.warn('Could not initialize notifications realtime channel:', error);
     }
 }
 
