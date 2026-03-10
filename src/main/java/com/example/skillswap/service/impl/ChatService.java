@@ -5,6 +5,7 @@ import com.example.skillswap.dto.ConversationSummaryDTO;
 import com.example.skillswap.dto.MessageReactionDTO;
 import com.example.skillswap.entity.*;
 import com.example.skillswap.enums.MessageStatus;
+import com.example.skillswap.enums.NotificationType;
 import com.example.skillswap.repository.ChatRoomRepository;
 import com.example.skillswap.repository.MessageReactionRepository;
 import com.example.skillswap.repository.MessageRepository;
@@ -37,6 +38,7 @@ public class ChatService {
     private final MessageReactionRepository reactionRepository;
     private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
+        private final NotificationService notificationService;
 
     @Transactional
     public ChatRoom createOrGetChatRoom(Long user1Id, Long user2Id) {
@@ -76,6 +78,23 @@ public class ChatService {
         message.setStatus(MessageStatus.SENT);
 
         Message saved = messageRepository.save(message);
+
+        User recipient = chatRoom.getUser1().getId().equals(sender.getId())
+                ? chatRoom.getUser2()
+                : chatRoom.getUser1();
+
+        String messagePreview = saved.getContent() == null ? "" : saved.getContent().trim();
+        if (messagePreview.length() > 120) {
+            messagePreview = messagePreview.substring(0, 117) + "...";
+        }
+
+        notificationService.createNotification(
+                recipient.getId(),
+                NotificationType.NEW_MESSAGE,
+                "Mesaj nou",
+                sender.getFullName() + ": " + messagePreview,
+                "/chat-history?roomId=" + chatRoom.getId()
+        );
 
         return convertToDTO(saved, sender.getId());
     }
