@@ -459,8 +459,20 @@ function loadConversations() {
         .then(conversations => {
             if (!Array.isArray(conversations) || conversations.length === 0) {
                 renderEmptyConversationsState();
+                window.dispatchEvent(new CustomEvent('chat:conversations-updated', {
+                    detail: { totalUnread: 0 }
+                }));
                 return;
             }
+
+            const totalUnread = conversations.reduce((sum, conversation) => {
+                const unread = Number(conversation && conversation.unreadCount);
+                return sum + (Number.isFinite(unread) && unread > 0 ? unread : 0);
+            }, 0);
+
+            window.dispatchEvent(new CustomEvent('chat:conversations-updated', {
+                detail: { totalUnread: totalUnread }
+            }));
 
             conversationsList.innerHTML = conversations.map(buildConversationItem).join('');
 
