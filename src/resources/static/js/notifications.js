@@ -243,9 +243,8 @@ function renderMobileNotifications() {
 function createNotificationElement(notification) {
     const item = document.createElement('div');
     item.className = 'notification-item';
-    if (notification.unread) {
-        item.classList.add('unread');
-    }
+    const isRead = notification.read === true;
+    item.classList.add(isRead ? 'read' : 'unread');
     item.setAttribute('data-notification-id', notification.id);
 
     const icon = document.createElement('div');

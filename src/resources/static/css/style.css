@@ -1716,6 +1716,7 @@ ol {
     background: rgba(129, 42, 207, 0.07);
 }
 
+.mobile-notifications-panel__list .notification-item.read::before,
 .mobile-notifications-panel__list .notification-item.unread::before {
     width: 2px;
 }
@@ -1815,15 +1816,26 @@ body.notifications-mobile-open {
     background: rgba(129, 42, 207, 0.08);
 }
 
+.notification-item.read::before,
 .notification-item.unread::before {
     content: '';
     position: absolute;
     left: 0;
-    top: 0;
-    bottom: 0;
+    top: 10px;
+    bottom: 10px;
 
     width: 3px;
+    border-radius: 999px;
     background: var(--brand-primary);
+    transition: opacity 0.3s ease;
+}
+
+.notification-item.read::before {
+    opacity: 0.22;
+}
+
+.notification-item.unread::before {
+    opacity: 1;
 }
 
 /* ===============================
@@ -5473,6 +5485,7 @@ body.notifications-mobile-open {
 		background: rgba(129, 42, 207, 0.06);
 	}
 
+	.notification-item.read::before,
 	.notification-item.unread::before {
 		width: 2px;
 	}
