@@ -72,6 +72,25 @@ public class ProfileCommentController {
         return "redirect:" + buildRedirectPath(profileOwnerId, currentUserId);
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/{commentId}/report")
+    public String reportComment(@PathVariable Long profileOwnerId,
+                                @PathVariable Long commentId,
+                                Authentication authentication,
+                                RedirectAttributes redirectAttributes) {
+
+        Long currentUserId = chatService.getCurrentUserId(authentication);
+
+        try {
+            profileCommentService.reportComment(profileOwnerId, commentId, currentUserId);
+            redirectAttributes.addFlashAttribute("commentSuccess", "Comentariul a fost raportat.");
+        } catch (RuntimeException exception) {
+            redirectAttributes.addFlashAttribute("commentError", exception.getMessage());
+        }
+
+        return "redirect:" + buildRedirectPath(profileOwnerId, currentUserId);
+    }
+
     private String buildRedirectPath(Long profileOwnerId, Long currentUserId) {
         if (profileOwnerId.equals(currentUserId)) {
             return "/profile";

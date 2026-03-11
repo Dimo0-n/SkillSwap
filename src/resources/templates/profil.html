@@ -240,13 +240,24 @@
                                             <span class="c-date"
                                                   th:text="${#temporals.format(comment.createdAt, 'dd.MM.yyyy HH:mm')}">10.03.2026 15:00</span>
                                         </div>
-                                        <form th:if="${comment.canDelete}"
-                                              th:action="@{/profile/{profileOwnerId}/comments/{commentId}/delete(profileOwnerId=${profileOwnerId}, commentId=${comment.id})}"
-                                              method="post"
-                                              class="profile-comment-delete-form">
-                                            <button type="submit" class="profile-comment-delete-btn"
-                                                    th:text="#{profile.comment.delete}">Sterge</button>
-                                        </form>
+                                        <div class="profile-comment-actions">
+                                            <form th:if="${comment.canDelete}"
+                                                  th:action="@{/profile/{profileOwnerId}/comments/{commentId}/delete(profileOwnerId=${profileOwnerId}, commentId=${comment.id})}"
+                                                  method="post"
+                                                  class="profile-comment-action-form">
+                                                <button type="submit" class="profile-comment-delete-btn"
+                                                        th:text="#{profile.comment.delete}">Sterge</button>
+                                            </form>
+                                            <form th:if="${comment.canReport}"
+                                                  th:action="@{/profile/{profileOwnerId}/comments/{commentId}/report(profileOwnerId=${profileOwnerId}, commentId=${comment.id})}"
+                                                  method="post"
+                                                  class="profile-comment-action-form">
+                                                <button type="submit" class="profile-comment-report-btn"
+                                                        th:text="#{profile.comment.report}">Raporteaza</button>
+                                            </form>
+                                            <span th:if="${comment.reported}" class="profile-comment-reported-badge"
+                                                  th:text="#{profile.comment.reported}">Raportat</span>
+                                        </div>
                                     </div>
                                     <p class="profile-comment-body" th:text="${comment.content}">Comentariu</p>
                                 </div>

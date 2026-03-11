@@ -14,4 +14,6 @@ public interface ProfileCommentService {
     ProfileCommentDto createComment(Long profileOwnerId, Long authorId, CreateProfileCommentDto dto);
 
     void deleteComment(Long profileOwnerId, Long commentId, Long currentUserId);
+
+    void reportComment(Long profileOwnerId, Long commentId, Long currentUserId);
 }

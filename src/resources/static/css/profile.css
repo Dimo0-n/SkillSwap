@@ -263,7 +263,14 @@
     color: #b78cff;
 }
 
-.profile-comment-delete-form {
+.profile-comment-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.profile-comment-action-form {
     margin: 0;
 }
 
@@ -280,6 +287,35 @@
 
 .profile-comment-delete-btn:hover {
     color: #ffffff;
+}
+
+.profile-comment-report-btn {
+    border: none;
+    background: transparent;
+    color: #ffb86c;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 0;
+}
+
+.profile-comment-report-btn:hover {
+    color: #ffffff;
+}
+
+.profile-comment-reported-badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(255, 184, 108, 0.14);
+    color: #ffcf97;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
 }
 
 .profile-comment-body {

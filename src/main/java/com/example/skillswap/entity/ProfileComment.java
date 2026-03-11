@@ -10,7 +10,8 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "profile_comment", indexes = {
         @Index(name = "idx_profile_comment_owner_created", columnList = "profile_owner_id, createdAt"),
-        @Index(name = "idx_profile_comment_author_created", columnList = "author_id, createdAt")
+        @Index(name = "idx_profile_comment_author_created", columnList = "author_id, createdAt"),
+        @Index(name = "idx_profile_comment_reported_created", columnList = "reported, reportedAt")
 })
 @Getter
 @Setter
@@ -37,6 +38,11 @@ public class ProfileComment {
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
+
+    @Column(nullable = false)
+    private boolean reported = false;
+
+    private LocalDateTime reportedAt;
 
     @PrePersist
     void onCreate() {

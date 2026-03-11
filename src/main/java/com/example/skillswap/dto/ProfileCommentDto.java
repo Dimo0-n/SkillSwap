@@ -16,4 +16,6 @@ public class ProfileCommentDto {
     private final String content;
     private final LocalDateTime createdAt;
     private final boolean canDelete;
+    private final boolean canReport;
+    private final boolean reported;
 }

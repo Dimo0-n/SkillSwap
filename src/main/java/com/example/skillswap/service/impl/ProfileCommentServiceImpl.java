@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -94,8 +95,7 @@ public class ProfileCommentServiceImpl implements ProfileCommentService {
         ProfileComment comment = profileCommentRepository.findDetailedByIdAndProfileOwnerId(commentId, profileOwnerId)
                 .orElseThrow(() -> new RuntimeException("Comentariul nu a fost gasit."));
 
-        boolean canDelete = comment.getAuthor().getId().equals(currentUserId)
-                || comment.getProfileOwner().getId().equals(currentUserId);
+        boolean canDelete = comment.getAuthor().getId().equals(currentUserId);
 
         if (!canDelete) {
             throw new RuntimeException("Nu ai permisiunea sa stergi acest comentariu.");
@@ -104,10 +104,33 @@ public class ProfileCommentServiceImpl implements ProfileCommentService {
         profileCommentRepository.delete(comment);
     }
 
+    @Override
+    @Transactional
+    public void reportComment(Long profileOwnerId, Long commentId, Long currentUserId) {
+        ProfileComment comment = profileCommentRepository.findDetailedByIdAndProfileOwnerId(commentId, profileOwnerId)
+                .orElseThrow(() -> new RuntimeException("Comentariul nu a fost gasit."));
+
+        if (!comment.getProfileOwner().getId().equals(currentUserId)) {
+            throw new RuntimeException("Doar proprietarul profilului poate raporta acest comentariu.");
+        }
+
+        if (comment.getAuthor().getId().equals(currentUserId)) {
+            throw new RuntimeException("Nu poti raporta propriul comentariu.");
+        }
+
+        if (comment.isReported()) {
+            throw new RuntimeException("Comentariul a fost deja raportat.");
+        }
+
+        comment.setReported(true);
+        comment.setReportedAt(LocalDateTime.now());
+    }
+
     private ProfileCommentDto toDto(ProfileComment comment, Long profileOwnerId, Long currentUserId) {
-        boolean canDelete = currentUserId != null
-                && (comment.getAuthor().getId().equals(currentUserId)
-                || profileOwnerId.equals(currentUserId));
+        boolean isAuthor = currentUserId != null && comment.getAuthor().getId().equals(currentUserId);
+        boolean isProfileOwner = currentUserId != null && profileOwnerId.equals(currentUserId);
+        boolean canDelete = isAuthor;
+        boolean canReport = isProfileOwner && !isAuthor && !comment.isReported();
 
         return new ProfileCommentDto(
                 comment.getId(),
@@ -116,7 +139,9 @@ public class ProfileCommentServiceImpl implements ProfileCommentService {
                 "/profile/image/" + comment.getAuthor().getEmail(),
                 comment.getContent(),
                 comment.getCreatedAt(),
-                canDelete
+                canDelete,
+                canReport,
+                comment.isReported()
         );
     }
 
