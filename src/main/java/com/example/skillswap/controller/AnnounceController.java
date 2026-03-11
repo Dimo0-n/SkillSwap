@@ -6,6 +6,7 @@ import com.example.skillswap.entity.Announce;
 import com.example.skillswap.service.AnnounceService;
 import com.example.skillswap.service.ProfileService;
 import com.example.skillswap.service.impl.AnnounceImageService;
+import com.example.skillswap.service.impl.ProfileCompletionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -32,6 +33,9 @@ class AnnounceController {
     @Autowired
     private ProfileService profileService;
 
+    @Autowired
+    private ProfileCompletionService profileCompletionService;
+
     @GetMapping("/announces-list")
     public String categoryGrid(Model model) {
         List<Announce> announcesList = announceService.getAnnouncesList();
@@ -41,7 +45,15 @@ class AnnounceController {
     }
 
     @GetMapping("/announces/new")
-    public String addAnnounce(Model model) {
+    public String addAnnounce(Model model, Authentication auth) {
+        if (auth == null) {
+            return "redirect:/login";
+        }
+
+        if (!profileCompletionService.isProfileCompleted(auth)) {
+            return profileCompletionService.getRequiredRedirectView();
+        }
+
         AnnounceDto announce = new AnnounceDto();
         model.addAttribute("announce", announce);
         return "announce-create";
@@ -50,6 +62,14 @@ class AnnounceController {
     @PostMapping("/announce/save")
     public String saveAnnounce(@Valid @ModelAttribute("announce") AnnounceDto announceDto, BindingResult bindingResult,
             Authentication auth, Model model) {
+
+        if (auth == null) {
+            return "redirect:/login";
+        }
+
+        if (!profileCompletionService.isProfileCompleted(auth)) {
+            return profileCompletionService.getRequiredRedirectView();
+        }
 
         if (bindingResult.hasErrors()) {
             return "announce-create";
@@ -66,7 +86,7 @@ class AnnounceController {
     }
 
     @GetMapping("/announce-details/{id}")
-    public String postDetails(@PathVariable Long id, Model model) {
+    public String postDetails(@PathVariable Long id, Model model, Authentication auth) {
 
         AnnounceDto announceDto = announceService.getAnnounceById(id);
 
@@ -75,6 +95,8 @@ class AnnounceController {
 
         model.addAttribute("announce", announceDto);
         model.addAttribute("profile", profilDto);
+        model.addAttribute("currentUserProfileCompleted", profileCompletionService.isProfileCompleted(auth));
+        model.addAttribute("profileCompletionRequiredUrl", ProfileCompletionService.REQUIRED_REDIRECT_PATH);
 
         return "announce-details";
     }

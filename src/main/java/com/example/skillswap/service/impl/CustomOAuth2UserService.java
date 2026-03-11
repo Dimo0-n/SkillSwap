@@ -71,6 +71,7 @@ public class CustomOAuth2UserService
         user.setRegisterData(LocalDateTime.now());
         user.setRoles(Set.of(userRole));
         user.setPassword(null);
+        user.setProfileCompleted(false);
 
         return userRepository.save(user);
     }

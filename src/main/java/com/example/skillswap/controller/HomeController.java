@@ -2,6 +2,7 @@ package com.example.skillswap.controller;
 
 import com.example.skillswap.entity.Announce;
 import com.example.skillswap.service.AnnounceService;
+import com.example.skillswap.service.impl.ProfileCompletionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +19,9 @@ public class HomeController {
     @Autowired
     private AnnounceService announceService;
 
+    @Autowired
+    private ProfileCompletionService profileCompletionService;
+
     @GetMapping("/index")
     public String home(Model model) {
         List<Announce> latest5Announces = announceService.getLatest5Announces();
@@ -27,13 +31,29 @@ public class HomeController {
     }
 
     @GetMapping("/chat")
-    public String chat(Model model) {
+    public String chat(Model model, java.security.Principal principal) {
+        if (principal == null) {
+            return "redirect:/login";
+        }
+
+        if (!profileCompletionService.isProfileCompleted(principal)) {
+            return profileCompletionService.getRequiredRedirectView();
+        }
+
         model.addAttribute("page", "chat");
         return "chat";
     }
 
     @GetMapping("/chat-history")
     public String chatHistory(Model model, java.security.Principal principal) {
+        if (principal == null) {
+            return "redirect:/login";
+        }
+
+        if (!profileCompletionService.isProfileCompleted(principal)) {
+            return profileCompletionService.getRequiredRedirectView();
+        }
+
         model.addAttribute("page", "chat-history");
         // Pass current user info to frontend for WebSocket
         if (principal != null) {

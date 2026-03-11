@@ -62,6 +62,7 @@ public class CustomOidcUserService extends OidcUserService {
         user.setRegisterData(LocalDateTime.now());
         user.setRoles(Set.of(userRole));
         user.setPassword(null);
+        user.setProfileCompleted(false);
 
         return userRepository.save(user);
     }

@@ -42,6 +42,9 @@ public class User {
     @Column(nullable = false)
     private Boolean online = false;
 
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private boolean profileCompleted = false;
+
     private LocalDateTime lastActivityAt;
 
     private LocalDateTime lastSeenAt;

@@ -4,7 +4,9 @@ import com.example.skillswap.dto.ChatMessageDTO;
 import com.example.skillswap.dto.ConversationSummaryDTO;
 import com.example.skillswap.entity.ChatRoom;
 import com.example.skillswap.service.impl.ChatService;
+import com.example.skillswap.service.impl.ProfileCompletionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,11 +21,20 @@ import java.util.Map;
 public class ChatController {
 
     private final ChatService chatService;
+    private final ProfileCompletionService profileCompletionService;
 
     @PostMapping("/create")
     public ResponseEntity<Map<String, Object>> createChatRoom(
             @RequestParam Long otherUserId,
             Principal principal) {
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(buildAuthenticationRequiredResponse());
+        }
+
+        if (!profileCompletionService.isProfileCompleted(principal)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(buildProfileCompletionRequiredResponse());
+        }
+
         try {
             // Get current user ID from UserService or repository
             // For now, we'll need to get it from the email
@@ -98,5 +109,21 @@ public class ChatController {
     // Helper method to get current user ID from Principal
     private Long getCurrentUserId(Principal principal) {
         return chatService.getCurrentUserId(principal);
+    }
+
+    private Map<String, Object> buildProfileCompletionRequiredResponse() {
+        Map<String, Object> body = new HashMap<>();
+        body.put("success", false);
+        body.put("message", "Complete your profile before using this feature.");
+        body.put("redirectUrl", ProfileCompletionService.REQUIRED_REDIRECT_PATH);
+        return body;
+    }
+
+    private Map<String, Object> buildAuthenticationRequiredResponse() {
+        Map<String, Object> body = new HashMap<>();
+        body.put("success", false);
+        body.put("message", "Authentication is required before using this feature.");
+        body.put("redirectUrl", "/login");
+        return body;
     }
 }

@@ -24,6 +24,9 @@ public class ProfileServiceImpl implements ProfileService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private ProfileCompletionService profileCompletionService;
+
     public void saveProfile(ProfilDto profilDto, MultipartFile profilePicture, String email) throws IOException {
 
         User user = Optional.ofNullable(userRepository.findUserByEmail(email))
@@ -46,8 +49,8 @@ public class ProfileServiceImpl implements ProfileService {
             toSave.setImage(profilePicture.getBytes());
         }
 
-        profileRepository.save(toSave);
-
+        Profil savedProfile = profileRepository.save(toSave);
+        profileCompletionService.refreshProfileCompletion(user, savedProfile);
     }
 
     @Override
