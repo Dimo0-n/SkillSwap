@@ -144,6 +144,11 @@
                                                 <i class="fa fa-ellipsis-v"></i>
                                             </button>
                                             <h6 th:text="#{navbar.notifications}">Notificări</h6>
+                                            <button class="notifications-mark-all" id="notificationsMarkAll" type="button" disabled
+                                                    th:text="#{navbar.notifications.markAll}"
+                                                    th:attr="aria-label=#{navbar.notifications.markAll}">
+                                                Marchează toate
+                                            </button>
                                         </div>
                                         <div class="notifications-list" id="notificationsList">
                                             <!-- Notification items will be dynamically inserted here -->

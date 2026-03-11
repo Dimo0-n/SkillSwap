@@ -70,6 +70,7 @@ function initializeNotifications() {
     const notificationsButton = document.getElementById('notificationsButton');
     const notificationsDropdown = document.getElementById('notificationsDropdown');
     const notificationsList = document.getElementById('notificationsList');
+    const notificationsMarkAllButton = document.getElementById('notificationsMarkAll');
     const mobilePanel = ensureMobilePanel();
     const mnpBackBtn = mobilePanel ? mobilePanel.querySelector('#mnpBackBtn') : null;
 
@@ -98,6 +99,14 @@ function initializeNotifications() {
         mnpBackBtn.addEventListener('click', function(e) {
             e.stopPropagation();
             closeMobilePanel();
+        });
+    }
+
+    if (notificationsMarkAllButton) {
+        notificationsMarkAllButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            markAllNotificationsAsRead();
         });
     }
 
@@ -310,9 +319,14 @@ async function handleNotificationClick(notification) {
 function updateNotificationBadge() {
     const badge = document.getElementById('notificationBadge');
     const mnpBadge = document.getElementById('mnpUnreadBadge');
+    const markAllButton = document.getElementById('notificationsMarkAll');
     if (!badge) return;
 
     const unreadCount = notificationsState.items.filter(n => !n.read).length;
+
+    if (markAllButton) {
+        markAllButton.disabled = unreadCount === 0;
+    }
 
     if (unreadCount > 0) {
         const displayValue = unreadCount > 99 ? '99+' : unreadCount.toString();
@@ -414,6 +428,47 @@ async function markNotificationAsRead(notificationId) {
         updateNotificationBadge();
     } catch (error) {
         console.warn('Could not mark notification as read:', error);
+    }
+}
+
+async function markAllNotificationsAsRead() {
+    const markAllButton = document.getElementById('notificationsMarkAll');
+    const hasUnreadNotifications = notificationsState.items.some(item => !item.read);
+
+    if (!hasUnreadNotifications) {
+        if (markAllButton) {
+            markAllButton.disabled = true;
+        }
+        return;
+    }
+
+    if (markAllButton) {
+        markAllButton.disabled = true;
+    }
+
+    try {
+        const response = await fetch('/api/notifications/read-all', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            return;
+        }
+
+        notificationsState.items = notificationsState.items.map(item =>
+            Object.assign({}, item, { read: true })
+        );
+
+        renderNotifications();
+        renderMobileNotifications();
+        updateNotificationBadge();
+    } catch (error) {
+        console.warn('Could not mark all notifications as read:', error);
+    } finally {
+        updateNotificationBadge();
     }
 }
 

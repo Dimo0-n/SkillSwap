@@ -1589,10 +1589,14 @@ ol {
     padding: 16px 20px;
     border-bottom: 1px solid var(--border-muted);
     background: rgba(129, 42, 207, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 .notifications-header h6 {
     margin: 0;
+    flex: 1;
 
     font-family: "Space Grotesk", sans-serif;
     font-size: 18px;
@@ -1600,6 +1604,31 @@ ol {
     letter-spacing: -0.02em;
 
     color: var(--text-primary);
+}
+
+.notifications-mark-all {
+    padding: 6px 10px;
+    border: 1px solid rgba(179, 116, 255, 0.24);
+    border-radius: 999px;
+    background: rgba(129, 42, 207, 0.14);
+    color: #f2e5ff;
+    font-family: "Montserrat", sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+}
+
+.notifications-mark-all:hover {
+    background: rgba(129, 42, 207, 0.24);
+    border-color: rgba(179, 116, 255, 0.38);
+}
+
+.notifications-mark-all:disabled {
+    opacity: 0.45;
+    cursor: default;
 }
 
 .notifications-mobile-btn,
@@ -5378,6 +5407,10 @@ body.notifications-mobile-open {
 		gap: 10px;
 		background: #060a12;
 		border-bottom: 1px solid var(--border-muted);
+	}
+
+	.notifications-mark-all {
+		display: none;
 	}
 
 	.notifications-header h6 {
