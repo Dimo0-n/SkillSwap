@@ -47,6 +47,15 @@ public class Profil {
     @Column(name = "image",  columnDefinition = "LONGBLOB")
     private byte[] image;
 
+    private Double reputationScore;
+
+    @Lob
+    @Column(columnDefinition = "TEXT")
+    private String reputationSummary;
+
+    @Column(nullable = false)
+    private Integer feedbackCountAtLastEvaluation = 0;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

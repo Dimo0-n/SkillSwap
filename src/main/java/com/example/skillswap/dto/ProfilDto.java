@@ -4,6 +4,7 @@ import com.example.skillswap.enums.Availability;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Locale;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -24,6 +25,9 @@ public class ProfilDto {
     private String limits;               // comma separated
     private String strengths;            // comma separated
     private String imageUrl;
+    private Double reputationScore;
+    private String reputationSummary;
+    private Integer feedbackCountAtLastEvaluation;
 
     public List<String> getCompetenceList() {
         return splitCommaSeparated(competences);
@@ -52,6 +56,22 @@ public class ProfilDto {
                 .filter(av -> (availabilityMask & av.getBit()) == av.getBit())
                 .map(this::toReadableAvailability)
                 .toList();
+    }
+
+    public int getReputationCircleValue() {
+        if (reputationScore == null) {
+            return 0;
+        }
+
+        return Math.max(0, Math.min(100, (int) Math.round(reputationScore * 10)));
+    }
+
+    public String getReputationScoreDisplay() {
+        if (reputationScore == null) {
+            return "E";
+        }
+
+        return String.format(Locale.US, "%.1f", reputationScore);
     }
 
     private List<String> splitCommaSeparated(String value) {

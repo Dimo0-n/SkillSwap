@@ -5,6 +5,7 @@ import com.example.skillswap.dto.ProfileCommentDto;
 import com.example.skillswap.entity.ProfileComment;
 import com.example.skillswap.entity.Profil;
 import com.example.skillswap.entity.User;
+import com.example.skillswap.event.ProfileReputationRefreshRequestedEvent;
 import com.example.skillswap.enums.NotificationType;
 import com.example.skillswap.repository.ProfileCommentRepository;
 import com.example.skillswap.repository.ProfileRepository;
@@ -12,6 +13,7 @@ import com.example.skillswap.repository.UserRepository;
 import com.example.skillswap.service.ProfileCommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +32,7 @@ public class ProfileCommentServiceImpl implements ProfileCommentService {
     private final ProfileRepository profileRepository;
     private final UserRepository userRepository;
     private final com.example.skillswap.service.NotificationService notificationService;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Override
     @Transactional(readOnly = true)
@@ -86,6 +89,8 @@ public class ProfileCommentServiceImpl implements ProfileCommentService {
                 "/profile"
         );
 
+        applicationEventPublisher.publishEvent(new ProfileReputationRefreshRequestedEvent(profileOwnerId));
+
         return toDto(saved, profileOwnerId, authorId);
     }
 
@@ -102,6 +107,7 @@ public class ProfileCommentServiceImpl implements ProfileCommentService {
         }
 
         profileCommentRepository.delete(comment);
+        applicationEventPublisher.publishEvent(new ProfileReputationRefreshRequestedEvent(profileOwnerId));
     }
 
     @Override

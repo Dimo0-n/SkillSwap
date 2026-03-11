@@ -26,4 +26,12 @@ public interface ProfileCommentRepository extends JpaRepository<ProfileComment, 
           and comment.profileOwner.id = :profileOwnerId
     """)
     Optional<ProfileComment> findDetailedByIdAndProfileOwnerId(Long commentId, Long profileOwnerId);
+
+    @Query("""
+        select comment.content
+        from ProfileComment comment
+        where comment.profileOwner.id = :profileOwnerId
+        order by comment.createdAt asc, comment.id asc
+    """)
+    List<String> findContentsByProfileOwnerId(Long profileOwnerId);
 }

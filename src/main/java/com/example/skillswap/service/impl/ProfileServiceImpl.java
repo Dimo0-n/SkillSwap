@@ -3,12 +3,15 @@ package com.example.skillswap.service.impl;
 import com.example.skillswap.dto.ProfilDto;
 import com.example.skillswap.entity.Profil;
 import com.example.skillswap.entity.User;
+import com.example.skillswap.event.ProfileReputationRefreshRequestedEvent;
 import com.example.skillswap.repository.ProfileRepository;
 import com.example.skillswap.repository.UserRepository;
 import com.example.skillswap.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -27,6 +30,10 @@ public class ProfileServiceImpl implements ProfileService {
     @Autowired
     private com.example.skillswap.service.ProfileCompletionService profileCompletionService;
 
+    @Autowired
+    private ApplicationEventPublisher applicationEventPublisher;
+
+    @Transactional
     public void saveProfile(ProfilDto profilDto, MultipartFile profilePicture, String email) throws IOException {
 
         User user = Optional.ofNullable(userRepository.findUserByEmail(email))
@@ -51,6 +58,7 @@ public class ProfileServiceImpl implements ProfileService {
 
         Profil savedProfile = profileRepository.save(toSave);
         profileCompletionService.refreshProfileCompletion(user, savedProfile);
+        applicationEventPublisher.publishEvent(new ProfileReputationRefreshRequestedEvent(user.getId()));
     }
 
     @Override
@@ -97,6 +105,9 @@ public class ProfileServiceImpl implements ProfileService {
         dto.setStrengths(profil.getStrengths());
         dto.setLimits(profil.getLimits());
         dto.setAvailabilityMask(profil.getAvailabilityMask());
+        dto.setReputationScore(profil.getReputationScore());
+        dto.setReputationSummary(profil.getReputationSummary());
+        dto.setFeedbackCountAtLastEvaluation(profil.getFeedbackCountAtLastEvaluation());
 
         // Add a cache-busting param so the browser fetches the latest avatar after updates
         String version = String.valueOf(

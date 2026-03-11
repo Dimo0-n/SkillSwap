@@ -150,19 +150,27 @@
                                     <div class="or-loader">
                                         <div class="loader-circle-wrap">
                                             <div class="loader-circle">
-                                                <span class="circle-progress-2" data-cpid="id-5" data-cpvalue="85"
-                                                    data-cpcolor="#812ACFFF"></span>
+                                                <span class="circle-progress-2"
+                                                      data-cpid="id-5"
+                                                      th:attr="data-cpvalue=${commentCount >= 4 and profile.reputationScore != null ? profile.reputationCircleValue : 0}"
+                                                      data-cpcolor="#812ACFFF"></span>
                                                 <div class="review-point">
-                                                    <div>8.5</div>
-                                                    <span>AVERAGE SCORE</span>
+                                                    <div th:text="${commentCount >= 4 and profile.reputationScore != null ? profile.reputationScoreDisplay : 'E'}">E</div>
+                                                    <span th:text="#{profile.average.score}">AVERAGE SCORE</span>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="or-text">
                                         <h5 th:text="#{profile.overall.rating}">Overall rating</h5>
-                                        <p>Aici va fie un rezumat despre persoana data pe baza la toate
-                                            feedback-urile lasate de de ceilalti utilizatori.</p>
+                                        <p th:if="${commentCount >= 4 and !#strings.isEmpty(profile.reputationSummary)}"
+                                           th:text="${profile.reputationSummary}">
+                                            Aici va fi un rezumat despre persoana data pe baza la toate feedback-urile lasate de ceilalti utilizatori.
+                                        </p>
+                                        <p th:if="${commentCount < 4 or #strings.isEmpty(profile.reputationSummary)}"
+                                           th:text="#{profile.reputation.placeholder}">
+                                            Aici va fi un rezumat despre persoana data pe baza la toate feedback-urile lasate de ceilalti utilizatori.
+                                        </p>
                                     </div>
                                 </div>
                             </div>
