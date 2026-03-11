@@ -127,6 +127,24 @@
     background: linear-gradient(90deg, var(--brand-primary), var(--brand-primary-light));
 }
 
+.announce-validation-alert {
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 107, 107, 0.35);
+    background: rgba(255, 107, 107, 0.12);
+    color: #ffb3b3;
+    border-radius: 14px;
+    padding: 14px 18px;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 14px;
+}
+
+.announce-required-note {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 13px;
+    color: #ff8fab;
+    margin: 0 0 24px;
+}
+
 .form-section {
     margin-bottom: 40px;
 }
@@ -199,6 +217,18 @@
     background: var(--card-bg);
 }
 
+.form-input.is-invalid,
+.form-textarea.is-invalid {
+    border-color: rgba(255, 107, 107, 0.75);
+    box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.12);
+}
+
+.form-input.is-invalid:focus,
+.form-textarea.is-invalid:focus {
+    border-color: rgba(255, 107, 107, 0.9);
+    box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.18);
+}
+
 .form-textarea {
     min-height: 140px;
     resize: vertical;
@@ -214,6 +244,11 @@
     letter-spacing: 0.3px;
 }
 
+.required-label::after {
+    content: " *";
+    color: #ff8fab;
+}
+
 .form-hint {
     display: flex;
     align-items: center;
@@ -225,6 +260,14 @@
 
 .form-hint i {
     color: var(--brand-primary-light);
+}
+
+.form-error {
+    font-family: "Montserrat", sans-serif;
+    font-size: 13px;
+    color: #ff8fab;
+    margin: 8px 0 0;
+    line-height: 1.5;
 }
 
 .input-grid {

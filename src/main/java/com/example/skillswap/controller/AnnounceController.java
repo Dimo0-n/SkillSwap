@@ -55,6 +55,7 @@ class AnnounceController {
         }
 
         AnnounceDto announce = new AnnounceDto();
+        announce.setAuthor(resolveDefaultAuthor(auth));
         model.addAttribute("announce", announce);
         return "announce-create";
     }
@@ -83,6 +84,14 @@ class AnnounceController {
         announceService.save(announceDto, auth);
 
         return "redirect:/index";
+    }
+
+    private String resolveDefaultAuthor(Authentication auth) {
+        try {
+            return profileService.getProfileForView(auth.getName()).getName();
+        } catch (RuntimeException exception) {
+            return auth.getName();
+        }
     }
 
     @GetMapping("/announce-details/{id}")

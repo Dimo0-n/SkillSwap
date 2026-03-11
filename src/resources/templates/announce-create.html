@@ -6,9 +6,8 @@
     <meta name="keywords" content="SkillSwap, announce, create, form">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title th:text="#{announce.create.page.title}">SkillSwap | Creează anunț</title>
+    <title th:text="#{announce.create.page.title}">SkillSwap | Creeaza anunt</title>
 
-    <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800,900&display=swap"
           rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Cinzel:400,700,900&display=swap" rel="stylesheet">
@@ -27,16 +26,21 @@
 <body class="announce-page">
 
 <div th:replace="~{fragments/lateral-menu :: lateral-menu}"></div>
-
 <div th:replace="~{/fragments/navbar :: navbar}"></div>
 
 <div class="container">
-    <!-- Main Grid -->
     <div class="announce-grid">
-        <!-- Form Card -->
         <div class="form-card">
             <form th:object="${announce}" th:action="@{/announce/save}" method="post" id="announceForm">
-                <!-- Main Details Section -->
+                <div th:if="${#fields.hasErrors('*')}" class="announce-validation-alert"
+                     th:text="#{announce.validation.summary}">
+                    Completeaza toate campurile obligatorii inainte de publicare.
+                </div>
+
+                <p class="announce-required-note" th:text="#{announce.validation.required.legend}">
+                    * Camp obligatoriu
+                </p>
+
                 <div class="form-section">
                     <div class="section-header">
                         <div class="section-icon">
@@ -46,77 +50,98 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" th:text="#{announce.create.title.label}">Titlul anunțului</label>
+                        <label class="form-label required-label" for="announce-title"
+                               th:text="#{announce.create.title.label}">Titlul anuntului</label>
                         <div class="input-wrapper">
-                            <input th:field="*{title}" type="text" id="announce-title" class="form-input" th:attr="placeholder=#{announce.create.title.placeholder}">
+                            <input th:field="*{title}" th:errorclass="is-invalid" type="text" id="announce-title" class="form-input"
+                                   required minlength="3" maxlength="100"
+                                   th:attr="placeholder=#{announce.create.title.placeholder},data-required-message=#{announce.validation.title.required}">
                         </div>
+                        <p class="form-error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Titlul este obligatoriu.</p>
                         <div class="form-hint">
                             <i class="fa fa-lightbulb-o"></i>
-                            <span th:text="#{announce.create.title.hint}">Un titlu clar și descriptiv ajută utilizatorii să înțeleagă rapid oferta ta</span>
+                            <span th:text="#{announce.create.title.hint}">Un titlu clar si descriptiv ajuta utilizatorii sa inteleaga rapid oferta ta</span>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" th:text="#{announce.create.description.label}">Descriere detaliată</label>
+                        <label class="form-label required-label" for="announce-description"
+                               th:text="#{announce.create.description.label}">Descriere detaliata</label>
                         <div class="input-wrapper">
-                            <textarea th:field="*{description}" id="announce-description" class="form-textarea" th:attr="placeholder=#{announce.create.description.placeholder}"></textarea>
+                            <textarea th:field="*{description}" th:errorclass="is-invalid" id="announce-description" class="form-textarea"
+                                      required minlength="10" maxlength="2000"
+                                      th:attr="placeholder=#{announce.create.description.placeholder},data-required-message=#{announce.validation.description.required}"></textarea>
                         </div>
+                        <p class="form-error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Descrierea este obligatorie.</p>
                         <div class="form-hint">
                             <i class="fa fa-info-circle"></i>
-                            <span th:text="#{announce.create.description.hint}">Adaugă detalii despre experiența ta și așteptări</span>
+                            <span th:text="#{announce.create.description.hint}">Adauga detalii despre experienta ta si asteptari</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Exchange Details Section -->
                 <div class="form-section">
                     <div class="section-header">
                         <div class="section-icon">
                             <i class="fa fa-exchange"></i>
                         </div>
-                        <h2 class="section-title-announce-create text-white" th:text="#{announce.create.exchange}">Ce oferți și ce cauți</h2>
+                        <h2 class="section-title-announce-create text-white" th:text="#{announce.create.exchange}">Ce oferi si ce cauti</h2>
                     </div>
 
                     <div class="input-grid">
                         <div class="form-group">
-                            <label class="form-label" th:text="#{announce.create.category.offer}">Categoria oferită</label>
-                            <input th:field="*{categoryOffered}" type="text" id="category-offer" class="form-input" th:attr="placeholder=#{announce.create.category.offer.placeholder}">
+                            <label class="form-label required-label" for="category-offer"
+                                   th:text="#{announce.create.category.offer}">Categoria oferita</label>
+                            <input th:field="*{categoryOffered}" th:errorclass="is-invalid" type="text" id="category-offer" class="form-input"
+                                   required minlength="2" maxlength="60"
+                                   th:attr="placeholder=#{announce.create.category.offer.placeholder},data-required-message=#{announce.validation.category.offered.required}">
+                            <p class="form-error" th:if="${#fields.hasErrors('categoryOffered')}" th:errors="*{categoryOffered}">Categoria oferita este obligatorie.</p>
                             <div class="form-hint">
                                 <i class="fa fa-star"></i>
-                                <span th:text="#{announce.create.category.offer.hint}">Skill-ul pe care îl oferi</span>
+                                <span th:text="#{announce.create.category.offer.hint}">Skill-ul pe care il oferi</span>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label" th:text="#{announce.create.category.seek}">Categoria căutată</label>
-                            <input th:field="*{categoryRequired}" type="text" id="category-want" class="form-input" th:attr="placeholder=#{announce.create.category.seek.placeholder}">
+                            <label class="form-label required-label" for="category-want"
+                                   th:text="#{announce.create.category.seek}">Categoria cautata</label>
+                            <input th:field="*{categoryRequired}" th:errorclass="is-invalid" type="text" id="category-want" class="form-input"
+                                   required minlength="2" maxlength="60"
+                                   th:attr="placeholder=#{announce.create.category.seek.placeholder},data-required-message=#{announce.validation.category.required.required}">
+                            <p class="form-error" th:if="${#fields.hasErrors('categoryRequired')}" th:errors="*{categoryRequired}">Categoria cautata este obligatorie.</p>
                             <div class="form-hint">
                                 <i class="fa fa-search"></i>
-                                <span th:text="#{announce.create.category.seek.hint}">Skill-ul pe care îl dorești</span>
+                                <span th:text="#{announce.create.category.seek.hint}">Skill-ul pe care il doresti</span>
                             </div>
                         </div>
                     </div>
 
                     <div class="input-grid">
                         <div class="form-group">
-                            <label class="form-label" th:text="#{announce.create.author}">Nume autor</label>
-                            <input th:field="*{author}" type="text" id="author-name" class="form-input" th:attr="placeholder=#{announce.create.author.placeholder}">
+                            <label class="form-label required-label" for="author-name"
+                                   th:text="#{announce.create.author}">Nume autor</label>
+                            <input th:field="*{author}" th:errorclass="is-invalid" type="text" id="author-name" class="form-input"
+                                   required minlength="2" maxlength="80"
+                                   th:attr="placeholder=#{announce.create.author.placeholder},data-required-message=#{announce.validation.author.required}">
+                            <p class="form-error" th:if="${#fields.hasErrors('author')}" th:errors="*{author}">Numele autorului este obligatoriu.</p>
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label" th:text="#{announce.create.note}">Notă secundară (opțional)</label>
-                            <input th:field="*{additionalInfo}" type="text" id="secondary-note" class="form-input" th:attr="placeholder=#{announce.create.note.placeholder}">
+                            <label class="form-label" for="secondary-note" th:text="#{announce.create.note}">Nota secundara (optional)</label>
+                            <input th:field="*{additionalInfo}" th:errorclass="is-invalid" type="text" id="secondary-note" class="form-input"
+                                   maxlength="160"
+                                   th:attr="placeholder=#{announce.create.note.placeholder}">
+                            <p class="form-error" th:if="${#fields.hasErrors('additionalInfo')}" th:errors="*{additionalInfo}">Nota secundara este prea lunga.</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Image Section -->
                 <div class="form-section">
                     <div class="section-header">
                         <div class="section-icon">
                             <i class="fa fa-image"></i>
                         </div>
-                        <h2 class="section-title-announce-create text-white" th:text="#{announce.create.image}">Imaginea anunțului</h2>
+                        <h2 class="section-title-announce-create text-white" th:text="#{announce.create.image}">Imaginea anuntului</h2>
                     </div>
 
                     <div class="image-preview-section">
@@ -125,17 +150,16 @@
                         </div>
                         <div class="auto-select-badge">
                             <i class="fa fa-magic"></i>
-                            <span th:text="#{announce.create.image.auto}">Imaginea se selectează automat în funcție de categoria aleasă</span>
+                            <span th:text="#{announce.create.image.auto}">Imaginea se selecteaza automat in functie de categoria aleasa</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Submit Section -->
                 <div class="form-section">
                     <div class="info-alert">
                         <i class="fa fa-check-circle"></i>
                         <div class="info-alert-content">
-                            <p th:text="#{announce.create.submit.hint}">Verifică toate detaliile înainte de publicare. Anunțul tău va fi vizibil imediat în comunitate!</p>
+                            <p th:text="#{announce.create.submit.hint}">Verifica toate detaliile inainte de publicare. Anuntul tau va fi vizibil imediat in comunitate!</p>
                         </div>
                     </div>
 
@@ -144,14 +168,13 @@
                     <div class="submit-section">
                         <button type="submit" class="btn btn-primary">
                             <i class="fa fa-paper-plane"></i>
-                            <span th:text="#{announce.create.publish}">Publică anunțul</span>
+                            <span th:text="#{announce.create.publish}">Publica anuntul</span>
                         </button>
                     </div>
                 </div>
             </form>
         </div>
 
-        <!-- Preview Sidebar -->
         <div class="preview-sidebar">
             <div class="preview-card">
                 <div class="preview-header">
@@ -164,16 +187,18 @@
                 <div class="preview-badges">
                     <div class="preview-badge">
                         <i class="fa fa-star"></i>
-                        <span id="preview-offer" th:text="#{announce.create.preview.offer}">Categoria oferită</span>
+                        <span id="preview-offer" th:text="#{announce.create.preview.offer}">Categoria oferita</span>
                     </div>
                     <div class="preview-badge">
                         <i class="fa fa-exchange"></i>
-                        <span id="preview-want" th:text="#{announce.create.preview.seek}">Categoria căutată</span>
+                        <span id="preview-want" th:text="#{announce.create.preview.seek}">Categoria cautata</span>
                     </div>
                 </div>
 
-                <h4 class="preview-title" id="preview-title" th:text="#{announce.create.preview.title}">Titlul anunțului tău</h4>
-                <p class="preview-description" id="preview-description" th:text="#{announce.create.preview.description}">Descrierea va apărea aici imediat ce o completezi. Adaugă informații relevante pentru a atrage persoanele potrivite.</p>
+                <h4 class="preview-title" id="preview-title" th:text="#{announce.create.preview.title}">Titlul anuntului tau</h4>
+                <p class="preview-description" id="preview-description" th:text="#{announce.create.preview.description}">
+                    Descrierea va aparea aici imediat ce o completezi. Adauga informatii relevante pentru a atrage persoanele potrivite.
+                </p>
 
                 <div class="preview-image">
                     <img id="sidebar-preview-image" src="/img/skill/skill-programming.png" alt="Preview">
@@ -186,7 +211,6 @@
 <div th:replace="~{/fragments/about :: about}"></div>
 
 <script th:inline="javascript">
-
     const previewDefaultTitle = [[#{announce.create.preview.title}]];
     const previewDefaultDescription = [[#{announce.create.preview.description}]];
     const previewDefaultOffer = [[#{announce.create.preview.offer}]];
@@ -195,28 +219,18 @@
     const categoryImageKeys = {
         programming: ["prog1", "prog2", "prog3"],
         programare: ["prog1", "prog2", "prog3"],
-
         guitar: ["guitar1", "guitar2"],
         chitara: ["guitar1", "guitar2"],
-        "chitară": ["guitar1", "guitar2"],
-
         english: ["eng1", "eng2"],
         engleza: ["eng1", "eng2"],
-        "engleză": ["eng1", "eng2"],
-
         photoshop: ["ps1", "ps2"],
         design: ["ps1", "ps2"],
-
         photography: ["photo1", "photo2"],
         fotografie: ["photo1", "photo2"],
-
         cooking: ["cook1", "cook2"],
         gatit: ["cook1", "cook2"],
-        "gătit": ["cook1", "cook2"],
-
         dance: ["dance1", "dance2"],
         dans: ["dance1", "dance2"],
-
         speaking: ["speak1", "speak2"],
         prezentare: ["speak1", "speak2"]
     };
@@ -225,28 +239,20 @@
         prog1: "/img/skill/skill-programming.png",
         prog2: "/img/skill/skill-programming-2.png",
         prog3: "/img/skill/skill-programming-3.png",
-
         guitar1: "/img/skill/skill-guitar.png",
         guitar2: "/img/skill/skill-guitar-2.png",
-
         eng1: "/img/skill/skill-english.png",
         eng2: "/img/skill/skill-english-2.png",
-
         ps1: "/img/skill/skill-photoshop.png",
         ps2: "/img/skill/skill-photoshop-2.png",
-
         photo1: "/img/skill/skill-photography.png",
         photo2: "/img/skill/skill-photography-2.png",
-
         cook1: "/img/skill/skill-cooking.png",
         cook2: "/img/skill/skill-cooking-2.png",
-
         dance1: "/img/skill/skill-dance.png",
         dance2: "/img/skill/skill-dance-2.png",
-
         speak1: "/img/skill/skill-public-speaking.png",
         speak2: "/img/skill/skill-public-speaking-2.png",
-
         default1: "/img/skill/skill-default.png",
         default2: "/img/skill/skill-default-2.png"
     };
@@ -268,43 +274,47 @@
     function getImageKeyForCategory(category) {
         const key = normalizeCategory(category);
         const keys = categoryImageKeys[key];
-        if (!keys || keys.length === 0) return pickRandom(defaultImageKeys);
+        if (!keys || keys.length === 0) {
+            return pickRandom(defaultImageKeys);
+        }
         return pickRandom(keys);
     }
 
-    function updateImages() {
-        // opțional: dacă vrei default fix până scrie user ceva
-        if (!offerInput.value.trim()) {
-            const dk = "default1";
-            mainPreviewImage.src = imageKeyToPath[dk];
-            sidebarPreviewImage.src = imageKeyToPath[dk];
-            if (imageKeyInput) imageKeyInput.value = dk;
-            return;
-        }
-
-        const imageKey = getImageKeyForCategory(offerInput.value);
-        const imagePath = imageKeyToPath[imageKey] || imageKeyToPath["default1"];
-
-        mainPreviewImage.src = imagePath;
-        sidebarPreviewImage.src = imagePath;
-
-        if (imageKeyInput) imageKeyInput.value = imageKey;
-    }
-
-    // Get Elements
     const titleInput = document.getElementById('announce-title');
     const descInput = document.getElementById('announce-description');
     const offerInput = document.getElementById('category-offer');
     const wantInput = document.getElementById('category-want');
+    const authorInput = document.getElementById('author-name');
     const previewTitle = document.getElementById('preview-title');
     const previewDesc = document.getElementById('preview-description');
     const previewOffer = document.getElementById('preview-offer');
     const previewWant = document.getElementById('preview-want');
     const mainPreviewImage = document.getElementById('main-preview-image');
     const sidebarPreviewImage = document.getElementById('sidebar-preview-image');
-    const imageKeyInput = document.getElementById("imageKey");
+    const imageKeyInput = document.getElementById('imageKey');
+    const announceForm = document.getElementById('announceForm');
 
-    // Update Preview Text
+    function updateImages() {
+        if (!offerInput.value.trim()) {
+            const defaultKey = "default1";
+            mainPreviewImage.src = imageKeyToPath[defaultKey];
+            sidebarPreviewImage.src = imageKeyToPath[defaultKey];
+            if (imageKeyInput) {
+                imageKeyInput.value = defaultKey;
+            }
+            return;
+        }
+
+        const imageKey = getImageKeyForCategory(offerInput.value);
+        const imagePath = imageKeyToPath[imageKey] || imageKeyToPath.default1;
+        mainPreviewImage.src = imagePath;
+        sidebarPreviewImage.src = imagePath;
+
+        if (imageKeyInput) {
+            imageKeyInput.value = imageKey;
+        }
+    }
+
     function updatePreview() {
         previewTitle.textContent = titleInput.value.trim() || previewDefaultTitle;
         previewDesc.textContent = descInput.value.trim() || previewDefaultDescription;
@@ -312,21 +322,51 @@
         previewWant.textContent = wantInput.value.trim() || previewDefaultSeek;
     }
 
-    // Event Listeners
+    function initializeBrowserValidation() {
+        const requiredFields = [titleInput, descInput, offerInput, wantInput, authorInput];
+
+        requiredFields.forEach((field) => {
+            if (!field) {
+                return;
+            }
+
+            field.addEventListener('input', () => field.setCustomValidity(''));
+            field.addEventListener('invalid', () => {
+                if (field.validity.valueMissing || !field.value.trim()) {
+                    field.setCustomValidity(field.dataset.requiredMessage || 'Completeaza acest camp.');
+                }
+            });
+        });
+
+        if (announceForm) {
+            announceForm.addEventListener('submit', (event) => {
+                for (const field of requiredFields) {
+                    if (!field || field.value.trim()) {
+                        continue;
+                    }
+
+                    field.setCustomValidity(field.dataset.requiredMessage || 'Completeaza acest camp.');
+                    field.reportValidity();
+                    event.preventDefault();
+                    return;
+                }
+            });
+        }
+    }
+
     titleInput.addEventListener('input', updatePreview);
     descInput.addEventListener('input', updatePreview);
-    offerInput.addEventListener('change', () => {
+    offerInput.addEventListener('input', () => {
         updatePreview();
         updateImages();
     });
     wantInput.addEventListener('input', updatePreview);
 
-    // Initialize
     updatePreview();
     updateImages();
+    initializeBrowserValidation();
 </script>
 
-<!-- Js Plugins -->
 <script src="/js/jquery-3.3.1.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
 <script src="/js/jquery.magnific-popup.min.js"></script>
