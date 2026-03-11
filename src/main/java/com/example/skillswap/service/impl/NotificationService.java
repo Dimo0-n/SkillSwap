@@ -47,6 +47,17 @@ public class NotificationService {
         return dto;
     }
 
+    @Transactional
+    public NotificationDTO createWelcomeNotification(Long recipientUserId) {
+        return createNotification(
+                recipientUserId,
+                NotificationType.WELCOME,
+                "Bine ai venit pe SkillSwap",
+                "Iti multumim ca te-ai alaturat comunitatii SkillSwap.",
+                "/profile/complete"
+        );
+    }
+
     @Transactional(readOnly = true)
     public List<NotificationDTO> getNotificationsForUser(Long userId, int limit) {
         int boundedLimit = Math.max(1, Math.min(limit, 100));

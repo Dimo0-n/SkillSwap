@@ -28,6 +28,7 @@ public class CustomOAuth2UserService
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final NotificationService notificationService;
 
     @Override
     @Transactional
@@ -73,6 +74,8 @@ public class CustomOAuth2UserService
         user.setPassword(null);
         user.setProfileCompleted(false);
 
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        notificationService.createWelcomeNotification(savedUser.getId());
+        return savedUser;
     }
 }

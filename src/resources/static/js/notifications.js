@@ -7,6 +7,7 @@ const NOTIFICATION_LIMIT = 20;
 const NOTIFICATIONS_POLL_INTERVAL_MS = 20000;
 
 const NOTIFICATION_ICON_BY_TYPE = {
+    WELCOME: 'fa-heart',
     NEW_MESSAGE: 'fa-comment',
     SKILL_REQUEST: 'fa-handshake-o',
     REQUEST_ACCEPTED: 'fa-check-circle',

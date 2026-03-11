@@ -19,15 +19,18 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final NotificationService notificationService;
 
     public AuthServiceImpl(
             UserRepository userRepository,
             RoleRepository roleRepository,
-            BCryptPasswordEncoder passwordEncoder
+            BCryptPasswordEncoder passwordEncoder,
+            NotificationService notificationService
     ) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.notificationService = notificationService;
     }
 
     @Override
@@ -47,7 +50,8 @@ public class AuthServiceImpl implements AuthService {
 
         newUser.getRoles().add(userRole);
 
-        userRepository.save(newUser);
+        User savedUser = userRepository.save(newUser);
+        notificationService.createWelcomeNotification(savedUser.getId());
     }
 
     @Override

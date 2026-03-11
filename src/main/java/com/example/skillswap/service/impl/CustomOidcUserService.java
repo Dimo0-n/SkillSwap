@@ -25,6 +25,7 @@ public class CustomOidcUserService extends OidcUserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final NotificationService notificationService;
 
     @Override
     @Transactional
@@ -64,6 +65,8 @@ public class CustomOidcUserService extends OidcUserService {
         user.setPassword(null);
         user.setProfileCompleted(false);
 
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        notificationService.createWelcomeNotification(savedUser.getId());
+        return savedUser;
     }
 }

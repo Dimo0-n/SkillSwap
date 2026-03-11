@@ -1,6 +1,7 @@
 package com.example.skillswap.enums;
 
 public enum NotificationType {
+    WELCOME,
     SKILL_REQUEST,
     REQUEST_ACCEPTED,
     REQUEST_REJECTED,
