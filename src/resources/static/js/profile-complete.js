@@ -33,6 +33,7 @@
         initializeStepNavigation();
         initializeScrollTracking();
         initializeLivePreview();
+        initializeBrowserValidation();
         syncHiddenFields();
         updateProgress();
     });
@@ -203,6 +204,7 @@
                 addSkill();
             }
         });
+        $('#skillInput').on('input', clearSkillsValidation);
 
         // Limitations management
         $('#addLimitationBtn').on('click', addLimitation);
@@ -241,11 +243,25 @@
         });
 
         // Ensure hidden fields are in sync before submit
-        $('form').on('submit', syncHiddenFields);
+        $('form').on('submit', function(e) {
+            syncHiddenFields();
 
-        // Save buttons
-        $('#saveProfileBtn').on('click', saveProfile);
-        $('#saveDraftBtn').on('click', saveDraft);
+            if (!validateSkillsField(true)) {
+                e.preventDefault();
+            }
+        });
+    }
+
+    function initializeBrowserValidation() {
+        $('#displayName, #professionalTitle, #shortBio, #detailedDescription')
+            .on('input change', function() {
+                this.setCustomValidity('');
+            })
+            .on('invalid', function() {
+                if (this.validity.valueMissing) {
+                    this.setCustomValidity($(this).data('required-message') || 'Completeaza acest camp.');
+                }
+            });
     }
 
     /**
@@ -327,6 +343,7 @@
         updateLivePreview();
         checkSectionCompletion();
         syncHiddenFields();
+        validateSkillsField(false);
     }
 
     /**
@@ -338,6 +355,7 @@
         updateLivePreview();
         checkSectionCompletion();
         syncHiddenFields();
+        validateSkillsField(false);
     }
 
     /**
@@ -579,41 +597,45 @@
         }
     }
 
-    function normalizeStrength(text) {
-        return text.trim().toLowerCase().replace(/\s+/g, '-');
+    function clearSkillsValidation() {
+        const skillInput = $('#skillInput');
+        if (!skillInput.length) {
+            return;
+        }
+
+        skillInput.removeClass('is-invalid');
+        skillInput.closest('.skill-input-group').removeClass('skills-input-invalid');
+        skillInput.get(0).setCustomValidity('');
     }
 
-    /**
-     * Save profile (placeholder)
-     */
-    function saveProfile() {
-        // Collect all form data
-        const profileData = {
-            displayName: $('#displayName').val(),
-            professionalTitle: $('#professionalTitle').val(),
-            shortBio: $('#shortBio').val(),
-            detailedDescription: $('#detailedDescription').val(),
-            skills: state.skills,
-            limitations: state.limitations,
-            customStrengths: state.customStrengths,
-            availabilityMask: parseInt($('#availabilityMask').val() || '0', 10),
-            visibility: {
-                public: $('#profilePublic').is(':checked'),
-                allowDirectContact: $('#allowDirectContact').is(':checked')
-            },
-            selectedStrengths: []
-        };
+    function validateSkillsField(reportValidity) {
+        const skillInput = $('#skillInput');
+        if (!skillInput.length) {
+            return true;
+        }
 
-        // Collect selected predefined strengths
-        $('.strength-checkbox:checked').each(function() {
-            profileData.selectedStrengths.push($(this).val());
-        });
+        const inputElement = skillInput.get(0);
+        const isValid = state.skills.length > 0;
 
-        // In a real implementation, this would send data to the server
-        console.log('Profile data to save:', profileData);
+        if (isValid) {
+            clearSkillsValidation();
+            return true;
+        }
 
-        // Show success message
-        showSuccessModal();
+        const message = skillInput.data('required-message') || 'Adauga cel putin o competenta.';
+        skillInput.addClass('is-invalid');
+        skillInput.closest('.skill-input-group').addClass('skills-input-invalid');
+        inputElement.setCustomValidity(message);
+
+        if (reportValidity) {
+            inputElement.reportValidity();
+        }
+
+        return false;
+    }
+
+    function normalizeStrength(text) {
+        return text.trim().toLowerCase().replace(/\s+/g, '-');
     }
 
     /**

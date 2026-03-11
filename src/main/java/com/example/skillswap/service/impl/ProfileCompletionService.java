@@ -18,8 +18,9 @@ public class ProfileCompletionService implements com.example.skillswap.service.P
     public boolean calculateProfileCompletion(Profil profile) {
         return profile != null
                 && hasText(profile.getName())
+                && hasText(profile.getProfession())
                 && hasText(profile.getBioShort())
-                && hasText(profile.getCompetences())
+                && hasAtLeastOneValue(profile.getCompetences())
                 && hasText(profile.getCompleteDescription());
     }
 
@@ -52,5 +53,19 @@ public class ProfileCompletionService implements com.example.skillswap.service.P
 
     private boolean hasText(String value) {
         return value != null && !value.isBlank();
+    }
+
+    private boolean hasAtLeastOneValue(String value) {
+        if (value == null || value.isBlank()) {
+            return false;
+        }
+
+        for (String item : value.split(",")) {
+            if (!item.isBlank()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

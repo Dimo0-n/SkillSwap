@@ -5,12 +5,9 @@ import com.example.skillswap.entity.Announce;
 import com.example.skillswap.entity.User;
 import com.example.skillswap.repository.AnnounceRepository;
 import com.example.skillswap.repository.UserRepository;
-import com.example.skillswap.security.CustomUserDetails;
-import com.example.skillswap.security.CustomUserDetailsService;
 import com.example.skillswap.service.AnnounceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -48,14 +45,14 @@ public class AnnounceServiceImpl implements AnnounceService {
 
         Announce announce = new Announce();
 
-        announce.setTitle(announceDto.getTitle());
-        announce.setDescription(announceDto.getDescription());
-        announce.setAuthor(announceDto.getAuthor());
-        announce.setCategoryOffered(announceDto.getCategoryOffered());
-        announce.setCategoryRequired(announceDto.getCategoryRequired());
+        announce.setTitle(normalizeNullableText(announceDto.getTitle()));
+        announce.setDescription(normalizeNullableText(announceDto.getDescription()));
+        announce.setAuthor(normalizeNullableText(announceDto.getAuthor()));
+        announce.setCategoryOffered(normalizeNullableText(announceDto.getCategoryOffered()));
+        announce.setCategoryRequired(normalizeNullableText(announceDto.getCategoryRequired()));
         announce.setImageKey(announceDto.getImageKey());
         announce.setImagePath(announceDto.getImagePath());
-        announce.setAdditionalInfo(announceDto.getAdditionalInfo());
+        announce.setAdditionalInfo(normalizeNullableText(announceDto.getAdditionalInfo()));
         announce.setDate(LocalDateTime.now());
         announce.setUser(user);
 
@@ -92,6 +89,15 @@ public class AnnounceServiceImpl implements AnnounceService {
         announceDto.setUserId(announce.get().getUser().getId());
 
         return announceDto;
+    }
+
+    private String normalizeNullableText(String value) {
+        if (value == null) {
+            return null;
+        }
+
+        String normalized = value.trim();
+        return normalized.isEmpty() ? null : normalized;
     }
 
 

@@ -8,12 +8,14 @@ import com.example.skillswap.security.CustomUserDetails;
 import com.example.skillswap.service.AnnounceService;
 import com.example.skillswap.service.ProfileCommentService;
 import com.example.skillswap.service.ProfileService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -78,20 +80,27 @@ public class ProfileController {
         } else {
             dto = new ProfilDto();
         }
-        model.addAttribute("profile", dto);
-        model.addAttribute("page", "profile-complete");
+        populateProfileCompleteModel(model, dto);
         return "profile-complete";
     }
 
     @PostMapping("/save")
     public String saveProfileComplete(
-            @ModelAttribute("profile") ProfilDto profilDto,
+            @Valid @ModelAttribute("profile") ProfilDto profilDto,
+            BindingResult bindingResult,
             @RequestParam(value = "profilePicture", required = false) MultipartFile profilePicture,
-            Authentication auth
+            Authentication auth,
+            Model model
     ) throws IOException {
 
         if (auth == null) {
             return "redirect:/login";
+        }
+
+        validateProfileForm(profilDto, bindingResult);
+        if (bindingResult.hasErrors()) {
+            populateProfileCompleteModel(model, profilDto);
+            return "profile-complete";
         }
 
         String email = auth.getName();
@@ -163,6 +172,17 @@ public class ProfileController {
         }
 
         throw new RuntimeException("Unable to resolve current user id");
+    }
+
+    private void validateProfileForm(ProfilDto profilDto, BindingResult bindingResult) {
+        if (profilDto.getCompetenceList().isEmpty()) {
+            bindingResult.rejectValue("competences", "profile.validation.skills.required");
+        }
+    }
+
+    private void populateProfileCompleteModel(Model model, ProfilDto profile) {
+        model.addAttribute("profile", profile);
+        model.addAttribute("page", "profile-complete");
     }
 
 }
