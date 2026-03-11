@@ -9,9 +9,6 @@ import com.example.skillswap.service.AnnounceService;
 import com.example.skillswap.service.ProfileCommentService;
 import com.example.skillswap.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.CacheControl;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -20,9 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.net.URLConnection;
 import java.util.List;
 
 @Controller
@@ -103,31 +98,6 @@ public class ProfileController {
 
         profileService.saveProfile(profilDto, profilePicture, email);
         return "redirect:/profile/complete?success=true";
-    }
-
-    @GetMapping("/image/{email:.+}")
-    @ResponseBody
-    public ResponseEntity<byte[]> getProfileImage(@PathVariable String email) throws IOException {
-
-        byte[] image = profileService.getProfileImageByEmail(email);
-
-        return ResponseEntity.ok()
-                .contentType(detectMediaType(image))
-                .cacheControl(CacheControl.noStore())
-                .header("Pragma", "no-cache")
-                .header("Expires", "0")
-                .body(image);
-    }
-
-    private MediaType detectMediaType(byte[] image) {
-        try (ByteArrayInputStream bais = new ByteArrayInputStream(image)) {
-            String detected = URLConnection.guessContentTypeFromStream(bais);
-            if (detected != null) {
-                return MediaType.parseMediaType(detected);
-            }
-        } catch (IOException ignored) {
-        }
-        return MediaType.IMAGE_JPEG;
     }
 
     //Afisarea anunturilor care le-a postat user-ul

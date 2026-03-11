@@ -6,20 +6,21 @@ import com.example.skillswap.entity.User;
 import com.example.skillswap.event.ProfileReputationRefreshRequestedEvent;
 import com.example.skillswap.repository.ProfileRepository;
 import com.example.skillswap.repository.UserRepository;
+import com.example.skillswap.service.ProfileImageStorageService;
 import com.example.skillswap.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Optional;
 
 @Service
 public class ProfileServiceImpl implements ProfileService {
+
+    private static final String DEFAULT_PROFILE_IMAGE_URL = "/img/default-avatar.png";
 
     @Autowired
     private ProfileRepository profileRepository;
@@ -32,6 +33,9 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Autowired
     private ApplicationEventPublisher applicationEventPublisher;
+
+    @Autowired
+    private ProfileImageStorageService profileImageStorageService;
 
     @Transactional
     public void saveProfile(ProfilDto profilDto, MultipartFile profilePicture, String email) throws IOException {
@@ -53,7 +57,7 @@ public class ProfileServiceImpl implements ProfileService {
         toSave.setStrengths(profilDto.getStrengths());
 
         if (profilePicture != null && !profilePicture.isEmpty()) {
-            toSave.setImage(profilePicture.getBytes());
+            toSave.setImageUrl(profileImageStorageService.uploadProfileImage(profilePicture, user.getId()));
         }
 
         Profil savedProfile = profileRepository.save(toSave);
@@ -68,7 +72,7 @@ public class ProfileServiceImpl implements ProfileService {
                 .findFirstByUserEmailOrderByIdDesc(username)
                 .orElseThrow(() -> new RuntimeException("Profil not found"));
 
-        return mapToDto(profil, username);
+        return mapToDto(profil);
     }
 
     @Override
@@ -77,21 +81,11 @@ public class ProfileServiceImpl implements ProfileService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         return profileRepository.findFirstByUserIdOrderByIdDesc(userId)
-                .map(profil -> mapToDto(profil, user.getEmail()))
+                .map(this::mapToDto)
                 .orElseGet(() -> mapUserToDto(user));
     }
 
-    public byte[] getProfileImageByEmail(String email) throws IOException {
-        Optional<Profil> profil = profileRepository.findFirstByUserEmailOrderByIdDesc(email);
-
-        if (profil.isPresent() && profil.get().getImage() != null) {
-            return profil.get().getImage();
-        }
-
-        return loadDefaultAvatar();
-    }
-
-    private ProfilDto mapToDto(Profil profil, String email) {
+    private ProfilDto mapToDto(Profil profil) {
         ProfilDto dto = new ProfilDto();
 
         dto.setId(profil.getId());
@@ -108,11 +102,7 @@ public class ProfileServiceImpl implements ProfileService {
         dto.setReputationScore(profil.getReputationScore());
         dto.setReputationSummary(profil.getReputationSummary());
         dto.setFeedbackCountAtLastEvaluation(profil.getFeedbackCountAtLastEvaluation());
-
-        // Add a cache-busting param so the browser fetches the latest avatar after updates
-        String version = String.valueOf(
-                (profil.getImage() != null ? profil.getImage().length : 0) + profil.getId());
-        dto.setImageUrl("/profile/image/" + email + "?v=" + version);
+        dto.setImageUrl(resolveProfileImageUrl(profil));
 
         return dto;
     }
@@ -127,15 +117,17 @@ public class ProfileServiceImpl implements ProfileService {
         dto.setUserId(user.getId());
         dto.setName(user.getFullName());
         dto.setProfession("SkillSwap user");
-        dto.setImageUrl("/profile/image/" + user.getEmail());
+        dto.setImageUrl(DEFAULT_PROFILE_IMAGE_URL);
         return dto;
     }
 
-    private byte[] loadDefaultAvatar() throws IOException {
-        ClassPathResource resource = new ClassPathResource("static/img/default-avatar.png");
-        try (InputStream is = resource.getInputStream()) {
-            return is.readAllBytes();
+    private String resolveProfileImageUrl(Profil profil) {
+        String imageUrl = profil.getImageUrl();
+        if (imageUrl == null || imageUrl.isBlank()) {
+            return DEFAULT_PROFILE_IMAGE_URL;
         }
+
+        return imageUrl;
     }
 
 }

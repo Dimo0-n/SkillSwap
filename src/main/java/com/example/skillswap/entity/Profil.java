@@ -6,10 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.List;
-
 @Entity
 @Getter
 @Setter
@@ -43,9 +39,8 @@ public class Profil {
     @Column(columnDefinition = "TEXT")
     private String strengths;
 
-    @Lob
-    @Column(name = "image",  columnDefinition = "LONGBLOB")
-    private byte[] image;
+    @Column(name = "image_url", length = 1000)
+    private String imageUrl;
 
     private Double reputationScore;
 
@@ -59,21 +54,6 @@ public class Profil {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
-    public String getBase64Image() {
-        if (this.image != null) {
-            return Base64.getEncoder().encodeToString(this.image);
-        }
-        return null;
-    }
-
-    public void setBase64Image(byte[] base64Image) {
-        if (base64Image != null) {
-            this.image = Base64.getDecoder().decode(base64Image);
-        } else {
-            this.image = null;
-        }
-    }
 
 }
 

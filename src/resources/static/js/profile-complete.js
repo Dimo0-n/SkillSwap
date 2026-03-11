@@ -493,6 +493,13 @@
      * Populate state from hidden inputs when editing existing data
      */
     function bootstrapStateFromDom() {
+        const picturePreview = $('#picturePreview');
+        const existingImageUrl = picturePreview.data('image-url');
+        if (existingImageUrl) {
+            picturePreview.html('<img src="' + existingImageUrl + '" alt="Profile Picture">');
+            state.profilePicture = existingImageUrl;
+        }
+
         const skillsValue = $('#competencesHidden').val();
         if (skillsValue) {
             state.skills = skillsValue.split(',').filter(Boolean);

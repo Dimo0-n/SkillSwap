@@ -142,7 +142,7 @@ public class ProfileCommentServiceImpl implements ProfileCommentService {
                 comment.getId(),
                 comment.getAuthor().getId(),
                 comment.getAuthorDisplayName(),
-                "/profile/image/" + comment.getAuthor().getEmail(),
+                resolveAuthorImageUrl(comment.getAuthor()),
                 comment.getContent(),
                 comment.getCreatedAt(),
                 canDelete,
@@ -156,6 +156,13 @@ public class ProfileCommentServiceImpl implements ProfileCommentService {
                 .map(Profil::getName)
                 .filter(name -> name != null && !name.isBlank())
                 .orElse(author.getFullName());
+    }
+
+    private String resolveAuthorImageUrl(User author) {
+        return profileRepository.findFirstByUserIdOrderByIdDesc(author.getId())
+                .map(Profil::getImageUrl)
+                .filter(url -> url != null && !url.isBlank())
+                .orElse("/img/default-avatar.png");
     }
 
     private String normalizeContent(String rawContent) {

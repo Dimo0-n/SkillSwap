@@ -225,7 +225,8 @@ public class ChatService implements com.example.skillswap.service.ChatService {
 
                     Long unreadCount = messageRepository.countUnreadMessages(chatRoom.getId(), currentUser.getId());
                     String avatarUrl = profileRepository.findFirstByUserEmailOrderByIdDesc(otherUser.getEmail())
-                            .map(p -> "/profile/image/" + otherUser.getEmail())
+                            .map(Profil::getImageUrl)
+                            .filter(url -> url != null && !url.isBlank())
                             .orElse("/img/default-avatar.png");
 
                     return new ConversationSummaryDTO(

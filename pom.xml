@@ -159,6 +159,12 @@
 			<version>4.0.0</version>
 			<scope>compile</scope>
 		</dependency>
+<!--		claudinary-->
+		<dependency>
+			<groupId>com.cloudinary</groupId>
+			<artifactId>cloudinary-http44</artifactId>
+			<version>1.13.0</version>
+		</dependency>
     </dependencies>
 
 	<build>

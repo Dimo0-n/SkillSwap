@@ -102,7 +102,7 @@
                         <label for="profilePicture" class="form-label" th:text="#{profile.complete.photo}">Fotografie de profil</label>
                         <div class="picture-upload-area">
                             <input type="file" name="profilePicture" id="profilePicture" accept="image/*" class="picture-input">
-                            <div class="picture-preview" id="picturePreview">
+                            <div class="picture-preview" id="picturePreview" th:attr="data-image-url=${profile.imageUrl}">
                                 <i class="fa fa-user"></i>
                                 <span>Fă click pentru a încărca</span>
                             </div>
