@@ -24,11 +24,12 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 public class CustomOAuth2UserService
-        extends DefaultOAuth2UserService {
+        extends DefaultOAuth2UserService
+        implements com.example.skillswap.service.OAuthUserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-    private final NotificationService notificationService;
+    private final com.example.skillswap.service.NotificationService notificationService;
 
     @Override
     @Transactional

@@ -1,8 +1,8 @@
 package com.example.skillswap.controller;
 
 import com.example.skillswap.dto.NotificationDTO;
-import com.example.skillswap.service.impl.ChatService;
-import com.example.skillswap.service.impl.NotificationService;
+import com.example.skillswap.service.ChatService;
+import com.example.skillswap.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

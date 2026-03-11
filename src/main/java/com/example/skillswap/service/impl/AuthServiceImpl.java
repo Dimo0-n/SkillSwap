@@ -19,13 +19,13 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final BCryptPasswordEncoder passwordEncoder;
-    private final NotificationService notificationService;
+    private final com.example.skillswap.service.NotificationService notificationService;
 
     public AuthServiceImpl(
             UserRepository userRepository,
             RoleRepository roleRepository,
             BCryptPasswordEncoder passwordEncoder,
-            NotificationService notificationService
+            com.example.skillswap.service.NotificationService notificationService
     ) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;

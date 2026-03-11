@@ -11,9 +11,7 @@ import java.security.Principal;
 
 @Service
 @RequiredArgsConstructor
-public class ProfileCompletionService {
-
-    public static final String REQUIRED_REDIRECT_PATH = "/profile/complete?required";
+public class ProfileCompletionService implements com.example.skillswap.service.ProfileCompletionService {
 
     private final UserRepository userRepository;
 

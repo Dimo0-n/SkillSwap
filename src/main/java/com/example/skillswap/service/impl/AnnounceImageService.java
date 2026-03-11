@@ -5,9 +5,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service
-public final class AnnounceImageService {
-
-    private AnnounceImageService() {}
+public class AnnounceImageService implements com.example.skillswap.service.AnnounceImageService {
 
     // key -> path (source of truth)
     private static final Map<String, String> KEY_TO_PATH = Map.ofEntries(
@@ -70,7 +68,8 @@ public final class AnnounceImageService {
     private static final String DEFAULT_KEY = "default1";
 
     /** Normalizează ca în front: lowercase + fără diacritice + trim */
-    public static String normalizeCategory(String input) {
+    @Override
+    public String normalizeCategory(String input) {
         if (input == null) return "";
         String s = input.trim().toLowerCase(Locale.ROOT);
         // Scoate diacritice (Java)
@@ -80,14 +79,16 @@ public final class AnnounceImageService {
     }
 
     /** Verifică dacă imageKey e permis pentru categoria oferită */
-    public static boolean isAllowedForCategory(String categoryOffered, String imageKey) {
+    @Override
+    public boolean isAllowedForCategory(String categoryOffered, String imageKey) {
         String cat = normalizeCategory(categoryOffered);
         Set<String> allowed = CATEGORY_TO_KEYS.get(cat);
         return allowed != null && imageKey != null && allowed.contains(imageKey);
     }
 
     /** Îți dă path-ul sigur, fallback la default */
-    public static String safePath(String categoryOffered, String imageKey) {
+    @Override
+    public String safePath(String categoryOffered, String imageKey) {
         if (!isAllowedForCategory(categoryOffered, imageKey)) {
             return KEY_TO_PATH.get(DEFAULT_KEY);
         }

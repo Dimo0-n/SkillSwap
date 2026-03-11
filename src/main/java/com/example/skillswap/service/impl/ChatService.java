@@ -31,15 +31,15 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class ChatService {
+public class ChatService implements com.example.skillswap.service.ChatService {
 
     private final ChatRoomRepository chatRoomRepository;
     private final MessageRepository messageRepository;
     private final MessageReactionRepository reactionRepository;
     private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
-    private final NotificationService notificationService;
-    private final ProfileCompletionService profileCompletionService;
+    private final com.example.skillswap.service.NotificationService notificationService;
+    private final com.example.skillswap.service.ProfileCompletionService profileCompletionService;
 
     @Transactional
     public ChatRoom createOrGetChatRoom(Long user1Id, Long user2Id) {

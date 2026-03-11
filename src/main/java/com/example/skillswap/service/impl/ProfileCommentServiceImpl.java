@@ -28,7 +28,7 @@ public class ProfileCommentServiceImpl implements ProfileCommentService {
     private final ProfileCommentRepository profileCommentRepository;
     private final ProfileRepository profileRepository;
     private final UserRepository userRepository;
-    private final NotificationService notificationService;
+    private final com.example.skillswap.service.NotificationService notificationService;
 
     @Override
     @Transactional(readOnly = true)

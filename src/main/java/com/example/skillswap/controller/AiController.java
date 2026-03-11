@@ -1,6 +1,6 @@
 package com.example.skillswap.controller;
 
-import com.example.skillswap.service.impl.AiService;
+import com.example.skillswap.service.AiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;

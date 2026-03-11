@@ -1,7 +1,7 @@
 package com.example.skillswap.config;
 
 import com.example.skillswap.dto.PresenceStatusDTO;
-import com.example.skillswap.service.impl.ChatService;
+import com.example.skillswap.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;

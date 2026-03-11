@@ -1,8 +1,8 @@
 package com.example.skillswap.config;
 
-import com.example.skillswap.service.impl.CustomOAuth2UserService;
-import com.example.skillswap.service.impl.CustomOidcUserService;
-import com.example.skillswap.service.impl.ChatService;
+import com.example.skillswap.service.ChatService;
+import com.example.skillswap.service.OAuthUserService;
+import com.example.skillswap.service.OidcUserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +28,14 @@ import java.nio.charset.StandardCharsets;
 public class SecurityConfig {
 
         private final UserDetailsService userDetailsService;
-        private final CustomOAuth2UserService customOAuth2UserService;
-        private final CustomOidcUserService customOidcUserService;
+        private final OAuthUserService customOAuth2UserService;
+        private final OidcUserService customOidcUserService;
         private final ChatService chatService;
 
         public SecurityConfig(
                         UserDetailsService userDetailsService,
-                        CustomOAuth2UserService customOAuth2UserService,
-                        CustomOidcUserService customOidcUserService,
+                        OAuthUserService customOAuth2UserService,
+                        OidcUserService customOidcUserService,
                         ChatService chatService) {
                 this.userDetailsService = userDetailsService;
                 this.customOAuth2UserService = customOAuth2UserService;

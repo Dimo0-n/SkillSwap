@@ -17,7 +17,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class NotificationService {
+public class NotificationService implements com.example.skillswap.service.NotificationService {
 
     private final NotificationRepository notificationRepository;
     private final UserRepository userRepository;

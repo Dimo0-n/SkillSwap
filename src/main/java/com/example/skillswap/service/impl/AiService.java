@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class AiService {
+public class AiService implements com.example.skillswap.service.AiService {
 
     private final WebClient webClient;
 
@@ -21,6 +21,7 @@ public class AiService {
                 .build();
     }
 
+    @Override
     public String generateDescription(String ideas) {
 
                 if (ideas == null || ideas.trim().isEmpty()) {

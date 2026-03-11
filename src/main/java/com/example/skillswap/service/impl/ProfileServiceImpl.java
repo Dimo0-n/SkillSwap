@@ -25,7 +25,7 @@ public class ProfileServiceImpl implements ProfileService {
     private UserRepository userRepository;
 
     @Autowired
-    private ProfileCompletionService profileCompletionService;
+    private com.example.skillswap.service.ProfileCompletionService profileCompletionService;
 
     public void saveProfile(ProfilDto profilDto, MultipartFile profilePicture, String email) throws IOException {
 

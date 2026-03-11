@@ -2,7 +2,7 @@ package com.example.skillswap.controller;
 
 import com.example.skillswap.dto.CreateProfileCommentDto;
 import com.example.skillswap.service.ProfileCommentService;
-import com.example.skillswap.service.impl.ChatService;
+import com.example.skillswap.service.ChatService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;

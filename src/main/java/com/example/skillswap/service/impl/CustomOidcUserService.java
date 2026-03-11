@@ -21,11 +21,11 @@ import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
-public class CustomOidcUserService extends OidcUserService {
+public class CustomOidcUserService extends OidcUserService implements com.example.skillswap.service.OidcUserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-    private final NotificationService notificationService;
+    private final com.example.skillswap.service.NotificationService notificationService;
 
     @Override
     @Transactional

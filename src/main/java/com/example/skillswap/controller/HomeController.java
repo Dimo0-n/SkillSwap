@@ -2,7 +2,7 @@ package com.example.skillswap.controller;
 
 import com.example.skillswap.entity.Announce;
 import com.example.skillswap.service.AnnounceService;
-import com.example.skillswap.service.impl.ProfileCompletionService;
+import com.example.skillswap.service.ProfileCompletionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

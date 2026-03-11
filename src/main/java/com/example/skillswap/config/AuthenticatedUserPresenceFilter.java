@@ -1,7 +1,7 @@
 package com.example.skillswap.config;
 
 import com.example.skillswap.dto.PresenceStatusDTO;
-import com.example.skillswap.service.impl.ChatService;
+import com.example.skillswap.service.ChatService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
