@@ -47,14 +47,14 @@ public class ProfileServiceImpl implements ProfileService {
                 .orElseGet(Profil::new);
 
         toSave.setUser(user);
-        toSave.setName(profilDto.getName());
-        toSave.setProfession(profilDto.getProfession());
-        toSave.setBioShort(profilDto.getBioShort());
-        toSave.setCompleteDescription(profilDto.getCompleteDescription());
+        toSave.setName(normalizeNullableText(profilDto.getName()));
+        toSave.setProfession(normalizeNullableText(profilDto.getProfession()));
+        toSave.setBioShort(normalizeNullableText(profilDto.getBioShort()));
+        toSave.setCompleteDescription(normalizeNullableText(profilDto.getCompleteDescription()));
         toSave.setAvailabilityMask(profilDto.getAvailabilityMask());
-        toSave.setLimits(profilDto.getLimits());
-        toSave.setCompetences(profilDto.getCompetences());
-        toSave.setStrengths(profilDto.getStrengths());
+        toSave.setLimits(normalizeCommaSeparated(profilDto.getLimits()));
+        toSave.setCompetences(normalizeCommaSeparated(profilDto.getCompetences()));
+        toSave.setStrengths(normalizeCommaSeparated(profilDto.getStrengths()));
 
         if (profilePicture != null && !profilePicture.isEmpty()) {
             toSave.setImageUrl(profileImageStorageService.uploadProfileImage(profilePicture, user.getId()));
@@ -128,6 +128,29 @@ public class ProfileServiceImpl implements ProfileService {
         }
 
         return imageUrl;
+    }
+
+    private String normalizeNullableText(String value) {
+        if (value == null) {
+            return null;
+        }
+
+        String normalized = value.trim();
+        return normalized.isEmpty() ? null : normalized;
+    }
+
+    private String normalizeCommaSeparated(String value) {
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+
+        return value.lines()
+                .flatMap(line -> java.util.Arrays.stream(line.split(",")))
+                .map(String::trim)
+                .filter(item -> !item.isEmpty())
+                .distinct()
+                .reduce((left, right) -> left + "," + right)
+                .orElse(null);
     }
 
 }

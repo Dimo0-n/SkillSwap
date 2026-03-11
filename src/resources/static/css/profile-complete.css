@@ -29,6 +29,15 @@
     padding: 1rem 1.25rem;
 }
 
+.profile-validation-alert {
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(255, 107, 107, 0.35);
+    background: rgba(255, 107, 107, 0.12);
+    color: #ffb3b3;
+    border-radius: 14px;
+    padding: 1rem 1.25rem;
+}
+
 /* ============================================
    LEFT SIDEBAR - STEP NAVIGATION (STICKY)
    ============================================ */
@@ -164,6 +173,13 @@
     margin: 0;
 }
 
+.required-fields-note {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 13px;
+    color: #ff8fab;
+    margin: 0 0 0.75rem;
+}
+
 /* Card Base Styles */
 .profile-card {
     background: #1a1a1a;
@@ -293,6 +309,11 @@
     margin-bottom: 0.75rem;
 }
 
+.required-label::after {
+    content: " *";
+    color: #ff8fab;
+}
+
 .profile-complete-section .form-control {
     width: 100%;
     background: #0f0f0f;
@@ -312,6 +333,18 @@
     background: #0a0a0a;
 }
 
+.profile-complete-section .form-control.is-invalid,
+.skills-input-invalid .form-control {
+    border-color: rgba(255, 107, 107, 0.75);
+    box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.12);
+}
+
+.profile-complete-section .form-control.is-invalid:focus,
+.skills-input-invalid .form-control:focus {
+    border-color: rgba(255, 107, 107, 0.9);
+    box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.18);
+}
+
 .profile-complete-section .form-control::placeholder {
     color: #666;
 }
@@ -327,6 +360,14 @@
     font-size: 13px;
     color: #a0a0b8;
     margin-top: 0.5rem;
+    line-height: 1.4;
+}
+
+.form-error {
+    font-family: "Montserrat", sans-serif;
+    font-size: 13px;
+    color: #ff8fab;
+    margin: 0.5rem 0 0;
     line-height: 1.4;
 }
 

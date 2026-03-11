@@ -1,6 +1,7 @@
 package com.example.skillswap.dto;
 
 import com.example.skillswap.enums.Availability;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,10 +17,14 @@ public class ProfilDto {
 
     private Long id;
     private Long userId;
+    @NotBlank(message = "{profile.validation.name.required}")
     private String name;
+    @NotBlank(message = "{profile.validation.profession.required}")
     private String profession;
+    @NotBlank(message = "{profile.validation.bio.required}")
     private String bioShort;
     private String competences;          // comma separated
+    @NotBlank(message = "{profile.validation.description.required}")
     private String completeDescription;
     private int availabilityMask;
     private String limits;               // comma separated
