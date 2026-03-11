@@ -78,6 +78,11 @@
         <form th:object="${profile}" th:action="@{/profile/save}" method="post" enctype="multipart/form-data">
             <!-- MAIN CONTENT - CARD-BASED SECTIONS -->
             <main class="profile-content">
+
+                <div th:if="${param.required}" class="alert alert-warning profile-required-alert"
+                     th:text="#{profile.complete.required.message}">
+                    Pentru a folosi toate funcțiile SkillSwap trebuie să îți completezi profilul.
+                </div>
                 
                 <!-- Introduction Header -->
                 <div class="intro-header">

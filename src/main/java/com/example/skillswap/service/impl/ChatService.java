@@ -38,7 +38,8 @@ public class ChatService {
     private final MessageReactionRepository reactionRepository;
     private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
-        private final NotificationService notificationService;
+    private final NotificationService notificationService;
+    private final ProfileCompletionService profileCompletionService;
 
     @Transactional
     public ChatRoom createOrGetChatRoom(Long user1Id, Long user2Id) {
@@ -58,9 +59,13 @@ public class ChatService {
 
     @Transactional
     public ChatMessageDTO sendMessage(ChatMessageDTO dto, Principal principal) {
-                Long currentUserId = extractCurrentUserId(principal);
-                User sender = userRepository.findById(currentUserId)
+        Long currentUserId = extractCurrentUserId(principal);
+        User sender = userRepository.findById(currentUserId)
                 .orElseThrow(() -> new RuntimeException("Sender not found"));
+
+        if (!profileCompletionService.isProfileCompleted(sender)) {
+            throw new RuntimeException("Profile completion is required before sending messages");
+        }
 
         ChatRoom chatRoom = chatRoomRepository.findById(dto.getChatRoomId())
                 .orElseThrow(() -> new RuntimeException("Chat room not found"));

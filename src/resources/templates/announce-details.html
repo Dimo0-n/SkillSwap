@@ -171,6 +171,8 @@
     <script th:inline="javascript">
         const msgNoAuthor = [[#{announce.details.error.noauthor}]];
         const msgCreateChat = [[#{announce.details.error.createchat}]];
+        const profileCompletionRequiredUrl = [[${profileCompletionRequiredUrl}]];
+        const currentUserProfileCompleted = [[${currentUserProfileCompleted}]];
 
         console.log('Script started loading...');
 
@@ -192,6 +194,11 @@
                     e.preventDefault();
                     console.log('=== BUTTON CLICKED ===');
 
+                    if (!currentUserProfileCompleted) {
+                        window.location.href = profileCompletionRequiredUrl;
+                        return;
+                    }
+
                     const announceAuthorId = this.dataset.authorId;
                     console.log('Author ID:', announceAuthorId);
 
@@ -209,11 +216,25 @@
                             'Content-Type': 'application/json'
                         }
                     })
-                        .then(response => {
+                        .then(async response => {
                             console.log('Response received:', response.status);
-                            return response.json();
+                            const data = await response.json().catch(() => ({}));
+
+                            if (response.status === 403 && data.redirectUrl) {
+                                window.location.href = data.redirectUrl;
+                                return null;
+                            }
+
+                            if (!response.ok) {
+                                throw new Error(data.message || data.error || 'Unknown error');
+                            }
+
+                            return data;
                         })
                         .then(data => {
+                            if (!data) {
+                                return;
+                            }
                             console.log('Data received:', data);
                             if (data.success) {
                                 const redirectUrl = '/chat-history?roomId=' + data.chatRoomId;
@@ -235,6 +256,11 @@
             // Propose swap button
             if (proposeSwapBtn) {
                 proposeSwapBtn.addEventListener('click', function () {
+                    if (!currentUserProfileCompleted) {
+                        window.location.href = profileCompletionRequiredUrl;
+                        return;
+                    }
+
                     console.log('Propune schimb clicked');
                 });
             }
