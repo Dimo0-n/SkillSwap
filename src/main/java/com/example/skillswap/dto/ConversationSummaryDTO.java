@@ -18,4 +18,9 @@ public class ConversationSummaryDTO {
     private Boolean otherUserOnline;
     private Instant otherUserLastSeenAt;
     private String otherUserTimeZoneId;
+    private Long activeProposalId;
+    private String activeProposalStatus;
+    private String activeProposalStatusLabel;
+    private Boolean currentUserIsProposalOwner;
+    private Boolean canAcceptActiveProposal;
 }

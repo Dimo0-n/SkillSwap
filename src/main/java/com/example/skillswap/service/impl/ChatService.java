@@ -6,10 +6,12 @@ import com.example.skillswap.dto.MessageReactionDTO;
 import com.example.skillswap.entity.*;
 import com.example.skillswap.enums.MessageStatus;
 import com.example.skillswap.enums.NotificationType;
+import com.example.skillswap.enums.SkillSwapProposalStatus;
 import com.example.skillswap.repository.ChatRoomRepository;
 import com.example.skillswap.repository.MessageReactionRepository;
 import com.example.skillswap.repository.MessageRepository;
 import com.example.skillswap.repository.ProfileRepository;
+import com.example.skillswap.repository.SkillSwapProposalRepository;
 import com.example.skillswap.repository.UserRepository;
 import com.example.skillswap.security.CustomUserDetails;
 import com.example.skillswap.util.UtcDateTimes;
@@ -27,6 +29,7 @@ import java.time.LocalDateTime;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,11 +37,17 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ChatService implements com.example.skillswap.service.ChatService {
 
+        private static final EnumSet<SkillSwapProposalStatus> CHAT_VISIBLE_PROPOSAL_STATUSES = EnumSet.of(
+                        SkillSwapProposalStatus.NEGOTIATING,
+                        SkillSwapProposalStatus.ACCEPTED
+        );
+
     private final ChatRoomRepository chatRoomRepository;
     private final MessageRepository messageRepository;
     private final MessageReactionRepository reactionRepository;
     private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
+        private final SkillSwapProposalRepository skillSwapProposalRepository;
     private final com.example.skillswap.service.NotificationService notificationService;
     private final com.example.skillswap.service.ProfileCompletionService profileCompletionService;
 
@@ -259,6 +268,9 @@ public class ChatService implements com.example.skillswap.service.ChatService {
                             .map(Profil::getImageUrl)
                             .filter(url -> url != null && !url.isBlank())
                             .orElse("/img/default-avatar.png");
+                    SkillSwapProposal activeProposal = skillSwapProposalRepository
+                            .findTopByChatRoomIdAndStatusInOrderByUpdatedAtDesc(chatRoom.getId(), CHAT_VISIBLE_PROPOSAL_STATUSES)
+                            .orElse(null);
 
                     return new ConversationSummaryDTO(
                             chatRoom.getId(),
@@ -270,12 +282,29 @@ public class ChatService implements com.example.skillswap.service.ChatService {
                             unreadCount,
                             Boolean.TRUE.equals(otherUser.getOnline()),
                             UtcDateTimes.toInstant(otherUser.getLastSeenAt()),
-                            otherUser.getTimeZoneId()
+                                                        otherUser.getTimeZoneId(),
+                                                        activeProposal != null ? activeProposal.getId() : null,
+                                                        activeProposal != null ? activeProposal.getStatus().name() : null,
+                                                        activeProposal != null ? mapProposalStatusLabel(activeProposal.getStatus()) : null,
+                                                        activeProposal != null && activeProposal.getOwner() != null && activeProposal.getOwner().getId().equals(currentUser.getId()),
+                                                        activeProposal != null
+                                                                        && activeProposal.getStatus() == SkillSwapProposalStatus.NEGOTIATING
+                                                                        && activeProposal.getOwner() != null
+                                                                        && activeProposal.getOwner().getId().equals(currentUser.getId())
                     );
                 })
                 .sorted(Comparator.comparing(ConversationSummaryDTO::getLastMessageTime).reversed())
                 .collect(Collectors.toList());
     }
+
+        private String mapProposalStatusLabel(SkillSwapProposalStatus status) {
+                return switch (status) {
+                        case PENDING -> "In asteptare";
+                        case ACCEPTED -> "Acceptat";
+                        case REJECTED -> "Refuzat";
+                        case NEGOTIATING -> "In negociere";
+                };
+        }
 
     @Transactional
         public boolean setUserOnline(Long userId) {

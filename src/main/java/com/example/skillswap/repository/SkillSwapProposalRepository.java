@@ -21,5 +21,8 @@ public interface SkillSwapProposalRepository extends JpaRepository<SkillSwapProp
                                                                                                   Long requesterId,
                                                                                                   Collection<SkillSwapProposalStatus> statuses);
 
+    Optional<SkillSwapProposal> findTopByChatRoomIdAndStatusInOrderByUpdatedAtDesc(Long chatRoomId,
+                                                                                   Collection<SkillSwapProposalStatus> statuses);
+
     Optional<SkillSwapProposal> findByIdAndOwnerId(Long id, Long ownerId);
 }

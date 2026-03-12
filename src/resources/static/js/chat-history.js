@@ -57,7 +57,12 @@ function buildConversationItem(conversation) {
              data-user-name="${escapeHtmlForSidebar(conversation.otherUserName)}"
              data-user-avatar="${escapeHtmlForSidebar(avatarUrl)}"
              data-user-timezone="${escapeHtmlForSidebar(conversation.otherUserTimeZoneId || '')}"
-             data-user-status="${status}">
+             data-user-status="${status}"
+             data-proposal-id="${conversation.activeProposalId || ''}"
+             data-proposal-status="${escapeHtmlForSidebar(conversation.activeProposalStatus || '')}"
+             data-proposal-status-label="${escapeHtmlForSidebar(conversation.activeProposalStatusLabel || '')}"
+             data-proposal-owner="${conversation.currentUserIsProposalOwner === true ? 'true' : 'false'}"
+             data-proposal-can-accept="${conversation.canAcceptActiveProposal === true ? 'true' : 'false'}">
             <div class="conversation-avatar">
                 <img src="${escapeHtmlForSidebar(avatarUrl)}" alt="${escapeHtmlForSidebar(conversation.otherUserName)}">
                 <span class="status-indicator ${status === 'online' ? 'status-online' : 'status-offline'}"></span>
@@ -72,6 +77,72 @@ function buildConversationItem(conversation) {
             ${unreadBadge}
         </div>
     `;
+}
+
+function setProposalHeaderState(options = {}) {
+    const statusBadge = document.getElementById('chatProposalStatusBadge');
+    const desktopAcceptButton = document.getElementById('chatProposalAcceptButton');
+    const mobileAcceptButton = document.getElementById('mobileProposalAcceptButton');
+    const status = options.status || '';
+    const statusLabel = options.statusLabel || '';
+    const canAccept = options.canAccept === true;
+    const proposalId = options.proposalId || '';
+    const isBusy = options.isBusy === true;
+
+    if (statusBadge) {
+        if (statusLabel) {
+            statusBadge.textContent = `Schimb: ${statusLabel}`;
+            statusBadge.classList.remove('is-hidden');
+            statusBadge.classList.toggle('is-accepted', status === 'ACCEPTED');
+        } else {
+            statusBadge.textContent = '';
+            statusBadge.classList.add('is-hidden');
+            statusBadge.classList.remove('is-accepted');
+        }
+    }
+
+    [desktopAcceptButton, mobileAcceptButton].forEach(button => {
+        if (!button) {
+            return;
+        }
+
+        button.dataset.proposalId = proposalId;
+        button.classList.toggle('is-hidden', !canAccept);
+        button.disabled = !canAccept || isBusy;
+        button.classList.toggle('is-busy', isBusy);
+        button.setAttribute('aria-busy', isBusy ? 'true' : 'false');
+    });
+}
+
+function updateProposalHeaderFromConversation(item) {
+    if (!item) {
+        setProposalHeaderState();
+        return;
+    }
+
+    setProposalHeaderState({
+        proposalId: item.dataset.proposalId || '',
+        status: item.dataset.proposalStatus || '',
+        statusLabel: item.dataset.proposalStatusLabel || '',
+        canAccept: item.dataset.proposalCanAccept === 'true'
+    });
+}
+
+function updateConversationProposalState(chatRoomId, state = {}) {
+    const item = document.querySelector(`#conversationsList .conversation-item[data-conversation-id="${chatRoomId}"]`);
+    if (!item) {
+        return;
+    }
+
+    item.dataset.proposalId = state.proposalId || '';
+    item.dataset.proposalStatus = state.status || '';
+    item.dataset.proposalStatusLabel = state.statusLabel || '';
+    item.dataset.proposalOwner = state.isOwner === true ? 'true' : 'false';
+    item.dataset.proposalCanAccept = state.canAccept === true ? 'true' : 'false';
+
+    if (item.classList.contains('active')) {
+        updateProposalHeaderFromConversation(item);
+    }
 }
 
 function getTotalUnreadFromDOM() {
@@ -185,6 +256,13 @@ function updateChatHeaderFromConversation(item) {
     if (mobileChatStatus) {
         mobileChatStatus.textContent = buildChatPresenceText(status, timeZoneId);
     }
+
+    document.querySelectorAll('#conversationsList .conversation-item.active').forEach(activeItem => {
+        activeItem.classList.remove('active');
+    });
+    item.classList.add('active');
+
+    updateProposalHeaderFromConversation(item);
 
     startChatHeaderLocalTimeUpdates();
 }
@@ -492,6 +570,7 @@ function attachChatSettingsDropdowns() {
 }
 
 let videoCallInProgress = false;
+let proposalAcceptInProgress = false;
 
 function setVideoCallButtonsBusy(isBusy) {
     document.querySelectorAll('[data-video-call-trigger="true"]').forEach(button => {
@@ -573,6 +652,80 @@ function attachVideoCallButtons() {
     });
 }
 
+async function acceptNegotiatedProposal() {
+    if (proposalAcceptInProgress) {
+        return;
+    }
+
+    const activeItem = document.querySelector('#conversationsList .conversation-item.active[data-conversation-id]');
+    const proposalId = activeItem ? activeItem.dataset.proposalId : '';
+    if (!activeItem || !proposalId || activeItem.dataset.proposalCanAccept !== 'true') {
+        return;
+    }
+
+    proposalAcceptInProgress = true;
+    updateProposalHeaderFromConversation(activeItem);
+    setProposalHeaderState({
+        proposalId,
+        status: activeItem.dataset.proposalStatus || '',
+        statusLabel: activeItem.dataset.proposalStatusLabel || '',
+        canAccept: true,
+        isBusy: true
+    });
+
+    try {
+        const response = await fetch(`/api/skill-swap-proposals/${proposalId}/accept`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        const payload = await response.json().catch(() => ({}));
+
+        if (payload && payload.redirectUrl && response.status === 401) {
+            window.location.href = payload.redirectUrl;
+            return;
+        }
+
+        if (!response.ok || payload.success === false) {
+            throw new Error(payload.message || 'Nu am putut accepta schimbul acum.');
+        }
+
+        updateConversationProposalState(activeItem.dataset.conversationId, {
+            proposalId,
+            status: 'ACCEPTED',
+            statusLabel: 'Acceptat',
+            isOwner: true,
+            canAccept: false
+        });
+    } catch (error) {
+        window.alert(error.message || 'Nu am putut accepta schimbul acum.');
+    } finally {
+        proposalAcceptInProgress = false;
+        const refreshedActiveItem = document.querySelector('#conversationsList .conversation-item.active[data-conversation-id]');
+        if (refreshedActiveItem) {
+            updateProposalHeaderFromConversation(refreshedActiveItem);
+        } else {
+            setProposalHeaderState();
+        }
+    }
+}
+
+function attachProposalAcceptButtons() {
+    const acceptButtons = [
+        document.getElementById('chatProposalAcceptButton'),
+        document.getElementById('mobileProposalAcceptButton')
+    ].filter(Boolean);
+
+    acceptButtons.forEach(button => {
+        button.addEventListener('click', function (event) {
+            event.preventDefault();
+            acceptNegotiatedProposal();
+        });
+    });
+}
+
 function loadConversations() {
     const conversationsList = document.getElementById('conversationsList');
     if (!conversationsList) {
@@ -637,6 +790,7 @@ document.addEventListener('DOMContentLoaded', function () {
     attachConversationSearch();
     attachChatSettingsDropdowns();
     attachVideoCallButtons();
+    attachProposalAcceptButtons();
 
     window.addEventListener('resize', function () {
         syncMobileNavbarOffset();

@@ -109,7 +109,11 @@ public class SkillSwapProposalService {
 
     @Transactional
     public SkillSwapProposalActionResponse acceptProposal(Long proposalId, Long ownerId) {
-        SkillSwapProposal proposal = getPendingOwnerProposal(proposalId, ownerId);
+        SkillSwapProposal proposal = getOwnerProposalForStatuses(
+            proposalId,
+            ownerId,
+            EnumSet.of(SkillSwapProposalStatus.PENDING, SkillSwapProposalStatus.NEGOTIATING)
+        );
         ChatRoom chatRoom = openProposalChat(proposal, "Acceptat");
 
         proposal.setStatus(SkillSwapProposalStatus.ACCEPTED);
@@ -137,7 +141,11 @@ public class SkillSwapProposalService {
 
     @Transactional
     public SkillSwapProposalActionResponse rejectProposal(Long proposalId, Long ownerId) {
-        SkillSwapProposal proposal = getPendingOwnerProposal(proposalId, ownerId);
+        SkillSwapProposal proposal = getOwnerProposalForStatuses(
+            proposalId,
+            ownerId,
+            EnumSet.of(SkillSwapProposalStatus.PENDING)
+        );
 
         proposal.setStatus(SkillSwapProposalStatus.REJECTED);
         proposal.setRespondedAt(UtcDateTimes.now());
@@ -163,7 +171,11 @@ public class SkillSwapProposalService {
 
     @Transactional
     public SkillSwapProposalActionResponse negotiateProposal(Long proposalId, Long ownerId) {
-        SkillSwapProposal proposal = getPendingOwnerProposal(proposalId, ownerId);
+        SkillSwapProposal proposal = getOwnerProposalForStatuses(
+            proposalId,
+            ownerId,
+            EnumSet.of(SkillSwapProposalStatus.PENDING)
+        );
         ChatRoom chatRoom = openProposalChat(proposal, "In negociere");
 
         proposal.setStatus(SkillSwapProposalStatus.NEGOTIATING);
@@ -189,11 +201,13 @@ public class SkillSwapProposalService {
         );
     }
 
-    private SkillSwapProposal getPendingOwnerProposal(Long proposalId, Long ownerId) {
+    private SkillSwapProposal getOwnerProposalForStatuses(Long proposalId,
+                                                          Long ownerId,
+                                                          EnumSet<SkillSwapProposalStatus> allowedStatuses) {
         SkillSwapProposal proposal = skillSwapProposalRepository.findByIdAndOwnerId(proposalId, ownerId)
                 .orElseThrow(() -> new RuntimeException("Propunerea nu a fost gasita."));
 
-        if (proposal.getStatus() != SkillSwapProposalStatus.PENDING) {
+        if (!allowedStatuses.contains(proposal.getStatus())) {
             throw new RuntimeException("Propunerea nu mai este disponibila pentru aceasta actiune.");
         }
 
