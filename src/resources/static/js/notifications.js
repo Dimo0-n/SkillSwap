@@ -475,6 +475,11 @@ async function handleProposalAction(notification, action) {
 
         closeNotificationsDropdown();
         closeMobilePanel();
+
+        if ((action === 'accept' || action === 'negotiate') && payload.redirectUrl) {
+            window.location.href = payload.redirectUrl;
+            return;
+        }
     } catch (error) {
         window.alert(error.message || 'Nu am putut procesa propunerea.');
     } finally {
