@@ -1,5 +1,6 @@
 package com.example.skillswap.service;
 
+import com.example.skillswap.dto.SkillSwapProposalAvailabilityResponse;
 import com.example.skillswap.dto.ChatMessageDTO;
 import com.example.skillswap.dto.SkillSwapProposalActionResponse;
 import com.example.skillswap.entity.Announce;
@@ -17,11 +18,18 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.EnumSet;
+
 @Service
 @RequiredArgsConstructor
 public class SkillSwapProposalService {
 
     private static final int MAX_MESSAGE_LENGTH = 500;
+    private static final EnumSet<SkillSwapProposalStatus> BLOCKING_STATUSES = EnumSet.of(
+            SkillSwapProposalStatus.PENDING,
+            SkillSwapProposalStatus.NEGOTIATING,
+            SkillSwapProposalStatus.ACCEPTED
+    );
 
     private final AnnounceRepository announceRepository;
     private final UserRepository userRepository;
@@ -44,12 +52,10 @@ public class SkillSwapProposalService {
         if (owner.getId().equals(requesterId)) {
             throw new RuntimeException("Nu poti trimite o propunere propriului anunt.");
         }
-        if (skillSwapProposalRepository.existsByAnnounceIdAndRequesterIdAndStatus(
-                announceId,
-                requesterId,
-                SkillSwapProposalStatus.PENDING
-        )) {
-            throw new RuntimeException("Ai deja o propunere activa pentru acest anunt.");
+
+        SkillSwapProposalAvailabilityResponse availability = getProposalAvailability(requesterId, announceId);
+        if (!availability.isCanSubmit()) {
+            throw new RuntimeException(availability.getMessage());
         }
 
         SkillSwapProposal proposal = new SkillSwapProposal();
@@ -73,6 +79,32 @@ public class SkillSwapProposalService {
         );
 
         return savedProposal;
+    }
+
+    @Transactional(readOnly = true)
+    public SkillSwapProposalAvailabilityResponse getProposalAvailability(Long requesterId, Long announceId) {
+        Announce announce = announceRepository.findById(announceId)
+                .orElseThrow(() -> new RuntimeException("Anuntul nu a fost gasit."));
+        User owner = announce.getUser();
+
+        if (owner == null) {
+            throw new RuntimeException("Anuntul nu are un proprietar valid.");
+        }
+
+        if (owner.getId().equals(requesterId)) {
+            return new SkillSwapProposalAvailabilityResponse(
+                    false,
+                    null,
+                    "Nu poti trimite o propunere propriului anunt.",
+                    null,
+                    null
+            );
+        }
+
+        return skillSwapProposalRepository
+                .findTopByAnnounceIdAndRequesterIdAndStatusInOrderByCreatedAtDesc(announceId, requesterId, BLOCKING_STATUSES)
+                .map(this::buildUnavailableResponse)
+                .orElseGet(() -> new SkillSwapProposalAvailabilityResponse(true, null, null, null, null));
     }
 
     @Transactional
@@ -187,6 +219,37 @@ public class SkillSwapProposalService {
 
         messagingTemplate.convertAndSend("/topic/chat/" + chatRoom.getId(), systemMessage);
         return chatRoom;
+    }
+
+    private SkillSwapProposalAvailabilityResponse buildUnavailableResponse(SkillSwapProposal proposal) {
+        SkillSwapProposalStatus status = proposal.getStatus();
+        if (status == SkillSwapProposalStatus.NEGOTIATING) {
+            return new SkillSwapProposalAvailabilityResponse(
+                    false,
+                    status.name(),
+                    "Ai deja o cerere in negociere pentru acest anunt. Continua discutia din chat.",
+                    proposal.getChatRoom() != null ? "/chat-history?roomId=" + proposal.getChatRoom().getId() : null,
+                    proposal.getChatRoom() != null ? "Deschide conversatia" : null
+            );
+        }
+
+        if (status == SkillSwapProposalStatus.ACCEPTED) {
+            return new SkillSwapProposalAvailabilityResponse(
+                    false,
+                    status.name(),
+                    "Acest Skill Swap a fost deja acceptat. Poti continua direct conversatia existenta.",
+                    proposal.getChatRoom() != null ? "/chat-history?roomId=" + proposal.getChatRoom().getId() : null,
+                    proposal.getChatRoom() != null ? "Mergi la chat" : null
+            );
+        }
+
+        return new SkillSwapProposalAvailabilityResponse(
+                false,
+                status.name(),
+                "Ai deja o cerere trimisa pentru acest anunt. Asteapta raspunsul proprietarului.",
+                null,
+                null
+        );
     }
 
     private String normalizeRequiredText(String rawValue, String errorMessage) {

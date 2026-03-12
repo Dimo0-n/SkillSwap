@@ -1896,10 +1896,25 @@ body.notifications-mobile-open {
     width: 40px;
     height: 40px;
     flex-shrink: 0;
+	padding: 0;
+	appearance: none;
     border-radius: 50%;
     overflow: hidden;
     border: 1px solid rgba(167, 139, 250, 0.26);
     background: rgba(255, 255, 255, 0.04);
+	cursor: pointer;
+	transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.notification-avatar:hover {
+	transform: translateY(-1px);
+	border-color: rgba(167, 139, 250, 0.48);
+	box-shadow: 0 10px 22px rgba(10, 10, 18, 0.28);
+}
+
+.notification-avatar:focus-visible {
+	outline: 2px solid rgba(167, 139, 250, 0.8);
+	outline-offset: 2px;
 }
 
 .notification-avatar img {
@@ -1927,6 +1942,39 @@ body.notifications-mobile-open {
 
     color: var(--text-primary);
     line-height: 1.4;
+}
+
+.notification-proposal-title {
+	display: flex;
+	align-items: baseline;
+	gap: 4px 6px;
+	flex-wrap: wrap;
+}
+
+.notification-profile-trigger {
+	padding: 0;
+	appearance: none;
+	border: 0;
+	background: transparent;
+	font: inherit;
+	color: var(--text-primary);
+	cursor: pointer;
+}
+
+.notification-profile-trigger--name {
+	font: inherit;
+	font-weight: 700;
+	line-height: inherit;
+}
+
+.notification-profile-trigger--name:hover,
+.notification-profile-trigger--name:focus-visible {
+	color: var(--brand-primary-light);
+	text-decoration: underline;
+}
+
+.notification-proposal-title-text {
+	color: var(--text-primary);
 }
 
 .notification-text {
@@ -2000,9 +2048,16 @@ body.notifications-mobile-open {
 .notification-actions {
     display: flex;
     justify-content: flex-end;
-    gap: 8px;
-    flex-wrap: wrap;
+	gap: 8px;
+	flex-wrap: nowrap;
     margin-top: 2px;
+}
+
+.notification-item--proposal .notification-action-btn {
+	flex: 1 1 0;
+	min-width: 0;
+	text-align: center;
+	white-space: nowrap;
 }
 
 .notification-action-btn {
@@ -5621,11 +5676,12 @@ body.notifications-mobile-open {
 
 	.notification-actions {
 		justify-content: flex-start;
+		gap: 6px;
 	}
 
 	.notification-action-btn {
-		font-size: 12px;
-		padding: 8px 12px;
+		font-size: 11px;
+		padding: 8px 10px;
 	}
 
 	.notification-item.unread {

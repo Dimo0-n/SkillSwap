@@ -157,6 +157,15 @@
                             <i class="fa fa-handshake-o"></i>
                             <span th:text="#{announce.details.propose}">Propune schimb</span>
                         </button>
+                        <div class="skill-swap-status-banner is-hidden" id="proposalStatusNotice" aria-live="polite">
+                            <div class="skill-swap-status-banner__icon">
+                                <i class="fa fa-info-circle"></i>
+                            </div>
+                            <div class="skill-swap-status-banner__body">
+                                <div class="skill-swap-status-banner__text" id="proposalStatusNoticeText"></div>
+                                <a class="skill-swap-status-banner__action is-hidden" id="proposalStatusNoticeAction">Deschide</a>
+                            </div>
+                        </div>
                         <button class="announce-btn announce-btn-icon" id="saveBtn">
                             <i class="fa fa-bookmark-o"></i>
                         </button>
@@ -178,6 +187,16 @@
                 Propunerea va trimite o notificare structurata proprietarului anuntului. Chat-ul se deschide doar daca
                 propunerea este acceptata sau intra in negociere.
             </p>
+
+            <div class="skill-swap-modal__notice is-hidden" id="skillSwapModalNotice" aria-live="polite">
+                <div class="skill-swap-modal__notice-icon">
+                    <i class="fa fa-info-circle"></i>
+                </div>
+                <div class="skill-swap-modal__notice-body">
+                    <div class="skill-swap-modal__notice-text" id="skillSwapModalNoticeText"></div>
+                    <a class="skill-swap-modal__notice-action is-hidden" id="skillSwapModalNoticeAction">Continua</a>
+                </div>
+            </div>
 
             <div class="skill-swap-modal__exchange">
                 <div class="skill-swap-modal__exchange-card">
@@ -227,6 +246,130 @@
             const proposalOfferedSkill = document.getElementById('proposalOfferedSkill');
             const proposalRequestedSkill = document.getElementById('proposalRequestedSkill');
             const submitProposalBtn = document.getElementById('submitProposalBtn');
+            const proposalStatusNotice = document.getElementById('proposalStatusNotice');
+            const proposalStatusNoticeText = document.getElementById('proposalStatusNoticeText');
+            const proposalStatusNoticeAction = document.getElementById('proposalStatusNoticeAction');
+            const skillSwapModalNotice = document.getElementById('skillSwapModalNotice');
+            const skillSwapModalNoticeText = document.getElementById('skillSwapModalNoticeText');
+            const skillSwapModalNoticeAction = document.getElementById('skillSwapModalNoticeAction');
+            const defaultProposeSwapBtnHtml = proposeSwapBtn ? proposeSwapBtn.innerHTML : '';
+            const proposalAvailabilityState = {
+                canSubmit: true,
+                status: null,
+                message: '',
+                actionUrl: null,
+                actionLabel: null,
+                loaded: false
+            };
+
+            function setNotice(container, textElement, actionElement, variant, message, actionUrl, actionLabel) {
+                if (!container || !textElement) {
+                    return;
+                }
+
+                container.classList.remove('is-hidden', 'is-info', 'is-success', 'is-warning');
+                container.classList.add(`is-${variant || 'info'}`);
+                textElement.textContent = message || '';
+
+                if (actionElement) {
+                    if (actionUrl && actionLabel) {
+                        actionElement.href = actionUrl;
+                        actionElement.textContent = actionLabel;
+                        actionElement.classList.remove('is-hidden');
+                    } else {
+                        actionElement.removeAttribute('href');
+                        actionElement.textContent = '';
+                        actionElement.classList.add('is-hidden');
+                    }
+                }
+            }
+
+            function clearNotice(container, textElement, actionElement) {
+                if (!container || !textElement) {
+                    return;
+                }
+
+                container.classList.add('is-hidden');
+                container.classList.remove('is-info', 'is-success', 'is-warning');
+                textElement.textContent = '';
+
+                if (actionElement) {
+                    actionElement.removeAttribute('href');
+                    actionElement.textContent = '';
+                    actionElement.classList.add('is-hidden');
+                }
+            }
+
+            function getDisabledProposalButtonMarkup(status) {
+                if (status === 'NEGOTIATING') {
+                    return '<i class="fa fa-comments"></i><span>In negociere</span>';
+                }
+
+                if (status === 'ACCEPTED') {
+                    return '<i class="fa fa-check"></i><span>Schimb acceptat</span>';
+                }
+
+                return '<i class="fa fa-clock-o"></i><span>Cerere in curs</span>';
+            }
+
+            function applyProposalAvailability(availability, noticeVariant) {
+                if (!availability) {
+                    return;
+                }
+
+                proposalAvailabilityState.canSubmit = availability.canSubmit !== false;
+                proposalAvailabilityState.status = availability.status || null;
+                proposalAvailabilityState.message = availability.message || '';
+                proposalAvailabilityState.actionUrl = availability.actionUrl || null;
+                proposalAvailabilityState.actionLabel = availability.actionLabel || null;
+                proposalAvailabilityState.loaded = true;
+
+                if (!proposeSwapBtn) {
+                    return;
+                }
+
+                if (proposalAvailabilityState.canSubmit) {
+                    proposeSwapBtn.disabled = false;
+                    proposeSwapBtn.classList.remove('announce-btn-disabled');
+                    proposeSwapBtn.innerHTML = defaultProposeSwapBtnHtml;
+                    clearNotice(proposalStatusNotice, proposalStatusNoticeText, proposalStatusNoticeAction);
+                    return;
+                }
+
+                proposeSwapBtn.disabled = true;
+                proposeSwapBtn.classList.add('announce-btn-disabled');
+                proposeSwapBtn.innerHTML = getDisabledProposalButtonMarkup(proposalAvailabilityState.status);
+                setNotice(
+                    proposalStatusNotice,
+                    proposalStatusNoticeText,
+                    proposalStatusNoticeAction,
+                    noticeVariant || 'info',
+                    proposalAvailabilityState.message,
+                    proposalAvailabilityState.actionUrl,
+                    proposalAvailabilityState.actionLabel
+                );
+            }
+
+            async function fetchProposalAvailability() {
+                const response = await fetch(`/api/skill-swap-proposals/availability?announceId=${encodeURIComponent(announceId)}`, {
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                const payload = await response.json().catch(() => ({}));
+
+                if ((response.status === 401 || response.status === 403) && payload.redirectUrl) {
+                    window.location.href = payload.redirectUrl;
+                    return null;
+                }
+
+                if (!response.ok) {
+                    throw new Error(payload.message || 'Nu am putut verifica starea schimbului.');
+                }
+
+                return payload;
+            }
 
             function openProposalModal() {
                 if (!skillSwapModal || !proposeSwapBtn) {
@@ -238,6 +381,7 @@
                 skillSwapModal.classList.add('is-open');
                 skillSwapModal.setAttribute('aria-hidden', 'false');
                 document.body.classList.add('skill-swap-modal-open');
+                clearNotice(skillSwapModalNotice, skillSwapModalNoticeText, skillSwapModalNoticeAction);
                 if (proposalMessageInput) {
                     proposalMessageInput.focus();
                 }
@@ -255,7 +399,7 @@
 
             // Propose swap button
             if (proposeSwapBtn) {
-                proposeSwapBtn.addEventListener('click', function () {
+                proposeSwapBtn.addEventListener('click', async function () {
                     if (!currentUserAuthenticated) {
                         window.location.href = '/login';
                         return;
@@ -266,8 +410,50 @@
                         return;
                     }
 
+                    try {
+                        const availability = await fetchProposalAvailability();
+                        if (!availability) {
+                            return;
+                        }
+
+                        applyProposalAvailability(availability);
+                        if (!availability.canSubmit) {
+                            setNotice(
+                                skillSwapModalNotice,
+                                skillSwapModalNoticeText,
+                                skillSwapModalNoticeAction,
+                                'warning',
+                                availability.message,
+                                availability.actionUrl,
+                                availability.actionLabel
+                            );
+                            return;
+                        }
+                    } catch (error) {
+                        setNotice(
+                            proposalStatusNotice,
+                            proposalStatusNoticeText,
+                            proposalStatusNoticeAction,
+                            'warning',
+                            error.message || 'Nu am putut verifica starea schimbului.'
+                        );
+                        return;
+                    }
+
                     openProposalModal();
                 });
+
+                if (currentUserAuthenticated && currentUserProfileCompleted) {
+                    fetchProposalAvailability()
+                        .then(function (availability) {
+                            if (availability) {
+                                applyProposalAvailability(availability);
+                            }
+                        })
+                        .catch(function () {
+                            // Keep the button usable if the availability check fails.
+                        });
+                }
             }
 
             if (skillSwapModal) {
@@ -295,6 +481,8 @@
                         return;
                     }
 
+                    clearNotice(skillSwapModalNotice, skillSwapModalNoticeText, skillSwapModalNoticeAction);
+
                     submitProposalBtn.disabled = true;
                     submitProposalBtn.textContent = 'Se trimite...';
 
@@ -319,6 +507,26 @@
                         }
 
                         if (!response.ok || payload.success === false) {
+                            if (response.status === 400 || response.status === 409) {
+                                const availability = await fetchProposalAvailability().catch(() => null);
+                                if (availability) {
+                                    applyProposalAvailability(availability);
+                                    setNotice(
+                                        skillSwapModalNotice,
+                                        skillSwapModalNoticeText,
+                                        skillSwapModalNoticeAction,
+                                        'warning',
+                                        availability.message || payload.message || 'Nu mai poti trimite o alta cerere pentru acest anunt.',
+                                        availability.actionUrl,
+                                        availability.actionLabel
+                                    );
+                                    if (!availability.canSubmit) {
+                                        closeProposalModal();
+                                        return;
+                                    }
+                                }
+                            }
+
                             throw new Error(payload.message || 'Nu am putut trimite propunerea acum.');
                         }
 
@@ -326,12 +534,22 @@
                         if (proposalMessageInput) {
                             proposalMessageInput.value = '';
                         }
-                        proposeSwapBtn.disabled = true;
-                        proposeSwapBtn.classList.add('announce-btn-disabled');
-                        proposeSwapBtn.innerHTML = '<i class="fa fa-check"></i><span>Propunere trimisa</span>';
-                        window.alert(payload.message || 'Propunerea a fost trimisa.');
+
+                        applyProposalAvailability({
+                            canSubmit: false,
+                            status: 'PENDING',
+                            message: payload.message || 'Propunerea a fost trimisa. Asteapta raspunsul proprietarului.',
+                            actionUrl: null,
+                            actionLabel: null
+                        }, 'success');
                     } catch (error) {
-                        window.alert(error.message || 'Nu am putut trimite propunerea acum.');
+                        setNotice(
+                            skillSwapModalNotice,
+                            skillSwapModalNoticeText,
+                            skillSwapModalNoticeAction,
+                            'warning',
+                            error.message || 'Nu am putut trimite propunerea acum.'
+                        );
                     } finally {
                         submitProposalBtn.disabled = false;
                         submitProposalBtn.textContent = 'Trimite propunerea';

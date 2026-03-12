@@ -310,16 +310,59 @@ function createProposalNotificationElement(notification) {
     item.setAttribute('data-notification-id', notification.id);
     item.setAttribute('data-proposal-id', proposal.proposalId);
 
-    const avatar = document.createElement('div');
+    const avatar = document.createElement('button');
+    avatar.type = 'button';
     avatar.className = 'notification-avatar';
     avatar.innerHTML = `<img src="${escapeHtml(notification.proposal.actorAvatarUrl || '/img/default-avatar.png')}" alt="${escapeHtml(notification.proposal.actorName || 'Utilizator')}">`;
+    avatar.addEventListener('click', function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        openProposalProfile(notification);
+    });
 
     const content = document.createElement('div');
     content.className = 'notification-content notification-content--proposal';
 
     const title = document.createElement('div');
-    title.className = 'notification-title';
-    title.textContent = notification.title || `${proposal.actorName || 'Un utilizator'} ti-a propus un Skill Swap`;
+    title.className = 'notification-title notification-proposal-title';
+
+    const actorName = (proposal.actorName || '').trim();
+    const rawTitle = (notification.title || '').trim();
+    const fallbackTitle = proposal.actionable === true
+        ? 'ti-a propus un Skill Swap'
+        : (rawTitle || 'a actualizat propunerea de Skill Swap');
+    let titleSuffix = fallbackTitle;
+
+    if (actorName && rawTitle) {
+        const rawTitleLower = rawTitle.toLowerCase();
+        const actorNameLower = actorName.toLowerCase();
+
+        if (rawTitleLower.startsWith(actorNameLower)) {
+            titleSuffix = rawTitle.slice(actorName.length).trim();
+        } else {
+            titleSuffix = rawTitle;
+        }
+    }
+
+    if (actorName) {
+        const profileNameButton = document.createElement('button');
+        profileNameButton.type = 'button';
+        profileNameButton.className = 'notification-profile-trigger notification-profile-trigger--name';
+        profileNameButton.textContent = actorName;
+        profileNameButton.addEventListener('click', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            openProposalProfile(notification);
+        });
+        title.appendChild(profileNameButton);
+    }
+
+    if (titleSuffix) {
+        const titleText = document.createElement('span');
+        titleText.className = 'notification-proposal-title-text';
+        titleText.textContent = actorName ? titleSuffix : (rawTitle || fallbackTitle);
+        title.appendChild(titleText);
+    }
 
     const summary = document.createElement('div');
     summary.className = 'notification-proposal-summary';
@@ -355,13 +398,6 @@ function createProposalNotificationElement(notification) {
     if (proposal.actionable === true) {
         const actions = document.createElement('div');
         actions.className = 'notification-actions';
-
-        actions.appendChild(createNotificationActionButton('Vezi profil', 'secondary', async function (event) {
-            event.preventDefault();
-            event.stopPropagation();
-            await markNotificationAsRead(notification.id);
-            window.location.href = proposal.viewProfileUrl || `/profile/${proposal.actorUserId}`;
-        }));
 
         actions.appendChild(createNotificationActionButton('Refuza', 'secondary', function (event) {
             event.preventDefault();
@@ -437,10 +473,8 @@ async function handleProposalAction(notification, action) {
         await refreshNotifications();
         updateConversationBadge();
 
-        if (payload.redirectUrl) {
-            window.location.href = payload.redirectUrl;
-            return;
-        }
+        closeNotificationsDropdown();
+        closeMobilePanel();
     } catch (error) {
         window.alert(error.message || 'Nu am putut procesa propunerea.');
     } finally {
@@ -448,6 +482,55 @@ async function handleProposalAction(notification, action) {
             button.disabled = false;
         });
     }
+}
+
+async function openProposalProfile(notification) {
+    if (!notification) {
+        return;
+    }
+
+    const targetUrl = resolveProposalProfileUrl(notification);
+    if (!targetUrl) {
+        return;
+    }
+
+    if (!notification.read) {
+        await markNotificationAsRead(notification.id);
+    }
+
+    closeNotificationsDropdown();
+    closeMobilePanel();
+    window.location.href = targetUrl;
+}
+
+function resolveProposalProfileUrl(notification) {
+    const proposal = notification && notification.proposal;
+    if (!proposal) {
+        return notification ? notification.targetUrl : null;
+    }
+
+    return proposal.viewProfileUrl || (proposal.actorUserId ? `/profile/${proposal.actorUserId}` : notification.targetUrl);
+}
+
+function resolveNotificationDestination(notification) {
+    if (!hasProposalPayload(notification)) {
+        return notification.targetUrl;
+    }
+
+    const proposal = notification.proposal;
+    if (proposal.chatUrl && (proposal.status === 'ACCEPTED' || proposal.status === 'NEGOTIATING')) {
+        return proposal.chatUrl;
+    }
+
+    if (proposal.status === 'REJECTED') {
+        return resolveProposalProfileUrl(notification);
+    }
+
+    if (proposal.actionable !== true) {
+        return resolveProposalProfileUrl(notification) || notification.targetUrl;
+    }
+
+    return notification.targetUrl;
 }
 
 function escapeHtml(text) {
@@ -472,8 +555,9 @@ async function handleNotificationClick(notification) {
     closeNotificationsDropdown();
     closeMobilePanel();
 
-    if (notification.targetUrl) {
-        window.location.href = notification.targetUrl;
+    const destination = resolveNotificationDestination(notification);
+    if (destination) {
+        window.location.href = destination;
     }
 }
 

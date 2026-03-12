@@ -1,6 +1,7 @@
 package com.example.skillswap.controller;
 
 import com.example.skillswap.dto.SkillSwapProposalActionResponse;
+import com.example.skillswap.dto.SkillSwapProposalAvailabilityResponse;
 import com.example.skillswap.dto.SkillSwapProposalCreateRequest;
 import com.example.skillswap.service.ChatService;
 import com.example.skillswap.service.ProfileCompletionService;
@@ -23,6 +24,21 @@ public class SkillSwapProposalController {
     private final SkillSwapProposalService skillSwapProposalService;
     private final ChatService chatService;
     private final ProfileCompletionService profileCompletionService;
+
+    @GetMapping("/availability")
+    public ResponseEntity<?> getProposalAvailability(@RequestParam Long announceId, Principal principal) {
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(buildAuthenticationRequiredResponse());
+        }
+
+        if (!profileCompletionService.isProfileCompleted(principal)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(buildProfileCompletionRequiredResponse());
+        }
+
+        Long requesterId = chatService.getCurrentUserId(principal);
+        SkillSwapProposalAvailabilityResponse response = skillSwapProposalService.getProposalAvailability(requesterId, announceId);
+        return ResponseEntity.ok(response);
+    }
 
     @PostMapping
     public ResponseEntity<Map<String, Object>> createProposal(@Valid @RequestBody SkillSwapProposalCreateRequest request,
