@@ -4,6 +4,8 @@ function escapeHtmlForSidebar(text) {
     return div.innerHTML;
 }
 
+let chatHeaderLocalTimeIntervalId = null;
+
 function formatConversationTime(timestamp) {
     if (!timestamp) {
         return '';
@@ -51,9 +53,10 @@ function buildConversationItem(conversation) {
         <div class="conversation-item"
              data-conversation-id="${conversation.chatRoomId}"
              data-user-id="${conversation.otherUserId}"
-               data-unread-count="${Number.isFinite(Number(conversation.unreadCount)) && Number(conversation.unreadCount) > 0 ? Math.floor(Number(conversation.unreadCount)) : 0}"
+             data-unread-count="${Number.isFinite(Number(conversation.unreadCount)) && Number(conversation.unreadCount) > 0 ? Math.floor(Number(conversation.unreadCount)) : 0}"
              data-user-name="${escapeHtmlForSidebar(conversation.otherUserName)}"
              data-user-avatar="${escapeHtmlForSidebar(avatarUrl)}"
+             data-user-timezone="${escapeHtmlForSidebar(conversation.otherUserTimeZoneId || '')}"
              data-user-status="${status}">
             <div class="conversation-avatar">
                 <img src="${escapeHtmlForSidebar(avatarUrl)}" alt="${escapeHtmlForSidebar(conversation.otherUserName)}">
@@ -136,6 +139,7 @@ function updateChatHeaderFromConversation(item) {
     const userName = item.dataset.userName || 'Conversa?ie';
     const avatarUrl = item.dataset.userAvatar || '/img/default-avatar.png';
     const status = item.dataset.userStatus || 'offline';
+    const timeZoneId = item.dataset.userTimezone || '';
 
     const chatHeaderName = document.getElementById('chatHeaderName');
     const chatHeaderStatus = document.getElementById('chatHeaderStatus');
@@ -171,7 +175,7 @@ function updateChatHeaderFromConversation(item) {
     }
 
     if (chatHeaderStatusText) {
-        chatHeaderStatusText.textContent = status === 'online' ? 'Online' : 'Offline';
+        chatHeaderStatusText.textContent = buildChatPresenceText(status, timeZoneId);
     }
 
     if (mobileChatName) {
@@ -179,11 +183,71 @@ function updateChatHeaderFromConversation(item) {
     }
 
     if (mobileChatStatus) {
-        mobileChatStatus.textContent = status === 'online' ? 'Online' : 'Offline';
+        mobileChatStatus.textContent = buildChatPresenceText(status, timeZoneId);
+    }
+
+    startChatHeaderLocalTimeUpdates();
+}
+
+function formatUserLocalTime(timeZoneId) {
+    if (!timeZoneId) {
+        return '';
+    }
+
+    try {
+        return new Intl.DateTimeFormat('en-GB', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+            timeZone: timeZoneId
+        }).format(new Date());
+    } catch (_) {
+        return '';
     }
 }
 
-function updateConversationPresence(userId, isOnline) {
+function buildChatPresenceText(status, timeZoneId) {
+    const statusLabel = status === 'online' ? 'Online' : 'Offline';
+    const localTime = formatUserLocalTime(timeZoneId);
+
+    if (!localTime) {
+        return statusLabel;
+    }
+
+    return `${statusLabel} \u2022 ${localTime} local time`;
+}
+
+function refreshActiveChatHeaderLocalTime() {
+    const activeItem = document.querySelector('#conversationsList .conversation-item.active[data-conversation-id]');
+    if (!activeItem) {
+        return;
+    }
+
+    const timeZoneId = activeItem.dataset.userTimezone || '';
+    const status = activeItem.dataset.userStatus || 'offline';
+    const presenceText = buildChatPresenceText(status, timeZoneId);
+
+    const chatHeaderStatusText = document.getElementById('chatHeaderStatusText');
+    const mobileChatStatus = document.getElementById('mobileChatStatus');
+
+    if (chatHeaderStatusText) {
+        chatHeaderStatusText.textContent = presenceText;
+    }
+
+    if (mobileChatStatus) {
+        mobileChatStatus.textContent = presenceText;
+    }
+}
+
+function startChatHeaderLocalTimeUpdates() {
+    if (chatHeaderLocalTimeIntervalId) {
+        return;
+    }
+
+    chatHeaderLocalTimeIntervalId = window.setInterval(refreshActiveChatHeaderLocalTime, 30000);
+}
+
+function updateConversationPresence(userId, isOnline, timeZoneId) {
     if (userId === null || userId === undefined) {
         return;
     }
@@ -197,6 +261,9 @@ function updateConversationPresence(userId, isOnline) {
         }
 
         item.dataset.userStatus = status;
+        if (typeof timeZoneId === 'string' && timeZoneId.trim()) {
+            item.dataset.userTimezone = timeZoneId.trim();
+        }
 
         const indicator = item.querySelector('.conversation-avatar .status-indicator');
         if (indicator) {

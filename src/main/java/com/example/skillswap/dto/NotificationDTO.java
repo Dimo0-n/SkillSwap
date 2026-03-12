@@ -2,10 +2,11 @@ package com.example.skillswap.dto;
 
 import com.example.skillswap.entity.Notification;
 import com.example.skillswap.enums.NotificationType;
+import com.example.skillswap.util.UtcDateTimes;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Data
 @AllArgsConstructor
@@ -15,7 +16,7 @@ public class NotificationDTO {
     private String title;
     private String message;
     private String targetUrl;
-    private LocalDateTime createdAt;
+    private Instant createdAt;
     private boolean read;
 
     public static NotificationDTO fromEntity(Notification notification) {
@@ -25,7 +26,7 @@ public class NotificationDTO {
                 notification.getTitle(),
                 notification.getMessage(),
                 notification.getTargetUrl(),
-                notification.getCreatedAt(),
+                UtcDateTimes.toInstant(notification.getCreatedAt()),
                 notification.getReadAt() != null
         );
     }

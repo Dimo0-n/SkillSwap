@@ -3,7 +3,7 @@ package com.example.skillswap.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Data
 @AllArgsConstructor
@@ -13,8 +13,9 @@ public class ConversationSummaryDTO {
     private String otherUserName;
     private String otherUserAvatarUrl;
     private String lastMessage;
-    private LocalDateTime lastMessageTime;
+    private Instant lastMessageTime;
     private Long unreadCount;
     private Boolean otherUserOnline;
-    private LocalDateTime otherUserLastSeenAt;
+    private Instant otherUserLastSeenAt;
+    private String otherUserTimeZoneId;
 }

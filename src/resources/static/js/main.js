@@ -50,6 +50,41 @@
     const $navbarSearchPanel = $('.navbar-search-panel');
     const $navbarSearchInput = $('#navbar-search-input');
 
+    function detectBrowserTimeZone() {
+        try {
+            var detectedTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            return typeof detectedTimeZone === 'string' && detectedTimeZone.trim() ? detectedTimeZone.trim() : null;
+        } catch (_) {
+            return null;
+        }
+    }
+
+    function syncAuthenticatedUserTimeZone() {
+        if (!document.getElementById('logoutForm')) {
+            return;
+        }
+
+        var timeZoneId = detectBrowserTimeZone();
+        if (!timeZoneId) {
+            return;
+        }
+
+        fetch('/api/users/me/timezone', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify({ timeZoneId: timeZoneId })
+        }).catch(function () {
+            // Ignore transient sync failures; heartbeat will retry.
+        });
+    }
+
+    syncAuthenticatedUserTimeZone();
+
     $('.navbar-search-toggle').on('click', function (e) {
         e.stopPropagation();
         $navbarSearchPanel.toggleClass('is-open');

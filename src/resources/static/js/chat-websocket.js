@@ -52,7 +52,7 @@ function subscribeToPresence() {
     presenceSubscription = stompClient.subscribe('/topic/presence', function (presenceEvent) {
         const payload = JSON.parse(presenceEvent.body);
         if (typeof window.updateConversationPresence === 'function') {
-            window.updateConversationPresence(payload.userId, payload.online === true);
+            window.updateConversationPresence(payload.userId, payload.online === true, payload.timeZoneId || null);
         }
     });
 }

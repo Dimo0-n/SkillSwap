@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 @Data
@@ -18,7 +18,7 @@ public class ChatMessageDTO {
     private String senderName;
     private String content;
     private MessageStatus status;
-    private LocalDateTime timestamp;
+    private Instant timestamp;
     private List<ReactionSummary> reactions;
 
     @Data
