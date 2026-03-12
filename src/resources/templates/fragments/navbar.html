@@ -69,6 +69,7 @@
                             </div>
                         </div>
 
+                        <script sec:authorize="isAuthenticated()" src="/js/user-timezone.js"></script>
                         <!-- Notifications JS -->
                         <script src="/js/notifications.js"></script>
 
@@ -196,13 +197,33 @@
             const heartbeatIntervalMs = 20000;
             let heartbeatTimer = null;
 
+            if (window.SkillSwapUserTimeZone && typeof window.SkillSwapUserTimeZone.start === 'function') {
+                window.SkillSwapUserTimeZone.start();
+            }
+
+            function detectBrowserTimeZone() {
+                try {
+                    const detected = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                    return typeof detected === 'string' && detected.trim() ? detected.trim() : '';
+                } catch (_) {
+                    return '';
+                }
+            }
+
             function sendPresenceHeartbeat() {
+                const timeZoneId = detectBrowserTimeZone();
+                const headers = {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                };
+
+                if (timeZoneId) {
+                    headers['X-Time-Zone'] = timeZoneId;
+                }
+
                 fetch('/api/presence/ping', {
                     method: 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    },
+                    headers: headers,
                     credentials: 'same-origin',
                     keepalive: true
                 }).catch(function () {

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import com.example.skillswap.util.UtcDateTimes;
 
 @Entity
 @Getter
@@ -38,6 +39,6 @@ public class MessageReaction {
 
     @PrePersist
     protected void onCreate() {
-        createdAt = LocalDateTime.now();
+        createdAt = UtcDateTimes.now();
     }
 }

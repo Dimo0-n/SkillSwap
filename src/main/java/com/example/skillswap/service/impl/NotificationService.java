@@ -6,6 +6,7 @@ import com.example.skillswap.entity.User;
 import com.example.skillswap.enums.NotificationType;
 import com.example.skillswap.repository.NotificationRepository;
 import com.example.skillswap.repository.UserRepository;
+import com.example.skillswap.util.UtcDateTimes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -81,7 +82,7 @@ public class NotificationService implements com.example.skillswap.service.Notifi
         }
 
         if (notification.getReadAt() == null) {
-            notification.setReadAt(LocalDateTime.now());
+            notification.setReadAt(UtcDateTimes.now());
         }
 
         return true;
@@ -94,7 +95,7 @@ public class NotificationService implements com.example.skillswap.service.Notifi
             return 0;
         }
 
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = UtcDateTimes.now();
         unread.forEach(item -> item.setReadAt(now));
         return unread.size();
     }

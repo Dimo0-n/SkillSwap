@@ -12,6 +12,7 @@ import com.example.skillswap.repository.MessageRepository;
 import com.example.skillswap.repository.ProfileRepository;
 import com.example.skillswap.repository.UserRepository;
 import com.example.skillswap.security.CustomUserDetails;
+import com.example.skillswap.util.UtcDateTimes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -235,10 +236,11 @@ public class ChatService implements com.example.skillswap.service.ChatService {
                             otherUser.getFullName(),
                             avatarUrl,
                             lastMessage != null ? lastMessage.getContent() : "",
-                            lastMessage != null ? lastMessage.getCreatedAt() : chatRoom.getCreatedAt(),
+                            UtcDateTimes.toInstant(lastMessage != null ? lastMessage.getCreatedAt() : chatRoom.getCreatedAt()),
                             unreadCount,
                             Boolean.TRUE.equals(otherUser.getOnline()),
-                            otherUser.getLastSeenAt()
+                            UtcDateTimes.toInstant(otherUser.getLastSeenAt()),
+                            otherUser.getTimeZoneId()
                     );
                 })
                 .sorted(Comparator.comparing(ConversationSummaryDTO::getLastMessageTime).reversed())
@@ -252,7 +254,7 @@ public class ChatService implements com.example.skillswap.service.ChatService {
 
                 boolean alreadyOnline = Boolean.TRUE.equals(user.getOnline());
         user.setOnline(true);
-                user.setLastActivityAt(LocalDateTime.now());
+                user.setLastActivityAt(UtcDateTimes.now());
         user.setLastSeenAt(null);
                 return !alreadyOnline;
     }
@@ -262,7 +264,7 @@ public class ChatService implements com.example.skillswap.service.ChatService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = UtcDateTimes.now();
         user.setOnline(false);
                 user.setLastActivityAt(null);
         user.setLastSeenAt(now);
@@ -324,7 +326,7 @@ public class ChatService implements com.example.skillswap.service.ChatService {
         dto.setSenderName(message.getSender().getFullName());
         dto.setContent(message.getContent());
         dto.setStatus(message.getStatus());
-        dto.setTimestamp(message.getCreatedAt());
+        dto.setTimestamp(UtcDateTimes.toInstant(message.getCreatedAt()));
 
         // Get reaction summary
         List<Object[]> reactionCounts = reactionRepository.countReactionsByEmoji(message);

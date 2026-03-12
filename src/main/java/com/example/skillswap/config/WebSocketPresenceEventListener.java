@@ -2,6 +2,7 @@ package com.example.skillswap.config;
 
 import com.example.skillswap.dto.PresenceStatusDTO;
 import com.example.skillswap.service.ChatService;
+import com.example.skillswap.util.UtcDateTimes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -11,7 +12,6 @@ import org.springframework.web.socket.messaging.SessionConnectEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import java.security.Principal;
-import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -47,7 +47,11 @@ public class WebSocketPresenceEventListener {
             if (activeSessions == 1) {
                 boolean becameOnline = chatService.setUserOnline(userId);
                 if (becameOnline) {
-                    messagingTemplate.convertAndSend("/topic/presence", new PresenceStatusDTO(userId, true, null));
+                    var user = chatService.getUserById(userId);
+                    messagingTemplate.convertAndSend(
+                            "/topic/presence",
+                            new PresenceStatusDTO(userId, true, null, user.getTimeZoneId())
+                    );
                 }
             }
         } catch (Exception ex) {
@@ -87,8 +91,12 @@ public class WebSocketPresenceEventListener {
             userSessionCount.remove(userId);
 
             try {
-                LocalDateTime lastSeenAt = chatService.setUserOffline(userId);
-                messagingTemplate.convertAndSend("/topic/presence", new PresenceStatusDTO(userId, false, lastSeenAt));
+                var lastSeenAt = chatService.setUserOffline(userId);
+                var user = chatService.getUserById(userId);
+                messagingTemplate.convertAndSend(
+                        "/topic/presence",
+                        new PresenceStatusDTO(userId, false, UtcDateTimes.toInstant(lastSeenAt), user.getTimeZoneId())
+                );
             } catch (Exception ex) {
                 System.err.println("[PRESENCE] Failed to mark user offline: " + ex.getMessage());
             }

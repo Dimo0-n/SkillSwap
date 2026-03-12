@@ -97,9 +97,11 @@ public class ChatController {
     public ResponseEntity<Map<String, Object>> getCurrentUser(Principal principal) {
         try {
             Long userId = getCurrentUserId(principal);
+            var user = chatService.getUserById(userId);
             Map<String, Object> response = new HashMap<>();
             response.put("userId", userId);
             response.put("email", principal.getName());
+            response.put("timeZoneId", user.getTimeZoneId());
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();

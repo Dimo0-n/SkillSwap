@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import com.example.skillswap.util.UtcDateTimes;
 
 @Entity
 @Table(name = "app_notification", indexes = {
@@ -47,7 +48,7 @@ public class Notification {
     @PrePersist
     void onCreate() {
         if (createdAt == null) {
-            createdAt = LocalDateTime.now();
+            createdAt = UtcDateTimes.now();
         }
     }
 }

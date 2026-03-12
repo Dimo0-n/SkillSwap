@@ -49,6 +49,9 @@ public class User {
 
     private LocalDateTime lastSeenAt;
 
+    @Column(length = 64)
+    private String timeZoneId;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles",
