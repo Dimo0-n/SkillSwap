@@ -310,6 +310,26 @@ function displayMessage(message) {
     messageDiv.className = 'message ' + (isOwnMessage ? 'message-outgoing' : 'message-incoming');
     messageDiv.dataset.messageId = message.id;
 
+    if (message.systemMessage === true) {
+        messageDiv.className = 'message message-system';
+        messageDiv.innerHTML = `
+            <div class="system-message-card">
+                <div class="system-message-title">${escapeHtml(message.systemTitle || 'Skill Swap Proposal')}</div>
+                <div class="system-message-summary">${escapeHtml(message.systemExchangeSummary || message.content || '')}</div>
+                ${message.systemStatusLabel ? `<div class="system-message-status">Status: ${escapeHtml(message.systemStatusLabel)}</div>` : ''}
+                <div class="system-message-time">${formatTime(message.timestamp)}</div>
+            </div>
+        `;
+
+        messagesContainer.appendChild(messageDiv);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+        if (!isOwnMessage) {
+            setTimeout(() => markAsSeen(message.id), 1000);
+        }
+        return;
+    }
+
     let messageHTML = '';
 
     if (!isOwnMessage) {

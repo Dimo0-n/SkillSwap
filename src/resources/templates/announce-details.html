@@ -148,10 +148,24 @@
                             <i class="fa fa-user"></i>
                             <span th:text="#{announce.details.profile}">Vezi profil</span>
                         </a>
-                        <button class="announce-btn announce-btn-secondary" id="proposeSwapBtn">
+                        <button class="announce-btn announce-btn-secondary"
+                                id="proposeSwapBtn"
+                                th:attr="data-announce-id=${announce.id},
+                                         data-owner-id=${announce.userId},
+                                         data-offered-skill=${announce.categoryOffered},
+                                         data-requested-skill=${announce.categoryRequired}">
                             <i class="fa fa-handshake-o"></i>
                             <span th:text="#{announce.details.propose}">Propune schimb</span>
                         </button>
+                        <div class="skill-swap-status-banner is-hidden" id="proposalStatusNotice" aria-live="polite">
+                            <div class="skill-swap-status-banner__icon">
+                                <i class="fa fa-info-circle"></i>
+                            </div>
+                            <div class="skill-swap-status-banner__body">
+                                <div class="skill-swap-status-banner__text" id="proposalStatusNoticeText"></div>
+                                <a class="skill-swap-status-banner__action is-hidden" id="proposalStatusNoticeAction">Deschide</a>
+                            </div>
+                        </div>
                         <button class="announce-btn announce-btn-icon" id="saveBtn">
                             <i class="fa fa-bookmark-o"></i>
                         </button>
@@ -161,100 +175,385 @@
         </div>
     </section>
 
+    <div class="skill-swap-modal" id="skillSwapModal" aria-hidden="true">
+        <div class="skill-swap-modal__backdrop" data-modal-close="true"></div>
+        <div class="skill-swap-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="skillSwapModalTitle">
+            <button type="button" class="skill-swap-modal__close" id="skillSwapModalClose" aria-label="Inchide">
+                <i class="fa fa-times"></i>
+            </button>
+            <div class="skill-swap-modal__eyebrow">Skill Swap Proposal</div>
+            <h3 class="skill-swap-modal__title" id="skillSwapModalTitle">Propune un schimb clar si relevant</h3>
+            <p class="skill-swap-modal__subtitle">
+                Propunerea va trimite o notificare structurata proprietarului anuntului. Chat-ul se deschide doar daca
+                propunerea este acceptata sau intra in negociere.
+            </p>
+
+            <div class="skill-swap-modal__notice is-hidden" id="skillSwapModalNotice" aria-live="polite">
+                <div class="skill-swap-modal__notice-icon">
+                    <i class="fa fa-info-circle"></i>
+                </div>
+                <div class="skill-swap-modal__notice-body">
+                    <div class="skill-swap-modal__notice-text" id="skillSwapModalNoticeText"></div>
+                    <a class="skill-swap-modal__notice-action is-hidden" id="skillSwapModalNoticeAction">Continua</a>
+                </div>
+            </div>
+
+            <div class="skill-swap-modal__exchange">
+                <div class="skill-swap-modal__exchange-card">
+                    <span class="skill-swap-modal__exchange-label">Skill oferit</span>
+                    <strong id="proposalOfferedSkill" class="skill-swap-modal__exchange-value"></strong>
+                </div>
+                <div class="skill-swap-modal__exchange-arrow">
+                    <i class="fa fa-exchange"></i>
+                </div>
+                <div class="skill-swap-modal__exchange-card">
+                    <span class="skill-swap-modal__exchange-label">Skill cautat</span>
+                    <strong id="proposalRequestedSkill" class="skill-swap-modal__exchange-value"></strong>
+                </div>
+            </div>
+
+            <form id="skillSwapProposalForm" class="skill-swap-modal__form">
+                <label class="skill-swap-modal__label" for="proposalMessageInput">Mesaj optional</label>
+                <textarea id="proposalMessageInput"
+                          class="skill-swap-modal__textarea"
+                          maxlength="500"
+                          placeholder="Salut! Am vazut anuntul tau si cred ca putem face un schimb util pentru amandoi."></textarea>
+                <div class="skill-swap-modal__footer">
+                    <span class="skill-swap-modal__hint">Maximum 500 de caractere</span>
+                    <button type="submit" class="announce-btn announce-btn-primary skill-swap-modal__submit" id="submitProposalBtn">
+                        Trimite propunerea
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div th:replace="~{/fragments/about :: about}"></div>
 
     <script th:inline="javascript">
-        const msgNoAuthor = [[#{announce.details.error.noauthor}]];
-        const msgCreateChat = [[#{announce.details.error.createchat}]];
+        const announceId = [[${announce.id}]];
+        const announceOwnerId = [[${announce.userId}]];
+        const currentUserAuthenticated = [[${currentUserAuthenticated}]];
         const profileCompletionRequiredUrl = [[${profileCompletionRequiredUrl}]];
         const currentUserProfileCompleted = [[${currentUserProfileCompleted}]];
 
-        console.log('Script started loading...');
-
         document.addEventListener('DOMContentLoaded', function () {
-            console.log('DOM loaded');
-
-            // CTA buttons
-            const sendMessageBtn = document.getElementById('sendMessageBtn');
             const proposeSwapBtn = document.getElementById('proposeSwapBtn');
             const saveBtn = document.getElementById('saveBtn');
+            const skillSwapModal = document.getElementById('skillSwapModal');
+            const skillSwapProposalForm = document.getElementById('skillSwapProposalForm');
+            const proposalMessageInput = document.getElementById('proposalMessageInput');
+            const proposalOfferedSkill = document.getElementById('proposalOfferedSkill');
+            const proposalRequestedSkill = document.getElementById('proposalRequestedSkill');
+            const submitProposalBtn = document.getElementById('submitProposalBtn');
+            const proposalStatusNotice = document.getElementById('proposalStatusNotice');
+            const proposalStatusNoticeText = document.getElementById('proposalStatusNoticeText');
+            const proposalStatusNoticeAction = document.getElementById('proposalStatusNoticeAction');
+            const skillSwapModalNotice = document.getElementById('skillSwapModalNotice');
+            const skillSwapModalNoticeText = document.getElementById('skillSwapModalNoticeText');
+            const skillSwapModalNoticeAction = document.getElementById('skillSwapModalNoticeAction');
+            const defaultProposeSwapBtnHtml = proposeSwapBtn ? proposeSwapBtn.innerHTML : '';
+            const proposalAvailabilityState = {
+                canSubmit: true,
+                status: null,
+                message: '',
+                actionUrl: null,
+                actionLabel: null,
+                loaded: false
+            };
 
-            console.log('sendMessageBtn found:', !!sendMessageBtn);
+            function setNotice(container, textElement, actionElement, variant, message, actionUrl, actionLabel) {
+                if (!container || !textElement) {
+                    return;
+                }
 
-            // Send message button
-            if (sendMessageBtn) {
-                console.log('Author ID on button:', sendMessageBtn.dataset.authorId);
+                container.classList.remove('is-hidden', 'is-info', 'is-success', 'is-warning');
+                container.classList.add(`is-${variant || 'info'}`);
+                textElement.textContent = message || '';
 
-                sendMessageBtn.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    console.log('=== BUTTON CLICKED ===');
-
-                    if (!currentUserProfileCompleted) {
-                        window.location.href = profileCompletionRequiredUrl;
-                        return;
+                if (actionElement) {
+                    if (actionUrl && actionLabel) {
+                        actionElement.href = actionUrl;
+                        actionElement.textContent = actionLabel;
+                        actionElement.classList.remove('is-hidden');
+                    } else {
+                        actionElement.removeAttribute('href');
+                        actionElement.textContent = '';
+                        actionElement.classList.add('is-hidden');
                     }
+                }
+            }
 
-                    const announceAuthorId = this.dataset.authorId;
-                    console.log('Author ID:', announceAuthorId);
+            function clearNotice(container, textElement, actionElement) {
+                if (!container || !textElement) {
+                    return;
+                }
 
-                    if (!announceAuthorId) {
-                        alert(msgNoAuthor);
-                        return;
+                container.classList.add('is-hidden');
+                container.classList.remove('is-info', 'is-success', 'is-warning');
+                textElement.textContent = '';
+
+                if (actionElement) {
+                    actionElement.removeAttribute('href');
+                    actionElement.textContent = '';
+                    actionElement.classList.add('is-hidden');
+                }
+            }
+
+            function getDisabledProposalButtonMarkup(status) {
+                if (status === 'NEGOTIATING') {
+                    return '<i class="fa fa-comments"></i><span>In negociere</span>';
+                }
+
+                if (status === 'ACCEPTED') {
+                    return '<i class="fa fa-check"></i><span>Schimb acceptat</span>';
+                }
+
+                return '<i class="fa fa-clock-o"></i><span>Cerere in curs</span>';
+            }
+
+            function applyProposalAvailability(availability, noticeVariant) {
+                if (!availability) {
+                    return;
+                }
+
+                proposalAvailabilityState.canSubmit = availability.canSubmit !== false;
+                proposalAvailabilityState.status = availability.status || null;
+                proposalAvailabilityState.message = availability.message || '';
+                proposalAvailabilityState.actionUrl = availability.actionUrl || null;
+                proposalAvailabilityState.actionLabel = availability.actionLabel || null;
+                proposalAvailabilityState.loaded = true;
+
+                if (!proposeSwapBtn) {
+                    return;
+                }
+
+                if (proposalAvailabilityState.canSubmit) {
+                    proposeSwapBtn.disabled = false;
+                    proposeSwapBtn.classList.remove('announce-btn-disabled');
+                    proposeSwapBtn.innerHTML = defaultProposeSwapBtnHtml;
+                    clearNotice(proposalStatusNotice, proposalStatusNoticeText, proposalStatusNoticeAction);
+                    return;
+                }
+
+                proposeSwapBtn.disabled = true;
+                proposeSwapBtn.classList.add('announce-btn-disabled');
+                proposeSwapBtn.innerHTML = getDisabledProposalButtonMarkup(proposalAvailabilityState.status);
+                setNotice(
+                    proposalStatusNotice,
+                    proposalStatusNoticeText,
+                    proposalStatusNoticeAction,
+                    noticeVariant || 'info',
+                    proposalAvailabilityState.message,
+                    proposalAvailabilityState.actionUrl,
+                    proposalAvailabilityState.actionLabel
+                );
+            }
+
+            async function fetchProposalAvailability() {
+                const response = await fetch(`/api/skill-swap-proposals/availability?announceId=${encodeURIComponent(announceId)}`, {
+                    headers: {
+                        'Accept': 'application/json'
                     }
-
-                    const url = '/api/chat/create?otherUserId=' + announceAuthorId;
-                    console.log('Fetching:', url);
-
-                    fetch(url, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
-                    })
-                        .then(async response => {
-                            console.log('Response received:', response.status);
-                            const data = await response.json().catch(() => ({}));
-
-                            if (response.status === 403 && data.redirectUrl) {
-                                window.location.href = data.redirectUrl;
-                                return null;
-                            }
-
-                            if (!response.ok) {
-                                throw new Error(data.message || data.error || 'Unknown error');
-                            }
-
-                            return data;
-                        })
-                        .then(data => {
-                            if (!data) {
-                                return;
-                            }
-                            console.log('Data received:', data);
-                            if (data.success) {
-                                const redirectUrl = '/chat-history?roomId=' + data.chatRoomId;
-                                console.log('Redirecting to:', redirectUrl);
-                                window.location.href = redirectUrl;
-                            } else {
-                                alert(msgCreateChat + ' ' + (data.error || 'Unknown error'));
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Fetch error:', error);
-                            alert(msgCreateChat + ' ' + error.message);
-                        });
                 });
+
+                const payload = await response.json().catch(() => ({}));
+
+                if ((response.status === 401 || response.status === 403) && payload.redirectUrl) {
+                    window.location.href = payload.redirectUrl;
+                    return null;
+                }
+
+                if (!response.ok) {
+                    throw new Error(payload.message || 'Nu am putut verifica starea schimbului.');
+                }
+
+                return payload;
+            }
+
+            function openProposalModal() {
+                if (!skillSwapModal || !proposeSwapBtn) {
+                    return;
+                }
+
+                proposalOfferedSkill.textContent = proposeSwapBtn.dataset.offeredSkill || '';
+                proposalRequestedSkill.textContent = proposeSwapBtn.dataset.requestedSkill || '';
+                skillSwapModal.classList.add('is-open');
+                skillSwapModal.setAttribute('aria-hidden', 'false');
+                document.body.classList.add('skill-swap-modal-open');
+                clearNotice(skillSwapModalNotice, skillSwapModalNoticeText, skillSwapModalNoticeAction);
+                if (proposalMessageInput) {
+                    proposalMessageInput.focus();
+                }
+            }
+
+            function closeProposalModal() {
+                if (!skillSwapModal) {
+                    return;
+                }
+
+                skillSwapModal.classList.remove('is-open');
+                skillSwapModal.setAttribute('aria-hidden', 'true');
+                document.body.classList.remove('skill-swap-modal-open');
             }
 
             // Propose swap button
             if (proposeSwapBtn) {
-                proposeSwapBtn.addEventListener('click', function () {
+                proposeSwapBtn.addEventListener('click', async function () {
+                    if (!currentUserAuthenticated) {
+                        window.location.href = '/login';
+                        return;
+                    }
+
                     if (!currentUserProfileCompleted) {
                         window.location.href = profileCompletionRequiredUrl;
                         return;
                     }
 
-                    console.log('Propune schimb clicked');
+                    try {
+                        const availability = await fetchProposalAvailability();
+                        if (!availability) {
+                            return;
+                        }
+
+                        applyProposalAvailability(availability);
+                        if (!availability.canSubmit) {
+                            setNotice(
+                                skillSwapModalNotice,
+                                skillSwapModalNoticeText,
+                                skillSwapModalNoticeAction,
+                                'warning',
+                                availability.message,
+                                availability.actionUrl,
+                                availability.actionLabel
+                            );
+                            return;
+                        }
+                    } catch (error) {
+                        setNotice(
+                            proposalStatusNotice,
+                            proposalStatusNoticeText,
+                            proposalStatusNoticeAction,
+                            'warning',
+                            error.message || 'Nu am putut verifica starea schimbului.'
+                        );
+                        return;
+                    }
+
+                    openProposalModal();
+                });
+
+                if (currentUserAuthenticated && currentUserProfileCompleted) {
+                    fetchProposalAvailability()
+                        .then(function (availability) {
+                            if (availability) {
+                                applyProposalAvailability(availability);
+                            }
+                        })
+                        .catch(function () {
+                            // Keep the button usable if the availability check fails.
+                        });
+                }
+            }
+
+            if (skillSwapModal) {
+                skillSwapModal.querySelectorAll('[data-modal-close="true"]').forEach(element => {
+                    element.addEventListener('click', closeProposalModal);
+                });
+            }
+
+            const skillSwapModalClose = document.getElementById('skillSwapModalClose');
+            if (skillSwapModalClose) {
+                skillSwapModalClose.addEventListener('click', closeProposalModal);
+            }
+
+            document.addEventListener('keydown', function (event) {
+                if (event.key === 'Escape') {
+                    closeProposalModal();
+                }
+            });
+
+            if (skillSwapProposalForm) {
+                skillSwapProposalForm.addEventListener('submit', async function (event) {
+                    event.preventDefault();
+
+                    if (!submitProposalBtn) {
+                        return;
+                    }
+
+                    clearNotice(skillSwapModalNotice, skillSwapModalNoticeText, skillSwapModalNoticeAction);
+
+                    submitProposalBtn.disabled = true;
+                    submitProposalBtn.textContent = 'Se trimite...';
+
+                    try {
+                        const response = await fetch('/api/skill-swap-proposals', {
+                            method: 'POST',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                announceId: announceId,
+                                message: proposalMessageInput ? proposalMessageInput.value.trim() : ''
+                            })
+                        });
+
+                        const payload = await response.json().catch(() => ({}));
+
+                        if ((response.status === 401 || response.status === 403) && payload.redirectUrl) {
+                            window.location.href = payload.redirectUrl;
+                            return;
+                        }
+
+                        if (!response.ok || payload.success === false) {
+                            if (response.status === 400 || response.status === 409) {
+                                const availability = await fetchProposalAvailability().catch(() => null);
+                                if (availability) {
+                                    applyProposalAvailability(availability);
+                                    setNotice(
+                                        skillSwapModalNotice,
+                                        skillSwapModalNoticeText,
+                                        skillSwapModalNoticeAction,
+                                        'warning',
+                                        availability.message || payload.message || 'Nu mai poti trimite o alta cerere pentru acest anunt.',
+                                        availability.actionUrl,
+                                        availability.actionLabel
+                                    );
+                                    if (!availability.canSubmit) {
+                                        closeProposalModal();
+                                        return;
+                                    }
+                                }
+                            }
+
+                            throw new Error(payload.message || 'Nu am putut trimite propunerea acum.');
+                        }
+
+                        closeProposalModal();
+                        if (proposalMessageInput) {
+                            proposalMessageInput.value = '';
+                        }
+
+                        applyProposalAvailability({
+                            canSubmit: false,
+                            status: 'PENDING',
+                            message: payload.message || 'Propunerea a fost trimisa. Asteapta raspunsul proprietarului.',
+                            actionUrl: null,
+                            actionLabel: null
+                        }, 'success');
+                    } catch (error) {
+                        setNotice(
+                            skillSwapModalNotice,
+                            skillSwapModalNoticeText,
+                            skillSwapModalNoticeAction,
+                            'warning',
+                            error.message || 'Nu am putut trimite propunerea acum.'
+                        );
+                    } finally {
+                        submitProposalBtn.disabled = false;
+                        submitProposalBtn.textContent = 'Trimite propunerea';
+                    }
                 });
             }
 

@@ -337,6 +337,45 @@ body {
     gap: 12px;
 }
 
+.chat-proposal-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    padding: 0 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(167, 139, 250, 0.26);
+    background: rgba(129, 42, 207, 0.1);
+    color: #f3e8ff;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+}
+
+.chat-proposal-status.is-hidden,
+.proposal-accept-btn.is-hidden {
+    display: none;
+}
+
+.chat-proposal-status.is-accepted {
+    border-color: rgba(52, 211, 153, 0.32);
+    background: rgba(16, 185, 129, 0.14);
+    color: #b8f7d5;
+}
+
+.proposal-accept-btn {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.proposal-accept-btn.is-busy {
+    opacity: 0.7;
+    cursor: wait;
+}
+
 .chat-settings-wrapper {
     position: relative;
 }
@@ -369,6 +408,26 @@ body {
 
 .chat-action-btn i {
     color: var(--text-primary);
+}
+
+.chat-action-btn.proposal-accept-btn {
+    width: auto;
+    min-width: 112px;
+    height: 42px;
+    padding: 0 18px;
+    gap: 8px;
+    flex: 0 0 auto;
+    white-space: nowrap;
+    border-radius: 999px;
+}
+
+.chat-action-btn.proposal-accept-btn i {
+    font-size: 14px;
+}
+
+.chat-action-btn.proposal-accept-btn span {
+    display: inline-block;
+    line-height: 1;
 }
 
 .chat-action-btn.disabled {
@@ -480,6 +539,11 @@ body {
     flex-direction: row-reverse;
 }
 
+.message-system {
+    align-self: center;
+    max-width: min(520px, 100%);
+}
+
 .message-avatar {
     display: none;
 }
@@ -585,6 +649,47 @@ body {
 .message-incoming+.message-outgoing,
 .message-outgoing+.message-incoming {
     margin-top: 0;
+}
+
+.system-message-card {
+    width: 100%;
+    padding: 16px 18px;
+    border-radius: 18px;
+    border: 1px solid rgba(167, 139, 250, 0.24);
+    background: linear-gradient(180deg, rgba(22, 17, 35, 0.94), rgba(11, 10, 19, 0.96));
+    text-align: center;
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.22);
+}
+
+.system-message-title {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--brand-primary-light);
+    margin-bottom: 8px;
+}
+
+.system-message-summary {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.system-message-status {
+    font-family: "Montserrat", sans-serif;
+    font-size: 13px;
+    color: rgba(236, 242, 255, 0.82);
+    margin-bottom: 10px;
+}
+
+.system-message-time {
+    font-family: "Montserrat", sans-serif;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.52);
 }
 
 /* Message Input Area */
@@ -866,6 +971,18 @@ body {
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     }
 
+    .chat-actions .chat-action-btn.proposal-accept-btn {
+        width: auto;
+        min-width: 34px;
+        height: 34px;
+        padding: 0 10px;
+        gap: 0;
+    }
+
+    .chat-actions .proposal-accept-btn span {
+        display: none;
+    }
+
     .chat-actions .chat-action-btn:hover,
     .chat-actions .chat-action-btn:focus {
         transform: none;
@@ -889,6 +1006,10 @@ body {
 
     .message {
         max-width: 75%;
+    }
+
+    .message-system {
+        max-width: 100%;
     }
 
     .message-input-area {

@@ -104,6 +104,7 @@ class AnnounceController {
 
         model.addAttribute("announce", announceDto);
         model.addAttribute("profile", profilDto);
+        model.addAttribute("currentUserAuthenticated", auth != null);
         model.addAttribute("currentUserProfileCompleted", profileCompletionService.isProfileCompleted(auth));
         model.addAttribute("profileCompletionRequiredUrl", ProfileCompletionService.REQUIRED_REDIRECT_PATH);
 

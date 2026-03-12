@@ -40,6 +40,10 @@ public class Notification {
     @Column(length = 255)
     private String targetUrl;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "skill_swap_proposal_id")
+    private SkillSwapProposal skillSwapProposal;
+
     @Column(nullable = false)
     private LocalDateTime createdAt;
 

@@ -16,6 +16,13 @@ public interface ChatService {
 
     ChatMessageDTO sendMessage(ChatMessageDTO dto, Principal principal);
 
+    ChatMessageDTO createSystemMessage(Long chatRoomId,
+                                       Long senderUserId,
+                                       String content,
+                                       String systemTitle,
+                                       String systemExchangeSummary,
+                                       String systemStatusLabel);
+
     void markAsDelivered(Long messageId);
 
     void markAsSeen(Long messageId, Principal principal);
