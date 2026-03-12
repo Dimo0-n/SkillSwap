@@ -148,11 +148,6 @@
                             <i class="fa fa-user"></i>
                             <span th:text="#{announce.details.profile}">Vezi profil</span>
                         </a>
-                        <button class="announce-btn announce-btn-primary" id="sendMessageBtn"
-                                th:attr="data-author-id=${announce.userId}">
-                            <i class="fa fa-envelope"></i>
-                            <span th:text="#{announce.details.send}">Trimite mesaj</span>
-                        </button>
                         <button class="announce-btn announce-btn-secondary" id="proposeSwapBtn">
                             <i class="fa fa-handshake-o"></i>
                             <span th:text="#{announce.details.propose}">Propune schimb</span>
@@ -249,8 +244,6 @@
                             alert(msgCreateChat + ' ' + error.message);
                         });
                 });
-            } else {
-                console.error('sendMessageBtn NOT FOUND!');
             }
 
             // Propose swap button
