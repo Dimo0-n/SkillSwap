@@ -366,10 +366,6 @@ body {
 }
 
 .proposal-accept-btn {
-    width: auto;
-    min-width: 44px;
-    padding: 0 16px;
-    gap: 8px;
     font-family: "Space Grotesk", sans-serif;
     font-size: 13px;
     font-weight: 700;
@@ -412,6 +408,26 @@ body {
 
 .chat-action-btn i {
     color: var(--text-primary);
+}
+
+.chat-action-btn.proposal-accept-btn {
+    width: auto;
+    min-width: 112px;
+    height: 42px;
+    padding: 0 18px;
+    gap: 8px;
+    flex: 0 0 auto;
+    white-space: nowrap;
+    border-radius: 999px;
+}
+
+.chat-action-btn.proposal-accept-btn i {
+    font-size: 14px;
+}
+
+.chat-action-btn.proposal-accept-btn span {
+    display: inline-block;
+    line-height: 1;
 }
 
 .chat-action-btn.disabled {
@@ -955,9 +971,10 @@ body {
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     }
 
-    .chat-actions .proposal-accept-btn {
+    .chat-actions .chat-action-btn.proposal-accept-btn {
         width: auto;
         min-width: 34px;
+        height: 34px;
         padding: 0 10px;
         gap: 0;
     }
