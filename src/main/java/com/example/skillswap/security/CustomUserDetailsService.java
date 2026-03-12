@@ -6,6 +6,8 @@ import com.example.skillswap.enums.AuthProvider;
 import com.example.skillswap.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -41,11 +43,25 @@ public class CustomUserDetailsService implements UserDetailsService {
             );
         }
 
+        if (user.isDeleted()) {
+            throw new DisabledException("Contul a fost dezactivat.");
+        }
+
+        if (user.isBanned()) {
+            throw new DisabledException("Contul a fost blocat de un administrator.");
+        }
+
+        if (user.isSuspended()) {
+            throw new LockedException("Contul este suspendat temporar.");
+        }
+
         return new CustomUserDetails(
                 user.getId(),
                 user.getEmail(),
                 user.getPassword(),
-                mapRolesToAuthorities(user.getRoles())
+                mapRolesToAuthorities(user.getRoles()),
+                !user.isSuspended(),
+                !user.isDeleted() && !user.isBanned()
         );
     }
 

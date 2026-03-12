@@ -126,6 +126,24 @@ public class NotificationService implements com.example.skillswap.service.Notifi
                 .forEach(notification -> notification.setReadAt(now));
     }
 
+        @Override
+        @Transactional
+        public int broadcastSystemNotification(String title, String message, String targetUrl) {
+        List<User> recipients = userRepository.findAll().stream()
+            .filter(user -> !user.isDeleted() && !user.isBanned())
+            .toList();
+
+        recipients.forEach(user -> createNotification(
+            user.getId(),
+            NotificationType.SYSTEM,
+            title,
+            message,
+            targetUrl
+        ));
+
+        return recipients.size();
+        }
+
     private NotificationDTO toDto(Notification notification) {
         NotificationDTO dto = NotificationDTO.basic(notification);
         SkillSwapProposal proposal = notification.getSkillSwapProposal();

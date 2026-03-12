@@ -46,9 +46,9 @@
                                             onclick="event.preventDefault(); document.getElementById('logoutForm').submit();"><i
                                                 class="fa fa-power-off"></i> <span th:text="#{navbar.logout}">Logout</span></a>
                                     </li>
-                                <li class="sep" sec:authorize="hasRole('ROLE_ADMIN')">/</li>
+                                <li class="sep" sec:authorize="hasAuthority('ROLE_ADMIN')">/</li>
                                     <li>
-                                        <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/admin}"><i
+                                    <a sec:authorize="hasAuthority('ROLE_ADMIN')" th:href="@{/admin}"><i
                                                 class="fa fa-shield"></i><span th:text="#{navbar.admin}">Admin</span></a>
                                     </li>
                                 </ul>

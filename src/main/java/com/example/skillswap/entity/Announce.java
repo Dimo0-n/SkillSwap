@@ -41,6 +41,14 @@ public class Announce {
 
     private LocalDateTime date;
 
+    @Column(nullable = false)
+    private boolean markedAsSpam = false;
+
+    @Column(nullable = false)
+    private boolean deletedByAdmin = false;
+
+    private LocalDateTime moderatedAt;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

@@ -1,5 +1,8 @@
 package com.example.skillswap.service.impl;
 
+import com.example.skillswap.admin.entity.ModerationReport;
+import com.example.skillswap.admin.enums.ReportTargetType;
+import com.example.skillswap.admin.repository.ModerationReportRepository;
 import com.example.skillswap.dto.CreateProfileCommentDto;
 import com.example.skillswap.dto.ProfileCommentDto;
 import com.example.skillswap.entity.ProfileComment;
@@ -33,6 +36,7 @@ public class ProfileCommentServiceImpl implements ProfileCommentService {
     private final UserRepository userRepository;
     private final com.example.skillswap.service.NotificationService notificationService;
     private final ApplicationEventPublisher applicationEventPublisher;
+    private final ModerationReportRepository moderationReportRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -130,6 +134,16 @@ public class ProfileCommentServiceImpl implements ProfileCommentService {
 
         comment.setReported(true);
         comment.setReportedAt(LocalDateTime.now());
+
+        if (!moderationReportRepository.existsByTargetTypeAndTargetIdAndReporterId(ReportTargetType.REVIEW, commentId, currentUserId)) {
+            ModerationReport report = new ModerationReport();
+            report.setReporter(comment.getProfileOwner());
+            report.setTargetType(ReportTargetType.REVIEW);
+            report.setTargetId(comment.getId());
+            report.setTargetLabel("Review by " + comment.getAuthorDisplayName());
+            report.setReason("Profile owner reported this review as abusive.");
+            moderationReportRepository.save(report);
+        }
     }
 
     private ProfileCommentDto toDto(ProfileComment comment, Long profileOwnerId, Long currentUserId) {

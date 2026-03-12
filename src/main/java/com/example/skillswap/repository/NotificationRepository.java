@@ -1,6 +1,7 @@
 package com.example.skillswap.repository;
 
 import com.example.skillswap.entity.Notification;
+import com.example.skillswap.enums.NotificationType;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -20,4 +21,6 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     List<Notification> findByRecipientIdAndReadAtIsNull(Long recipientId);
 
     List<Notification> findByRecipientIdAndSkillSwapProposalIdAndReadAtIsNull(Long recipientId, Long skillSwapProposalId);
+
+    List<Notification> findTop12ByTypeOrderByCreatedAtDesc(NotificationType type);
 }

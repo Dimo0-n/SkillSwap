@@ -3,6 +3,7 @@ package com.example.skillswap.config;
 import com.example.skillswap.service.ChatService;
 import com.example.skillswap.service.OAuthUserService;
 import com.example.skillswap.service.OidcUserService;
+import com.example.skillswap.service.UserAccessService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,16 +32,19 @@ public class SecurityConfig {
         private final OAuthUserService customOAuth2UserService;
         private final OidcUserService customOidcUserService;
         private final ChatService chatService;
+        private final UserAccessService userAccessService;
 
         public SecurityConfig(
                         UserDetailsService userDetailsService,
                         OAuthUserService customOAuth2UserService,
                         OidcUserService customOidcUserService,
-                        ChatService chatService) {
+                        ChatService chatService,
+                        UserAccessService userAccessService) {
                 this.userDetailsService = userDetailsService;
                 this.customOAuth2UserService = customOAuth2UserService;
                 this.customOidcUserService = customOidcUserService;
                 this.chatService = chatService;
+                this.userAccessService = userAccessService;
         }
 
         @Bean
@@ -67,6 +71,7 @@ public class SecurityConfig {
                                                 .permitAll()
                                                 .requestMatchers("/ws-native/**").permitAll()
                                                 .requestMatchers("/ws/**").permitAll()
+                                                .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                                                 .anyRequest().authenticated())
                                 .formLogin(form -> form
                                                 .loginPage("/login")
@@ -74,8 +79,7 @@ public class SecurityConfig {
 
                                                         String message = "Email sau parola incorectă";
 
-                                                        if (exception instanceof BadCredentialsException &&
-                                                                        exception.getMessage().contains("Google")) {
+                                                        if (exception.getMessage() != null && !exception.getMessage().isBlank()) {
                                                                 message = exception.getMessage();
                                                         }
 
@@ -84,7 +88,10 @@ public class SecurityConfig {
                                                                                         URLEncoder.encode(message,
                                                                                                         StandardCharsets.UTF_8));
                                                 })
-                                                .defaultSuccessUrl("/index", true)
+                                                .successHandler((request, response, authentication) -> {
+                                                        userAccessService.recordSuccessfulLogin(authentication.getName());
+                                                        response.sendRedirect("/index");
+                                                })
                                                 .permitAll())
                                 .logout(logout -> logout
                                                 .logoutUrl("/logout")
@@ -108,7 +115,10 @@ public class SecurityConfig {
                                                 .userInfoEndpoint(userInfo -> userInfo
                                                                 .userService(customOAuth2UserService)
                                                                 .oidcUserService(customOidcUserService))
-                                                .defaultSuccessUrl("/index", true))
+                                                .successHandler((request, response, authentication) -> {
+                                                        userAccessService.recordSuccessfulLogin(authentication.getName());
+                                                        response.sendRedirect("/index");
+                                                }))
                                 .oauth2Client(Customizer.withDefaults())
                                 .exceptionHandling(ex -> ex.accessDeniedPage("/error/403"));
 

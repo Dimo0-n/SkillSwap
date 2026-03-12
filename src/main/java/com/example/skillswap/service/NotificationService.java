@@ -32,4 +32,6 @@ public interface NotificationService {
     int markAllAsRead(Long userId);
 
     void markProposalNotificationsAsRead(Long recipientUserId, Long proposalId);
+
+    int broadcastSystemNotification(String title, String message, String targetUrl);
 }

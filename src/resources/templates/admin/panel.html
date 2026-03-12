@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillSwap Admin</title>
+    <link rel="icon" type="image/png" href="/img/tab-logo.png?v=2">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/admin-dashboard.css" type="text/css">
+</head>
+<body class="admin-body" data-active-section="dashboard" th:attr="data-active-section=${activeSection}">
+<div class="admin-app">
+    <aside class="admin-sidebar">
+        <div class="admin-brand">
+            <span class="admin-brand__eyebrow">SkillSwap</span>
+            <h1>Admin Console</h1>
+            <p>Operations, moderation, and platform control.</p>
+        </div>
+
+        <nav class="admin-nav">
+            <a th:href="@{/admin}" th:classappend="${activeSection == 'dashboard'} ? ' is-active'" class="admin-nav__link">
+                <i class="fa fa-th-large"></i>
+                <span>Dashboard</span>
+            </a>
+            <a th:href="@{/admin/users}" th:classappend="${activeSection == 'users'} ? ' is-active'" class="admin-nav__link">
+                <i class="fa fa-users"></i>
+                <span>Users</span>
+            </a>
+            <a th:href="@{/admin/skills}" th:classappend="${activeSection == 'skills'} ? ' is-active'" class="admin-nav__link">
+                <i class="fa fa-code-fork"></i>
+                <span>Skills</span>
+            </a>
+            <a th:href="@{/admin/posts}" th:classappend="${activeSection == 'posts'} ? ' is-active'" class="admin-nav__link">
+                <i class="fa fa-clone"></i>
+                <span>Posts / Sessions</span>
+            </a>
+            <a th:href="@{/admin/reviews}" th:classappend="${activeSection == 'reviews'} ? ' is-active'" class="admin-nav__link">
+                <i class="fa fa-star-half-o"></i>
+                <span>Reviews</span>
+            </a>
+            <a th:href="@{/admin/reports}" th:classappend="${activeSection == 'reports'} ? ' is-active'" class="admin-nav__link">
+                <i class="fa fa-flag"></i>
+                <span>Reports</span>
+            </a>
+            <a th:href="@{/admin/statistics}" th:classappend="${activeSection == 'statistics'} ? ' is-active'" class="admin-nav__link">
+                <i class="fa fa-line-chart"></i>
+                <span>Statistics</span>
+            </a>
+            <a th:href="@{/admin/notifications}" th:classappend="${activeSection == 'notifications'} ? ' is-active'" class="admin-nav__link">
+                <i class="fa fa-bullhorn"></i>
+                <span>Notifications</span>
+            </a>
+            <a th:href="@{/admin/images}" th:classappend="${activeSection == 'images'} ? ' is-active'" class="admin-nav__link">
+                <i class="fa fa-picture-o"></i>
+                <span>Images</span>
+            </a>
+            <a th:href="@{/admin/settings}" th:classappend="${activeSection == 'settings'} ? ' is-active'" class="admin-nav__link">
+                <i class="fa fa-sliders"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+
+        <div class="admin-sidebar__footer">
+            <a href="/index" class="admin-back-link">Back to SkillSwap</a>
+        </div>
+    </aside>
+
+    <main class="admin-main">
+        <header class="admin-header">
+            <div>
+                <p class="admin-kicker">Professional SaaS-style control center</p>
+                <h2 th:switch="${activeSection}">
+                    <span th:case="'dashboard'">Platform Health Dashboard</span>
+                    <span th:case="'users'">User Management</span>
+                    <span th:case="'skills'">Skill Management</span>
+                    <span th:case="'posts'">Posts and Session Moderation</span>
+                    <span th:case="'reviews'">Review Moderation</span>
+                    <span th:case="'reports'">Abuse Reports</span>
+                    <span th:case="'statistics'">Platform Statistics</span>
+                    <span th:case="'notifications'">Notification Management</span>
+                    <span th:case="'images'">Image Moderation</span>
+                    <span th:case="'settings'">Platform Settings</span>
+                    <span th:case="*">Admin Console</span>
+                </h2>
+            </div>
+            <div class="admin-header__actions">
+                <button type="button" id="themeToggle" class="admin-theme-toggle">
+                    <i class="fa fa-moon-o"></i>
+                    <span>Theme</span>
+                </button>
+            </div>
+        </header>
+
+        <div class="admin-alert" th:if="${adminSuccess}" th:text="${adminSuccess}"></div>
+
+        <section th:if="${activeSection == 'dashboard'}" class="admin-section">
+            <div class="stats-grid">
+                <article class="metric-card" th:each="metric : ${overview.metrics()}">
+                    <span class="metric-card__label" th:text="${metric.label()}">Label</span>
+                    <strong class="metric-card__value" th:text="${metric.value()}">0</strong>
+                    <p class="metric-card__meta" th:text="${metric.context()}">Context</p>
+                </article>
+            </div>
+
+            <div class="chart-grid chart-grid--three">
+                <article class="panel-card chart-card">
+                    <div class="panel-card__header">
+                        <div>
+                            <p class="panel-card__eyebrow">Growth</p>
+                            <h3>Users Registered Per Day</h3>
+                        </div>
+                    </div>
+                    <canvas id="dashboardUsersChart"></canvas>
+                </article>
+
+                <article class="panel-card chart-card">
+                    <div class="panel-card__header">
+                        <div>
+                            <p class="panel-card__eyebrow">Engagement</p>
+                            <h3>Sessions Created Per Week</h3>
+                        </div>
+                    </div>
+                    <canvas id="dashboardSessionsChart"></canvas>
+                </article>
+
+                <article class="panel-card chart-card">
+                    <div class="panel-card__header">
+                        <div>
+                            <p class="panel-card__eyebrow">Demand</p>
+                            <h3>Most Popular Skills</h3>
+                        </div>
+                    </div>
+                    <canvas id="dashboardSkillsChart"></canvas>
+                </article>
+            </div>
+
+            <div class="content-grid content-grid--wide">
+                <article class="panel-card">
+                    <div class="panel-card__header">
+                        <div>
+                            <p class="panel-card__eyebrow">Audit trail</p>
+                            <h3>Recent Admin Actions</h3>
+                        </div>
+                    </div>
+                    <div class="timeline-list" th:if="${!#lists.isEmpty(overview.recentActions())}">
+                        <div class="timeline-item" th:each="action : ${overview.recentActions()}">
+                            <div>
+                                <strong th:text="${action.description()}">Action</strong>
+                                <p th:text="${action.actorName()}">Admin</p>
+                            </div>
+                            <span th:text="${#temporals.format(action.createdAt(), 'dd MMM yyyy HH:mm')}">Time</span>
+                        </div>
+                    </div>
+                    <p class="empty-state" th:if="${#lists.isEmpty(overview.recentActions())}">No admin actions logged yet.</p>
+                </article>
+
+                <article class="panel-card">
+                    <div class="panel-card__header">
+                        <div>
+                            <p class="panel-card__eyebrow">Moderation</p>
+                            <h3>Pending Reports</h3>
+                        </div>
+                        <a class="panel-card__link" th:href="@{/admin/reports}">Open queue</a>
+                    </div>
+                    <div class="mini-table" th:if="${!#lists.isEmpty(overview.pendingReports())}">
+                        <div class="mini-table__row mini-table__row--header">
+                            <span>Reporter</span>
+                            <span>Target</span>
+                            <span>Status</span>
+                        </div>
+                        <div class="mini-table__row" th:each="report : ${overview.pendingReports()}">
+                            <span th:text="${report.reporter()}">Reporter</span>
+                            <span th:text="${report.target()}">Target</span>
+                            <span class="pill pill--danger" th:text="${report.status()}">PENDING</span>
+                        </div>
+                    </div>
+                    <p class="empty-state" th:if="${#lists.isEmpty(overview.pendingReports())}">No pending reports right now.</p>
+                </article>
+            </div>
+        </section>
+
+        <section th:if="${activeSection == 'users'}" class="admin-section">
+            <form method="get" th:action="@{/admin/users}" class="filters-bar">
+                <input type="text" name="query" th:value="${query}" placeholder="Search by email, username, or skill">
+                <select name="status">
+                    <option value="" th:selected="${status == ''}">All statuses</option>
+                    <option value="active" th:selected="${status == 'active'}">Active</option>
+                    <option value="suspended" th:selected="${status == 'suspended'}">Suspended</option>
+                    <option value="banned" th:selected="${status == 'banned'}">Banned</option>
+                    <option value="deleted" th:selected="${status == 'deleted'}">Deleted</option>
+                </select>
+                <button type="submit" class="button button--primary">Filter</button>
+            </form>
+
+            <article class="panel-card">
+                <div class="table-shell">
+                    <table class="admin-table">
+                        <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Roles</th>
+                            <th>Created</th>
+                            <th>Last login</th>
+                            <th>Completed sessions</th>
+                            <th>Rating / reputation</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="user : ${usersPage.content}">
+                            <td>
+                                <strong th:text="${user.fullName()}">User</strong>
+                                <p th:text="${user.email()}">email</p>
+                                <div class="status-group">
+                                    <span class="pill" th:if="${user.suspended()}">Suspended</span>
+                                    <span class="pill pill--danger" th:if="${user.banned()}">Banned</span>
+                                    <span class="pill pill--muted" th:if="${user.deleted()}">Deleted</span>
+                                </div>
+                            </td>
+                            <td th:text="${user.roles()}">ROLE_USER</td>
+                            <td th:text="${user.createdAt() != null ? #temporals.format(user.createdAt(), 'dd MMM yyyy') : 'N/A'}">N/A</td>
+                            <td th:text="${user.lastLoginAt() != null ? #temporals.format(user.lastLoginAt(), 'dd MMM yyyy HH:mm') : 'Never'}">Never</td>
+                            <td th:text="${user.completedSessions()}">0</td>
+                            <td th:text="${user.reputation() != null ? #numbers.formatDecimal(user.reputation(), 1, 1) : 'Unrated'}">Unrated</td>
+                            <td>
+                                <div class="table-actions">
+                                    <a class="button button--ghost" th:href="@{|/profile/${user.id()}|}">View profile</a>
+                                    <form th:id="|suspend-user-${user.id()}|" th:action="@{|/admin/users/${user.id()}/suspend|}" method="post"></form>
+                                    <form th:id="|ban-user-${user.id()}|" th:action="@{|/admin/users/${user.id()}/ban|}" method="post"></form>
+                                    <form th:id="|delete-user-${user.id()}|" th:action="@{|/admin/users/${user.id()}/delete|}" method="post"></form>
+                                    <form th:id="|reset-user-${user.id()}|" th:action="@{|/admin/users/${user.id()}/reset-password|}" method="post"></form>
+
+                                    <button type="button" class="button button--ghost" th:attr="data-form-id=|suspend-user-${user.id()}|,data-confirm-message='Suspend this user account?'">Suspend</button>
+                                    <button type="button" class="button button--ghost danger" th:attr="data-form-id=|ban-user-${user.id()}|,data-confirm-message='Ban this user from accessing SkillSwap?'">Ban</button>
+                                    <button type="button" class="button button--ghost" th:attr="data-form-id=|reset-user-${user.id()}|,data-confirm-message='Generate a temporary password for this user?'">Reset password</button>
+                                    <button type="button" class="button button--ghost danger" th:attr="data-form-id=|delete-user-${user.id()}|,data-confirm-message='Soft-delete this user account?'">Delete</button>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pagination-bar" th:if="${usersPage.totalPages > 1}">
+                    <a th:if="${usersPage.hasPrevious()}" th:href="@{/admin/users(page=${usersPage.number - 1},query=${query},status=${status})}">Previous</a>
+                    <span th:text="|Page ${usersPage.number + 1} of ${usersPage.totalPages}|">Page</span>
+                    <a th:if="${usersPage.hasNext()}" th:href="@{/admin/users(page=${usersPage.number + 1},query=${query},status=${status})}">Next</a>
+                </div>
+            </article>
+        </section>
+
+        <section th:if="${activeSection == 'skills'}" class="admin-section">
+            <div class="split-toolbar">
+                <form method="get" th:action="@{/admin/skills}" class="filters-bar filters-bar--compact">
+                    <input type="text" name="query" th:value="${query}" placeholder="Search skills or duplicates">
+                    <button type="submit" class="button button--primary">Search</button>
+                </form>
+
+                <form id="mergeSkillsForm" th:action="@{/admin/skills/merge}" method="post" class="filters-bar filters-bar--compact">
+                    <input type="text" name="targetName" placeholder="Canonical skill name" required>
+                    <button type="submit" class="button button--primary">Merge selected</button>
+                </form>
+            </div>
+
+            <article class="panel-card">
+                <div class="table-shell">
+                    <table class="admin-table">
+                        <thead>
+                        <tr>
+                            <th>Select</th>
+                            <th>Skill</th>
+                            <th>Occurrences</th>
+                            <th>Known variants</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="skill, iter : ${skills}">
+                            <td><input form="mergeSkillsForm" type="checkbox" name="sourceNames" th:value="${skill.canonicalName()}"></td>
+                            <td th:text="${skill.canonicalName()}">Java</td>
+                            <td th:text="${skill.occurrences()}">10</td>
+                            <td th:text="${skill.variants()}">java, JAVA programming</td>
+                            <td>
+                                <form th:id="|delete-skill-${iter.index}|" th:action="@{/admin/skills/delete}" method="post">
+                                    <input type="hidden" name="skillName" th:value="${skill.canonicalName()}">
+                                </form>
+                                <button type="button" class="button button--ghost danger" th:attr="data-form-id=|delete-skill-${iter.index}|,data-confirm-message='Delete this skill label from posts and sessions?'">Delete skill</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+        </section>
+
+        <section th:if="${activeSection == 'posts'}" class="admin-section">
+            <form method="get" th:action="@{/admin/posts}" class="filters-bar">
+                <input type="text" name="query" th:value="${query}" placeholder="Search posts, authors, or skills">
+                <label class="checkbox-inline">
+                    <input type="checkbox" name="spamOnly" value="true" th:checked="${spamOnly}">
+                    Spam only
+                </label>
+                <button type="submit" class="button button--primary">Filter</button>
+            </form>
+
+            <article class="panel-card">
+                <div class="table-shell">
+                    <table class="admin-table">
+                        <thead>
+                        <tr>
+                            <th>Post</th>
+                            <th>Creator</th>
+                            <th>Skills</th>
+                            <th>Created</th>
+                            <th>Related sessions</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="post : ${postsPage.content}">
+                            <td>
+                                <strong th:text="${post.title()}">Title</strong>
+                                <p th:text="${post.authorName()}">Author</p>
+                                <span class="pill pill--danger" th:if="${post.spam()}">Spam</span>
+                            </td>
+                            <td th:text="${post.creatorEmail()}">email</td>
+                            <td>
+                                <div class="skill-stack">
+                                    <span th:text="|Offers: ${post.offeredSkill()}|">Offers</span>
+                                    <span th:text="|Needs: ${post.requestedSkill()}|">Needs</span>
+                                </div>
+                            </td>
+                            <td th:text="${post.createdAt() != null ? #temporals.format(post.createdAt(), 'dd MMM yyyy HH:mm') : 'N/A'}">N/A</td>
+                            <td th:text="${post.relatedSessions()}">0</td>
+                            <td>
+                                <div class="table-actions">
+                                    <a class="button button--ghost" th:href="@{|/announce-details/${post.id()}|}">View details</a>
+                                    <form th:id="|spam-post-${post.id()}|" th:action="@{|/admin/posts/${post.id()}/spam|}" method="post"></form>
+                                    <form th:id="|delete-post-${post.id()}|" th:action="@{|/admin/posts/${post.id()}/delete|}" method="post"></form>
+                                    <button type="button" class="button button--ghost" th:attr="data-form-id=|spam-post-${post.id()}|,data-confirm-message='Mark this post as spam?'">Mark spam</button>
+                                    <button type="button" class="button button--ghost danger" th:attr="data-form-id=|delete-post-${post.id()}|,data-confirm-message='Remove this post from the platform?'">Delete</button>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pagination-bar" th:if="${postsPage.totalPages > 1}">
+                    <a th:if="${postsPage.hasPrevious()}" th:href="@{/admin/posts(page=${postsPage.number - 1},query=${query},spamOnly=${spamOnly})}">Previous</a>
+                    <span th:text="|Page ${postsPage.number + 1} of ${postsPage.totalPages}|">Page</span>
+                    <a th:if="${postsPage.hasNext()}" th:href="@{/admin/posts(page=${postsPage.number + 1},query=${query},spamOnly=${spamOnly})}">Next</a>
+                </div>
+            </article>
+        </section>
+
+        <section th:if="${activeSection == 'reviews'}" class="admin-section">
+            <form method="get" th:action="@{/admin/reviews}" class="filters-bar">
+                <input type="text" name="query" th:value="${query}" placeholder="Search by profile owner, reviewer, or content">
+                <select name="rating">
+                    <option value="" th:selected="${rating == null}">All ratings</option>
+                    <option value="1" th:selected="${rating == 1}">1 star</option>
+                    <option value="2" th:selected="${rating == 2}">2 stars</option>
+                    <option value="3" th:selected="${rating == 3}">3 stars</option>
+                    <option value="4" th:selected="${rating == 4}">4 stars</option>
+                    <option value="5" th:selected="${rating == 5}">5 stars</option>
+                </select>
+                <label class="checkbox-inline">
+                    <input type="checkbox" name="reportedOnly" value="true" th:checked="${reportedOnly}">
+                    Reported only
+                </label>
+                <button type="submit" class="button button--primary">Filter</button>
+            </form>
+
+            <article class="panel-card">
+                <div class="table-shell">
+                    <table class="admin-table">
+                        <thead>
+                        <tr>
+                            <th>Review</th>
+                            <th>Rating</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="review : ${reviewsPage.content}">
+                            <td>
+                                <strong th:text="${review.profileOwner()}">Profile owner</strong>
+                                <p th:text="|By ${review.author()}|">Reviewer</p>
+                                <p th:text="${review.content()}">Content</p>
+                            </td>
+                            <td th:text="${review.rating() != null ? review.rating() : 'Unrated'}">Unrated</td>
+                            <td th:text="${#temporals.format(review.createdAt(), 'dd MMM yyyy HH:mm')}">Date</td>
+                            <td>
+                                <span class="pill pill--danger" th:if="${review.reported()}">Reported</span>
+                                <span class="pill" th:if="${!review.reported()}">Visible</span>
+                            </td>
+                            <td>
+                                <form th:id="|delete-review-${review.id()}|" th:action="@{|/admin/reviews/${review.id()}/delete|}" method="post"></form>
+                                <button type="button" class="button button--ghost danger" th:attr="data-form-id=|delete-review-${review.id()}|,data-confirm-message='Delete this review?'">Delete</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pagination-bar" th:if="${reviewsPage.totalPages > 1}">
+                    <a th:if="${reviewsPage.hasPrevious()}" th:href="@{/admin/reviews(page=${reviewsPage.number - 1},query=${query},rating=${rating},reportedOnly=${reportedOnly})}">Previous</a>
+                    <span th:text="|Page ${reviewsPage.number + 1} of ${reviewsPage.totalPages}|">Page</span>
+                    <a th:if="${reviewsPage.hasNext()}" th:href="@{/admin/reviews(page=${reviewsPage.number + 1},query=${query},rating=${rating},reportedOnly=${reportedOnly})}">Next</a>
+                </div>
+            </article>
+        </section>
+
+        <section th:if="${activeSection == 'reports'}" class="admin-section">
+            <form method="get" th:action="@{/admin/reports}" class="filters-bar">
+                <select name="status">
+                    <option value="" th:selected="${status == ''}">All statuses</option>
+                    <option value="PENDING" th:selected="${status == 'PENDING'}">Pending</option>
+                    <option value="IGNORED" th:selected="${status == 'IGNORED'}">Ignored</option>
+                    <option value="WARNED" th:selected="${status == 'WARNED'}">Warned</option>
+                    <option value="CONTENT_DELETED" th:selected="${status == 'CONTENT_DELETED'}">Content deleted</option>
+                    <option value="USER_BANNED" th:selected="${status == 'USER_BANNED'}">User banned</option>
+                </select>
+                <button type="submit" class="button button--primary">Filter</button>
+            </form>
+
+            <article class="panel-card">
+                <div class="table-shell">
+                    <table class="admin-table">
+                        <thead>
+                        <tr>
+                            <th>Reporter</th>
+                            <th>Target</th>
+                            <th>Reason</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="report : ${reportsPage.content}">
+                            <td th:text="${report.reporter()}">Reporter</td>
+                            <td>
+                                <strong th:text="${report.target()}">Target</strong>
+                                <p th:text="${report.targetType()}">Type</p>
+                            </td>
+                            <td th:text="${report.reason()}">Reason</td>
+                            <td th:text="${#temporals.format(report.createdAt(), 'dd MMM yyyy HH:mm')}">Date</td>
+                            <td><span class="pill pill--danger" th:text="${report.status()}">PENDING</span></td>
+                            <td>
+                                <div class="table-actions">
+                                    <form th:id="|ignore-report-${report.id()}|" th:action="@{|/admin/reports/${report.id()}/resolve|}" method="post"><input type="hidden" name="action" value="ignore"></form>
+                                    <form th:id="|warn-report-${report.id()}|" th:action="@{|/admin/reports/${report.id()}/resolve|}" method="post"><input type="hidden" name="action" value="warn"></form>
+                                    <form th:id="|delete-report-${report.id()}|" th:action="@{|/admin/reports/${report.id()}/resolve|}" method="post"><input type="hidden" name="action" value="delete-content"></form>
+                                    <form th:id="|ban-report-${report.id()}|" th:action="@{|/admin/reports/${report.id()}/resolve|}" method="post"><input type="hidden" name="action" value="ban-user"></form>
+                                    <button type="button" class="button button--ghost" th:attr="data-form-id=|ignore-report-${report.id()}|,data-confirm-message='Ignore this report?'">Ignore</button>
+                                    <button type="button" class="button button--ghost" th:attr="data-form-id=|warn-report-${report.id()}|,data-confirm-message='Warn the reported user?'">Warn user</button>
+                                    <button type="button" class="button button--ghost" th:attr="data-form-id=|delete-report-${report.id()}|,data-confirm-message='Delete the reported content if supported?'">Delete content</button>
+                                    <button type="button" class="button button--ghost danger" th:attr="data-form-id=|ban-report-${report.id()}|,data-confirm-message='Ban the reported user?'">Ban user</button>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pagination-bar" th:if="${reportsPage.totalPages > 1}">
+                    <a th:if="${reportsPage.hasPrevious()}" th:href="@{/admin/reports(page=${reportsPage.number - 1},status=${status})}">Previous</a>
+                    <span th:text="|Page ${reportsPage.number + 1} of ${reportsPage.totalPages}|">Page</span>
+                    <a th:if="${reportsPage.hasNext()}" th:href="@{/admin/reports(page=${reportsPage.number + 1},status=${status})}">Next</a>
+                </div>
+            </article>
+        </section>
+
+        <section th:if="${activeSection == 'statistics'}" class="admin-section">
+            <div class="stats-grid">
+                <article class="metric-card" th:each="metric : ${statistics.metrics()}">
+                    <span class="metric-card__label" th:text="${metric.label()}">Label</span>
+                    <strong class="metric-card__value" th:text="${metric.value()}">0</strong>
+                    <p class="metric-card__meta" th:text="${metric.context()}">Context</p>
+                </article>
+            </div>
+
+            <div class="chart-grid chart-grid--two">
+                <article class="panel-card chart-card">
+                    <div class="panel-card__header"><div><p class="panel-card__eyebrow">Growth</p><h3>User Growth</h3></div></div>
+                    <canvas id="statisticsUsersChart"></canvas>
+                </article>
+                <article class="panel-card chart-card">
+                    <div class="panel-card__header"><div><p class="panel-card__eyebrow">Activity</p><h3>Active Sessions</h3></div></div>
+                    <canvas id="statisticsActiveSessionsChart"></canvas>
+                </article>
+                <article class="panel-card chart-card">
+                    <div class="panel-card__header"><div><p class="panel-card__eyebrow">Delivery</p><h3>Completed Sessions</h3></div></div>
+                    <canvas id="statisticsCompletedSessionsChart"></canvas>
+                </article>
+                <article class="panel-card chart-card">
+                    <div class="panel-card__header"><div><p class="panel-card__eyebrow">Demand</p><h3>Popular Skills</h3></div></div>
+                    <canvas id="statisticsSkillsChart"></canvas>
+                </article>
+            </div>
+        </section>
+
+        <section th:if="${activeSection == 'notifications'}" class="admin-section">
+            <div class="content-grid content-grid--wide">
+                <article class="panel-card">
+                    <div class="panel-card__header">
+                        <div>
+                            <p class="panel-card__eyebrow">Broadcast</p>
+                            <h3>Send Platform-wide Announcement</h3>
+                        </div>
+                    </div>
+                    <form th:action="@{/admin/notifications/send}" method="post" class="stack-form">
+                        <input type="text" name="title" placeholder="Example: SkillSwap maintenance tonight at 22:00." required>
+                        <textarea name="message" rows="5" placeholder="Write the announcement shown in the user notification center." required></textarea>
+                        <input type="text" name="targetUrl" placeholder="Optional target URL, for example /index">
+                        <button type="submit" class="button button--primary">Send announcement</button>
+                    </form>
+                </article>
+
+                <article class="panel-card">
+                    <div class="panel-card__header">
+                        <div>
+                            <p class="panel-card__eyebrow">History</p>
+                            <h3>Recent System Notifications</h3>
+                        </div>
+                    </div>
+                    <div class="timeline-list" th:if="${!#lists.isEmpty(recentNotifications)}">
+                        <div class="timeline-item" th:each="notification : ${recentNotifications}">
+                            <div>
+                                <strong th:text="${notification.title()}">Title</strong>
+                                <p th:text="${notification.message()}">Message</p>
+                            </div>
+                            <span th:text="${#temporals.format(notification.createdAt(), 'dd MMM yyyy HH:mm')}">Time</span>
+                        </div>
+                    </div>
+                    <p class="empty-state" th:if="${#lists.isEmpty(recentNotifications)}">No broadcast notifications sent yet.</p>
+                </article>
+            </div>
+        </section>
+
+        <section th:if="${activeSection == 'images'}" class="admin-section">
+            <div class="module-switcher">
+                <a class="module-switcher__button"
+                   th:classappend="${imageModule == 'skills'} ? ' is-active'"
+                   th:href="@{/admin/images(module='skills')}">Skill Images</a>
+                <a class="module-switcher__button"
+                   th:classappend="${imageModule == 'profiles'} ? ' is-active'"
+                   th:href="@{/admin/images(module='profiles',suspiciousOnly=${suspiciousOnly})}">Profile Images</a>
+            </div>
+
+            <div th:if="${imageModule == 'skills'}">
+                <article class="panel-card">
+                    <div class="panel-card__header">
+                        <div>
+                            <p class="panel-card__eyebrow">Gallery</p>
+                            <h3>Skill Images</h3>
+                        </div>
+                    </div>
+                    <div class="skill-gallery-grid">
+                        <article class="skill-gallery-card" th:each="skillGroup : ${skillImageGroups}">
+                            <div class="skill-gallery-card__header">
+                                <h4 th:text="${skillGroup.skillName()}">Programming</h4>
+                                <span class="pill" th:text="|${#lists.size(skillGroup.imageUrls())} images|">3 images</span>
+                            </div>
+                            <div class="skill-gallery-card__images">
+                                <img th:each="imageUrl : ${skillGroup.imageUrls()}" th:src="${imageUrl}" alt="Skill image preview">
+                            </div>
+                        </article>
+                    </div>
+                    <p class="empty-state" th:if="${#lists.isEmpty(skillImageGroups)}">No skill image sets configured.</p>
+                </article>
+            </div>
+
+            <div th:if="${imageModule == 'profiles'}">
+                <form method="get" th:action="@{/admin/images}" class="filters-bar">
+                    <input type="hidden" name="module" value="profiles">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" name="suspiciousOnly" value="true" th:checked="${suspiciousOnly}">
+                        Show suspicious uploads only
+                    </label>
+                    <button type="submit" class="button button--primary">Apply</button>
+                </form>
+
+                <div class="image-grid">
+                    <article class="image-card" th:each="image : ${profileImages}">
+                        <div class="image-card__preview">
+                            <img th:src="${image.previewUrl()}" alt="Profile image">
+                        </div>
+                        <div class="image-card__body">
+                            <div class="status-group">
+                                <span class="pill">PROFILE</span>
+                                <span class="pill pill--danger" th:if="${image.suspicious()}">Suspicious</span>
+                            </div>
+                            <strong th:text="${image.ownerName()}">Owner</strong>
+                            <p th:text="${image.sourceLabel()}">Source</p>
+                            <form th:id="|delete-image-${image.imageType()}-${image.entityId()}|" th:action="@{/admin/images/delete}" method="post">
+                                <input type="hidden" name="imageType" th:value="${image.imageType()}">
+                                <input type="hidden" name="entityId" th:value="${image.entityId()}">
+                            </form>
+                            <button type="button" class="button button--ghost danger image-card__action" th:attr="data-form-id=|delete-image-${image.imageType()}-${image.entityId()}|,data-confirm-message='Delete this profile image?'">Delete image</button>
+                        </div>
+                    </article>
+                </div>
+                <p class="empty-state" th:if="${#lists.isEmpty(profileImages)}">No profile images matched the current filter.</p>
+            </div>
+        </section>
+
+        <section th:if="${activeSection == 'settings'}" class="admin-section">
+            <article class="panel-card">
+                <div class="panel-card__header">
+                    <div>
+                        <p class="panel-card__eyebrow">Configuration</p>
+                        <h3>Platform Settings</h3>
+                    </div>
+                </div>
+                <form th:action="@{/admin/settings}" method="post" class="settings-grid">
+                    <label class="settings-field" th:each="setting : ${settingsRows}">
+                        <span th:text="${setting.label()}">Setting</span>
+                        <small th:text="${setting.category() + ' • ' + setting.description()}">Description</small>
+                        <textarea th:if="${setting.key() == 'platform.rules'}" rows="6" th:name="|setting_${setting.key()}|" th:text="${setting.value()}"></textarea>
+                        <input th:unless="${setting.key() == 'platform.rules'}" type="text" th:name="|setting_${setting.key()}|" th:value="${setting.value()}">
+                    </label>
+                    <div class="settings-actions">
+                        <button type="submit" class="button button--primary">Save settings</button>
+                    </div>
+                </form>
+            </article>
+        </section>
+    </main>
+</div>
+
+<div id="confirmModal" class="confirm-modal" aria-hidden="true">
+    <div class="confirm-modal__backdrop" data-close-modal="true"></div>
+    <div class="confirm-modal__dialog">
+        <h3>Confirm admin action</h3>
+        <p id="confirmModalText">Are you sure?</p>
+        <div class="confirm-modal__actions">
+            <button type="button" class="button button--ghost" data-close-modal="true">Cancel</button>
+            <button type="button" class="button button--primary" id="confirmModalSubmit">Continue</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script th:inline="javascript">
+    window.adminCharts = {
+        dashboardUsers: /*[[${activeSection == 'dashboard' ? overview.userRegistrations() : null}]]*/ null,
+        dashboardSessions: /*[[${activeSection == 'dashboard' ? overview.sessionsByWeek() : null}]]*/ null,
+        dashboardSkills: /*[[${activeSection == 'dashboard' ? overview.popularSkills() : null}]]*/ null,
+        statisticsUsers: /*[[${activeSection == 'statistics' ? statistics.userGrowth() : null}]]*/ null,
+        statisticsActiveSessions: /*[[${activeSection == 'statistics' ? statistics.activeSessions() : null}]]*/ null,
+        statisticsCompletedSessions: /*[[${activeSection == 'statistics' ? statistics.completedSessions() : null}]]*/ null,
+        statisticsSkills: /*[[${activeSection == 'statistics' ? statistics.popularSkills() : null}]]*/ null
+    };
+</script>
+<script src="/js/admin-dashboard.js"></script>
+</body>
+</html>

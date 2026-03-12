@@ -39,6 +39,8 @@ public class User {
 
     private LocalDateTime registerData;
 
+    private LocalDateTime lastLoginAt;
+
     @Column(nullable = false)
     private Boolean online = false;
 
@@ -48,6 +50,15 @@ public class User {
     private LocalDateTime lastActivityAt;
 
     private LocalDateTime lastSeenAt;
+
+    @Column(nullable = false)
+    private boolean suspended = false;
+
+    @Column(nullable = false)
+    private boolean banned = false;
+
+    @Column(nullable = false)
+    private boolean deleted = false;
 
     @Column(length = 64)
     private String timeZoneId;

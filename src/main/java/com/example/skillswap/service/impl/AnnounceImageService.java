@@ -94,4 +94,20 @@ public class AnnounceImageService implements com.example.skillswap.service.Annou
         }
         return KEY_TO_PATH.getOrDefault(imageKey, KEY_TO_PATH.get(DEFAULT_KEY));
     }
+
+    @Override
+    public Map<String, List<String>> getSkillImageCatalog() {
+        Map<String, List<String>> catalog = new LinkedHashMap<>();
+        CATEGORY_TO_KEYS.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .forEach(entry -> catalog.put(
+                        entry.getKey(),
+                        entry.getValue().stream()
+                                .sorted()
+                                .map(key -> KEY_TO_PATH.getOrDefault(key, KEY_TO_PATH.get(DEFAULT_KEY)))
+                                .distinct()
+                                .toList()
+                ));
+        return catalog;
+    }
 }

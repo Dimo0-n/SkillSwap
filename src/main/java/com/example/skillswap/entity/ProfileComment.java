@@ -36,6 +36,8 @@ public class ProfileComment {
     @Column(nullable = false, length = 200)
     private String content;
 
+    private Integer rating;
+
     @Column(nullable = false)
     private LocalDateTime createdAt;
 

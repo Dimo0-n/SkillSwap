@@ -26,14 +26,18 @@ public class AnnounceServiceImpl implements AnnounceService {
     //5 anunturi care sunt afisate pentru pagina de index
     @Override
     public List<Announce> getLatest5Announces() {
-        List<Announce> latest5Announces = announceRepository.findAll();
+        List<Announce> latest5Announces = announceRepository.findAll().stream()
+                .filter(announce -> !announce.isDeletedByAdmin())
+                .toList();
         return latest5Announces.subList(0, Math.min(5, latest5Announces.size()));
     }
 
     //lista cu toate anunturile care sunt afisate din DB
     @Override
     public List<Announce> getAnnouncesList() {
-        return announceRepository.findAllByOrderByIdDesc();
+        return announceRepository.findAllByOrderByIdDesc().stream()
+                .filter(announce -> !announce.isDeletedByAdmin())
+                .toList();
     }
 
     //Crearea unui anunt nou de catre user-ul logat
@@ -62,7 +66,9 @@ public class AnnounceServiceImpl implements AnnounceService {
     //afisarea anunturilor pe care le-a publicat user-ul
     @Override
     public List<Announce> getAnnouncesListByEmail(Long id) {
-        return announceRepository.getAnnouncesListByEmail(id);
+        return announceRepository.getAnnouncesListByEmail(id).stream()
+                .filter(announce -> !announce.isDeletedByAdmin())
+                .toList();
     }
 
     @Override
@@ -74,6 +80,9 @@ public class AnnounceServiceImpl implements AnnounceService {
     public AnnounceDto getAnnounceById(Long id) {
 
         Optional<Announce> announce = announceRepository.findById(id);
+        if (announce.isEmpty() || announce.get().isDeletedByAdmin()) {
+            throw new RuntimeException("Announce not found");
+        }
         AnnounceDto announceDto = new AnnounceDto();
 
         announceDto.setId(announce.get().getId());
