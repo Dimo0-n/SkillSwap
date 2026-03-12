@@ -23,6 +23,8 @@ public interface UserRepository extends JpaRepository<User, Long>{
     """)
     Optional<User> findByEmailWithRoles(String email);
 
+    List<User> findDistinctByRoles_Name(String roleName);
+
     List<User> findByOnlineTrueAndLastActivityAtBefore(LocalDateTime cutoff);
 
 }

@@ -222,6 +222,13 @@ function unsubscribeFromAll() {
 function sendMessage(content) {
     if (!content.trim() || !currentChatRoomId) return;
 
+    if (window.currentConversationSettings?.blocked === true) {
+        if (typeof window.showChatToast === 'function') {
+            window.showChatToast('Conversația este blocată. Deblochează pentru a trimite mesaje.', 'warning');
+        }
+        return;
+    }
+
     const message = {
         chatRoomId: currentChatRoomId,
         content: content,

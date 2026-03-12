@@ -23,4 +23,7 @@ public class ConversationSummaryDTO {
     private String activeProposalStatusLabel;
     private Boolean currentUserIsProposalOwner;
     private Boolean canAcceptActiveProposal;
+    private Boolean mutedByCurrentUser;
+    private Boolean blockedByCurrentUser;
+    private Boolean reportedByCurrentUser;
 }

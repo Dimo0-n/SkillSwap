@@ -1,6 +1,8 @@
 package com.example.skillswap.controller;
 
 import com.example.skillswap.dto.ChatMessageDTO;
+import com.example.skillswap.dto.ConversationSettingsDTO;
+import com.example.skillswap.dto.ConversationSettingsUpdateRequest;
 import com.example.skillswap.dto.ConversationSummaryDTO;
 import com.example.skillswap.entity.ChatRoom;
 import com.example.skillswap.service.ChatService;
@@ -74,6 +76,18 @@ public class ChatController {
         try {
             List<ConversationSummaryDTO> conversations = chatService.getConversationSummaries(principal);
             return ResponseEntity.ok(conversations);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PatchMapping("/rooms/{chatRoomId}/settings")
+    public ResponseEntity<ConversationSettingsDTO> updateConversationSettings(
+            @PathVariable Long chatRoomId,
+            @RequestBody ConversationSettingsUpdateRequest request,
+            Principal principal) {
+        try {
+            return ResponseEntity.ok(chatService.updateConversationSettings(chatRoomId, request, principal));
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }

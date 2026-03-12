@@ -1,6 +1,8 @@
 package com.example.skillswap.service;
 
 import com.example.skillswap.dto.ChatMessageDTO;
+import com.example.skillswap.dto.ConversationSettingsDTO;
+import com.example.skillswap.dto.ConversationSettingsUpdateRequest;
 import com.example.skillswap.dto.ConversationSummaryDTO;
 import com.example.skillswap.dto.MessageReactionDTO;
 import com.example.skillswap.entity.ChatRoom;
@@ -38,6 +40,10 @@ public interface ChatService {
     List<ChatRoom> getUserChatRooms(Principal principal);
 
     List<ConversationSummaryDTO> getConversationSummaries(Principal principal);
+
+    ConversationSettingsDTO updateConversationSettings(Long chatRoomId,
+                                                       ConversationSettingsUpdateRequest request,
+                                                       Principal principal);
 
     boolean setUserOnline(Long userId);
 

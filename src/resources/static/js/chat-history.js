@@ -42,12 +42,55 @@ function renderEmptyConversationsState() {
     `;
 }
 
+function ensureChatToastContainer() {
+    let container = document.getElementById('chatToastContainer');
+    if (container) {
+        return container;
+    }
+
+    container = document.createElement('div');
+    container.id = 'chatToastContainer';
+    container.className = 'chat-toast-container';
+    document.body.appendChild(container);
+    return container;
+}
+
+function showChatToast(message, tone = 'info') {
+    const container = ensureChatToastContainer();
+    const toast = document.createElement('div');
+    toast.className = `chat-toast chat-toast-${tone}`;
+    toast.textContent = message;
+
+    container.appendChild(toast);
+
+    requestAnimationFrame(() => {
+        toast.classList.add('is-visible');
+    });
+
+    window.setTimeout(() => {
+        toast.classList.remove('is-visible');
+        window.setTimeout(() => {
+            toast.remove();
+        }, 220);
+    }, 2800);
+}
+
+window.showChatToast = showChatToast;
+
 function buildConversationItem(conversation) {
     const unreadBadge = conversation.unreadCount > 0
         ? `<span class="unread-badge">${conversation.unreadCount}</span>`
         : '';
     const avatarUrl = conversation.otherUserAvatarUrl || '/img/default-avatar.png';
     const status = conversation.otherUserOnline ? 'online' : 'offline';
+    const muted = conversation.mutedByCurrentUser === true;
+    const blocked = conversation.blockedByCurrentUser === true;
+    const reported = conversation.reportedByCurrentUser === true;
+    const stateBadges = [
+        muted ? '<span class="conversation-state-badge">Mute</span>' : '',
+        blocked ? '<span class="conversation-state-badge conversation-state-badge-blocked">Blocat</span>' : '',
+        reported ? '<span class="conversation-state-badge conversation-state-badge-reported">Raportat</span>' : ''
+    ].join('');
 
     return `
         <div class="conversation-item"
@@ -62,7 +105,10 @@ function buildConversationItem(conversation) {
              data-proposal-status="${escapeHtmlForSidebar(conversation.activeProposalStatus || '')}"
              data-proposal-status-label="${escapeHtmlForSidebar(conversation.activeProposalStatusLabel || '')}"
              data-proposal-owner="${conversation.currentUserIsProposalOwner === true ? 'true' : 'false'}"
-             data-proposal-can-accept="${conversation.canAcceptActiveProposal === true ? 'true' : 'false'}">
+             data-proposal-can-accept="${conversation.canAcceptActiveProposal === true ? 'true' : 'false'}"
+             data-muted-by-current-user="${muted ? 'true' : 'false'}"
+             data-blocked-by-current-user="${blocked ? 'true' : 'false'}"
+             data-reported-by-current-user="${reported ? 'true' : 'false'}">
             <div class="conversation-avatar">
                 <img src="${escapeHtmlForSidebar(avatarUrl)}" alt="${escapeHtmlForSidebar(conversation.otherUserName)}">
                 <span class="status-indicator ${status === 'online' ? 'status-online' : 'status-offline'}"></span>
@@ -73,10 +119,107 @@ function buildConversationItem(conversation) {
                     <span class="conversation-time">${formatConversationTime(conversation.lastMessageTime)}</span>
                 </div>
                 <div class="conversation-preview">${escapeHtmlForSidebar(conversation.lastMessage)}</div>
+                <div class="conversation-state-badges">${stateBadges}</div>
             </div>
             ${unreadBadge}
         </div>
     `;
+}
+
+function getConversationSettingsState(item) {
+    return {
+        muted: item?.dataset.mutedByCurrentUser === 'true',
+        blocked: item?.dataset.blockedByCurrentUser === 'true',
+        reported: item?.dataset.reportedByCurrentUser === 'true'
+    };
+}
+
+function renderConversationStateBadges(item) {
+    if (!item) {
+        return;
+    }
+
+    let badgesContainer = item.querySelector('.conversation-state-badges');
+    if (!badgesContainer) {
+        badgesContainer = document.createElement('div');
+        badgesContainer.className = 'conversation-state-badges';
+        const content = item.querySelector('.conversation-content');
+        if (content) {
+            content.appendChild(badgesContainer);
+        }
+    }
+
+    const state = getConversationSettingsState(item);
+    badgesContainer.innerHTML = [
+        state.muted ? '<span class="conversation-state-badge">Mute</span>' : '',
+        state.blocked ? '<span class="conversation-state-badge conversation-state-badge-blocked">Blocat</span>' : '',
+        state.reported ? '<span class="conversation-state-badge conversation-state-badge-reported">Raportat</span>' : ''
+    ].join('');
+
+    item.classList.toggle('is-muted', state.muted);
+    item.classList.toggle('is-blocked', state.blocked);
+    item.classList.toggle('is-reported', state.reported);
+}
+
+function applyConversationSettingsToActiveView(item) {
+    const state = getConversationSettingsState(item);
+    window.currentConversationSettings = state;
+
+    const messageInput = document.getElementById('messageInput');
+    const messageSendButton = document.querySelector('#messageForm .message-send-btn');
+    const messageInputArea = document.querySelector('.message-input-area');
+    const blockedPlaceholder = 'Conversația este blocată. Deblochează pentru a trimite mesaje.';
+
+    if (messageInput) {
+        if (!messageInput.dataset.defaultPlaceholder) {
+            messageInput.dataset.defaultPlaceholder = messageInput.getAttribute('placeholder') || '';
+        }
+
+        messageInput.disabled = state.blocked;
+        messageInput.placeholder = state.blocked ? blockedPlaceholder : messageInput.dataset.defaultPlaceholder;
+    }
+
+    if (messageSendButton) {
+        messageSendButton.disabled = state.blocked;
+    }
+
+    if (messageInputArea) {
+        messageInputArea.classList.toggle('is-disabled', state.blocked);
+    }
+
+    document.querySelectorAll('[data-video-call-trigger="true"]').forEach(button => {
+        button.disabled = state.blocked;
+    });
+
+    document.querySelectorAll('.chat-settings-item[data-chat-action="mute"]').forEach(button => {
+        button.textContent = state.muted ? 'Activează sunetul' : 'Dezactivează sunetul';
+    });
+
+    document.querySelectorAll('.chat-settings-item[data-chat-action="block"]').forEach(button => {
+        button.textContent = state.blocked ? 'Deblochează' : 'Blochează';
+    });
+
+    document.querySelectorAll('.chat-settings-item[data-chat-action="report"]').forEach(button => {
+        button.textContent = state.reported ? 'Raportată' : 'Raportează';
+        button.disabled = state.reported;
+    });
+}
+
+function updateConversationSettingsState(chatRoomId, settings) {
+    const item = document.querySelector(`#conversationsList .conversation-item[data-conversation-id="${chatRoomId}"]`);
+    if (!item || !settings) {
+        return;
+    }
+
+    item.dataset.mutedByCurrentUser = settings.muted === true ? 'true' : 'false';
+    item.dataset.blockedByCurrentUser = settings.blocked === true ? 'true' : 'false';
+    item.dataset.reportedByCurrentUser = settings.reported === true ? 'true' : 'false';
+
+    renderConversationStateBadges(item);
+
+    if (item.classList.contains('active')) {
+        applyConversationSettingsToActiveView(item);
+    }
 }
 
 function setProposalHeaderState(options = {}) {
@@ -263,6 +406,7 @@ function updateChatHeaderFromConversation(item) {
     item.classList.add('active');
 
     updateProposalHeaderFromConversation(item);
+    applyConversationSettingsToActiveView(item);
 
     startChatHeaderLocalTimeUpdates();
 }
@@ -499,24 +643,66 @@ function closeAllChatSettingsDropdowns(exceptWrapper = null) {
     });
 }
 
-function handleChatSettingsAction(action) {
-    const chatPartnerName = document.getElementById('chatHeaderName')?.textContent?.trim() || 'utilizator';
+async function updateConversationSettingsOnServer(chatRoomId, payload) {
+    const response = await fetch(`/api/chat/rooms/${chatRoomId}/settings`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(payload)
+    });
 
-    if (action === 'mute') {
-        window.alert(`Conversația cu ${chatPartnerName} a fost pusă pe mute.`);
+    if (!response.ok) {
+        throw new Error('Nu am putut actualiza setările conversației.');
+    }
+
+    return response.json();
+}
+
+async function handleChatSettingsAction(action) {
+    const activeConversation = document.querySelector('#conversationsList .conversation-item.active[data-conversation-id]');
+    if (!activeConversation) {
+        showChatToast('Selectează mai întâi o conversație.', 'warning');
         return;
     }
 
-    if (action === 'block') {
-        const confirmed = window.confirm(`Sigur vrei să blochezi utilizatorul ${chatPartnerName}?`);
-        if (confirmed) {
-            window.alert(`${chatPartnerName} a fost blocat.`);
+    const chatRoomId = activeConversation.dataset.conversationId;
+    const chatPartnerName = activeConversation.dataset.userName || 'utilizator';
+    const state = getConversationSettingsState(activeConversation);
+
+    try {
+        if (action === 'mute') {
+            const settings = await updateConversationSettingsOnServer(chatRoomId, { muted: !state.muted });
+            updateConversationSettingsState(chatRoomId, settings);
+            showChatToast(settings.muted
+                ? `Conversația cu ${chatPartnerName} este acum pe mute.`
+                : `Sunetul pentru conversația cu ${chatPartnerName} a fost reactivat.`, settings.muted ? 'info' : 'success');
+            return;
         }
-        return;
-    }
 
-    if (action === 'report') {
-        window.alert(`Conversația cu ${chatPartnerName} a fost raportată.`);
+        if (action === 'block') {
+            const willBlock = !state.blocked;
+            const settings = await updateConversationSettingsOnServer(chatRoomId, { blocked: willBlock });
+            updateConversationSettingsState(chatRoomId, settings);
+            showChatToast(settings.blocked
+                ? `${chatPartnerName} a fost blocat pentru această conversație.`
+                : `Conversația cu ${chatPartnerName} a fost deblocată.`, settings.blocked ? 'warning' : 'success');
+            return;
+        }
+
+        if (action === 'report') {
+            if (state.reported) {
+                showChatToast('Conversația a fost deja raportată.', 'warning');
+                return;
+            }
+
+            const settings = await updateConversationSettingsOnServer(chatRoomId, { reported: true });
+            updateConversationSettingsState(chatRoomId, settings);
+            showChatToast(`Conversația cu ${chatPartnerName} a fost raportată.`, 'success');
+        }
+    } catch (error) {
+        showChatToast(error.message || 'Nu am putut actualiza setările conversației.', 'error');
     }
 }
 
@@ -586,7 +772,12 @@ async function startConversationVideoCall() {
     }
 
     if (!currentChatRoomId) {
-        window.alert('Selecteaza mai intai o conversatie.');
+        showChatToast('Selectează mai întâi o conversație.', 'warning');
+        return;
+    }
+
+    if (window.currentConversationSettings?.blocked === true) {
+        showChatToast('Conversația este blocată. Deblochează pentru a porni un apel video.', 'warning');
         return;
     }
 
@@ -621,17 +812,17 @@ async function startConversationVideoCall() {
 
         const meetingUrl = payload?.meetingUrl;
         if (!meetingUrl) {
-            window.alert('Serverul nu a returnat un link valid pentru apel.');
+            showChatToast('Serverul nu a returnat un link valid pentru apel.', 'error');
             return;
         }
 
         const newWindow = window.open(meetingUrl, '_blank', 'noopener,noreferrer');
         if (!newWindow) {
-            window.alert('Browserul a blocat pop-up-ul. Permite pop-up-uri pentru acest site si incearca din nou.');
+            showChatToast('Browserul a blocat pop-up-ul. Permite pop-up-uri pentru acest site și încearcă din nou.', 'warning');
         }
     } catch (error) {
         console.error('Error starting video call:', error);
-        window.alert('A aparut o eroare la pornirea apelului video.');
+        showChatToast('A apărut o eroare la pornirea apelului video.', 'error');
     } finally {
         videoCallInProgress = false;
         setVideoCallButtonsBusy(false);
@@ -747,6 +938,7 @@ function loadConversations() {
             }
 
             conversationsList.innerHTML = conversations.map(buildConversationItem).join('');
+            conversationsList.querySelectorAll('.conversation-item[data-conversation-id]').forEach(renderConversationStateBadges);
             emitUnreadTotalUpdate();
 
             // Subscribe to video call topics for ALL conversations so notifications
