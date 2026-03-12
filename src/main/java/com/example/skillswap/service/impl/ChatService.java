@@ -106,6 +106,36 @@ public class ChatService implements com.example.skillswap.service.ChatService {
     }
 
     @Transactional
+    public ChatMessageDTO createSystemMessage(Long chatRoomId,
+                                              Long senderUserId,
+                                              String content,
+                                              String systemTitle,
+                                              String systemExchangeSummary,
+                                              String systemStatusLabel) {
+        User sender = userRepository.findById(senderUserId)
+                .orElseThrow(() -> new RuntimeException("Sender not found"));
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
+                .orElseThrow(() -> new RuntimeException("Chat room not found"));
+
+        if (!chatRoom.getUser1().getId().equals(senderUserId) && !chatRoom.getUser2().getId().equals(senderUserId)) {
+            throw new RuntimeException("Unauthorized access to chat room");
+        }
+
+        Message message = new Message();
+        message.setChatRoom(chatRoom);
+        message.setSender(sender);
+        message.setContent(content);
+        message.setStatus(MessageStatus.SENT);
+        message.setSystemMessage(true);
+        message.setSystemTitle(systemTitle);
+        message.setSystemExchangeSummary(systemExchangeSummary);
+        message.setSystemStatusLabel(systemStatusLabel);
+
+        Message saved = messageRepository.save(message);
+        return convertToDTO(saved, senderUserId);
+    }
+
+    @Transactional
     public void markAsDelivered(Long messageId) {
         messageRepository.updateMessageStatus(messageId, MessageStatus.DELIVERED);
     }
@@ -327,6 +357,10 @@ public class ChatService implements com.example.skillswap.service.ChatService {
         dto.setContent(message.getContent());
         dto.setStatus(message.getStatus());
         dto.setTimestamp(UtcDateTimes.toInstant(message.getCreatedAt()));
+        dto.setSystemMessage(message.isSystemMessage());
+        dto.setSystemTitle(message.getSystemTitle());
+        dto.setSystemExchangeSummary(message.getSystemExchangeSummary());
+        dto.setSystemStatusLabel(message.getSystemStatusLabel());
 
         // Get reaction summary
         List<Object[]> reactionCounts = reactionRepository.countReactionsByEmoji(message);

@@ -11,6 +11,7 @@ const NOTIFICATION_ICON_BY_TYPE = {
     NEW_MESSAGE: 'fa-comment',
     SKILL_REQUEST: 'fa-handshake-o',
     REQUEST_ACCEPTED: 'fa-check-circle',
+    REQUEST_NEGOTIATING: 'fa-comments-o',
     REQUEST_REJECTED: 'fa-times-circle',
     NEW_REVIEW: 'fa-star',
     SYSTEM: 'fa-info-circle'
@@ -251,6 +252,10 @@ function renderMobileNotifications() {
  * @returns {HTMLElement} Notification element
  */
 function createNotificationElement(notification) {
+    if (hasProposalPayload(notification)) {
+        return createProposalNotificationElement(notification);
+    }
+
     const item = document.createElement('div');
     item.className = 'notification-item';
     const isRead = notification.read === true;
@@ -291,6 +296,164 @@ function createNotificationElement(notification) {
     });
 
     return item;
+}
+
+function hasProposalPayload(notification) {
+    return Boolean(notification && notification.proposal && notification.proposal.proposalId);
+}
+
+function createProposalNotificationElement(notification) {
+    const proposal = notification.proposal;
+    const item = document.createElement('div');
+    item.className = 'notification-item notification-item--proposal';
+    item.classList.add(notification.read === true ? 'read' : 'unread');
+    item.setAttribute('data-notification-id', notification.id);
+    item.setAttribute('data-proposal-id', proposal.proposalId);
+
+    const avatar = document.createElement('div');
+    avatar.className = 'notification-avatar';
+    avatar.innerHTML = `<img src="${escapeHtml(notification.proposal.actorAvatarUrl || '/img/default-avatar.png')}" alt="${escapeHtml(notification.proposal.actorName || 'Utilizator')}">`;
+
+    const content = document.createElement('div');
+    content.className = 'notification-content notification-content--proposal';
+
+    const title = document.createElement('div');
+    title.className = 'notification-title';
+    title.textContent = notification.title || `${proposal.actorName || 'Un utilizator'} ti-a propus un Skill Swap`;
+
+    const summary = document.createElement('div');
+    summary.className = 'notification-proposal-summary';
+    summary.textContent = `${proposal.offeredSkill || ''} \u2194 ${proposal.requestedSkill || ''}`;
+
+    const metaRow = document.createElement('div');
+    metaRow.className = 'notification-meta-row';
+
+    const time = document.createElement('div');
+    time.className = 'notification-time';
+    time.textContent = formatNotificationTime(notification.createdAt);
+    metaRow.appendChild(time);
+
+    if (proposal.statusLabel) {
+        const statusPill = document.createElement('span');
+        statusPill.className = 'notification-proposal-status';
+        statusPill.textContent = proposal.statusLabel;
+        metaRow.appendChild(statusPill);
+    }
+
+    content.appendChild(title);
+    content.appendChild(summary);
+
+    if (proposal.requesterMessage) {
+        const note = document.createElement('div');
+        note.className = 'notification-proposal-note';
+        note.textContent = proposal.requesterMessage;
+        content.appendChild(note);
+    }
+
+    content.appendChild(metaRow);
+
+    if (proposal.actionable === true) {
+        const actions = document.createElement('div');
+        actions.className = 'notification-actions';
+
+        actions.appendChild(createNotificationActionButton('Vezi profil', 'secondary', async function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            await markNotificationAsRead(notification.id);
+            window.location.href = proposal.viewProfileUrl || `/profile/${proposal.actorUserId}`;
+        }));
+
+        actions.appendChild(createNotificationActionButton('Refuza', 'secondary', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            handleProposalAction(notification, 'reject');
+        }));
+
+        actions.appendChild(createNotificationActionButton('Negociaza', 'secondary', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            handleProposalAction(notification, 'negotiate');
+        }));
+
+        actions.appendChild(createNotificationActionButton('Accepta', 'primary', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            handleProposalAction(notification, 'accept');
+        }));
+
+        content.appendChild(actions);
+    } else {
+        item.addEventListener('click', function() {
+            handleNotificationClick(notification);
+        });
+    }
+
+    item.appendChild(avatar);
+    item.appendChild(content);
+    return item;
+}
+
+function createNotificationActionButton(label, variant, onClick) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = `notification-action-btn notification-action-btn--${variant}`;
+    button.textContent = label;
+    button.addEventListener('click', onClick);
+    return button;
+}
+
+async function handleProposalAction(notification, action) {
+    const proposal = notification && notification.proposal;
+    if (!proposal || !proposal.proposalId) {
+        return;
+    }
+
+    const endpoint = `/api/skill-swap-proposals/${proposal.proposalId}/${action}`;
+    const item = document.querySelector(`.notification-item[data-notification-id="${notification.id}"]`);
+    const actionButtons = item ? item.querySelectorAll('.notification-action-btn') : [];
+    actionButtons.forEach(button => {
+        button.disabled = true;
+    });
+
+    try {
+        const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        const payload = await response.json().catch(() => ({}));
+
+        if (payload && payload.redirectUrl && response.status === 401) {
+            window.location.href = payload.redirectUrl;
+            return;
+        }
+
+        if (!response.ok || payload.success === false) {
+            throw new Error(payload.message || 'Nu am putut procesa propunerea.');
+        }
+
+        await refreshNotifications();
+        updateConversationBadge();
+
+        if (payload.redirectUrl) {
+            window.location.href = payload.redirectUrl;
+            return;
+        }
+    } catch (error) {
+        window.alert(error.message || 'Nu am putut procesa propunerea.');
+    } finally {
+        actionButtons.forEach(button => {
+            button.disabled = false;
+        });
+    }
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text || '';
+    return div.innerHTML;
 }
 
 /**
@@ -414,7 +577,7 @@ async function markNotificationAsRead(notificationId) {
         });
 
         if (!response.ok && response.status !== 404) {
-            return;
+            return false;
         }
 
         notificationsState.items = notificationsState.items.map(item => {
@@ -427,8 +590,10 @@ async function markNotificationAsRead(notificationId) {
         renderNotifications();
         renderMobileNotifications();
         updateNotificationBadge();
+        return true;
     } catch (error) {
         console.warn('Could not mark notification as read:', error);
+        return false;
     }
 }
 

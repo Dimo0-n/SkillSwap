@@ -40,6 +40,18 @@ public class Message {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
+    @Column(nullable = false)
+    private boolean systemMessage = false;
+
+    @Column(length = 120)
+    private String systemTitle;
+
+    @Column(length = 160)
+    private String systemExchangeSummary;
+
+    @Column(length = 60)
+    private String systemStatusLabel;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private MessageStatus status;

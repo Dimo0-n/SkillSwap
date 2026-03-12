@@ -18,4 +18,6 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     Optional<Notification> findByIdAndRecipientId(Long id, Long recipientId);
 
     List<Notification> findByRecipientIdAndReadAtIsNull(Long recipientId);
+
+    List<Notification> findByRecipientIdAndSkillSwapProposalIdAndReadAtIsNull(Long recipientId, Long skillSwapProposalId);
 }

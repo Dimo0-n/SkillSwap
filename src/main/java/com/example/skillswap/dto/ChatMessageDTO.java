@@ -19,6 +19,10 @@ public class ChatMessageDTO {
     private String content;
     private MessageStatus status;
     private Instant timestamp;
+    private boolean systemMessage;
+    private String systemTitle;
+    private String systemExchangeSummary;
+    private String systemStatusLabel;
     private List<ReactionSummary> reactions;
 
     @Data

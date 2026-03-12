@@ -148,7 +148,12 @@
                             <i class="fa fa-user"></i>
                             <span th:text="#{announce.details.profile}">Vezi profil</span>
                         </a>
-                        <button class="announce-btn announce-btn-secondary" id="proposeSwapBtn">
+                        <button class="announce-btn announce-btn-secondary"
+                                id="proposeSwapBtn"
+                                th:attr="data-announce-id=${announce.id},
+                                         data-owner-id=${announce.userId},
+                                         data-offered-skill=${announce.categoryOffered},
+                                         data-requested-skill=${announce.categoryRequired}">
                             <i class="fa fa-handshake-o"></i>
                             <span th:text="#{announce.details.propose}">Propune schimb</span>
                         </button>
@@ -161,100 +166,176 @@
         </div>
     </section>
 
+    <div class="skill-swap-modal" id="skillSwapModal" aria-hidden="true">
+        <div class="skill-swap-modal__backdrop" data-modal-close="true"></div>
+        <div class="skill-swap-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="skillSwapModalTitle">
+            <button type="button" class="skill-swap-modal__close" id="skillSwapModalClose" aria-label="Inchide">
+                <i class="fa fa-times"></i>
+            </button>
+            <div class="skill-swap-modal__eyebrow">Skill Swap Proposal</div>
+            <h3 class="skill-swap-modal__title" id="skillSwapModalTitle">Propune un schimb clar si relevant</h3>
+            <p class="skill-swap-modal__subtitle">
+                Propunerea va trimite o notificare structurata proprietarului anuntului. Chat-ul se deschide doar daca
+                propunerea este acceptata sau intra in negociere.
+            </p>
+
+            <div class="skill-swap-modal__exchange">
+                <div class="skill-swap-modal__exchange-card">
+                    <span class="skill-swap-modal__exchange-label">Skill oferit</span>
+                    <strong id="proposalOfferedSkill" class="skill-swap-modal__exchange-value"></strong>
+                </div>
+                <div class="skill-swap-modal__exchange-arrow">
+                    <i class="fa fa-exchange"></i>
+                </div>
+                <div class="skill-swap-modal__exchange-card">
+                    <span class="skill-swap-modal__exchange-label">Skill cautat</span>
+                    <strong id="proposalRequestedSkill" class="skill-swap-modal__exchange-value"></strong>
+                </div>
+            </div>
+
+            <form id="skillSwapProposalForm" class="skill-swap-modal__form">
+                <label class="skill-swap-modal__label" for="proposalMessageInput">Mesaj optional</label>
+                <textarea id="proposalMessageInput"
+                          class="skill-swap-modal__textarea"
+                          maxlength="500"
+                          placeholder="Salut! Am vazut anuntul tau si cred ca putem face un schimb util pentru amandoi."></textarea>
+                <div class="skill-swap-modal__footer">
+                    <span class="skill-swap-modal__hint">Maximum 500 de caractere</span>
+                    <button type="submit" class="announce-btn announce-btn-primary skill-swap-modal__submit" id="submitProposalBtn">
+                        Trimite propunerea
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div th:replace="~{/fragments/about :: about}"></div>
 
     <script th:inline="javascript">
-        const msgNoAuthor = [[#{announce.details.error.noauthor}]];
-        const msgCreateChat = [[#{announce.details.error.createchat}]];
+        const announceId = [[${announce.id}]];
+        const announceOwnerId = [[${announce.userId}]];
+        const currentUserAuthenticated = [[${currentUserAuthenticated}]];
         const profileCompletionRequiredUrl = [[${profileCompletionRequiredUrl}]];
         const currentUserProfileCompleted = [[${currentUserProfileCompleted}]];
 
-        console.log('Script started loading...');
-
         document.addEventListener('DOMContentLoaded', function () {
-            console.log('DOM loaded');
-
-            // CTA buttons
-            const sendMessageBtn = document.getElementById('sendMessageBtn');
             const proposeSwapBtn = document.getElementById('proposeSwapBtn');
             const saveBtn = document.getElementById('saveBtn');
+            const skillSwapModal = document.getElementById('skillSwapModal');
+            const skillSwapProposalForm = document.getElementById('skillSwapProposalForm');
+            const proposalMessageInput = document.getElementById('proposalMessageInput');
+            const proposalOfferedSkill = document.getElementById('proposalOfferedSkill');
+            const proposalRequestedSkill = document.getElementById('proposalRequestedSkill');
+            const submitProposalBtn = document.getElementById('submitProposalBtn');
 
-            console.log('sendMessageBtn found:', !!sendMessageBtn);
+            function openProposalModal() {
+                if (!skillSwapModal || !proposeSwapBtn) {
+                    return;
+                }
 
-            // Send message button
-            if (sendMessageBtn) {
-                console.log('Author ID on button:', sendMessageBtn.dataset.authorId);
+                proposalOfferedSkill.textContent = proposeSwapBtn.dataset.offeredSkill || '';
+                proposalRequestedSkill.textContent = proposeSwapBtn.dataset.requestedSkill || '';
+                skillSwapModal.classList.add('is-open');
+                skillSwapModal.setAttribute('aria-hidden', 'false');
+                document.body.classList.add('skill-swap-modal-open');
+                if (proposalMessageInput) {
+                    proposalMessageInput.focus();
+                }
+            }
 
-                sendMessageBtn.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    console.log('=== BUTTON CLICKED ===');
+            function closeProposalModal() {
+                if (!skillSwapModal) {
+                    return;
+                }
 
-                    if (!currentUserProfileCompleted) {
-                        window.location.href = profileCompletionRequiredUrl;
-                        return;
-                    }
-
-                    const announceAuthorId = this.dataset.authorId;
-                    console.log('Author ID:', announceAuthorId);
-
-                    if (!announceAuthorId) {
-                        alert(msgNoAuthor);
-                        return;
-                    }
-
-                    const url = '/api/chat/create?otherUserId=' + announceAuthorId;
-                    console.log('Fetching:', url);
-
-                    fetch(url, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
-                    })
-                        .then(async response => {
-                            console.log('Response received:', response.status);
-                            const data = await response.json().catch(() => ({}));
-
-                            if (response.status === 403 && data.redirectUrl) {
-                                window.location.href = data.redirectUrl;
-                                return null;
-                            }
-
-                            if (!response.ok) {
-                                throw new Error(data.message || data.error || 'Unknown error');
-                            }
-
-                            return data;
-                        })
-                        .then(data => {
-                            if (!data) {
-                                return;
-                            }
-                            console.log('Data received:', data);
-                            if (data.success) {
-                                const redirectUrl = '/chat-history?roomId=' + data.chatRoomId;
-                                console.log('Redirecting to:', redirectUrl);
-                                window.location.href = redirectUrl;
-                            } else {
-                                alert(msgCreateChat + ' ' + (data.error || 'Unknown error'));
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Fetch error:', error);
-                            alert(msgCreateChat + ' ' + error.message);
-                        });
-                });
+                skillSwapModal.classList.remove('is-open');
+                skillSwapModal.setAttribute('aria-hidden', 'true');
+                document.body.classList.remove('skill-swap-modal-open');
             }
 
             // Propose swap button
             if (proposeSwapBtn) {
                 proposeSwapBtn.addEventListener('click', function () {
+                    if (!currentUserAuthenticated) {
+                        window.location.href = '/login';
+                        return;
+                    }
+
                     if (!currentUserProfileCompleted) {
                         window.location.href = profileCompletionRequiredUrl;
                         return;
                     }
 
-                    console.log('Propune schimb clicked');
+                    openProposalModal();
+                });
+            }
+
+            if (skillSwapModal) {
+                skillSwapModal.querySelectorAll('[data-modal-close="true"]').forEach(element => {
+                    element.addEventListener('click', closeProposalModal);
+                });
+            }
+
+            const skillSwapModalClose = document.getElementById('skillSwapModalClose');
+            if (skillSwapModalClose) {
+                skillSwapModalClose.addEventListener('click', closeProposalModal);
+            }
+
+            document.addEventListener('keydown', function (event) {
+                if (event.key === 'Escape') {
+                    closeProposalModal();
+                }
+            });
+
+            if (skillSwapProposalForm) {
+                skillSwapProposalForm.addEventListener('submit', async function (event) {
+                    event.preventDefault();
+
+                    if (!submitProposalBtn) {
+                        return;
+                    }
+
+                    submitProposalBtn.disabled = true;
+                    submitProposalBtn.textContent = 'Se trimite...';
+
+                    try {
+                        const response = await fetch('/api/skill-swap-proposals', {
+                            method: 'POST',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                announceId: announceId,
+                                message: proposalMessageInput ? proposalMessageInput.value.trim() : ''
+                            })
+                        });
+
+                        const payload = await response.json().catch(() => ({}));
+
+                        if ((response.status === 401 || response.status === 403) && payload.redirectUrl) {
+                            window.location.href = payload.redirectUrl;
+                            return;
+                        }
+
+                        if (!response.ok || payload.success === false) {
+                            throw new Error(payload.message || 'Nu am putut trimite propunerea acum.');
+                        }
+
+                        closeProposalModal();
+                        if (proposalMessageInput) {
+                            proposalMessageInput.value = '';
+                        }
+                        proposeSwapBtn.disabled = true;
+                        proposeSwapBtn.classList.add('announce-btn-disabled');
+                        proposeSwapBtn.innerHTML = '<i class="fa fa-check"></i><span>Propunere trimisa</span>';
+                        window.alert(payload.message || 'Propunerea a fost trimisa.');
+                    } catch (error) {
+                        window.alert(error.message || 'Nu am putut trimite propunerea acum.');
+                    } finally {
+                        submitProposalBtn.disabled = false;
+                        submitProposalBtn.textContent = 'Trimite propunerea';
+                    }
                 });
             }
 
