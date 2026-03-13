@@ -150,6 +150,15 @@ public class AdminController {
         return "redirect:/admin/users";
     }
 
+    @PostMapping("/users/{userId}/grant-admin")
+    public String grantAdminRole(@PathVariable Long userId,
+                                 Authentication authentication,
+                                 RedirectAttributes redirectAttributes) {
+        adminDashboardService.grantAdminRole(userId, adminId(authentication));
+        redirectAttributes.addFlashAttribute("adminSuccess", "Admin role assigned.");
+        return "redirect:/admin/users";
+    }
+
     @PostMapping("/users/{userId}/delete")
     public String deleteUser(@PathVariable Long userId,
                              Authentication authentication,

@@ -3,6 +3,7 @@ package com.example.skillswap.admin.enums;
 public enum AdminActionType {
     USER_SUSPENDED,
     USER_BANNED,
+    USER_ROLE_ADMIN_GRANTED,
     USER_DELETED,
     USER_PASSWORD_RESET,
     SKILL_MERGED,

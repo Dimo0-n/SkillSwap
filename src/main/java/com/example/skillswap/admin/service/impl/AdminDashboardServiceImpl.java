@@ -30,6 +30,7 @@ import com.example.skillswap.entity.Announce;
 import com.example.skillswap.entity.Notification;
 import com.example.skillswap.entity.ProfileComment;
 import com.example.skillswap.entity.Profil;
+import com.example.skillswap.entity.Role;
 import com.example.skillswap.entity.SkillSwapProposal;
 import com.example.skillswap.entity.User;
 import com.example.skillswap.enums.NotificationType;
@@ -38,6 +39,7 @@ import com.example.skillswap.repository.AnnounceRepository;
 import com.example.skillswap.repository.NotificationRepository;
 import com.example.skillswap.repository.ProfileCommentRepository;
 import com.example.skillswap.repository.ProfileRepository;
+import com.example.skillswap.repository.RoleRepository;
 import com.example.skillswap.repository.SkillSwapProposalRepository;
 import com.example.skillswap.repository.UserRepository;
 import com.example.skillswap.service.AnnounceImageService;
@@ -78,8 +80,11 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 
     private static final int DEFAULT_PAGE_SIZE = 10;
     private static final String PROFILE_IMAGE_PUBLIC_ID_PREFIX = "skillswap/profile-images/user-";
+    private static final long ROLE_ADMIN_ID = 1L;
+    private static final long ROLE_USER_ID = 2L;
 
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final AnnounceRepository announceRepository;
     private final SkillSwapProposalRepository skillSwapProposalRepository;
     private final ProfileRepository profileRepository;
@@ -184,6 +189,24 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
         user.setSuspended(false);
         user.setOnline(false);
         logAction(adminUserId, AdminActionType.USER_BANNED, "USER", user.getId(), user.getEmail(), "Account banned.");
+    }
+
+    @Override
+    @Transactional
+    public void grantAdminRole(Long targetUserId, Long adminUserId) {
+        User user = getManagedUser(targetUserId);
+
+        Role adminRole = roleRepository.findById(ROLE_ADMIN_ID)
+                .or(() -> roleRepository.findByName("ROLE_ADMIN"))
+                .orElseThrow(() -> new IllegalArgumentException("Admin role not found."));
+        Role userRole = roleRepository.findById(ROLE_USER_ID)
+                .or(() -> roleRepository.findByName("ROLE_USER"))
+                .orElseThrow(() -> new IllegalArgumentException("User role not found."));
+
+        user.getRoles().add(userRole);
+        user.getRoles().add(adminRole);
+
+        logAction(adminUserId, AdminActionType.USER_ROLE_ADMIN_GRANTED, "USER", user.getId(), user.getEmail(), "Admin role assigned.");
     }
 
     @Override

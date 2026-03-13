@@ -229,11 +229,13 @@
                             <td>
                                 <div class="table-actions">
                                     <a class="button button--ghost" th:href="@{|/profile/${user.id()}|}">View profile</a>
+                                    <form th:id="|grant-admin-user-${user.id()}|" th:action="@{|/admin/users/${user.id()}/grant-admin|}" method="post"></form>
                                     <form th:id="|suspend-user-${user.id()}|" th:action="@{|/admin/users/${user.id()}/suspend|}" method="post"></form>
                                     <form th:id="|ban-user-${user.id()}|" th:action="@{|/admin/users/${user.id()}/ban|}" method="post"></form>
                                     <form th:id="|delete-user-${user.id()}|" th:action="@{|/admin/users/${user.id()}/delete|}" method="post"></form>
                                     <form th:id="|reset-user-${user.id()}|" th:action="@{|/admin/users/${user.id()}/reset-password|}" method="post"></form>
 
+                                    <button type="button" class="button button--ghost" th:if="${!#strings.contains(user.roles(), 'ADMIN')}" th:attr="data-form-id=|grant-admin-user-${user.id()}|,data-confirm-message='Assign ROLE_ADMIN to this user?'">Assign admin</button>
                                     <button type="button" class="button button--ghost" th:attr="data-form-id=|suspend-user-${user.id()}|,data-confirm-message='Suspend this user account?'">Suspend</button>
                                     <button type="button" class="button button--ghost danger" th:attr="data-form-id=|ban-user-${user.id()}|,data-confirm-message='Ban this user from accessing SkillSwap?'">Ban</button>
                                     <button type="button" class="button button--ghost" th:attr="data-form-id=|reset-user-${user.id()}|,data-confirm-message='Generate a temporary password for this user?'">Reset password</button>

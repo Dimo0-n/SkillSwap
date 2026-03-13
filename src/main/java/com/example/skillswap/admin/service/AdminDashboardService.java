@@ -26,6 +26,8 @@ public interface AdminDashboardService {
 
     void banUser(Long targetUserId, Long adminUserId);
 
+    void grantAdminRole(Long targetUserId, Long adminUserId);
+
     void softDeleteUser(Long targetUserId, Long adminUserId);
 
     String resetPassword(Long targetUserId, Long adminUserId);
