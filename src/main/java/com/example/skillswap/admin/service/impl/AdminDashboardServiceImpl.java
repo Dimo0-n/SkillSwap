@@ -832,7 +832,7 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
         if (imageUrl == null || imageUrl.isBlank()) {
             return false;
         }
-        return !imageUrl.startsWith("https://") || (!imageUrl.contains("res.cloudinary.com") && !imageUrl.startsWith("/img/"));
+        return !imageUrl.contains("res.cloudinary.com") && !imageUrl.startsWith("/img/");
     }
 
     private String rewriteSkill(String currentValue, String targetName, Set<String> normalizedSources) {

@@ -69,7 +69,8 @@
                 <div class="col-lg-4 col-md-6 mb-4">
                     <a th:href="@{/announce-details/{id}(id=${announce.id})}" class="announce-link">
                     <div class="cg-item" data-skill="reviews">
-                        <div class="cg-pic set-bg" th:attr="data-setbg=@{${announce.imagePath}}">
+                        <div class="cg-pic"
+                             th:style="|background-image: url('${announce.imagePath != null and !#strings.isEmpty(announce.imagePath) ? announce.imagePath : '/img/placeholder-announce.svg'}');|">
                             <div class="label"><span th:text="${announce.categoryOffered}"></span></div>
                         </div>
                         <div class="cg-text">

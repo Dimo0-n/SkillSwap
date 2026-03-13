@@ -5,6 +5,7 @@ import com.example.skillswap.entity.Announce;
 import com.example.skillswap.entity.User;
 import com.example.skillswap.repository.AnnounceRepository;
 import com.example.skillswap.repository.UserRepository;
+import com.example.skillswap.service.AnnounceImageService;
 import com.example.skillswap.service.AnnounceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -23,11 +24,15 @@ public class AnnounceServiceImpl implements AnnounceService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private AnnounceImageService announceImageService;
+
     //5 anunturi care sunt afisate pentru pagina de index
     @Override
     public List<Announce> getLatest5Announces() {
         List<Announce> latest5Announces = announceRepository.findAll().stream()
                 .filter(announce -> !announce.isDeletedByAdmin())
+                .peek(this::normalizeImagePathForDisplay)
                 .toList();
         return latest5Announces.subList(0, Math.min(5, latest5Announces.size()));
     }
@@ -37,6 +42,7 @@ public class AnnounceServiceImpl implements AnnounceService {
     public List<Announce> getAnnouncesList() {
         return announceRepository.findAllByOrderByIdDesc().stream()
                 .filter(announce -> !announce.isDeletedByAdmin())
+                .peek(this::normalizeImagePathForDisplay)
                 .toList();
     }
 
@@ -68,6 +74,7 @@ public class AnnounceServiceImpl implements AnnounceService {
     public List<Announce> getAnnouncesListByEmail(Long id) {
         return announceRepository.getAnnouncesListByEmail(id).stream()
                 .filter(announce -> !announce.isDeletedByAdmin())
+                .peek(this::normalizeImagePathForDisplay)
                 .toList();
     }
 
@@ -92,7 +99,7 @@ public class AnnounceServiceImpl implements AnnounceService {
         announceDto.setCategoryOffered(announce.get().getCategoryOffered());
         announceDto.setCategoryRequired(announce.get().getCategoryRequired());
         announceDto.setImageKey(announce.get().getImageKey());
-        announceDto.setImagePath(announce.get().getImagePath());
+        announceDto.setImagePath(resolveImagePathForDisplay(announce.get()));
         announceDto.setAdditionalInfo(announce.get().getAdditionalInfo());
         announceDto.setDate(announce.get().getDate());
         announceDto.setUserId(announce.get().getUser().getId());
@@ -107,6 +114,22 @@ public class AnnounceServiceImpl implements AnnounceService {
 
         String normalized = value.trim();
         return normalized.isEmpty() ? null : normalized;
+    }
+
+    private void normalizeImagePathForDisplay(Announce announce) {
+        announce.setImagePath(resolveImagePathForDisplay(announce));
+    }
+
+    private String resolveImagePathForDisplay(Announce announce) {
+        String imagePath = announce.getImagePath();
+        if (imagePath != null) {
+            String trimmedPath = imagePath.trim();
+            if (!trimmedPath.isEmpty() && !trimmedPath.startsWith("/img/skill/")) {
+                return trimmedPath;
+            }
+        }
+
+        return announceImageService.safePath(announce.getCategoryOffered(), announce.getImageKey());
     }
 
 

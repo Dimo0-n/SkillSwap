@@ -9,33 +9,33 @@ public class AnnounceImageService implements com.example.skillswap.service.Annou
 
     // key -> path (source of truth)
     private static final Map<String, String> KEY_TO_PATH = Map.ofEntries(
-        Map.entry("prog1", "/img/skill/skill-programming.png"),
-        Map.entry("prog2", "/img/skill/skill-programming-2.png"),
-        Map.entry("prog3", "/img/skill/skill-programming-3.png"),
+        Map.entry("prog1", "https://res.cloudinary.com/dsqtynmrn/image/upload/v1773394304/skill-programming_gmiwi9.png"),
+        Map.entry("prog2", "https://res.cloudinary.com/dsqtynmrn/image/upload/v1773400801/skill-programming-2_o7oxn2.jpg"),
+        Map.entry("prog3", "https://res.cloudinary.com/dsqtynmrn/image/upload/v1773400804/skill-programming3_v2hd16.jpg"),
 
-        Map.entry("guitar1", "/img/skill/skill-guitar.png"),
-        Map.entry("guitar2", "/img/skill/skill-guitar-2.png"),
+        Map.entry("guitar1", "https://res.cloudinary.com/dsqtynmrn/image/upload/v1773394301/skill-guitar_vi3kqm.png"),
+        Map.entry("guitar2", "https://res.cloudinary.com/dsqtynmrn/image/upload/v1773400794/skill-guitare2_ssnvnj.jpg"),
 
-        Map.entry("eng1", "/img/skill/skill-english.png"),
-        Map.entry("eng2", "/img/skill/skill-english-2.png"),
+        Map.entry("eng1", "https://res.cloudinary.com/dsqtynmrn/image/upload/v1773394300/skill-english_flxmr0.png"),
+        Map.entry("eng2", "https://res.cloudinary.com/dsqtynmrn/image/upload/v1773400789/skill-english2_mff1kw.jpg"),
 
-        Map.entry("ps1", "/img/skill/skill-photoshop.png"),
-        Map.entry("ps2", "/img/skill/skill-photoshop-2.png"),
+        Map.entry("ps1", "https://res.cloudinary.com/dsqtynmrn/image/upload/v1773394303/skill-photoshop_wiyk5f.png"),
+        Map.entry("ps2", "https://res.cloudinary.com/dsqtynmrn/image/upload/v1773400799/skill-photoshop2_jtoovv.jpg"),
 
-        Map.entry("photo1", "/img/skill/skill-photography.png"),
-        Map.entry("photo2", "/img/skill/skill-photography-2.png"),
+        Map.entry("photo1", "https://res.cloudinary.com/dsqtynmrn/image/upload/v1773394302/skill-photography_mbasvx.png"),
+        Map.entry("photo2", "https://res.cloudinary.com/dsqtynmrn/image/upload/v1773400795/skill-photography2_chjfrk.jpg"),
 
-        Map.entry("cook1", "/img/skill/skill-cooking.png"),
-        Map.entry("cook2", "/img/skill/skill-cooking-2.png"),
+        Map.entry("cook1", "https://res.cloudinary.com/dsqtynmrn/image/upload/v1773394298/skill-cooking_tslvh1.png"),
+        Map.entry("cook2", "https://res.cloudinary.com/dsqtynmrn/image/upload/v1773400782/skill-cooking2_nej88w.jpg"),
 
-        Map.entry("dance1", "/img/skill/skill-dance.png"),
-        Map.entry("dance2", "/img/skill/skill-dance-2.png"),
+        Map.entry("dance1", "https://res.cloudinary.com/dsqtynmrn/image/upload/v1773394299/skill-dance_skkhv8.png"),
+        Map.entry("dance2", "https://res.cloudinary.com/dsqtynmrn/image/upload/v1773400785/skill-dance2_iee29c.jpg"),
 
-        Map.entry("speak1", "/img/skill/skill-public-speaking.png"),
-        Map.entry("speak2", "/img/skill/skill-public-speaking-2.png"),
+        Map.entry("speak1", "https://res.cloudinary.com/dsqtynmrn/image/upload/v1773394306/skill-public-speaking_rhgjua.png"),
+        Map.entry("speak2", "https://res.cloudinary.com/dsqtynmrn/image/upload/v1773400807/skill-speaking2_uxjyam.jpg"),
 
-        Map.entry("default1", "/img/skill/skill-default.png"),
-        Map.entry("default2", "/img/skill/skill-default-2.png")
+        Map.entry("default1", "https://res.cloudinary.com/dsqtynmrn/image/upload/v1773394300/skill-default_ofzyc1.png"),
+        Map.entry("default2", "https://res.cloudinary.com/dsqtynmrn/image/upload/v1773400788/skill-default2_ck37b9.jpg")
     );
 
     // category(normalizată) -> keys permise
