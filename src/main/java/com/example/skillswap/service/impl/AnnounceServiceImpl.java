@@ -1,5 +1,6 @@
 package com.example.skillswap.service.impl;
 
+import com.example.skillswap.config.CacheConfig;
 import com.example.skillswap.dto.AnnounceDto;
 import com.example.skillswap.entity.Announce;
 import com.example.skillswap.entity.User;
@@ -8,6 +9,9 @@ import com.example.skillswap.repository.UserRepository;
 import com.example.skillswap.service.AnnounceImageService;
 import com.example.skillswap.service.AnnounceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +33,7 @@ public class AnnounceServiceImpl implements AnnounceService {
 
     //5 anunturi care sunt afisate pentru pagina de index
     @Override
+    @Cacheable(cacheNames = CacheConfig.ANNOUNCE_LATEST5_CACHE, key = "'latest5'")
     public List<Announce> getLatest5Announces() {
         List<Announce> latest5Announces = announceRepository.findAll().stream()
                 .filter(announce -> !announce.isDeletedByAdmin())
@@ -39,6 +44,7 @@ public class AnnounceServiceImpl implements AnnounceService {
 
     //lista cu toate anunturile care sunt afisate din DB
     @Override
+    @Cacheable(cacheNames = CacheConfig.ANNOUNCE_LIST_CACHE, key = "'all'")
     public List<Announce> getAnnouncesList() {
         return announceRepository.findAllByOrderByIdDesc().stream()
                 .filter(announce -> !announce.isDeletedByAdmin())
@@ -48,6 +54,11 @@ public class AnnounceServiceImpl implements AnnounceService {
 
     //Crearea unui anunt nou de catre user-ul logat
     @Override
+        @Caching(evict = {
+            @CacheEvict(cacheNames = CacheConfig.ANNOUNCE_LATEST5_CACHE, allEntries = true),
+            @CacheEvict(cacheNames = CacheConfig.ANNOUNCE_LIST_CACHE, allEntries = true),
+            @CacheEvict(cacheNames = CacheConfig.ANNOUNCE_BY_AUTHOR_CACHE, allEntries = true)
+        })
     public void save(AnnounceDto announceDto, Authentication auth) {
 
         User user = Optional.ofNullable(userRepository.findUserByEmail(auth.getName()))
@@ -71,6 +82,7 @@ public class AnnounceServiceImpl implements AnnounceService {
 
     //afisarea anunturilor pe care le-a publicat user-ul
     @Override
+    @Cacheable(cacheNames = CacheConfig.ANNOUNCE_BY_AUTHOR_CACHE, key = "#id")
     public List<Announce> getAnnouncesListByEmail(Long id) {
         return announceRepository.getAnnouncesListByEmail(id).stream()
                 .filter(announce -> !announce.isDeletedByAdmin())
@@ -79,11 +91,18 @@ public class AnnounceServiceImpl implements AnnounceService {
     }
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(cacheNames = CacheConfig.ANNOUNCE_BY_ID_CACHE, key = "#id"),
+            @CacheEvict(cacheNames = CacheConfig.ANNOUNCE_LATEST5_CACHE, allEntries = true),
+            @CacheEvict(cacheNames = CacheConfig.ANNOUNCE_LIST_CACHE, allEntries = true),
+            @CacheEvict(cacheNames = CacheConfig.ANNOUNCE_BY_AUTHOR_CACHE, allEntries = true)
+    })
     public void deleteAnnounceById(Long id) {
         announceRepository.deleteById(id);
     }
 
     @Override
+    @Cacheable(cacheNames = CacheConfig.ANNOUNCE_BY_ID_CACHE, key = "#id")
     public AnnounceDto getAnnounceById(Long id) {
 
         Optional<Announce> announce = announceRepository.findById(id);

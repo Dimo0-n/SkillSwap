@@ -1,5 +1,6 @@
 package com.example.skillswap.service.impl;
 
+import com.example.skillswap.config.CacheConfig;
 import com.example.skillswap.dto.ProfilDto;
 import com.example.skillswap.entity.Profil;
 import com.example.skillswap.entity.User;
@@ -9,6 +10,8 @@ import com.example.skillswap.repository.UserRepository;
 import com.example.skillswap.service.ProfileImageStorageService;
 import com.example.skillswap.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +40,10 @@ public class ProfileServiceImpl implements ProfileService {
     @Autowired
     private ProfileImageStorageService profileImageStorageService;
 
+    @Autowired
+    private CacheManager cacheManager;
+
+    @Override
     @Transactional
     public void saveProfile(ProfilDto profilDto, MultipartFile profilePicture, String email) throws IOException {
 
@@ -63,9 +70,11 @@ public class ProfileServiceImpl implements ProfileService {
         Profil savedProfile = profileRepository.save(toSave);
         profileCompletionService.refreshProfileCompletion(user, savedProfile);
         applicationEventPublisher.publishEvent(new ProfileReputationRefreshRequestedEvent(user.getId()));
+        evictProfileCaches(user.getId(), email);
     }
 
     @Override
+    @Cacheable(cacheNames = CacheConfig.PROFILE_BY_USERNAME_CACHE, key = "#username")
     public ProfilDto getProfileForView(String username) {
 
         Profil profil = profileRepository
@@ -76,6 +85,7 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
+    @Cacheable(cacheNames = CacheConfig.PROFILE_BY_USER_ID_CACHE, key = "#userId")
     public ProfilDto getProfileForUserId(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -108,8 +118,23 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
+    @Cacheable(cacheNames = CacheConfig.PROFILE_AUTHOR_CACHE, key = "#userId")
     public ProfilDto getAuthorByUserId(Long userId) {
         return getProfileForUserId(userId);
+    }
+
+    private void evictProfileCaches(Long userId, String username) {
+        if (username != null) {
+            java.util.Optional.ofNullable(cacheManager.getCache(CacheConfig.PROFILE_BY_USERNAME_CACHE))
+                    .ifPresent(cache -> cache.evict(username));
+        }
+
+        if (userId != null) {
+            java.util.Optional.ofNullable(cacheManager.getCache(CacheConfig.PROFILE_BY_USER_ID_CACHE))
+                    .ifPresent(cache -> cache.evict(userId));
+            java.util.Optional.ofNullable(cacheManager.getCache(CacheConfig.PROFILE_AUTHOR_CACHE))
+                    .ifPresent(cache -> cache.evict(userId));
+        }
     }
 
     private ProfilDto mapUserToDto(User user) {
