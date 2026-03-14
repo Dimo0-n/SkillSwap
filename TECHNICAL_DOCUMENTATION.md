@@ -454,7 +454,7 @@ Typical environment variables include:
 - GOOGLE_CLIENT_ID
 - GOOGLE_CLIENT_SECRET
 - DEEPSEEK_API_KEY
-- CLAUDINARY_URL or Cloudinary key components
+- CLOUDINARY_URL or Cloudinary key components
 
 ### 11.4 Initialization and Bootstrap
 - Roles are ensured at startup by role data loader
