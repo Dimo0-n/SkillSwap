@@ -3513,7 +3513,15 @@ body.notifications-mobile-open {
 
 .cg-item .cg-pic {
 	position: relative;
-	height: 257px;
+ height: 247px;
+ overflow: hidden;
+}
+
+.cg-item .cg-pic img {
+ width: 100%;
+ height: 100%;
+ object-fit: cover;
+ display: block;
 }
 
 .cg-item .cg-pic .label {
@@ -3616,6 +3624,16 @@ body.notifications-mobile-open {
 	float: left;
 	margin-right: 30px;
 	max-width: 370px;
+ width: 370px;
+ height: 247px;
+ overflow: hidden;
+}
+
+.cl-item .cl-pic img {
+ width: 100%;
+ height: 100%;
+ object-fit: cover;
+ display: block;
 }
 
 .cl-item .cl-text {
