@@ -50,6 +50,10 @@
                 <i class="fa fa-line-chart"></i>
                 <span>Statistics</span>
             </a>
+            <a th:href="@{/admin/cache}" th:classappend="${activeSection == 'cache'} ? ' is-active'" class="admin-nav__link">
+                <i class="fa fa-database"></i>
+                <span>Cache</span>
+            </a>
             <a th:href="@{/admin/notifications}" th:classappend="${activeSection == 'notifications'} ? ' is-active'" class="admin-nav__link">
                 <i class="fa fa-bullhorn"></i>
                 <span>Notifications</span>
@@ -81,6 +85,7 @@
                     <span th:case="'reviews'">Review Moderation</span>
                     <span th:case="'reports'">Abuse Reports</span>
                     <span th:case="'statistics'">Platform Statistics</span>
+                    <span th:case="'cache'">Cache Monitoring</span>
                     <span th:case="'notifications'">Notification Management</span>
                     <span th:case="'images'">Image Moderation</span>
                     <span th:case="'settings'">Platform Settings</span>
@@ -504,6 +509,60 @@
                     <canvas id="statisticsSkillsChart"></canvas>
                 </article>
             </div>
+        </section>
+
+        <section th:if="${activeSection == 'cache'}" class="admin-section">
+            <article class="panel-card">
+                <div class="panel-card__header">
+                    <div>
+                        <p class="panel-card__eyebrow">Runtime metrics</p>
+                        <h3>Caffeine Cache Regions</h3>
+                    </div>
+                    <div class="table-actions">
+                        <a class="button button--ghost" href="/admin/cache">Refresh</a>
+                        <a class="button button--ghost" href="/admin/api/cache/stats" target="_blank" rel="noopener">Open JSON API</a>
+                    </div>
+                </div>
+
+                <div class="table-shell" th:if="${!#lists.isEmpty(cacheStats)}">
+                    <table class="admin-table">
+                        <thead>
+                        <tr>
+                            <th>Region</th>
+                            <th>Estimated size</th>
+                            <th>Requests</th>
+                            <th>Hits</th>
+                            <th>Misses</th>
+                            <th>Hit rate</th>
+                            <th>Miss rate</th>
+                            <th>Evictions</th>
+                            <th>TTL write (s)</th>
+                            <th>TTL access (s)</th>
+                            <th>Snapshot</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="stat : ${cacheStats}">
+                            <td>
+                                <strong th:text="${stat.cacheName()}">cache-name</strong>
+                            </td>
+                            <td th:text="${stat.estimatedSize()}">0</td>
+                            <td th:text="${stat.requestCount()}">0</td>
+                            <td th:text="${stat.hitCount()}">0</td>
+                            <td th:text="${stat.missCount()}">0</td>
+                            <td th:text="|${#numbers.formatDecimal(stat.hitRate() * 100, 1, 2)}%|">0%</td>
+                            <td th:text="|${#numbers.formatDecimal(stat.missRate() * 100, 1, 2)}%|">0%</td>
+                            <td th:text="${stat.evictionCount()}">0</td>
+                            <td th:text="${stat.expireAfterWriteSeconds() != null ? stat.expireAfterWriteSeconds() : 'N/A'}">N/A</td>
+                            <td th:text="${stat.expireAfterAccessSeconds() != null ? stat.expireAfterAccessSeconds() : 'N/A'}">N/A</td>
+                            <td th:text="${#temporals.format(stat.snapshotAt(), 'dd MMM yyyy HH:mm:ss')}">time</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="empty-state" th:if="${#lists.isEmpty(cacheStats)}">No cache metrics available yet. Trigger read operations and refresh this page.</p>
+            </article>
         </section>
 
         <section th:if="${activeSection == 'notifications'}" class="admin-section">

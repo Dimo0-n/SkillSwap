@@ -3,6 +3,7 @@ package com.example.skillswap.controller;
 import com.example.skillswap.admin.dto.AdminDashboardOverviewDto;
 import com.example.skillswap.admin.dto.AdminImageRowDto;
 import com.example.skillswap.admin.dto.AdminStatisticsDto;
+import com.example.skillswap.admin.service.AdminCacheStatsService;
 import com.example.skillswap.admin.service.AdminDashboardService;
 import com.example.skillswap.service.ChatService;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
 public class AdminController {
 
     private final AdminDashboardService adminDashboardService;
+    private final AdminCacheStatsService adminCacheStatsService;
     private final ChatService chatService;
 
     @GetMapping
@@ -99,6 +101,13 @@ public class AdminController {
         AdminStatisticsDto statistics = adminDashboardService.getStatistics();
         populateBaseModel(model, "statistics");
         model.addAttribute("statistics", statistics);
+        return "admin/panel";
+    }
+
+    @GetMapping("/cache")
+    public String cache(Model model) {
+        populateBaseModel(model, "cache");
+        model.addAttribute("cacheStats", adminCacheStatsService.getAllCacheStats());
         return "admin/panel";
     }
 

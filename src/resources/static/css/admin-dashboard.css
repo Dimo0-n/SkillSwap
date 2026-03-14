@@ -62,6 +62,7 @@ body.admin-body {
     display: flex;
     flex-direction: column;
     gap: 28px;
+    min-height: 0;
 }
 
 .admin-brand h1,
@@ -93,6 +94,19 @@ body.admin-body {
 .admin-nav {
     display: grid;
     gap: 8px;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding-right: 6px;
+}
+
+.admin-nav::-webkit-scrollbar {
+    width: 8px;
+}
+
+.admin-nav::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.22);
+    border-radius: 999px;
 }
 
 .admin-nav__link {
