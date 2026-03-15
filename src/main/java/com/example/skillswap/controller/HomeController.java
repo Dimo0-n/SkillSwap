@@ -22,7 +22,7 @@ public class HomeController {
     @Autowired
     private ProfileCompletionService profileCompletionService;
 
-    @GetMapping("")
+    @GetMapping("/index")
     public String home(Model model) {
         List<Announce> latest5Announces = announceService.getLatest5Announces();
         model.addAttribute("latest5Announces", latest5Announces);

@@ -61,16 +61,21 @@ public class SecurityConfig {
                         )
                                 .csrf(AbstractHttpConfigurer::disable)
                                 .authorizeHttpRequests(authorize -> authorize
-                                                .requestMatchers(
-                                                                "/css/**", "/js/**", "/img/**", "/fonts/**",
-                                                                "/Source/**",
-                                                                "/index", "/contact", "/ws-native/**",
-                                                                "/oauth2/**",
-                                                                "/register", "/register/**",
-                                                                "/login",
-                                                                "/error/**",
-                                                                "/ws/**", "/api/chat/**",
-                                                                "/announces-list", "/announce-details", "/meeting")
+                                        .requestMatchers(
+                                                "/",
+                                                "/index",
+                                                "/announces-list",
+                                                "/announce-details/**",
+                                                "/profile/**",
+                                                "/css/**",
+                                                "/js/**",
+                                                "/img/**",
+                                                "/fonts/**",
+                                                "/login",
+                                                "/register",
+                                                "/oauth2/**",
+                                                "/privacy",
+                                                "/terms")
                                                 .permitAll()
                                                 .requestMatchers("/ws-native/**").permitAll()
                                                 .requestMatchers("/ws/**").permitAll()
