@@ -22,7 +22,7 @@ public class HomeController {
     @Autowired
     private ProfileCompletionService profileCompletionService;
 
-    @GetMapping("/index")
+    @GetMapping("")
     public String home(Model model) {
         List<Announce> latest5Announces = announceService.getLatest5Announces();
         model.addAttribute("latest5Announces", latest5Announces);
@@ -72,9 +72,14 @@ public class HomeController {
         return "typography";
     }
 
-    @GetMapping("/meeting")
-    public String meeting() {
-        return "jitsi-meet";
+    @GetMapping("/privacy-policy")
+    public String privacyPolicy() {
+        return "privacy-policy";
+    }
+
+    @GetMapping("/terms-of-service")
+    public String termsOfService() {
+        return "terms-of-service";
     }
 
 }
