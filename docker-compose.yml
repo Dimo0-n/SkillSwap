@@ -20,9 +20,7 @@ services:
       retries: 10
 
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ghcr.io/dimo0-n/skillswap:latest
     container_name: skillswap-app
     restart: unless-stopped
     depends_on:

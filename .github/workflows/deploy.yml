@@ -5,17 +5,15 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
-concurrency:
-  group: deploy-main
-  cancel-in-progress: true
+env:
+  IMAGE_NAME: ghcr.io/dimo0-n/skillswap
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Login to GHCR
         uses: docker/login-action@v3
@@ -25,12 +23,10 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build image
-        run: |
-          docker build -t ghcr.io/${{ github.repository_owner }}/skillswap:latest .
+        run: docker build -t $IMAGE_NAME:latest .
 
       - name: Push image
-        run: |
-          docker push ghcr.io/${{ github.repository_owner }}/skillswap:latest
+        run: docker push $IMAGE_NAME:latest
 
   deploy:
     runs-on: ubuntu-latest
@@ -48,6 +44,7 @@ jobs:
 
             cd ${{ secrets.VPS_APP_DIR }}
 
+            docker compose down
             docker compose pull
             docker compose up -d
 
