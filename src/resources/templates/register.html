@@ -43,7 +43,7 @@
         <div class="checkbox-group">
             <input type="checkbox" id="terms" name="terms" required>
             <label for="terms">
-                <span th:text="#{register.accept}">Accept</span> <a href="/terms-of-service" onclick="showTerms()" th:text="#{register.terms}">termenii și condițiile</a>
+                <span th:text="#{register.accept}">Accept</span> <a th:href="@{/terms-of-service}" th:text="#{register.terms}">termenii și condițiile</a>
             </label>
         </div>
 
@@ -61,7 +61,7 @@
         </a>
 
         <div class="login-link">
-            <span th:text="#{register.have.account}">Ai deja un cont?</span> <a th:href="@{/terms-of-service}" onclick="goToTerms()" th:text="#{register.login.link}">Conectează-te</a>
+            <span th:text="#{register.have.account}">Ai deja un cont?</span> <a th:href="@{/terms-of-service}" th:text="#{register.login.link}">Conectează-te</a>
         </div>
     </form>
 </div>
@@ -90,14 +90,6 @@
             // Poți să ascunzi complet elementul sau să redirecționezi
             window.location.href = '#'; // sau pagina principală
         }, 300);
-    }
-
-    function showTerms() {
-        showMessage('Termenii și condițiile vor fi afișate în curând.', 'success');
-    }
-
-    function goToTerms() {
-        window.location.href = '/terms-of-service';
     }
 
     document.getElementById('registerForm').addEventListener('submit', async function (e) {
