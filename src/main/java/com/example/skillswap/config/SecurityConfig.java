@@ -75,7 +75,8 @@ public class SecurityConfig {
                                                 "/register",
                                                 "/oauth2/**",
                                                 "/privacy",
-                                                "/terms")
+                                                "/terms-of-service",
+                                                "/privacy-policy")
                                                 .permitAll()
                                                 .requestMatchers("/ws-native/**").permitAll()
                                                 .requestMatchers("/ws/**").permitAll()
