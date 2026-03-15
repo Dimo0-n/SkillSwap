@@ -61,7 +61,7 @@
         </a>
 
         <div class="login-link">
-            <span th:text="#{register.have.account}">Ai deja un cont?</span> <a th:href="@{/login}" onclick="goToLogin()" th:text="#{register.login.link}">Conectează-te</a>
+            <span th:text="#{register.have.account}">Ai deja un cont?</span> <a th:href="@{/terms-of-service}" onclick="goToTerms()" th:text="#{register.login.link}">Conectează-te</a>
         </div>
     </form>
 </div>
@@ -96,12 +96,8 @@
         showMessage('Termenii și condițiile vor fi afișate în curând.', 'success');
     }
 
-    function goToLogin() {
-        showMessage('Redirecționare către pagina de login...', 'success');
-        // Aici poți adăuga logica de redirecționare
-        setTimeout(() => {
-            window.location.href = '#login'; // sau URL-ul paginii de login
-        }, 1500);
+    function goToTerms() {
+        window.location.href = '/terms-of-service';
     }
 
     document.getElementById('registerForm').addEventListener('submit', async function (e) {
