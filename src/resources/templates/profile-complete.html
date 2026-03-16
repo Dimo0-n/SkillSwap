@@ -183,7 +183,17 @@
                             <textarea name="completeDescription" th:field="*{completeDescription}" th:errorclass="is-invalid" id="detailedDescription" class="form-control" rows="10"
                                       required
                                       th:attr="data-required-message=#{profile.validation.description.required}"
-                                      placeholder="Scrie clar ce oferi, cum lucrezi, pentru cine esti potrivit si in ce situatii nu esti potrivit."></textarea>
+placeholder="Poți completa descrierea în două moduri:
+
+✍️ Manual – scrie liber, clar și direct.
+🤖 AI – notează idei scurte, AI-ul le va transforma într-o descriere completă.
+
+Include (indiferent de variantă):
+• Ce oferi exact
+• Cum lucrezi
+• Pentru cine ești potrivit
+• Pentru cine NU ești potrivit"
+                            ></textarea>
                             <p class="form-error" th:if="${#fields.hasErrors('completeDescription')}" th:errors="*{completeDescription}">Descrierea detaliata este obligatorie.</p>
                             <small class="form-help">Aceasta sectiune ajuta la filtrare si claritate, nu la promovare.</small>
                         </div>
