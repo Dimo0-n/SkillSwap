@@ -223,37 +223,55 @@ function updateConversationSettingsState(chatRoomId, settings) {
 }
 
 function setProposalHeaderState(options = {}) {
-    const statusBadge = document.getElementById('chatProposalStatusBadge');
-    const desktopAcceptButton = document.getElementById('chatProposalAcceptButton');
-    const mobileAcceptButton = document.getElementById('mobileProposalAcceptButton');
+    const desktopActionsWrapper = document.getElementById('chatProposalActionsWrapper');
+    const mobileActionsWrapper = document.getElementById('mobileProposalActionsWrapper');
     const status = options.status || '';
     const statusLabel = options.statusLabel || '';
-    const canAccept = options.canAccept === true;
+    const isOwner = options.isOwner === true;
     const proposalId = options.proposalId || '';
     const isBusy = options.isBusy === true;
+    const actions = getProposalActions(status, isOwner);
 
-    if (statusBadge) {
-        if (statusLabel) {
-            statusBadge.textContent = `Schimb: ${statusLabel}`;
-            statusBadge.classList.remove('is-hidden');
-            statusBadge.classList.toggle('is-accepted', status === 'ACCEPTED');
-        } else {
-            statusBadge.textContent = '';
-            statusBadge.classList.add('is-hidden');
-            statusBadge.classList.remove('is-accepted');
-        }
-    }
-
-    [desktopAcceptButton, mobileAcceptButton].forEach(button => {
-        if (!button) {
+    [desktopActionsWrapper, mobileActionsWrapper].forEach(wrapper => {
+        if (!wrapper) {
             return;
         }
 
-        button.dataset.proposalId = proposalId;
-        button.classList.toggle('is-hidden', !canAccept);
-        button.disabled = !canAccept || isBusy;
-        button.classList.toggle('is-busy', isBusy);
-        button.setAttribute('aria-busy', isBusy ? 'true' : 'false');
+        const trigger = wrapper.querySelector('.proposal-actions-btn');
+        const triggerLabel = trigger ? trigger.querySelector('span') : null;
+        const triggerIcon = trigger ? trigger.querySelector('i') : null;
+        const hasActions = actions.length > 0;
+        const hasStatus = Boolean(statusLabel);
+        wrapper.classList.toggle('is-hidden', !hasStatus);
+        if (!hasStatus || !hasActions) {
+            wrapper.classList.remove('is-open');
+            if (trigger) {
+                trigger.setAttribute('aria-expanded', 'false');
+            }
+        }
+
+        if (trigger) {
+            trigger.disabled = !hasActions || isBusy;
+            trigger.classList.toggle('is-readonly', !hasActions);
+            trigger.classList.remove('is-pending', 'is-accepted', 'is-in-progress', 'is-completed', 'is-cancelled');
+            const toneClass = getProposalStatusToneClass(status);
+            if (toneClass) {
+                trigger.classList.add(toneClass);
+            }
+        }
+
+        if (triggerLabel) {
+            triggerLabel.textContent = hasStatus ? `Schimb: ${statusLabel}` : 'Schimb';
+        }
+
+        if (triggerIcon) {
+            triggerIcon.classList.toggle('is-hidden', !hasActions);
+        }
+
+        const menu = wrapper.querySelector('.proposal-actions-dropdown');
+        if (menu) {
+            renderProposalActions(menu, proposalId, actions, isBusy);
+        }
     });
 }
 
@@ -267,8 +285,94 @@ function updateProposalHeaderFromConversation(item) {
         proposalId: item.dataset.proposalId || '',
         status: item.dataset.proposalStatus || '',
         statusLabel: item.dataset.proposalStatusLabel || '',
-        canAccept: item.dataset.proposalCanAccept === 'true'
+        isOwner: item.dataset.proposalOwner === 'true'
     });
+}
+
+function getProposalActions(status, isOwner) {
+    if (!status) {
+        return [];
+    }
+
+    if (status === 'PENDING' || (status === 'NEGOTIATING' && isOwner)) {
+        return isOwner ? ['accept', 'cancel'] : [];
+    }
+
+    if (status === 'ACCEPTED') {
+        return ['start', 'cancel'];
+    }
+
+    if (status === 'IN_PROGRESS') {
+        return ['complete', 'cancel'];
+    }
+
+    return [];
+}
+
+function renderProposalActions(menuElement, proposalId, actions, isBusy) {
+    if (!menuElement) {
+        return;
+    }
+
+    if (!proposalId || !actions.length) {
+        menuElement.innerHTML = '';
+        return;
+    }
+
+    const labels = {
+        accept: 'Accepta (Acceptat)',
+        start: 'Porneste (In progres)',
+        complete: 'Finalizeaza (Completat)',
+        cancel: 'Anuleaza (Anulat)'
+    };
+
+    const actionToStatusClass = {
+        accept: 'status-accepted',
+        start: 'status-in-progress',
+        complete: 'status-completed',
+        cancel: 'status-cancelled'
+    };
+
+    menuElement.innerHTML = actions
+        .map(action => {
+            const toneClass = actionToStatusClass[action] || '';
+            return `<button type="button" class="chat-settings-item proposal-action-item ${toneClass}" data-proposal-action="${action}" data-proposal-id="${proposalId}" ${isBusy ? 'disabled' : ''}>${labels[action] || action}</button>`;
+        })
+        .join('');
+}
+
+function getProposalStatusToneClass(status) {
+    switch (status) {
+        case 'PENDING':
+            return 'is-pending';
+        case 'ACCEPTED':
+            return 'is-accepted';
+        case 'IN_PROGRESS':
+            return 'is-in-progress';
+        case 'COMPLETED':
+            return 'is-completed';
+        case 'CANCELLED':
+            return 'is-cancelled';
+        default:
+            return '';
+    }
+}
+
+function mapProposalStatusLabel(status) {
+    switch (status) {
+        case 'PENDING':
+            return 'In asteptare';
+        case 'ACCEPTED':
+            return 'Acceptat';
+        case 'IN_PROGRESS':
+            return 'In progres';
+        case 'COMPLETED':
+            return 'Finalizat';
+        case 'CANCELLED':
+            return 'Anulat';
+        default:
+            return status || '';
+    }
 }
 
 function updateConversationProposalState(chatRoomId, state = {}) {
@@ -756,7 +860,7 @@ function attachChatSettingsDropdowns() {
 }
 
 let videoCallInProgress = false;
-let proposalAcceptInProgress = false;
+let proposalActionInProgress = false;
 
 function setVideoCallButtonsBusy(isBusy) {
     document.querySelectorAll('[data-video-call-trigger="true"]').forEach(button => {
@@ -843,29 +947,34 @@ function attachVideoCallButtons() {
     });
 }
 
-async function acceptNegotiatedProposal() {
-    if (proposalAcceptInProgress) {
+async function runProposalAction(action) {
+    if (proposalActionInProgress) {
         return;
     }
 
     const activeItem = document.querySelector('#conversationsList .conversation-item.active[data-conversation-id]');
     const proposalId = activeItem ? activeItem.dataset.proposalId : '';
-    if (!activeItem || !proposalId || activeItem.dataset.proposalCanAccept !== 'true') {
+    if (!activeItem || !proposalId) {
         return;
     }
 
-    proposalAcceptInProgress = true;
+    const allowedActions = getProposalActions(activeItem.dataset.proposalStatus || '', activeItem.dataset.proposalOwner === 'true');
+    if (!allowedActions.includes(action)) {
+        return;
+    }
+
+    proposalActionInProgress = true;
     updateProposalHeaderFromConversation(activeItem);
     setProposalHeaderState({
         proposalId,
         status: activeItem.dataset.proposalStatus || '',
         statusLabel: activeItem.dataset.proposalStatusLabel || '',
-        canAccept: true,
+        isOwner: activeItem.dataset.proposalOwner === 'true',
         isBusy: true
     });
 
     try {
-        const response = await fetch(`/api/skill-swap-proposals/${proposalId}/accept`, {
+        const response = await fetch(`/api/skill-swap-proposals/${proposalId}/${action}`, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json'
@@ -880,20 +989,22 @@ async function acceptNegotiatedProposal() {
         }
 
         if (!response.ok || payload.success === false) {
-            throw new Error(payload.message || 'Nu am putut accepta schimbul acum.');
+            throw new Error(payload.message || 'Nu am putut actualiza starea schimbului.');
         }
 
+        const nextStatus = payload.status || activeItem.dataset.proposalStatus || '';
         updateConversationProposalState(activeItem.dataset.conversationId, {
             proposalId,
-            status: 'ACCEPTED',
-            statusLabel: 'Acceptat',
-            isOwner: true,
+            status: nextStatus,
+            statusLabel: mapProposalStatusLabel(nextStatus),
+            isOwner: activeItem.dataset.proposalOwner === 'true',
             canAccept: false
         });
+        showChatToast(payload.message || 'Starea schimbului a fost actualizata.', 'success');
     } catch (error) {
-        window.alert(error.message || 'Nu am putut accepta schimbul acum.');
+        window.alert(error.message || 'Nu am putut actualiza starea schimbului.');
     } finally {
-        proposalAcceptInProgress = false;
+        proposalActionInProgress = false;
         const refreshedActiveItem = document.querySelector('#conversationsList .conversation-item.active[data-conversation-id]');
         if (refreshedActiveItem) {
             updateProposalHeaderFromConversation(refreshedActiveItem);
@@ -903,16 +1014,44 @@ async function acceptNegotiatedProposal() {
     }
 }
 
-function attachProposalAcceptButtons() {
-    const acceptButtons = [
-        document.getElementById('chatProposalAcceptButton'),
-        document.getElementById('mobileProposalAcceptButton')
-    ].filter(Boolean);
+function attachProposalActionDropdowns() {
+    const wrappers = document.querySelectorAll('.proposal-actions-wrapper');
+    if (!wrappers.length) {
+        return;
+    }
 
-    acceptButtons.forEach(button => {
-        button.addEventListener('click', function (event) {
+    wrappers.forEach(wrapper => {
+        const trigger = wrapper.querySelector('.proposal-actions-btn');
+        const menu = wrapper.querySelector('.proposal-actions-dropdown');
+        if (!trigger || !menu) {
+            return;
+        }
+
+        trigger.addEventListener('click', function (event) {
             event.preventDefault();
-            acceptNegotiatedProposal();
+            event.stopPropagation();
+
+            if (trigger.disabled) {
+                return;
+            }
+
+            const willOpen = !wrapper.classList.contains('is-open');
+            closeAllChatSettingsDropdowns(wrapper);
+            wrapper.classList.toggle('is-open', willOpen);
+            trigger.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+        });
+
+        menu.addEventListener('click', function (event) {
+            const actionButton = event.target.closest('.proposal-action-item[data-proposal-action]');
+            if (!actionButton || actionButton.disabled) {
+                return;
+            }
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            closeAllChatSettingsDropdowns();
+            runProposalAction(actionButton.dataset.proposalAction);
         });
     });
 }
@@ -982,7 +1121,7 @@ document.addEventListener('DOMContentLoaded', function () {
     attachConversationSearch();
     attachChatSettingsDropdowns();
     attachVideoCallButtons();
-    attachProposalAcceptButtons();
+    attachProposalActionDropdowns();
 
     window.addEventListener('resize', function () {
         syncMobileNavbarOffset();

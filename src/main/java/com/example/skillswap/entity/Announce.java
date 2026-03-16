@@ -1,5 +1,6 @@
 package com.example.skillswap.entity;
 
+import com.example.skillswap.enums.AnnounceStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -46,6 +47,19 @@ public class Announce {
 
     @Column(nullable = false)
     private boolean deletedByAdmin = false;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 16)
+    private AnnounceStatus status = AnnounceStatus.ACTIVE;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "locked_by_swap_id")
+    private SkillSwapProposal lockedBySwap;
+
+    @Column(length = 32)
+    private String inactivatedReason;
+
+    private LocalDateTime inactivatedAt;
 
     private LocalDateTime moderatedAt;
 

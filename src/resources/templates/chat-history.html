@@ -58,13 +58,21 @@
             <span class="chat-status" id="mobileChatStatus" th:text="#{chat.history.offline}">Offline</span>
         </div>
         <div class="chat-actions">
-            <button class="chat-action-btn proposal-accept-btn is-hidden"
-                    id="mobileProposalAcceptButton"
-                    type="button"
-                    aria-label="Acceptă schimbul"
-                    title="Acceptă schimbul">
-                <i class="fa fa-check"></i>
-            </button>
+            <div class="chat-settings-wrapper proposal-actions-wrapper is-hidden" id="mobileProposalActionsWrapper">
+                <button class="chat-action-btn proposal-actions-btn"
+                        id="mobileProposalActionsButton"
+                        type="button"
+                        aria-label="Actiuni schimb"
+                        title="Actiuni schimb"
+                        aria-expanded="false">
+                    <span>Status</span>
+                    <i class="fa fa-angle-down"></i>
+                </button>
+                <div class="chat-settings-dropdown proposal-actions-dropdown"
+                     id="mobileProposalActionsMenu"
+                     role="menu"
+                     aria-label="Actiuni schimb"></div>
+            </div>
             <button class="chat-action-btn call-action-btn"
                     id="mobileStartCallButton"
                     data-video-call-trigger="true"
@@ -124,15 +132,21 @@
                                     </div>
                                 </div>
                                 <div class="chat-header-actions">
-                                    <div class="chat-proposal-status is-hidden" id="chatProposalStatusBadge"></div>
-                                    <button class="chat-action-btn proposal-accept-btn is-hidden"
-                                            id="chatProposalAcceptButton"
-                                            type="button"
-                                            aria-label="Acceptă schimbul"
-                                            title="Acceptă schimbul">
-                                        <i class="fa fa-check"></i>
-                                        <span>Acceptă</span>
-                                    </button>
+                                    <div class="chat-settings-wrapper proposal-actions-wrapper is-hidden" id="chatProposalActionsWrapper">
+                                        <button class="chat-action-btn proposal-actions-btn"
+                                                id="chatProposalActionsButton"
+                                                type="button"
+                                                aria-label="Actiuni schimb"
+                                                title="Actiuni schimb"
+                                                aria-expanded="false">
+                                            <span>Actualizeaza</span>
+                                            <i class="fa fa-angle-down"></i>
+                                        </button>
+                                        <div class="chat-settings-dropdown proposal-actions-dropdown"
+                                             id="chatProposalActionsMenu"
+                                             role="menu"
+                                             aria-label="Actiuni schimb"></div>
+                                    </div>
                                     <button class="chat-action-btn call-action-btn"
                                             id="startCallButton"
                                             data-video-call-trigger="true"

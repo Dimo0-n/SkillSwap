@@ -4,6 +4,7 @@ import com.example.skillswap.config.CacheConfig;
 import com.example.skillswap.dto.AnnounceDto;
 import com.example.skillswap.entity.Announce;
 import com.example.skillswap.entity.User;
+import com.example.skillswap.enums.AnnounceStatus;
 import com.example.skillswap.repository.AnnounceRepository;
 import com.example.skillswap.repository.UserRepository;
 import com.example.skillswap.service.AnnounceImageService;
@@ -37,6 +38,7 @@ public class AnnounceServiceImpl implements AnnounceService {
     public List<Announce> getLatest5Announces() {
         List<Announce> latest5Announces = announceRepository.findAll().stream()
                 .filter(announce -> !announce.isDeletedByAdmin())
+                .filter(announce -> announce.getStatus() == AnnounceStatus.ACTIVE)
                 .peek(this::normalizeImagePathForDisplay)
                 .toList();
         return latest5Announces.subList(0, Math.min(5, latest5Announces.size()));
@@ -48,6 +50,7 @@ public class AnnounceServiceImpl implements AnnounceService {
     public List<Announce> getAnnouncesList() {
         return announceRepository.findAllByOrderByIdDesc().stream()
                 .filter(announce -> !announce.isDeletedByAdmin())
+                .filter(announce -> announce.getStatus() == AnnounceStatus.ACTIVE)
                 .peek(this::normalizeImagePathForDisplay)
                 .toList();
     }
@@ -75,6 +78,7 @@ public class AnnounceServiceImpl implements AnnounceService {
         announce.setImagePath(announceDto.getImagePath());
         announce.setAdditionalInfo(normalizeNullableText(announceDto.getAdditionalInfo()));
         announce.setDate(LocalDateTime.now());
+        announce.setStatus(AnnounceStatus.ACTIVE);
         announce.setUser(user);
 
         announceRepository.save(announce);

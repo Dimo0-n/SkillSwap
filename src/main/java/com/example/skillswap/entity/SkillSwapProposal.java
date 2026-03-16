@@ -24,6 +24,10 @@ public class SkillSwapProposal {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Version
+    @Column(nullable = false)
+    private Long version = 0L;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "announce_id", nullable = false)
     private Announce announce;
@@ -60,6 +64,19 @@ public class SkillSwapProposal {
     private LocalDateTime updatedAt;
 
     private LocalDateTime respondedAt;
+
+    private LocalDateTime acceptedAt;
+
+    private LocalDateTime startedAt;
+
+    private LocalDateTime completedAt;
+
+    private LocalDateTime cancelledAt;
+
+    private Long cancelledByUserId;
+
+    @Column(length = 255)
+    private String cancellationReason;
 
     @PrePersist
     void onCreate() {

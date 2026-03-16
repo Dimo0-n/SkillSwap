@@ -43,8 +43,10 @@ import java.util.stream.Collectors;
 public class ChatService implements com.example.skillswap.service.ChatService {
 
         private static final EnumSet<SkillSwapProposalStatus> CHAT_VISIBLE_PROPOSAL_STATUSES = EnumSet.of(
-                        SkillSwapProposalStatus.NEGOTIATING,
-                        SkillSwapProposalStatus.ACCEPTED
+                        SkillSwapProposalStatus.ACCEPTED,
+                        SkillSwapProposalStatus.IN_PROGRESS,
+                        SkillSwapProposalStatus.COMPLETED,
+                        SkillSwapProposalStatus.CANCELLED
         );
 
     private final ChatRoomRepository chatRoomRepository;
@@ -306,10 +308,7 @@ public class ChatService implements com.example.skillswap.service.ChatService {
                                                         activeProposal != null ? activeProposal.getStatus().name() : null,
                                                         activeProposal != null ? mapProposalStatusLabel(activeProposal.getStatus()) : null,
                                                         activeProposal != null && activeProposal.getOwner() != null && activeProposal.getOwner().getId().equals(currentUser.getId()),
-                                                        activeProposal != null
-                                                                        && activeProposal.getStatus() == SkillSwapProposalStatus.NEGOTIATING
-                                                                        && activeProposal.getOwner() != null
-                                                                                                                                                && activeProposal.getOwner().getId().equals(currentUser.getId()),
+                                                        false,
                                                         settings != null && settings.isMuted(),
                                                         settings != null && settings.isBlocked(),
                                                         settings != null && settings.isReported()
@@ -357,6 +356,9 @@ public class ChatService implements com.example.skillswap.service.ChatService {
                 return switch (status) {
                         case PENDING -> "In asteptare";
                         case ACCEPTED -> "Acceptat";
+                        case IN_PROGRESS -> "In progres";
+                        case COMPLETED -> "Finalizat";
+                        case CANCELLED -> "Anulat";
                         case REJECTED -> "Refuzat";
                         case NEGOTIATING -> "In negociere";
                 };
