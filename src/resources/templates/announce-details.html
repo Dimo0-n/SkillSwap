@@ -115,14 +115,18 @@
                         <p th:text="${profile.profession}" class="announce-user-title"></p>
 
                         <div class="announce-user-rating">
-                            <div class="announce-rating-stars">
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
+                            <div class="announce-rating-circle"
+                                 th:style="|--announce-rating-progress:${profile.reputationScore != null ? profile.reputationCircleValue : 0}%;|">
+                                <div class="announce-rating-circle-inner">
+                                    <span class="announce-rating-score"
+                                          th:text="${profile.reputationScore != null ? profile.reputationScoreDisplay : 'E'}">E</span>
+                                </div>
                             </div>
-                            <span class="announce-rating-text" th:text="#{announce.details.rating}">4.8 (12 evaluări)</span>
+                            <div class="announce-rating-info">
+                                <span class="announce-rating-label" th:text="#{profile.average.score}">AVERAGE SCORE</span>
+                                <span class="announce-rating-text"
+                                      th:text="|${profile.feedbackCountAtLastEvaluation != null ? profile.feedbackCountAtLastEvaluation : 0} evaluări|">0 evaluări</span>
+                            </div>
                         </div>
 
                         <div class="announce-user-status">
@@ -130,16 +134,6 @@
                             <span th:text="#{announce.details.active}">Activ recent</span>
                         </div>
 
-                        <div class="announce-user-meta">
-                            <div class="announce-user-meta-item">
-                                <span class="announce-user-meta-label" th:text="#{announce.details.responds}">Răspunde de obicei în</span>
-                                <span class="announce-user-meta-value">2-4 ore</span>
-                            </div>
-                            <div class="announce-user-meta-item">
-                                <span class="announce-user-meta-label" th:text="#{announce.details.swaps}">Schimburi finalizate</span>
-                                <span class="announce-user-meta-value">8</span>
-                            </div>
-                        </div>
                     </div>
 
                     <!-- CTA Section -->
