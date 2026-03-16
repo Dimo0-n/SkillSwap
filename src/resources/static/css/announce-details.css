@@ -450,22 +450,63 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
+    gap: 0.9rem;
     margin-bottom: 1rem;
-    padding: 0.75rem;
+    padding: 0.9rem;
     background: rgba(129, 42, 207, 0.035);
-    border-radius: 8px;
+    border-radius: 12px;
 }
 
-.announce-rating-stars {
-    color: #fbbf24;
-    font-size: 16px;
+.announce-rating-circle {
+    width: 86px;
+    height: 86px;
+    border-radius: 50%;
+    background: conic-gradient(var(--announce-primary-light) var(--announce-rating-progress, 0%), rgba(255, 255, 255, 0.16) 0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.28);
+}
+
+.announce-rating-circle-inner {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: linear-gradient(180deg, #0d0d14, #171623);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.announce-rating-score {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 28px;
+    line-height: 1;
+    font-weight: 700;
+    color: var(--announce-text);
+}
+
+.announce-rating-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    align-items: flex-start;
+}
+
+.announce-rating-label {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--announce-muted);
 }
 
 .announce-rating-text {
     font-family: "Space Grotesk", sans-serif;
     font-size: 14px;
     color: var(--announce-text-secondary);
+    font-weight: 600;
 }
 
 .announce-user-status {
@@ -484,33 +525,6 @@ html, body {
 
 .announce-user-status i {
     font-size: 10px;
-}
-
-.announce-user-meta {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--announce-border);
-}
-
-.announce-user-meta-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-family: "Space Grotesk", sans-serif;
-    font-size: 13px;
-    color: var(--announce-text-secondary);
-}
-
-.announce-user-meta-label {
-    color: var(--announce-muted);
-}
-
-.announce-user-meta-value {
-    color: var(--announce-text);
-    font-weight: 600;
 }
 
 /* CTA Buttons */

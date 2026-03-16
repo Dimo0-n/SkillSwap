@@ -4,12 +4,10 @@ import com.example.skillswap.service.ChatService;
 import com.example.skillswap.service.OAuthUserService;
 import com.example.skillswap.service.OidcUserService;
 import com.example.skillswap.service.UserAccessService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -33,18 +31,21 @@ public class SecurityConfig {
         private final OidcUserService customOidcUserService;
         private final ChatService chatService;
         private final UserAccessService userAccessService;
+        private final boolean requireHttps;
 
         public SecurityConfig(
                         UserDetailsService userDetailsService,
                         OAuthUserService customOAuth2UserService,
                         OidcUserService customOidcUserService,
                         ChatService chatService,
-                        UserAccessService userAccessService) {
+                        UserAccessService userAccessService,
+                        @Value("${app.security.require-https:true}") boolean requireHttps) {
                 this.userDetailsService = userDetailsService;
                 this.customOAuth2UserService = customOAuth2UserService;
                 this.customOidcUserService = customOidcUserService;
                 this.chatService = chatService;
                 this.userAccessService = userAccessService;
+                this.requireHttps = requireHttps;
         }
 
         @Bean
@@ -55,10 +56,11 @@ public class SecurityConfig {
         @Bean
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
+                if (requireHttps) {
+                        http.requiresChannel(channel -> channel.anyRequest().requiresSecure());
+                }
+
                 http
-                        .requiresChannel(channel ->
-                                channel.anyRequest().requiresSecure()
-                        )
                                 .csrf(AbstractHttpConfigurer::disable)
                                 .authorizeHttpRequests(authorize -> authorize
                                         .requestMatchers(
@@ -72,6 +74,7 @@ public class SecurityConfig {
                                                 "/img/**",
                                                 "/fonts/**",
                                                 "/login",
+                                                "/register/save",
                                                 "/register",
                                                 "/oauth2/**",
                                                 "/privacy",
