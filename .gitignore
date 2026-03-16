@@ -35,3 +35,6 @@ build/
 ### env file ###
 .env
 
+### local runtime overrides ###
+src/resources/application-local.properties
+
