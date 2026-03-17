@@ -86,13 +86,12 @@ function initializeNotifications() {
     // Toggle: use mobile panel on mobile, desktop dropdown on desktop
     notificationsButton.addEventListener('click', function(e) {
         e.stopPropagation();
+        resetNotificationCounterOnOpen();
+
         if (isMobileViewport()) {
             toggleMobilePanel();
         } else {
             toggleNotificationsDropdown();
-            if (notificationsDropdown.classList.contains('is-open')) {
-                refreshNotifications();
-            }
         }
     });
 
@@ -145,6 +144,33 @@ function initializeNotifications() {
     }
 
     connectNotificationsRealtime();
+}
+
+/**
+ * Resets unread counter immediately on bell click and syncs read-all in background.
+ */
+function resetNotificationCounterOnOpen() {
+    const hasUnread = notificationsState.items.some(item => !item.read);
+    if (!hasUnread) {
+        return;
+    }
+
+    notificationsState.items = notificationsState.items.map(item =>
+        Object.assign({}, item, { read: true })
+    );
+
+    renderNotifications();
+    renderMobileNotifications();
+    updateNotificationBadge();
+
+    fetch('/api/notifications/read-all', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json'
+        }
+    }).catch(error => {
+        console.warn('Could not sync read-all on notification bell click:', error);
+    });
 }
 
 /**
