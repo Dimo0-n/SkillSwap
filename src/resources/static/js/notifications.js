@@ -405,12 +405,6 @@ function createProposalNotificationElement(notification) {
             handleProposalAction(notification, 'reject');
         }));
 
-        actions.appendChild(createNotificationActionButton('Negociaza', 'secondary', function (event) {
-            event.preventDefault();
-            event.stopPropagation();
-            handleProposalAction(notification, 'negotiate');
-        }));
-
         actions.appendChild(createNotificationActionButton('Accepta', 'primary', function (event) {
             event.preventDefault();
             event.stopPropagation();

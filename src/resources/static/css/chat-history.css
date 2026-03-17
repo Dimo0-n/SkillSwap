@@ -581,6 +581,12 @@ body {
     color: #fde68a;
 }
 
+.chat-action-btn.proposal-actions-btn.is-negotiating {
+    border-color: rgba(94, 234, 212, 0.35);
+    background: rgba(45, 212, 191, 0.16);
+    color: #99f6e4;
+}
+
 .chat-action-btn.proposal-actions-btn.is-accepted {
     border-color: rgba(52, 211, 153, 0.32);
     background: rgba(16, 185, 129, 0.14);

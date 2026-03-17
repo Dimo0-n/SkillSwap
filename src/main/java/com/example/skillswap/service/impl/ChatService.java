@@ -19,6 +19,7 @@ import com.example.skillswap.repository.UserRepository;
 import com.example.skillswap.security.CustomUserDetails;
 import com.example.skillswap.util.UtcDateTimes;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +28,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.context.i18n.LocaleContextHolder;
 
 import java.time.LocalDateTime;
 import java.security.Principal;
@@ -34,6 +36,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Comparator;
 import java.util.EnumSet;
+import java.util.Locale;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -43,6 +46,7 @@ import java.util.stream.Collectors;
 public class ChatService implements com.example.skillswap.service.ChatService {
 
         private static final EnumSet<SkillSwapProposalStatus> CHAT_VISIBLE_PROPOSAL_STATUSES = EnumSet.of(
+                        SkillSwapProposalStatus.NEGOTIATING,
                         SkillSwapProposalStatus.ACCEPTED,
                         SkillSwapProposalStatus.IN_PROGRESS,
                         SkillSwapProposalStatus.COMPLETED,
@@ -58,6 +62,7 @@ public class ChatService implements com.example.skillswap.service.ChatService {
         private final SkillSwapProposalRepository skillSwapProposalRepository;
     private final com.example.skillswap.service.NotificationService notificationService;
     private final com.example.skillswap.service.ProfileCompletionService profileCompletionService;
+        private final MessageSource messageSource;
 
     @Transactional
     public ChatRoom createOrGetChatRoom(Long user1Id, Long user2Id) {
@@ -353,15 +358,18 @@ public class ChatService implements com.example.skillswap.service.ChatService {
         }
 
         private String mapProposalStatusLabel(SkillSwapProposalStatus status) {
-                return switch (status) {
-                        case PENDING -> "In asteptare";
-                        case ACCEPTED -> "Acceptat";
-                        case IN_PROGRESS -> "In progres";
-                        case COMPLETED -> "Finalizat";
-                        case CANCELLED -> "Anulat";
-                        case REJECTED -> "Refuzat";
-                        case NEGOTIATING -> "In negociere";
+                String key = switch (status) {
+                        case PENDING -> "chat.proposal.status.pending";
+                        case NEGOTIATING -> "chat.proposal.status.negotiating";
+                        case ACCEPTED -> "chat.proposal.status.accepted";
+                        case IN_PROGRESS -> "chat.proposal.status.inProgress";
+                        case COMPLETED -> "chat.proposal.status.completed";
+                        case CANCELLED -> "chat.proposal.status.cancelled";
+                        case REJECTED -> "chat.proposal.status.rejected";
                 };
+
+                Locale locale = LocaleContextHolder.getLocale();
+                return messageSource.getMessage(key, null, status.name(), locale);
         }
 
     @Transactional

@@ -38,7 +38,6 @@ public class AnnounceServiceImpl implements AnnounceService {
     public List<Announce> getLatest5Announces() {
         List<Announce> latest5Announces = announceRepository.findAll().stream()
                 .filter(announce -> !announce.isDeletedByAdmin())
-                .filter(announce -> announce.getStatus() == AnnounceStatus.ACTIVE)
                 .peek(this::normalizeImagePathForDisplay)
                 .toList();
         return latest5Announces.subList(0, Math.min(5, latest5Announces.size()));
@@ -50,7 +49,6 @@ public class AnnounceServiceImpl implements AnnounceService {
     public List<Announce> getAnnouncesList() {
         return announceRepository.findAllByOrderByIdDesc().stream()
                 .filter(announce -> !announce.isDeletedByAdmin())
-                .filter(announce -> announce.getStatus() == AnnounceStatus.ACTIVE)
                 .peek(this::normalizeImagePathForDisplay)
                 .toList();
     }

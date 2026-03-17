@@ -297,6 +297,25 @@ function getStatusLabel(status) {
     }
 }
 
+function isUnresolvedI18nValue(value) {
+    return typeof value === 'string' && value.startsWith('??') && value.endsWith('??');
+}
+
+function pickI18nValue(value, fallback) {
+    if (isUnresolvedI18nValue(value) || value === null || value === undefined || value === '') {
+        return fallback;
+    }
+    return value;
+}
+
+function getProposalI18n() {
+    const raw = (window.chatI18n && window.chatI18n.proposal) || {};
+    return {
+        systemTitle: pickI18nValue(raw.systemTitle, 'Skill Swap Proposal'),
+        systemStatusPrefix: pickI18nValue(raw.systemStatusPrefix, 'Status')
+    };
+}
+
 function refreshOwnMessageStatusVisibility() {
     const ownStatusLines = document.querySelectorAll('.message-outgoing .message-status-line');
     if (!ownStatusLines.length) {
@@ -318,12 +337,15 @@ function displayMessage(message) {
     messageDiv.dataset.messageId = message.id;
 
     if (message.systemMessage === true) {
+        const proposalI18n = getProposalI18n();
+        const systemTitle = pickI18nValue(message.systemTitle, proposalI18n.systemTitle);
+        const statusPrefix = proposalI18n.systemStatusPrefix;
         messageDiv.className = 'message message-system';
         messageDiv.innerHTML = `
             <div class="system-message-card">
-                <div class="system-message-title">${escapeHtml(message.systemTitle || 'Skill Swap Proposal')}</div>
+                <div class="system-message-title">${escapeHtml(systemTitle)}</div>
                 <div class="system-message-summary">${escapeHtml(message.systemExchangeSummary || message.content || '')}</div>
-                ${message.systemStatusLabel ? `<div class="system-message-status">Status: ${escapeHtml(message.systemStatusLabel)}</div>` : ''}
+                ${message.systemStatusLabel ? `<div class="system-message-status">${escapeHtml(statusPrefix)}: ${escapeHtml(message.systemStatusLabel)}</div>` : ''}
                 <div class="system-message-time">${formatTime(message.timestamp)}</div>
             </div>
         `;

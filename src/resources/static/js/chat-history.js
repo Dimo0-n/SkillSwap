@@ -6,6 +6,68 @@ function escapeHtmlForSidebar(text) {
 
 let chatHeaderLocalTimeIntervalId = null;
 
+function isUnresolvedI18nValue(value) {
+    return typeof value === 'string' && value.startsWith('??') && value.endsWith('??');
+}
+
+function pickI18nValue(value, fallback) {
+    if (isUnresolvedI18nValue(value) || value === null || value === undefined || value === '') {
+        return fallback;
+    }
+    return value;
+}
+
+function getProposalI18nDefaults() {
+    return {
+        prefix: 'Schimb',
+        defaultLabel: 'Status',
+        systemTitle: 'Skill Swap Proposal',
+        systemStatusPrefix: 'Status',
+        statuses: {
+            PENDING: 'In asteptare',
+            NEGOTIATING: 'Negociere',
+            ACCEPTED: 'Acceptat',
+            IN_PROGRESS: 'In progres',
+            COMPLETED: 'Finalizat',
+            CANCELLED: 'Anulat',
+            REJECTED: 'Refuzat'
+        },
+        actions: {
+            accept: 'Accepta (Acceptat)',
+            start: 'Porneste (In progres)',
+            complete: 'Finalizeaza (Finalizat)',
+            cancel: 'Anuleaza (Anulat)'
+        }
+    };
+}
+
+function getProposalI18n() {
+    const defaults = getProposalI18nDefaults();
+    const raw = (window.chatI18n && window.chatI18n.proposal) || {};
+
+    return {
+        prefix: pickI18nValue(raw.prefix, defaults.prefix),
+        defaultLabel: pickI18nValue(raw.defaultLabel, defaults.defaultLabel),
+        systemTitle: pickI18nValue(raw.systemTitle, defaults.systemTitle),
+        systemStatusPrefix: pickI18nValue(raw.systemStatusPrefix, defaults.systemStatusPrefix),
+        statuses: {
+            PENDING: pickI18nValue(raw.statuses && raw.statuses.PENDING, defaults.statuses.PENDING),
+            NEGOTIATING: pickI18nValue(raw.statuses && raw.statuses.NEGOTIATING, defaults.statuses.NEGOTIATING),
+            ACCEPTED: pickI18nValue(raw.statuses && raw.statuses.ACCEPTED, defaults.statuses.ACCEPTED),
+            IN_PROGRESS: pickI18nValue(raw.statuses && raw.statuses.IN_PROGRESS, defaults.statuses.IN_PROGRESS),
+            COMPLETED: pickI18nValue(raw.statuses && raw.statuses.COMPLETED, defaults.statuses.COMPLETED),
+            CANCELLED: pickI18nValue(raw.statuses && raw.statuses.CANCELLED, defaults.statuses.CANCELLED),
+            REJECTED: pickI18nValue(raw.statuses && raw.statuses.REJECTED, defaults.statuses.REJECTED)
+        },
+        actions: {
+            accept: pickI18nValue(raw.actions && raw.actions.accept, defaults.actions.accept),
+            start: pickI18nValue(raw.actions && raw.actions.start, defaults.actions.start),
+            complete: pickI18nValue(raw.actions && raw.actions.complete, defaults.actions.complete),
+            cancel: pickI18nValue(raw.actions && raw.actions.cancel, defaults.actions.cancel)
+        }
+    };
+}
+
 function formatConversationTime(timestamp) {
     if (!timestamp) {
         return '';
@@ -253,7 +315,7 @@ function setProposalHeaderState(options = {}) {
         if (trigger) {
             trigger.disabled = !hasActions || isBusy;
             trigger.classList.toggle('is-readonly', !hasActions);
-            trigger.classList.remove('is-pending', 'is-accepted', 'is-in-progress', 'is-completed', 'is-cancelled');
+            trigger.classList.remove('is-pending', 'is-negotiating', 'is-accepted', 'is-in-progress', 'is-completed', 'is-cancelled');
             const toneClass = getProposalStatusToneClass(status);
             if (toneClass) {
                 trigger.classList.add(toneClass);
@@ -261,7 +323,10 @@ function setProposalHeaderState(options = {}) {
         }
 
         if (triggerLabel) {
-            triggerLabel.textContent = hasStatus ? `Schimb: ${statusLabel}` : 'Schimb';
+            const i18n = getProposalI18n();
+            const prefix = i18n.prefix || 'Schimb';
+            const defaultLabel = i18n.defaultLabel || 'Status';
+            triggerLabel.textContent = hasStatus ? `${prefix}: ${statusLabel}` : defaultLabel;
         }
 
         if (triggerIcon) {
@@ -319,11 +384,12 @@ function renderProposalActions(menuElement, proposalId, actions, isBusy) {
         return;
     }
 
+    const i18n = getProposalI18n();
     const labels = {
-        accept: 'Accepta (Acceptat)',
-        start: 'Porneste (In progres)',
-        complete: 'Finalizeaza (Completat)',
-        cancel: 'Anuleaza (Anulat)'
+        accept: i18n.actions?.accept || 'Accepta (Acceptat)',
+        start: i18n.actions?.start || 'Porneste (In progres)',
+        complete: i18n.actions?.complete || 'Finalizeaza (Completat)',
+        cancel: i18n.actions?.cancel || 'Anuleaza (Anulat)'
     };
 
     const actionToStatusClass = {
@@ -345,6 +411,8 @@ function getProposalStatusToneClass(status) {
     switch (status) {
         case 'PENDING':
             return 'is-pending';
+        case 'NEGOTIATING':
+            return 'is-negotiating';
         case 'ACCEPTED':
             return 'is-accepted';
         case 'IN_PROGRESS':
@@ -359,20 +427,8 @@ function getProposalStatusToneClass(status) {
 }
 
 function mapProposalStatusLabel(status) {
-    switch (status) {
-        case 'PENDING':
-            return 'In asteptare';
-        case 'ACCEPTED':
-            return 'Acceptat';
-        case 'IN_PROGRESS':
-            return 'In progres';
-        case 'COMPLETED':
-            return 'Finalizat';
-        case 'CANCELLED':
-            return 'Anulat';
-        default:
-            return status || '';
-    }
+    const labels = getProposalI18n().statuses || {};
+    return labels[status] || status || '';
 }
 
 function updateConversationProposalState(chatRoomId, state = {}) {
