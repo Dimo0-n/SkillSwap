@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,6 +33,12 @@ public class User {
     @Column(unique = true)
     private String email;
 
+    @NotBlank(message = "{register.validation.password.required}")
+    @Size(min = 10, max = 72, message = "{register.validation.password.size}")
+    @Pattern(
+            regexp = "^(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z0-9]).+$",
+            message = "{register.validation.password.complexity}"
+    )
     private String password;
 
     @Enumerated(EnumType.STRING)

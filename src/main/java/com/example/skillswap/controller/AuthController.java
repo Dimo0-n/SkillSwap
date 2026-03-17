@@ -5,8 +5,9 @@ import com.example.skillswap.repository.UserRepository;
 import com.example.skillswap.service.impl.AuthServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,9 +29,14 @@ public class AuthController {
     }
 
     @PostMapping("/register/save")
-    public String registerUser(@Valid @ModelAttribute User user, BindingResult bindingResult, Model model) {
+    @ResponseBody
+    public ResponseEntity<String> registerUser(@Valid @ModelAttribute User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "register";
+            String errorMessage = bindingResult.getFieldErrors().stream()
+                    .map(fieldError -> fieldError.getDefaultMessage())
+                    .findFirst()
+                    .orElse("Date invalide.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
         }
 
         Optional<User> existingUser = authService.searchUserByEmail(user.getEmail());
@@ -38,8 +44,7 @@ public class AuthController {
         // TODO + de verificat daca emailul este valid
 
         if (existingUser.isPresent()) {
-            model.addAttribute("error", "Acest email deja este înregistrat!");
-            return "register";
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Acest email deja este înregistrat!");
         }
 
         authService.saveUser(
@@ -47,7 +52,7 @@ public class AuthController {
                 user.getPassword(),
                 user.getFullName());
 
-        return "redirect:/login?success";
+        return ResponseEntity.ok("Cont creat cu succes!");
     }
 
     @GetMapping("/login")
