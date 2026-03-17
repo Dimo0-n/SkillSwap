@@ -3,6 +3,7 @@ package com.example.skillswap.controller;
 import com.example.skillswap.dto.SkillSwapProposalActionResponse;
 import com.example.skillswap.dto.SkillSwapProposalAvailabilityResponse;
 import com.example.skillswap.dto.SkillSwapProposalCreateRequest;
+import com.example.skillswap.exceptions.ApiException;
 import com.example.skillswap.service.ChatService;
 import com.example.skillswap.service.ProfileCompletionService;
 import com.example.skillswap.service.SkillSwapProposalService;
@@ -85,6 +86,24 @@ public class SkillSwapProposalController {
         return handleDecision(proposalId, principal, skillSwapProposalService::negotiateProposal);
     }
 
+    @PostMapping("/{proposalId}/start")
+    public ResponseEntity<SkillSwapProposalActionResponse> startProposal(@PathVariable Long proposalId,
+                                                                         Principal principal) {
+        return handleDecision(proposalId, principal, skillSwapProposalService::startProposal);
+    }
+
+    @PostMapping("/{proposalId}/complete")
+    public ResponseEntity<SkillSwapProposalActionResponse> completeProposal(@PathVariable Long proposalId,
+                                                                            Principal principal) {
+        return handleDecision(proposalId, principal, skillSwapProposalService::completeProposal);
+    }
+
+    @PostMapping("/{proposalId}/cancel")
+    public ResponseEntity<SkillSwapProposalActionResponse> cancelProposal(@PathVariable Long proposalId,
+                                                                          Principal principal) {
+        return handleDecision(proposalId, principal, skillSwapProposalService::cancelProposal);
+    }
+
     private ResponseEntity<SkillSwapProposalActionResponse> handleDecision(Long proposalId,
                                                                            Principal principal,
                                                                            ProposalDecisionHandler handler) {
@@ -94,8 +113,11 @@ public class SkillSwapProposalController {
         }
 
         try {
-            Long ownerId = chatService.getCurrentUserId(principal);
-            return ResponseEntity.ok(handler.handle(proposalId, ownerId));
+            Long actorId = chatService.getCurrentUserId(principal);
+            return ResponseEntity.ok(handler.handle(proposalId, actorId));
+        } catch (ApiException exception) {
+            return ResponseEntity.status(exception.getStatus())
+                    .body(new SkillSwapProposalActionResponse(false, null, exception.getMessage(), null, null));
         } catch (Exception exception) {
             return ResponseEntity.badRequest()
                     .body(new SkillSwapProposalActionResponse(false, null, exception.getMessage(), null, null));

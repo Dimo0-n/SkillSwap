@@ -437,24 +437,26 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
         List<SkillSwapProposal> proposals = skillSwapProposalRepository.findAll();
 
         long activeSessions = proposals.stream()
-                .filter(proposal -> proposal.getStatus() == SkillSwapProposalStatus.PENDING || proposal.getStatus() == SkillSwapProposalStatus.NEGOTIATING)
+            .filter(proposal -> proposal.getStatus() == SkillSwapProposalStatus.PENDING
+                || proposal.getStatus() == SkillSwapProposalStatus.ACCEPTED
+                || proposal.getStatus() == SkillSwapProposalStatus.IN_PROGRESS)
                 .count();
         long completedSessions = proposals.stream()
-                .filter(proposal -> proposal.getStatus() == SkillSwapProposalStatus.ACCEPTED)
+            .filter(proposal -> proposal.getStatus() == SkillSwapProposalStatus.COMPLETED)
                 .count();
 
         List<AdminSummaryMetricDto> metrics = List.of(
                 metric("User Growth", users.size(), "Total registered accounts", "primary"),
                 metric("Popular Skills", buildSkillInventory().size(), "Unique skill labels monitored", "accent"),
-                metric("Active Sessions", activeSessions, "Pending or negotiating", "info"),
-                metric("Completed Sessions", completedSessions, "Accepted skill swaps", "success")
+                metric("Active Sessions", activeSessions, "Pending, accepted, or in-progress", "info"),
+                metric("Completed Sessions", completedSessions, "Completed skill swaps", "success")
         );
 
         return new AdminStatisticsDto(
                 metrics,
                 buildUserRegistrationSeries(users, 14),
-                buildProposalStatusSeries(proposals, List.of(SkillSwapProposalStatus.PENDING, SkillSwapProposalStatus.NEGOTIATING)),
-                buildProposalStatusSeries(proposals, List.of(SkillSwapProposalStatus.ACCEPTED)),
+                buildProposalStatusSeries(proposals, List.of(SkillSwapProposalStatus.PENDING, SkillSwapProposalStatus.ACCEPTED, SkillSwapProposalStatus.IN_PROGRESS)),
+                buildProposalStatusSeries(proposals, List.of(SkillSwapProposalStatus.COMPLETED)),
                 buildPopularSkillsSeries(8)
         );
     }

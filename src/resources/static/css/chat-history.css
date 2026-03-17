@@ -452,10 +452,38 @@ body {
     display: none;
 }
 
+.proposal-actions-wrapper.is-hidden {
+    display: none;
+}
+
 .chat-proposal-status.is-accepted {
     border-color: rgba(52, 211, 153, 0.32);
     background: rgba(16, 185, 129, 0.14);
     color: #b8f7d5;
+}
+
+.chat-proposal-status.is-pending {
+    border-color: rgba(250, 204, 21, 0.32);
+    background: rgba(250, 204, 21, 0.14);
+    color: #fde68a;
+}
+
+.chat-proposal-status.is-in-progress {
+    border-color: rgba(56, 189, 248, 0.32);
+    background: rgba(56, 189, 248, 0.14);
+    color: #bae6fd;
+}
+
+.chat-proposal-status.is-completed {
+    border-color: rgba(34, 197, 94, 0.32);
+    background: rgba(34, 197, 94, 0.14);
+    color: #bbf7d0;
+}
+
+.chat-proposal-status.is-cancelled {
+    border-color: rgba(248, 113, 113, 0.32);
+    background: rgba(248, 113, 113, 0.14);
+    color: #fecaca;
 }
 
 .proposal-accept-btn {
@@ -523,6 +551,128 @@ body {
     line-height: 1;
 }
 
+.chat-action-btn.proposal-actions-btn {
+    width: auto;
+    min-width: 140px;
+    height: 40px;
+    padding: 0 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(167, 139, 250, 0.26);
+    background: rgba(129, 42, 207, 0.12);
+    color: #efe4ff;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    gap: 8px;
+}
+
+.chat-action-btn.proposal-actions-btn span {
+    display: inline-block;
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.chat-action-btn.proposal-actions-btn.is-pending {
+    border-color: rgba(250, 204, 21, 0.32);
+    background: rgba(250, 204, 21, 0.14);
+    color: #fde68a;
+}
+
+.chat-action-btn.proposal-actions-btn.is-accepted {
+    border-color: rgba(52, 211, 153, 0.32);
+    background: rgba(16, 185, 129, 0.14);
+    color: #b8f7d5;
+}
+
+.chat-action-btn.proposal-actions-btn.is-in-progress {
+    border-color: rgba(56, 189, 248, 0.32);
+    background: rgba(56, 189, 248, 0.14);
+    color: #bae6fd;
+}
+
+.chat-action-btn.proposal-actions-btn.is-completed {
+    border-color: rgba(34, 197, 94, 0.32);
+    background: rgba(34, 197, 94, 0.14);
+    color: #bbf7d0;
+}
+
+.chat-action-btn.proposal-actions-btn.is-cancelled {
+    border-color: rgba(248, 113, 113, 0.32);
+    background: rgba(248, 113, 113, 0.14);
+    color: #fecaca;
+}
+
+.chat-action-btn.proposal-actions-btn.is-readonly {
+    cursor: default;
+}
+
+.chat-action-btn.proposal-actions-btn i.is-hidden {
+    display: none;
+}
+
+.chat-action-btn.proposal-actions-btn:hover {
+    border-color: rgba(192, 132, 252, 0.48);
+    background: rgba(129, 42, 207, 0.2);
+}
+
+.chat-action-btn.proposal-actions-btn i {
+    font-size: 14px;
+}
+
+.proposal-actions-dropdown {
+    min-width: 220px;
+}
+
+.proposal-action-item {
+    border: 1px solid transparent;
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+}
+
+.proposal-action-item.status-accepted {
+    color: #bbf7d0;
+    background: rgba(16, 185, 129, 0.1);
+    border-color: rgba(16, 185, 129, 0.2);
+}
+
+.proposal-action-item.status-accepted:hover {
+    background: rgba(16, 185, 129, 0.2);
+}
+
+.proposal-action-item.status-in-progress {
+    color: #bae6fd;
+    background: rgba(56, 189, 248, 0.1);
+    border-color: rgba(56, 189, 248, 0.2);
+}
+
+.proposal-action-item.status-in-progress:hover {
+    background: rgba(56, 189, 248, 0.2);
+}
+
+.proposal-action-item.status-completed {
+    color: #bbf7d0;
+    background: rgba(34, 197, 94, 0.1);
+    border-color: rgba(34, 197, 94, 0.2);
+}
+
+.proposal-action-item.status-completed:hover {
+    background: rgba(34, 197, 94, 0.2);
+}
+
+.proposal-action-item.status-cancelled {
+    color: #fecaca;
+    background: rgba(248, 113, 113, 0.1);
+    border-color: rgba(248, 113, 113, 0.2);
+}
+
+.proposal-action-item.status-cancelled:hover {
+    background: rgba(248, 113, 113, 0.2);
+}
+
 .chat-action-btn.disabled {
     background: var(--input-bg);
     opacity: 0.5;
@@ -573,6 +723,14 @@ body {
 
 .chat-settings-item:hover {
     background: rgba(129, 42, 207, 0.2);
+}
+
+.chat-settings-item.is-danger {
+    color: #fecaca;
+}
+
+.chat-settings-item.is-danger:hover {
+    background: rgba(239, 68, 68, 0.2);
 }
 
 /* Messages Container */
@@ -1081,8 +1239,17 @@ body {
         gap: 0;
     }
 
-    .chat-actions .proposal-accept-btn span {
-        display: none;
+    .chat-actions .chat-action-btn.proposal-actions-btn {
+        min-width: 120px;
+        height: 34px;
+        padding: 0 10px;
+        gap: 6px;
+    }
+
+    .chat-actions .proposal-actions-btn span {
+        display: inline-block;
+        max-width: 108px;
+        font-size: 11px;
     }
 
     .chat-actions .chat-action-btn:hover,

@@ -198,6 +198,9 @@ public class NotificationService implements com.example.skillswap.service.Notifi
         return switch (status) {
             case PENDING -> "In asteptare";
             case ACCEPTED -> "Acceptat";
+            case IN_PROGRESS -> "In progres";
+            case COMPLETED -> "Finalizat";
+            case CANCELLED -> "Anulat";
             case REJECTED -> "Refuzat";
             case NEGOTIATING -> "In negociere";
         };

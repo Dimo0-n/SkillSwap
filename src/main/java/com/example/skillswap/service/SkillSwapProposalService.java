@@ -7,28 +7,48 @@ import com.example.skillswap.entity.Announce;
 import com.example.skillswap.entity.ChatRoom;
 import com.example.skillswap.entity.SkillSwapProposal;
 import com.example.skillswap.entity.User;
+import com.example.skillswap.enums.AnnounceStatus;
 import com.example.skillswap.enums.NotificationType;
 import com.example.skillswap.enums.SkillSwapProposalStatus;
+import com.example.skillswap.exceptions.ApiException;
 import com.example.skillswap.repository.AnnounceRepository;
 import com.example.skillswap.repository.SkillSwapProposalRepository;
 import com.example.skillswap.repository.UserRepository;
 import com.example.skillswap.util.UtcDateTimes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.EnumSet;
+import java.util.Map;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class SkillSwapProposalService {
 
     private static final int MAX_MESSAGE_LENGTH = 500;
+
     private static final EnumSet<SkillSwapProposalStatus> BLOCKING_STATUSES = EnumSet.of(
             SkillSwapProposalStatus.PENDING,
-            SkillSwapProposalStatus.NEGOTIATING,
-            SkillSwapProposalStatus.ACCEPTED
+            SkillSwapProposalStatus.ACCEPTED,
+            SkillSwapProposalStatus.IN_PROGRESS,
+            SkillSwapProposalStatus.NEGOTIATING
+        );
+
+        private static final EnumSet<SkillSwapProposalStatus> ACTIVE_ANNOUNCEMENT_LOCK_STATUSES = EnumSet.of(
+            SkillSwapProposalStatus.ACCEPTED,
+            SkillSwapProposalStatus.IN_PROGRESS
+        );
+
+        private static final Map<SkillSwapProposalStatus, Set<SkillSwapProposalStatus>> ALLOWED_TRANSITIONS = Map.of(
+            SkillSwapProposalStatus.PENDING, Set.of(SkillSwapProposalStatus.ACCEPTED, SkillSwapProposalStatus.CANCELLED),
+            SkillSwapProposalStatus.ACCEPTED, Set.of(SkillSwapProposalStatus.IN_PROGRESS, SkillSwapProposalStatus.CANCELLED),
+            SkillSwapProposalStatus.IN_PROGRESS, Set.of(SkillSwapProposalStatus.COMPLETED, SkillSwapProposalStatus.CANCELLED),
+            SkillSwapProposalStatus.NEGOTIATING, Set.of(SkillSwapProposalStatus.ACCEPTED, SkillSwapProposalStatus.CANCELLED)
     );
 
     private final AnnounceRepository announceRepository;
@@ -51,6 +71,9 @@ public class SkillSwapProposalService {
         }
         if (owner.getId().equals(requesterId)) {
             throw new RuntimeException("Nu poti trimite o propunere propriului anunt.");
+        }
+        if (announce.getStatus() != AnnounceStatus.ACTIVE) {
+            throw new RuntimeException("Acest anunt nu mai accepta propuneri noi.");
         }
 
         SkillSwapProposalAvailabilityResponse availability = getProposalAvailability(requesterId, announceId);
@@ -101,6 +124,16 @@ public class SkillSwapProposalService {
             );
         }
 
+        if (announce.getStatus() != AnnounceStatus.ACTIVE) {
+            return new SkillSwapProposalAvailabilityResponse(
+                false,
+                null,
+                "Anuntul nu mai este activ pentru propuneri noi.",
+                null,
+                null
+            );
+        }
+
         return skillSwapProposalRepository
                 .findTopByAnnounceIdAndRequesterIdAndStatusInOrderByCreatedAtDesc(announceId, requesterId, BLOCKING_STATUSES)
                 .map(this::buildUnavailableResponse)
@@ -114,11 +147,15 @@ public class SkillSwapProposalService {
             ownerId,
             EnumSet.of(SkillSwapProposalStatus.PENDING, SkillSwapProposalStatus.NEGOTIATING)
         );
+        ensureNoOtherActiveSwapForAnnouncement(proposal);
         ChatRoom chatRoom = openProposalChat(proposal, "Acceptat");
 
-        proposal.setStatus(SkillSwapProposalStatus.ACCEPTED);
+        transitionStatus(proposal, SkillSwapProposalStatus.ACCEPTED);
         proposal.setRespondedAt(UtcDateTimes.now());
+        proposal.setAcceptedAt(UtcDateTimes.now());
         proposal.setChatRoom(chatRoom);
+        lockAnnouncementForActiveSwap(proposal);
+        persistTransition(proposal);
 
         notificationService.markProposalNotificationsAsRead(ownerId, proposal.getId());
         notificationService.createNotification(
@@ -144,17 +181,22 @@ public class SkillSwapProposalService {
         SkillSwapProposal proposal = getOwnerProposalForStatuses(
             proposalId,
             ownerId,
-            EnumSet.of(SkillSwapProposalStatus.PENDING)
+            EnumSet.of(SkillSwapProposalStatus.PENDING, SkillSwapProposalStatus.ACCEPTED, SkillSwapProposalStatus.IN_PROGRESS, SkillSwapProposalStatus.NEGOTIATING)
         );
 
-        proposal.setStatus(SkillSwapProposalStatus.REJECTED);
+        transitionStatus(proposal, SkillSwapProposalStatus.CANCELLED);
         proposal.setRespondedAt(UtcDateTimes.now());
+        proposal.setCancelledAt(UtcDateTimes.now());
+        proposal.setCancelledByUserId(ownerId);
+        proposal.setCancellationReason("Respinsa de proprietarul anuntului.");
+        updateAnnouncementAfterCancellation(proposal);
+        persistTransition(proposal);
 
         notificationService.markProposalNotificationsAsRead(ownerId, proposal.getId());
         notificationService.createNotification(
                 proposal.getRequester().getId(),
                 NotificationType.REQUEST_REJECTED,
-                "Propunerea ta de Skill Swap a fost refuzata",
+                "Propunerea ta de Skill Swap a fost anulata",
                 proposal.getOfferedSkill() + " ↔ " + proposal.getRequestedSkill(),
                 "/profile/" + proposal.getOwner().getId(),
                 proposal
@@ -163,7 +205,7 @@ public class SkillSwapProposalService {
         return new SkillSwapProposalActionResponse(
                 true,
                 proposal.getStatus().name(),
-                "Propunerea a fost refuzata.",
+                "Propunerea a fost anulata.",
                 null,
                 null
         );
@@ -171,47 +213,169 @@ public class SkillSwapProposalService {
 
     @Transactional
     public SkillSwapProposalActionResponse negotiateProposal(Long proposalId, Long ownerId) {
-        SkillSwapProposal proposal = getOwnerProposalForStatuses(
-            proposalId,
-            ownerId,
-            EnumSet.of(SkillSwapProposalStatus.PENDING)
-        );
-        ChatRoom chatRoom = openProposalChat(proposal, "In negociere");
+            return acceptProposal(proposalId, ownerId);
+            }
 
-        proposal.setStatus(SkillSwapProposalStatus.NEGOTIATING);
-        proposal.setRespondedAt(UtcDateTimes.now());
-        proposal.setChatRoom(chatRoom);
+            @Transactional
+            public SkillSwapProposalActionResponse startProposal(Long proposalId, Long actorId) {
+            SkillSwapProposal proposal = getParticipantProposalForStatuses(
+                proposalId,
+                actorId,
+                EnumSet.of(SkillSwapProposalStatus.ACCEPTED)
+            );
 
-        notificationService.markProposalNotificationsAsRead(ownerId, proposal.getId());
-        notificationService.createNotification(
-                proposal.getRequester().getId(),
-                NotificationType.REQUEST_NEGOTIATING,
-                "Propunerea ta de Skill Swap a intrat in negociere",
-                proposal.getOfferedSkill() + " ↔ " + proposal.getRequestedSkill(),
-                "/chat-history?roomId=" + chatRoom.getId(),
-                proposal
-        );
+                ensureNoOtherActiveSwapForAnnouncement(proposal);
+            transitionStatus(proposal, SkillSwapProposalStatus.IN_PROGRESS);
+            proposal.setStartedAt(UtcDateTimes.now());
+            lockAnnouncementForActiveSwap(proposal);
+                persistTransition(proposal);
 
-        return new SkillSwapProposalActionResponse(
+            return new SkillSwapProposalActionResponse(
                 true,
                 proposal.getStatus().name(),
-                "Conversația a fost deschisa pentru negociere.",
-                chatRoom.getId(),
-                "/chat-history?roomId=" + chatRoom.getId()
-        );
+                "Schimbul a fost pornit.",
+                proposal.getChatRoom() != null ? proposal.getChatRoom().getId() : null,
+                proposal.getChatRoom() != null ? "/chat-history?roomId=" + proposal.getChatRoom().getId() : null
+            );
+            }
+
+            @Transactional
+            public SkillSwapProposalActionResponse completeProposal(Long proposalId, Long actorId) {
+            SkillSwapProposal proposal = getParticipantProposalForStatuses(
+                proposalId,
+                actorId,
+                EnumSet.of(SkillSwapProposalStatus.IN_PROGRESS)
+            );
+
+            transitionStatus(proposal, SkillSwapProposalStatus.COMPLETED);
+            proposal.setCompletedAt(UtcDateTimes.now());
+            closeAnnouncementForCompletedSwap(proposal);
+            persistTransition(proposal);
+
+            return new SkillSwapProposalActionResponse(
+                true,
+                proposal.getStatus().name(),
+                "Schimbul a fost marcat ca finalizat.",
+                proposal.getChatRoom() != null ? proposal.getChatRoom().getId() : null,
+                proposal.getChatRoom() != null ? "/chat-history?roomId=" + proposal.getChatRoom().getId() : null
+            );
+            }
+
+            @Transactional
+            public SkillSwapProposalActionResponse cancelProposal(Long proposalId, Long actorId) {
+            SkillSwapProposal proposal = getParticipantProposalForStatuses(
+                proposalId,
+                actorId,
+                EnumSet.of(SkillSwapProposalStatus.ACCEPTED, SkillSwapProposalStatus.IN_PROGRESS)
+            );
+
+            transitionStatus(proposal, SkillSwapProposalStatus.CANCELLED);
+            proposal.setCancelledAt(UtcDateTimes.now());
+            proposal.setCancelledByUserId(actorId);
+            proposal.setCancellationReason("Anulata de unul dintre participanti.");
+            updateAnnouncementAfterCancellation(proposal);
+            persistTransition(proposal);
+
+            return new SkillSwapProposalActionResponse(
+                true,
+                proposal.getStatus().name(),
+                "Schimbul a fost anulat.",
+                proposal.getChatRoom() != null ? proposal.getChatRoom().getId() : null,
+                proposal.getChatRoom() != null ? "/chat-history?roomId=" + proposal.getChatRoom().getId() : null
+            );
     }
 
     private SkillSwapProposal getOwnerProposalForStatuses(Long proposalId,
                                                           Long ownerId,
                                                           EnumSet<SkillSwapProposalStatus> allowedStatuses) {
-        SkillSwapProposal proposal = skillSwapProposalRepository.findByIdAndOwnerId(proposalId, ownerId)
+        return skillSwapProposalRepository.findByIdAndOwnerIdAndStatusIn(proposalId, ownerId, allowedStatuses)
                 .orElseThrow(() -> new RuntimeException("Propunerea nu a fost gasita."));
+    }
+
+    private SkillSwapProposal getParticipantProposalForStatuses(Long proposalId,
+                                                                Long userId,
+                                                                EnumSet<SkillSwapProposalStatus> allowedStatuses) {
+        SkillSwapProposal proposal = skillSwapProposalRepository.findByIdForUpdate(proposalId)
+                .orElseThrow(() -> new RuntimeException("Propunerea nu a fost gasita."));
+
+        boolean participant = proposal.getOwner() != null && proposal.getOwner().getId().equals(userId)
+                || proposal.getRequester() != null && proposal.getRequester().getId().equals(userId);
+        if (!participant) {
+            throw new RuntimeException("Nu ai permisiunea pentru aceasta actiune.");
+        }
 
         if (!allowedStatuses.contains(proposal.getStatus())) {
             throw new RuntimeException("Propunerea nu mai este disponibila pentru aceasta actiune.");
         }
 
         return proposal;
+    }
+
+    private void transitionStatus(SkillSwapProposal proposal, SkillSwapProposalStatus targetStatus) {
+        SkillSwapProposalStatus currentStatus = proposal.getStatus();
+        if (currentStatus == targetStatus) {
+            return;
+        }
+
+        Set<SkillSwapProposalStatus> allowed = ALLOWED_TRANSITIONS.get(currentStatus);
+        if (allowed == null || !allowed.contains(targetStatus)) {
+            throw new ApiException(HttpStatus.CONFLICT, "Tranzitie invalida de stare pentru Skill Swap.");
+        }
+
+        proposal.setStatus(targetStatus);
+    }
+
+    private void ensureNoOtherActiveSwapForAnnouncement(SkillSwapProposal proposal) {
+        boolean hasAnotherActiveSwap = skillSwapProposalRepository.existsByAnnounceIdAndStatusInAndIdNot(
+                proposal.getAnnounce().getId(),
+                ACTIVE_ANNOUNCEMENT_LOCK_STATUSES,
+                proposal.getId()
+        );
+        if (hasAnotherActiveSwap) {
+            throw new ApiException(HttpStatus.CONFLICT, "Anuntul este deja blocat de un alt schimb activ.");
+        }
+    }
+
+    private void persistTransition(SkillSwapProposal proposal) {
+        try {
+            skillSwapProposalRepository.saveAndFlush(proposal);
+        } catch (OptimisticLockingFailureException exception) {
+            throw new ApiException(HttpStatus.CONFLICT, "Starea schimbului a fost actualizata de alt utilizator. Reincarca pagina.");
+        }
+    }
+
+    private void lockAnnouncementForActiveSwap(SkillSwapProposal proposal) {
+        Announce announce = proposal.getAnnounce();
+        announce.setStatus(AnnounceStatus.INACTIVE);
+        announce.setLockedBySwap(proposal);
+        announce.setInactivatedReason("SWAP_ACCEPTED");
+        announce.setInactivatedAt(UtcDateTimes.now());
+    }
+
+    private void closeAnnouncementForCompletedSwap(SkillSwapProposal proposal) {
+        Announce announce = proposal.getAnnounce();
+        announce.setStatus(AnnounceStatus.CLOSED);
+        announce.setLockedBySwap(proposal);
+        announce.setInactivatedReason("SWAP_COMPLETED");
+        announce.setInactivatedAt(UtcDateTimes.now());
+    }
+
+    private void updateAnnouncementAfterCancellation(SkillSwapProposal proposal) {
+        Announce announce = proposal.getAnnounce();
+        boolean hasAnotherActiveSwap = skillSwapProposalRepository.existsByAnnounceIdAndStatusInAndIdNot(
+                announce.getId(),
+                ACTIVE_ANNOUNCEMENT_LOCK_STATUSES,
+                proposal.getId()
+        );
+
+        if (hasAnotherActiveSwap) {
+            return;
+        }
+
+        announce.setStatus(AnnounceStatus.ACTIVE);
+        announce.setLockedBySwap(null);
+        announce.setInactivatedReason(null);
+        announce.setInactivatedAt(null);
     }
 
     private ChatRoom openProposalChat(SkillSwapProposal proposal, String statusLabel) {
@@ -237,11 +401,11 @@ public class SkillSwapProposalService {
 
     private SkillSwapProposalAvailabilityResponse buildUnavailableResponse(SkillSwapProposal proposal) {
         SkillSwapProposalStatus status = proposal.getStatus();
-        if (status == SkillSwapProposalStatus.NEGOTIATING) {
+        if (status == SkillSwapProposalStatus.IN_PROGRESS) {
             return new SkillSwapProposalAvailabilityResponse(
                     false,
                     status.name(),
-                    "Ai deja o cerere in negociere pentru acest anunt. Continua discutia din chat.",
+                    "Ai deja un schimb in desfasurare pentru acest anunt.",
                     proposal.getChatRoom() != null ? "/chat-history?roomId=" + proposal.getChatRoom().getId() : null,
                     proposal.getChatRoom() != null ? "Deschide conversatia" : null
             );
@@ -251,9 +415,19 @@ public class SkillSwapProposalService {
             return new SkillSwapProposalAvailabilityResponse(
                     false,
                     status.name(),
-                    "Acest Skill Swap a fost deja acceptat. Poti continua direct conversatia existenta.",
+                    "Acest Skill Swap a fost deja acceptat.",
                     proposal.getChatRoom() != null ? "/chat-history?roomId=" + proposal.getChatRoom().getId() : null,
                     proposal.getChatRoom() != null ? "Mergi la chat" : null
+            );
+        }
+
+        if (status == SkillSwapProposalStatus.COMPLETED || status == SkillSwapProposalStatus.CANCELLED) {
+            return new SkillSwapProposalAvailabilityResponse(
+                    false,
+                    status.name(),
+                    "Acest anunt nu mai este disponibil pentru o noua propunere.",
+                    null,
+                    null
             );
         }
 
