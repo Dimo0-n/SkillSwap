@@ -306,7 +306,7 @@
                             <img th:src="${announce.imagePath}" alt="SkillSwap">
                             <div class="status-label"
                                  th:classappend="${announce.status.name() == 'ACTIVE'} ? ' status-active' : (${announce.status.name() == 'INACTIVE'} ? ' status-in-progress' : ' status-closed')">
-                                <span th:text="${announce.status.name() == 'ACTIVE' ? 'Activ' : (announce.status.name() == 'INACTIVE' ? 'In progres' : 'Finalizat')}"></span>
+                                <span th:text="${announce.status.name() == 'ACTIVE' ? #messages.msg('announce.status.active') : (announce.status.name() == 'INACTIVE' ? #messages.msg('announce.status.inProgress') : #messages.msg('announce.status.closed'))}"></span>
                             </div>
                         </div>
                         <div class="ip-text">
