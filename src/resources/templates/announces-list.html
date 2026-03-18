@@ -72,6 +72,10 @@
                         <div class="cg-pic">
                             <img th:src="${announce.imagePath != null and !#strings.isEmpty(announce.imagePath) ? announce.imagePath : '/img/placeholder-announce.svg'}" alt="SkillSwap">
                             <div class="label"><span th:text="${announce.categoryOffered}"></span></div>
+                            <div class="status-label"
+                                 th:classappend="${announce.status.name() == 'ACTIVE'} ? ' status-active' : (${announce.status.name() == 'INACTIVE'} ? ' status-in-progress' : ' status-closed')">
+                                <span th:text="${announce.status.name() == 'ACTIVE' ? #messages.msg('announce.status.active') : (announce.status.name() == 'INACTIVE' ? #messages.msg('announce.status.inProgress') : #messages.msg('announce.status.closed'))}"></span>
+                            </div>
                         </div>
                         <div class="cg-text">
                             <h5><a th:text="${announce.title}" href="#"></a></h5>
@@ -200,6 +204,38 @@
     #results-info {
         text-align: center;
         display: block;
+    }
+
+    .cg-pic {
+        position: relative;
+    }
+
+    .status-label {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        z-index: 3;
+        border-radius: 16px;
+        padding: 5px 12px;
+        text-transform: uppercase;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+    }
+
+    .status-active {
+        background: rgba(39, 174, 96, 0.9);
+        color: #ffffff;
+    }
+
+    .status-in-progress {
+        background: rgba(243, 156, 18, 0.92);
+        color: #ffffff;
+    }
+
+    .status-closed {
+        background: rgba(127, 140, 141, 0.95);
+        color: #ffffff;
     }
 </style>
 </body>

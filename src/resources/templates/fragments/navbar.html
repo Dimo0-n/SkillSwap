@@ -70,6 +70,25 @@
                         </div>
 
                         <script sec:authorize="isAuthenticated()" src="/js/user-timezone.js"></script>
+                        <script th:inline="javascript">
+                            window.notificationsI18n = {
+                                mobileBack: [[#{notifications.mobile.back}]],
+                                mobileOptions: [[#{notifications.mobile.options}]],
+                                title: [[#{navbar.notifications}]],
+                                emptyTitle: [[#{notifications.empty.title}]],
+                                emptyText: [[#{notifications.empty.text}]],
+                                defaultTitle: [[#{notifications.default.title}]],
+                                proposalFallbackActionable: [[#{notifications.proposal.fallback.actionable}]],
+                                proposalFallbackUpdated: [[#{notifications.proposal.fallback.updated}]],
+                                actionReject: [[#{notifications.action.reject}]],
+                                actionAccept: [[#{notifications.action.accept}]],
+                                processProposalError: [[#{notifications.error.processProposal}]],
+                                timeNow: [[#{notifications.time.now}]],
+                                timeMinutes: [[#{notifications.time.minutes}]],
+                                timeHours: [[#{notifications.time.hours}]],
+                                timeDays: [[#{notifications.time.days}]]
+                            };
+                        </script>
                         <!-- Notifications JS -->
                         <script src="/js/notifications.js"></script>
 
@@ -176,14 +195,14 @@
     <!-- Mobile Notifications Panel -->
     <div class="mobile-notifications-panel" id="mobileNotificationsPanel" aria-hidden="true">
         <div class="mobile-notifications-panel__header">
-            <button class="mnp-btn mnp-btn--back" id="mnpBackBtn" type="button" aria-label="Înapoi">
+            <button class="mnp-btn mnp-btn--back" id="mnpBackBtn" type="button" th:attr="aria-label=#{notifications.mobile.back}">
                 <i class="fa fa-arrow-left"></i>
             </button>
             <div class="mnp-title-wrap">
-                <span class="mnp-title">Notificări</span>
+                <span class="mnp-title" th:text="#{navbar.notifications}">Notificări</span>
                 <span class="mnp-unread-badge hidden" id="mnpUnreadBadge">0</span>
             </div>
-            <button class="mnp-btn mnp-btn--menu" id="mnpMenuBtn" type="button" aria-label="Opțiuni">
+            <button class="mnp-btn mnp-btn--menu" id="mnpMenuBtn" type="button" th:attr="aria-label=#{notifications.mobile.options}">
                 <i class="fa fa-ellipsis-v"></i>
             </button>
         </div>

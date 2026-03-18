@@ -193,6 +193,31 @@
     <!-- Chat History Section End -->
 
     <!-- Js Plugins -->
+    <script th:inline="javascript">
+        window.chatI18n = {
+            proposal: {
+                prefix: [[#{chat.proposal.prefix}]],
+                defaultLabel: [[#{chat.proposal.default}]],
+                systemTitle: [[#{chat.proposal.system.title}]],
+                systemStatusPrefix: [[#{chat.proposal.system.status.prefix}]],
+                statuses: {
+                    PENDING: [[#{chat.proposal.status.pending}]],
+                    NEGOTIATING: [[#{chat.proposal.status.negotiating}]],
+                    ACCEPTED: [[#{chat.proposal.status.accepted}]],
+                    IN_PROGRESS: [[#{chat.proposal.status.inProgress}]],
+                    COMPLETED: [[#{chat.proposal.status.completed}]],
+                    CANCELLED: [[#{chat.proposal.status.cancelled}]],
+                    REJECTED: [[#{chat.proposal.status.rejected}]]
+                },
+                actions: {
+                    accept: [[#{chat.proposal.action.accept}]],
+                    start: [[#{chat.proposal.action.start}]],
+                    complete: [[#{chat.proposal.action.complete}]],
+                    cancel: [[#{chat.proposal.action.cancel}]]
+                }
+            }
+        };
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
     <script src="/js/jquery-3.3.1.min.js"></script>

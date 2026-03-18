@@ -16,15 +16,18 @@ import com.example.skillswap.repository.SkillSwapProposalRepository;
 import com.example.skillswap.repository.UserRepository;
 import com.example.skillswap.util.UtcDateTimes;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Locale;
 import java.util.EnumSet;
 import java.util.Map;
 import java.util.Set;
+import org.springframework.context.i18n.LocaleContextHolder;
 
 @Service
 @RequiredArgsConstructor
@@ -45,7 +48,7 @@ public class SkillSwapProposalService {
         );
 
         private static final Map<SkillSwapProposalStatus, Set<SkillSwapProposalStatus>> ALLOWED_TRANSITIONS = Map.of(
-            SkillSwapProposalStatus.PENDING, Set.of(SkillSwapProposalStatus.ACCEPTED, SkillSwapProposalStatus.CANCELLED),
+            SkillSwapProposalStatus.PENDING, Set.of(SkillSwapProposalStatus.NEGOTIATING, SkillSwapProposalStatus.ACCEPTED, SkillSwapProposalStatus.CANCELLED),
             SkillSwapProposalStatus.ACCEPTED, Set.of(SkillSwapProposalStatus.IN_PROGRESS, SkillSwapProposalStatus.CANCELLED),
             SkillSwapProposalStatus.IN_PROGRESS, Set.of(SkillSwapProposalStatus.COMPLETED, SkillSwapProposalStatus.CANCELLED),
             SkillSwapProposalStatus.NEGOTIATING, Set.of(SkillSwapProposalStatus.ACCEPTED, SkillSwapProposalStatus.CANCELLED)
@@ -57,6 +60,7 @@ public class SkillSwapProposalService {
     private final NotificationService notificationService;
     private final ChatService chatService;
     private final SimpMessagingTemplate messagingTemplate;
+    private final MessageSource messageSource;
 
     @Transactional
     public SkillSwapProposal createProposal(Long requesterId, Long announceId, String requesterMessage) {
@@ -148,7 +152,7 @@ public class SkillSwapProposalService {
             EnumSet.of(SkillSwapProposalStatus.PENDING, SkillSwapProposalStatus.NEGOTIATING)
         );
         ensureNoOtherActiveSwapForAnnouncement(proposal);
-        ChatRoom chatRoom = openProposalChat(proposal, "Acceptat");
+        ChatRoom chatRoom = openProposalChat(proposal, SkillSwapProposalStatus.ACCEPTED);
 
         transitionStatus(proposal, SkillSwapProposalStatus.ACCEPTED);
         proposal.setRespondedAt(UtcDateTimes.now());
@@ -213,8 +217,37 @@ public class SkillSwapProposalService {
 
     @Transactional
     public SkillSwapProposalActionResponse negotiateProposal(Long proposalId, Long ownerId) {
-            return acceptProposal(proposalId, ownerId);
-            }
+        SkillSwapProposal proposal = getOwnerProposalForStatuses(
+            proposalId,
+            ownerId,
+            EnumSet.of(SkillSwapProposalStatus.PENDING, SkillSwapProposalStatus.NEGOTIATING)
+        );
+
+        ChatRoom chatRoom = openProposalChat(proposal, SkillSwapProposalStatus.NEGOTIATING);
+
+        transitionStatus(proposal, SkillSwapProposalStatus.NEGOTIATING);
+        proposal.setRespondedAt(UtcDateTimes.now());
+        proposal.setChatRoom(chatRoom);
+        persistTransition(proposal);
+
+        notificationService.markProposalNotificationsAsRead(ownerId, proposal.getId());
+        notificationService.createNotification(
+            proposal.getRequester().getId(),
+            NotificationType.REQUEST_NEGOTIATING,
+            "Propunerea ta de Skill Swap este in negociere",
+            proposal.getOfferedSkill() + " ↔ " + proposal.getRequestedSkill(),
+            "/chat-history?roomId=" + chatRoom.getId(),
+            proposal
+        );
+
+        return new SkillSwapProposalActionResponse(
+            true,
+            proposal.getStatus().name(),
+            "Propunerea a fost mutata in negociere.",
+            chatRoom.getId(),
+            "/chat-history?roomId=" + chatRoom.getId()
+        );
+        }
 
             @Transactional
             public SkillSwapProposalActionResponse startProposal(Long proposalId, Long actorId) {
@@ -378,25 +411,45 @@ public class SkillSwapProposalService {
         announce.setInactivatedAt(null);
     }
 
-    private ChatRoom openProposalChat(SkillSwapProposal proposal, String statusLabel) {
+        private ChatRoom openProposalChat(SkillSwapProposal proposal, SkillSwapProposalStatus status) {
         ChatRoom chatRoom = chatService.createOrGetChatRoom(
                 proposal.getRequester().getId(),
                 proposal.getOwner().getId()
         );
 
+        String statusLabel = mapProposalStatusLabel(status);
+        String systemTitle = resolveMessage("chat.proposal.system.title", "Skill Swap Proposal");
         String exchangeSummary = proposal.getOfferedSkill() + " ↔ " + proposal.getRequestedSkill();
-        String previewContent = "Skill Swap: " + exchangeSummary + " (" + statusLabel + ")";
+        String previewContent = systemTitle + ": " + exchangeSummary + " (" + statusLabel + ")";
         ChatMessageDTO systemMessage = chatService.createSystemMessage(
                 chatRoom.getId(),
                 proposal.getOwner().getId(),
                 previewContent,
-                "Skill Swap Proposal",
+            systemTitle,
                 exchangeSummary,
                 statusLabel
         );
 
         messagingTemplate.convertAndSend("/topic/chat/" + chatRoom.getId(), systemMessage);
         return chatRoom;
+    }
+
+    private String mapProposalStatusLabel(SkillSwapProposalStatus status) {
+        String key = switch (status) {
+            case PENDING -> "chat.proposal.status.pending";
+            case NEGOTIATING -> "chat.proposal.status.negotiating";
+            case ACCEPTED -> "chat.proposal.status.accepted";
+            case IN_PROGRESS -> "chat.proposal.status.inProgress";
+            case COMPLETED -> "chat.proposal.status.completed";
+            case CANCELLED -> "chat.proposal.status.cancelled";
+            case REJECTED -> "chat.proposal.status.rejected";
+        };
+        return resolveMessage(key, status.name());
+    }
+
+    private String resolveMessage(String key, String fallback) {
+        Locale locale = LocaleContextHolder.getLocale();
+        return messageSource.getMessage(key, null, fallback, locale);
     }
 
     private SkillSwapProposalAvailabilityResponse buildUnavailableResponse(SkillSwapProposal proposal) {

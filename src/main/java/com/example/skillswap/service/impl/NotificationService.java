@@ -11,6 +11,8 @@ import com.example.skillswap.repository.ProfileRepository;
 import com.example.skillswap.repository.UserRepository;
 import com.example.skillswap.util.UtcDateTimes;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +30,7 @@ public class NotificationService implements com.example.skillswap.service.Notifi
     private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
     private final SimpMessagingTemplate messagingTemplate;
+    private final MessageSource messageSource;
 
     @Transactional
     public NotificationDTO createNotification(Long recipientUserId,
@@ -147,6 +151,9 @@ public class NotificationService implements com.example.skillswap.service.Notifi
     private NotificationDTO toDto(Notification notification) {
         NotificationDTO dto = NotificationDTO.basic(notification);
         SkillSwapProposal proposal = notification.getSkillSwapProposal();
+
+        localizeNotificationContent(notification, dto, proposal);
+
         if (proposal == null) {
             return dto;
         }
@@ -195,14 +202,75 @@ public class NotificationService implements com.example.skillswap.service.Notifi
     }
 
     private String mapStatusLabel(com.example.skillswap.enums.SkillSwapProposalStatus status) {
-        return switch (status) {
-            case PENDING -> "In asteptare";
-            case ACCEPTED -> "Acceptat";
-            case IN_PROGRESS -> "In progres";
-            case COMPLETED -> "Finalizat";
-            case CANCELLED -> "Anulat";
-            case REJECTED -> "Refuzat";
-            case NEGOTIATING -> "In negociere";
+        String key = switch (status) {
+            case PENDING -> "chat.proposal.status.pending";
+            case ACCEPTED -> "chat.proposal.status.accepted";
+            case IN_PROGRESS -> "chat.proposal.status.inProgress";
+            case COMPLETED -> "chat.proposal.status.completed";
+            case CANCELLED -> "chat.proposal.status.cancelled";
+            case REJECTED -> "chat.proposal.status.rejected";
+            case NEGOTIATING -> "chat.proposal.status.negotiating";
         };
+
+        return resolveMessage(key, status.name());
+    }
+
+    private void localizeNotificationContent(Notification notification,
+                                             NotificationDTO dto,
+                                             SkillSwapProposal proposal) {
+        NotificationType type = notification.getType();
+
+        switch (type) {
+            case WELCOME -> {
+                dto.setTitle(resolveMessage("notification.type.welcome.title", dto.getTitle()));
+                dto.setMessage(resolveMessage("notification.type.welcome.message", dto.getMessage()));
+            }
+            case NEW_MESSAGE -> {
+                dto.setTitle(resolveMessage("notification.type.newMessage.title", dto.getTitle()));
+            }
+            case NEW_REVIEW -> {
+                boolean profileComment = "/profile".equals(notification.getTargetUrl());
+                if (profileComment) {
+                    dto.setTitle(resolveMessage("notification.type.profileComment.title", dto.getTitle()));
+                    dto.setMessage(resolveMessage("notification.type.profileComment.message", dto.getMessage()));
+                } else {
+                    dto.setTitle(resolveMessage("notification.type.swapReview.title", dto.getTitle()));
+                    dto.setMessage(resolveMessage("notification.type.swapReview.message", dto.getMessage()));
+                }
+            }
+            case SKILL_REQUEST -> {
+                String actorName = resolveProposalActorName(notification, proposal);
+                dto.setTitle(resolveMessage("notification.type.skillRequest.title", dto.getTitle(), actorName));
+                dto.setMessage(resolveMessage("notification.type.skillRequest.message", dto.getMessage()));
+            }
+            case REQUEST_ACCEPTED -> {
+                dto.setTitle(resolveMessage("notification.type.requestAccepted.title", dto.getTitle()));
+                dto.setMessage(resolveMessage("notification.type.requestAccepted.message", dto.getMessage()));
+            }
+            case REQUEST_NEGOTIATING -> {
+                dto.setTitle(resolveMessage("notification.type.requestNegotiating.title", dto.getTitle()));
+                dto.setMessage(resolveMessage("notification.type.requestNegotiating.message", dto.getMessage()));
+            }
+            case REQUEST_REJECTED -> {
+                dto.setTitle(resolveMessage("notification.type.requestRejected.title", dto.getTitle()));
+                dto.setMessage(resolveMessage("notification.type.requestRejected.message", dto.getMessage()));
+            }
+            case SYSTEM -> {
+                // Keep system notifications custom text.
+            }
+        }
+    }
+
+    private String resolveProposalActorName(Notification notification, SkillSwapProposal proposal) {
+        if (proposal != null) {
+            return resolveActor(notification, proposal).getFullName();
+        }
+
+        return "";
+    }
+
+    private String resolveMessage(String key, String fallback, Object... args) {
+        Locale locale = LocaleContextHolder.getLocale();
+        return messageSource.getMessage(key, args, fallback, locale);
     }
 }

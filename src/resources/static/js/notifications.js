@@ -24,6 +24,43 @@ const notificationsState = {
     realtimeConnected: false
 };
 
+function isUnresolvedI18nValue(value) {
+    return typeof value === 'string' && value.startsWith('??') && value.endsWith('??');
+}
+
+function pickI18nValue(value, fallback) {
+    if (isUnresolvedI18nValue(value) || value === null || value === undefined || value === '') {
+        return fallback;
+    }
+    return value;
+}
+
+function getNotificationsI18n() {
+    const raw = window.notificationsI18n || {};
+
+    return {
+        mobileBack: pickI18nValue(raw.mobileBack, 'Inapoi'),
+        mobileOptions: pickI18nValue(raw.mobileOptions, 'Optiuni'),
+        title: pickI18nValue(raw.title, 'Notificari'),
+        emptyTitle: pickI18nValue(raw.emptyTitle, 'Nu ai notificari'),
+        emptyText: pickI18nValue(raw.emptyText, 'Cand apare ceva nou, il vezi aici.'),
+        defaultTitle: pickI18nValue(raw.defaultTitle, 'Notificare'),
+        proposalFallbackActionable: pickI18nValue(raw.proposalFallbackActionable, 'ti-a propus un Skill Swap'),
+        proposalFallbackUpdated: pickI18nValue(raw.proposalFallbackUpdated, 'a actualizat propunerea de Skill Swap'),
+        actionReject: pickI18nValue(raw.actionReject, 'Refuza'),
+        actionAccept: pickI18nValue(raw.actionAccept, 'Accepta'),
+        processProposalError: pickI18nValue(raw.processProposalError, 'Nu am putut procesa propunerea.'),
+        timeNow: pickI18nValue(raw.timeNow, 'Acum'),
+        timeMinutes: pickI18nValue(raw.timeMinutes, 'Acum {0} min'),
+        timeHours: pickI18nValue(raw.timeHours, 'Acum {0} h'),
+        timeDays: pickI18nValue(raw.timeDays, 'Acum {0} zile')
+    };
+}
+
+function formatCountTemplate(template, count) {
+    return String(template || '').replace('{0}', String(count));
+}
+
 /**
  * Returns true when viewport is in mobile range
  */
@@ -36,6 +73,7 @@ function isMobileViewport() {
  * (avoids stacking/position issues when navbar is inside positioned containers)
  */
 function ensureMobilePanel() {
+    const i18n = getNotificationsI18n();
     let panel = document.getElementById('mobileNotificationsPanel');
 
     if (!panel) {
@@ -43,14 +81,14 @@ function ensureMobilePanel() {
         wrapper.innerHTML = `
             <div class="mobile-notifications-panel" id="mobileNotificationsPanel" aria-hidden="true">
                 <div class="mobile-notifications-panel__header">
-                    <button class="mnp-btn mnp-btn--back" id="mnpBackBtn" type="button" aria-label="Înapoi">
+                    <button class="mnp-btn mnp-btn--back" id="mnpBackBtn" type="button" aria-label="${escapeHtml(i18n.mobileBack)}">
                         <i class="fa fa-arrow-left"></i>
                     </button>
                     <div class="mnp-title-wrap">
-                        <span class="mnp-title">Notificări</span>
+                        <span class="mnp-title">${escapeHtml(i18n.title)}</span>
                         <span class="mnp-unread-badge hidden" id="mnpUnreadBadge">0</span>
                     </div>
-                    <button class="mnp-btn mnp-btn--menu" id="mnpMenuBtn" type="button" aria-label="Opțiuni">
+                    <button class="mnp-btn mnp-btn--menu" id="mnpMenuBtn" type="button" aria-label="${escapeHtml(i18n.mobileOptions)}">
                         <i class="fa fa-ellipsis-v"></i>
                     </button>
                 </div>
@@ -86,13 +124,12 @@ function initializeNotifications() {
     // Toggle: use mobile panel on mobile, desktop dropdown on desktop
     notificationsButton.addEventListener('click', function(e) {
         e.stopPropagation();
+        resetNotificationCounterOnOpen();
+
         if (isMobileViewport()) {
             toggleMobilePanel();
         } else {
             toggleNotificationsDropdown();
-            if (notificationsDropdown.classList.contains('is-open')) {
-                refreshNotifications();
-            }
         }
     });
 
@@ -145,6 +182,33 @@ function initializeNotifications() {
     }
 
     connectNotificationsRealtime();
+}
+
+/**
+ * Resets unread counter immediately on bell click and syncs read-all in background.
+ */
+function resetNotificationCounterOnOpen() {
+    const hasUnread = notificationsState.items.some(item => !item.read);
+    if (!hasUnread) {
+        return;
+    }
+
+    notificationsState.items = notificationsState.items.map(item =>
+        Object.assign({}, item, { read: true })
+    );
+
+    renderNotifications();
+    renderMobileNotifications();
+    updateNotificationBadge();
+
+    fetch('/api/notifications/read-all', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json'
+        }
+    }).catch(error => {
+        console.warn('Could not sync read-all on notification bell click:', error);
+    });
 }
 
 /**
@@ -218,6 +282,7 @@ function toggleMobilePanel() {
  * Renders notifications in the desktop dropdown
  */
 function renderNotifications() {
+    const i18n = getNotificationsI18n();
     const notificationsList = document.getElementById('notificationsList');
     if (!notificationsList) return;
     notificationsList.innerHTML = '';
@@ -226,7 +291,7 @@ function renderNotifications() {
     });
 
     if (!notificationsState.items.length) {
-        notificationsList.innerHTML = '<div class="notification-item"><div class="notification-content"><div class="notification-title">Nu ai notificari</div><div class="notification-text">Cand apare ceva nou, il vezi aici.</div></div></div>';
+        notificationsList.innerHTML = `<div class="notification-item"><div class="notification-content"><div class="notification-title">${escapeHtml(i18n.emptyTitle)}</div><div class="notification-text">${escapeHtml(i18n.emptyText)}</div></div></div>`;
     }
 }
 
@@ -234,6 +299,7 @@ function renderNotifications() {
  * Renders notifications in the mobile panel
  */
 function renderMobileNotifications() {
+    const i18n = getNotificationsI18n();
     const list = document.getElementById('mobileNotificationsList');
     if (!list) return;
     list.innerHTML = '';
@@ -242,7 +308,7 @@ function renderMobileNotifications() {
     });
 
     if (!notificationsState.items.length) {
-        list.innerHTML = '<div class="notification-item"><div class="notification-content"><div class="notification-title">Nu ai notificari</div><div class="notification-text">Cand apare ceva nou, il vezi aici.</div></div></div>';
+        list.innerHTML = `<div class="notification-item"><div class="notification-content"><div class="notification-title">${escapeHtml(i18n.emptyTitle)}</div><div class="notification-text">${escapeHtml(i18n.emptyText)}</div></div></div>`;
     }
 }
 
@@ -252,6 +318,7 @@ function renderMobileNotifications() {
  * @returns {HTMLElement} Notification element
  */
 function createNotificationElement(notification) {
+    const i18n = getNotificationsI18n();
     if (hasProposalPayload(notification)) {
         return createProposalNotificationElement(notification);
     }
@@ -273,7 +340,7 @@ function createNotificationElement(notification) {
 
     const title = document.createElement('div');
     title.className = 'notification-title';
-    title.textContent = notification.title || 'Notificare';
+    title.textContent = notification.title || i18n.defaultTitle;
 
     const text = document.createElement('div');
     text.className = 'notification-text';
@@ -303,6 +370,7 @@ function hasProposalPayload(notification) {
 }
 
 function createProposalNotificationElement(notification) {
+    const i18n = getNotificationsI18n();
     const proposal = notification.proposal;
     const item = document.createElement('div');
     item.className = 'notification-item notification-item--proposal';
@@ -329,8 +397,8 @@ function createProposalNotificationElement(notification) {
     const actorName = (proposal.actorName || '').trim();
     const rawTitle = (notification.title || '').trim();
     const fallbackTitle = proposal.actionable === true
-        ? 'ti-a propus un Skill Swap'
-        : (rawTitle || 'a actualizat propunerea de Skill Swap');
+        ? i18n.proposalFallbackActionable
+        : (rawTitle || i18n.proposalFallbackUpdated);
     let titleSuffix = fallbackTitle;
 
     if (actorName && rawTitle) {
@@ -399,19 +467,13 @@ function createProposalNotificationElement(notification) {
         const actions = document.createElement('div');
         actions.className = 'notification-actions';
 
-        actions.appendChild(createNotificationActionButton('Refuza', 'secondary', function (event) {
+        actions.appendChild(createNotificationActionButton(i18n.actionReject, 'secondary', function (event) {
             event.preventDefault();
             event.stopPropagation();
             handleProposalAction(notification, 'reject');
         }));
 
-        actions.appendChild(createNotificationActionButton('Negociaza', 'secondary', function (event) {
-            event.preventDefault();
-            event.stopPropagation();
-            handleProposalAction(notification, 'negotiate');
-        }));
-
-        actions.appendChild(createNotificationActionButton('Accepta', 'primary', function (event) {
+        actions.appendChild(createNotificationActionButton(i18n.actionAccept, 'primary', function (event) {
             event.preventDefault();
             event.stopPropagation();
             handleProposalAction(notification, 'accept');
@@ -439,6 +501,7 @@ function createNotificationActionButton(label, variant, onClick) {
 }
 
 async function handleProposalAction(notification, action) {
+    const i18n = getNotificationsI18n();
     const proposal = notification && notification.proposal;
     if (!proposal || !proposal.proposalId) {
         return;
@@ -467,7 +530,7 @@ async function handleProposalAction(notification, action) {
         }
 
         if (!response.ok || payload.success === false) {
-            throw new Error(payload.message || 'Nu am putut procesa propunerea.');
+            throw new Error(payload.message || i18n.processProposalError);
         }
 
         await refreshNotifications();
@@ -481,7 +544,7 @@ async function handleProposalAction(notification, action) {
             return;
         }
     } catch (error) {
-        window.alert(error.message || 'Nu am putut procesa propunerea.');
+        window.alert(error.message || i18n.processProposalError);
     } finally {
         actionButtons.forEach(button => {
             button.disabled = false;
@@ -598,6 +661,7 @@ function updateNotificationBadge() {
 }
 
 function formatNotificationTime(timestamp) {
+    const i18n = getNotificationsI18n();
     if (!timestamp) {
         return '';
     }
@@ -613,10 +677,10 @@ function formatNotificationTime(timestamp) {
     const diffHours = Math.floor(diffMinutes / 60);
     const diffDays = Math.floor(diffHours / 24);
 
-    if (diffMinutes < 1) return 'Acum';
-    if (diffMinutes < 60) return `Acum ${diffMinutes} min`;
-    if (diffHours < 24) return `Acum ${diffHours} h`;
-    if (diffDays < 7) return `Acum ${diffDays} zile`;
+    if (diffMinutes < 1) return i18n.timeNow;
+    if (diffMinutes < 60) return formatCountTemplate(i18n.timeMinutes, diffMinutes);
+    if (diffHours < 24) return formatCountTemplate(i18n.timeHours, diffHours);
+    if (diffDays < 7) return formatCountTemplate(i18n.timeDays, diffDays);
 
     return date.toLocaleDateString('ro-RO', { day: '2-digit', month: '2-digit' });
 }
