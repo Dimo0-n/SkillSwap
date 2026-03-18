@@ -62,16 +62,15 @@
                 <button class="chat-action-btn proposal-actions-btn"
                         id="mobileProposalActionsButton"
                         type="button"
-                        aria-label="Actiuni schimb"
-                        title="Actiuni schimb"
+                        th:attr="aria-label=#{chat.history.proposal.actions},title=#{chat.history.proposal.actions}"
                         aria-expanded="false">
-                    <span>Status</span>
+                    <span th:text="#{chat.history.proposal.status}">Status</span>
                     <i class="fa fa-angle-down"></i>
                 </button>
                 <div class="chat-settings-dropdown proposal-actions-dropdown"
                      id="mobileProposalActionsMenu"
                      role="menu"
-                     aria-label="Actiuni schimb"></div>
+                     th:attr="aria-label=#{chat.history.proposal.actions}"></div>
             </div>
             <button class="chat-action-btn call-action-btn"
                     id="mobileStartCallButton"
@@ -136,16 +135,15 @@
                                         <button class="chat-action-btn proposal-actions-btn"
                                                 id="chatProposalActionsButton"
                                                 type="button"
-                                                aria-label="Actiuni schimb"
-                                                title="Actiuni schimb"
+                                                th:attr="aria-label=#{chat.history.proposal.actions},title=#{chat.history.proposal.actions}"
                                                 aria-expanded="false">
-                                            <span>Actualizeaza</span>
+                                            <span th:text="#{chat.history.proposal.update}">Update</span>
                                             <i class="fa fa-angle-down"></i>
                                         </button>
                                         <div class="chat-settings-dropdown proposal-actions-dropdown"
                                              id="chatProposalActionsMenu"
                                              role="menu"
-                                             aria-label="Actiuni schimb"></div>
+                                             th:attr="aria-label=#{chat.history.proposal.actions}"></div>
                                     </div>
                                     <button class="chat-action-btn call-action-btn"
                                             id="startCallButton"
@@ -195,6 +193,80 @@
     <!-- Js Plugins -->
     <script th:inline="javascript">
         window.chatI18n = {
+            common: {
+                locale: [[${#locale.toString()}]],
+                language: [[${#locale.language}]]
+            },
+            history: {
+                selectConversation: [[#{chat.history.select}]],
+                unknownUser: [[#{chat.history.unknown.user}]],
+                empty: {
+                    title: [[#{chat.history.empty.title}]],
+                    subtitle: [[#{chat.history.empty.subtitle}]]
+                },
+                state: {
+                    muted: [[#{chat.history.state.muted}]],
+                    blocked: [[#{chat.history.state.blocked}]],
+                    reported: [[#{chat.history.state.reported}]]
+                },
+                presence: {
+                    online: [[#{chat.history.presence.online}]],
+                    offline: [[#{chat.history.presence.offline}]],
+                    localTimeSuffix: [[#{chat.history.presence.localTimeSuffix}]]
+                },
+                settings: {
+                    blockedPlaceholder: [[#{chat.history.blocked.placeholder}]],
+                    muteEnable: [[#{chat.history.mute.enable}]],
+                    muteDisable: [[#{chat.history.mute.disable}]],
+                    blockEnable: [[#{chat.history.block.enable}]],
+                    blockDisable: [[#{chat.history.block.disable}]],
+                    reportAction: [[#{chat.history.report.action}]],
+                    reportDone: [[#{chat.history.report.done}]],
+                    updateError: [[#{chat.history.error.settings.update}]],
+                    selectConversation: [[#{chat.history.error.settings.selectConversation}]]
+                },
+                toast: {
+                    mutedOn: [[#{chat.history.toast.muted.on}]],
+                    mutedOff: [[#{chat.history.toast.muted.off}]],
+                    blockedOn: [[#{chat.history.toast.blocked.on}]],
+                    blockedOff: [[#{chat.history.toast.blocked.off}]],
+                    reportedAlready: [[#{chat.history.toast.report.already}]],
+                    reportedDone: [[#{chat.history.toast.report.done}]]
+                },
+                video: {
+                    selectConversation: [[#{chat.history.video.selectConversation}]],
+                    blocked: [[#{chat.history.video.blocked}]],
+                    startFailed: [[#{chat.history.video.startFailed}]],
+                    missingUrl: [[#{chat.history.video.missingUrl}]],
+                    popupBlocked: [[#{chat.history.video.popupBlocked}]],
+                    errorStart: [[#{chat.history.video.errorStart}]]
+                },
+                proposal: {
+                    updateError: [[#{chat.history.proposal.errorUpdate}]],
+                    updated: [[#{chat.history.proposal.updated}]]
+                }
+            },
+            runtime: {
+                status: {
+                    seen: [[#{chat.runtime.status.seen}]],
+                    delivered: [[#{chat.runtime.status.delivered}]],
+                    sent: [[#{chat.runtime.status.sent}]]
+                },
+                joinCall: {
+                    message: [[#{chat.runtime.joinCall.message}]],
+                    joinButton: [[#{chat.runtime.joinCall.joinButton}]],
+                    popupBlocked: [[#{chat.runtime.joinCall.popupBlocked}]]
+                },
+                reaction: {
+                    triggerLabel: [[#{chat.runtime.reaction.trigger}]],
+                    clickToReact: [[#{chat.runtime.reaction.clickToReact}]]
+                },
+                blockedSend: [[#{chat.runtime.blocked.send}]],
+                welcome: {
+                    title: [[#{chat.runtime.welcome.title}]],
+                    startWith: [[#{chat.runtime.welcome.startWith}]]
+                }
+            },
             proposal: {
                 prefix: [[#{chat.proposal.prefix}]],
                 defaultLabel: [[#{chat.proposal.default}]],

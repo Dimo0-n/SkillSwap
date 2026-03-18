@@ -119,7 +119,8 @@ function showJoinCallSection(payload) {
     }
 
     const meetingUrl = payload && payload.meetingUrl ? payload.meetingUrl : null;
-    const message = 'Alătură-te apelului';
+    const runtimeI18n = getRuntimeI18n();
+    const message = runtimeI18n.joinCall.message;
 
     const existing = document.getElementById('join-call-section');
     if (existing) {
@@ -139,11 +140,11 @@ function showJoinCallSection(payload) {
         const joinButton = document.createElement('button');
         joinButton.type = 'button';
         joinButton.className = 'join-call-section__btn';
-        joinButton.textContent = 'Alătură-te';
+        joinButton.textContent = runtimeI18n.joinCall.joinButton;
         joinButton.addEventListener('click', function () {
             const newWindow = window.open(meetingUrl, '_blank', 'noopener,noreferrer');
             if (!newWindow) {
-                window.alert('Browserul a blocat pop-up-ul. Permite pop-up-uri pentru acest site si incearca din nou.');
+                window.alert(runtimeI18n.joinCall.popupBlocked);
             }
         });
         section.appendChild(joinButton);
@@ -223,8 +224,9 @@ function sendMessage(content) {
     if (!content.trim() || !currentChatRoomId) return;
 
     if (window.currentConversationSettings?.blocked === true) {
+        const runtimeI18n = getRuntimeI18n();
         if (typeof window.showChatToast === 'function') {
-            window.showChatToast('Conversația este blocată. Deblochează pentru a trimite mesaje.', 'warning');
+            window.showChatToast(runtimeI18n.blockedSend, 'warning');
         }
         return;
     }
@@ -286,14 +288,15 @@ function getCurrentChatPartnerAvatar() {
 }
 
 function getStatusLabel(status) {
+    const runtimeI18n = getRuntimeI18n();
     switch (status) {
         case 'SEEN':
-            return 'Vazut';
+            return runtimeI18n.status.seen;
         case 'DELIVERED':
-            return 'livrat';
+            return runtimeI18n.status.delivered;
         case 'SENT':
         default:
-            return 'trimis';
+            return runtimeI18n.status.sent;
     }
 }
 
@@ -312,7 +315,132 @@ function getProposalI18n() {
     const raw = (window.chatI18n && window.chatI18n.proposal) || {};
     return {
         systemTitle: pickI18nValue(raw.systemTitle, 'Skill Swap Proposal'),
-        systemStatusPrefix: pickI18nValue(raw.systemStatusPrefix, 'Status')
+        systemStatusPrefix: pickI18nValue(raw.systemStatusPrefix, 'Status'),
+        statuses: {
+            PENDING: pickI18nValue(raw.statuses && raw.statuses.PENDING, 'Pending'),
+            NEGOTIATING: pickI18nValue(raw.statuses && raw.statuses.NEGOTIATING, 'Negotiating'),
+            ACCEPTED: pickI18nValue(raw.statuses && raw.statuses.ACCEPTED, 'Accepted'),
+            IN_PROGRESS: pickI18nValue(raw.statuses && raw.statuses.IN_PROGRESS, 'In progress'),
+            COMPLETED: pickI18nValue(raw.statuses && raw.statuses.COMPLETED, 'Completed'),
+            CANCELLED: pickI18nValue(raw.statuses && raw.statuses.CANCELLED, 'Cancelled'),
+            REJECTED: pickI18nValue(raw.statuses && raw.statuses.REJECTED, 'Rejected')
+        }
+    };
+}
+
+function normalizeStatusText(value) {
+    if (!value) {
+        return '';
+    }
+
+    return String(value)
+        .trim()
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/\s+/g, ' ');
+}
+
+function resolveProposalStatusCode(rawStatus) {
+    if (!rawStatus) {
+        return '';
+    }
+
+    const normalized = normalizeStatusText(rawStatus);
+    const enumCandidate = normalized.toUpperCase().replace(/\s+/g, '_');
+    const enumSet = new Set(['PENDING', 'NEGOTIATING', 'ACCEPTED', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED', 'REJECTED']);
+    if (enumSet.has(enumCandidate)) {
+        return enumCandidate;
+    }
+
+    const aliases = {
+        PENDING: ['pending', 'in asteptare', 'in așteptare', 'en attente', 'v ozhidanii', 'в ожидании'],
+        NEGOTIATING: ['negotiating', 'negociere', 'negociation', 'peregovory', 'переговоры'],
+        ACCEPTED: ['accepted', 'acceptat', 'accepte', 'prinyat', 'принят'],
+        IN_PROGRESS: ['in progress', 'in progres', 'en cours', 'v processe', 'в процессе'],
+        COMPLETED: ['completed', 'finalizat', 'termine', 'zavershen', 'завершен'],
+        CANCELLED: ['cancelled', 'anulat', 'annule', 'otmenen', 'отменен'],
+        REJECTED: ['rejected', 'respins', 'refuse', 'otklonen', 'отклонен']
+    };
+
+    for (const [code, values] of Object.entries(aliases)) {
+        if (values.some(alias => normalizeStatusText(alias) === normalized)) {
+            return code;
+        }
+    }
+
+    return '';
+}
+
+function resolveLocalizedProposalStatusLabel(rawStatus) {
+    const proposalI18n = getProposalI18n();
+    const statusCode = resolveProposalStatusCode(rawStatus);
+    if (statusCode && proposalI18n.statuses && proposalI18n.statuses[statusCode]) {
+        return proposalI18n.statuses[statusCode];
+    }
+
+    return rawStatus || '';
+}
+
+function getRuntimeI18nDefaults() {
+    return {
+        status: {
+            seen: 'Seen',
+            delivered: 'Delivered',
+            sent: 'Sent'
+        },
+        joinCall: {
+            message: 'Join the call',
+            joinButton: 'Join',
+            popupBlocked: 'Browser blocked the pop-up. Allow pop-ups for this site and try again.'
+        },
+        reaction: {
+            triggerLabel: 'React',
+            clickToReact: 'Click to react'
+        },
+        blockedSend: 'Conversation is blocked. Unblock to send messages.',
+        welcome: {
+            title: 'Welcome!',
+            startWith: 'Start a conversation with {name}'
+        }
+    };
+}
+
+function formatRuntimeTemplate(template, values = {}) {
+    if (typeof template !== 'string') {
+        return '';
+    }
+
+    return template.replace(/\{(\w+)\}/g, (_, key) => {
+        const value = values[key];
+        return value === null || value === undefined ? '' : String(value);
+    });
+}
+
+function getRuntimeI18n() {
+    const defaults = getRuntimeI18nDefaults();
+    const raw = (window.chatI18n && window.chatI18n.runtime) || {};
+
+    return {
+        status: {
+            seen: pickI18nValue(raw.status && raw.status.seen, defaults.status.seen),
+            delivered: pickI18nValue(raw.status && raw.status.delivered, defaults.status.delivered),
+            sent: pickI18nValue(raw.status && raw.status.sent, defaults.status.sent)
+        },
+        joinCall: {
+            message: pickI18nValue(raw.joinCall && raw.joinCall.message, defaults.joinCall.message),
+            joinButton: pickI18nValue(raw.joinCall && raw.joinCall.joinButton, defaults.joinCall.joinButton),
+            popupBlocked: pickI18nValue(raw.joinCall && raw.joinCall.popupBlocked, defaults.joinCall.popupBlocked)
+        },
+        reaction: {
+            triggerLabel: pickI18nValue(raw.reaction && raw.reaction.triggerLabel, defaults.reaction.triggerLabel),
+            clickToReact: pickI18nValue(raw.reaction && raw.reaction.clickToReact, defaults.reaction.clickToReact)
+        },
+        blockedSend: pickI18nValue(raw.blockedSend, defaults.blockedSend),
+        welcome: {
+            title: pickI18nValue(raw.welcome && raw.welcome.title, defaults.welcome.title),
+            startWith: pickI18nValue(raw.welcome && raw.welcome.startWith, defaults.welcome.startWith)
+        }
     };
 }
 
@@ -340,12 +468,13 @@ function displayMessage(message) {
         const proposalI18n = getProposalI18n();
         const systemTitle = pickI18nValue(message.systemTitle, proposalI18n.systemTitle);
         const statusPrefix = proposalI18n.systemStatusPrefix;
+        const localizedSystemStatus = resolveLocalizedProposalStatusLabel(message.systemStatusLabel);
         messageDiv.className = 'message message-system';
         messageDiv.innerHTML = `
             <div class="system-message-card">
                 <div class="system-message-title">${escapeHtml(systemTitle)}</div>
                 <div class="system-message-summary">${escapeHtml(message.systemExchangeSummary || message.content || '')}</div>
-                ${message.systemStatusLabel ? `<div class="system-message-status">${escapeHtml(statusPrefix)}: ${escapeHtml(message.systemStatusLabel)}</div>` : ''}
+                ${localizedSystemStatus ? `<div class="system-message-status">${escapeHtml(statusPrefix)}: ${escapeHtml(localizedSystemStatus)}</div>` : ''}
                 <div class="system-message-time">${formatTime(message.timestamp)}</div>
             </div>
         `;
@@ -383,7 +512,7 @@ function displayMessage(message) {
                         </button>
                     `).join('')}
                 </div>
-                <button type="button" class="reaction-trigger" onclick="toggleReactionPicker(event, ${message.id})" aria-label="React">
+                <button type="button" class="reaction-trigger" onclick="toggleReactionPicker(event, ${message.id})" aria-label="${escapeHtml(getRuntimeI18n().reaction.triggerLabel)}">
                     <i class="fa fa-smile-o"></i>
                 </button>
             </div>
@@ -407,7 +536,7 @@ function displayMessage(message) {
             emojiSpan.dataset.emoji = reaction.emoji;
             emojiSpan.dataset.count = reaction.count;
             emojiSpan.textContent = reaction.emoji + ' ' + reaction.count;
-            emojiSpan.title = 'Click to react';
+            emojiSpan.title = getRuntimeI18n().reaction.clickToReact;
             emojiSpan.addEventListener('click', function () {
                 const messageIdKey = String(message.id);
                 const currentUserKey = currentUserId != null ? String(currentUserId) : null;
@@ -906,13 +1035,14 @@ function loadChatRoom(chatRoomId) {
 
 // Show welcome message for new conversations
 function showWelcomeMessage(userName) {
+    const runtimeI18n = getRuntimeI18n();
     const messagesContainer = document.getElementById('messagesContainer');
     const welcomeDiv = document.createElement('div');
     welcomeDiv.className = 'welcome-message';
     welcomeDiv.innerHTML = `
         <div class="welcome-content">
-            <h3>👋 Bun venit!</h3>
-            <p>Începe conversația cu ${userName}</p>
+            <h3>👋 ${escapeHtml(runtimeI18n.welcome.title)}</h3>
+            <p>${escapeHtml(formatRuntimeTemplate(runtimeI18n.welcome.startWith, { name: userName }))}</p>
         </div>
     `;
     messagesContainer.appendChild(welcomeDiv);

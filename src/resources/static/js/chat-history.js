@@ -17,6 +17,131 @@ function pickI18nValue(value, fallback) {
     return value;
 }
 
+function formatI18nTemplate(template, values = {}) {
+    if (typeof template !== 'string') {
+        return '';
+    }
+
+    return template.replace(/\{(\w+)\}/g, (_, key) => {
+        const value = values[key];
+        return value === null || value === undefined ? '' : String(value);
+    });
+}
+
+function getChatHistoryI18nDefaults() {
+    return {
+        common: {
+            locale: (document && document.documentElement && document.documentElement.lang) || 'en'
+        },
+        selectConversation: 'Select a conversation',
+        unknownUser: 'User',
+        empty: {
+            title: 'No conversations yet',
+            subtitle: 'Start a chat from an announcement to see history here.'
+        },
+        state: {
+            muted: 'Muted',
+            blocked: 'Blocked',
+            reported: 'Reported'
+        },
+        presence: {
+            online: 'Online',
+            offline: 'Offline',
+            localTimeSuffix: 'local time'
+        },
+        settings: {
+            blockedPlaceholder: 'Conversation is blocked. Unblock to send messages.',
+            muteEnable: 'Unmute',
+            muteDisable: 'Mute',
+            blockEnable: 'Unblock',
+            blockDisable: 'Block',
+            reportAction: 'Report',
+            reportDone: 'Reported',
+            updateError: 'Could not update conversation settings.',
+            selectConversation: 'Select a conversation first.'
+        },
+        toast: {
+            mutedOn: 'Conversation with {name} is now muted.',
+            mutedOff: 'Sound for conversation with {name} has been restored.',
+            blockedOn: '{name} has been blocked for this conversation.',
+            blockedOff: 'Conversation with {name} has been unblocked.',
+            reportedAlready: 'Conversation has already been reported.',
+            reportedDone: 'Conversation with {name} has been reported.'
+        },
+        video: {
+            selectConversation: 'Select a conversation first.',
+            blocked: 'Conversation is blocked. Unblock to start a video call.',
+            startFailed: 'Could not start the video call now. Try again.',
+            missingUrl: 'Server did not return a valid meeting link.',
+            popupBlocked: 'Browser blocked the pop-up. Allow pop-ups for this site and try again.',
+            errorStart: 'An error occurred while starting the video call.'
+        },
+        proposal: {
+            updateError: 'Could not update swap status.',
+            updated: 'Swap status updated.'
+        }
+    };
+}
+
+function getChatHistoryI18n() {
+    const defaults = getChatHistoryI18nDefaults();
+    const commonRaw = (window.chatI18n && window.chatI18n.common) || {};
+    const raw = (window.chatI18n && window.chatI18n.history) || {};
+
+    return {
+        common: {
+            locale: pickI18nValue(commonRaw.locale, defaults.common.locale)
+        },
+        selectConversation: pickI18nValue(raw.selectConversation, defaults.selectConversation),
+        unknownUser: pickI18nValue(raw.unknownUser, defaults.unknownUser),
+        empty: {
+            title: pickI18nValue(raw.empty && raw.empty.title, defaults.empty.title),
+            subtitle: pickI18nValue(raw.empty && raw.empty.subtitle, defaults.empty.subtitle)
+        },
+        state: {
+            muted: pickI18nValue(raw.state && raw.state.muted, defaults.state.muted),
+            blocked: pickI18nValue(raw.state && raw.state.blocked, defaults.state.blocked),
+            reported: pickI18nValue(raw.state && raw.state.reported, defaults.state.reported)
+        },
+        presence: {
+            online: pickI18nValue(raw.presence && raw.presence.online, defaults.presence.online),
+            offline: pickI18nValue(raw.presence && raw.presence.offline, defaults.presence.offline),
+            localTimeSuffix: pickI18nValue(raw.presence && raw.presence.localTimeSuffix, defaults.presence.localTimeSuffix)
+        },
+        settings: {
+            blockedPlaceholder: pickI18nValue(raw.settings && raw.settings.blockedPlaceholder, defaults.settings.blockedPlaceholder),
+            muteEnable: pickI18nValue(raw.settings && raw.settings.muteEnable, defaults.settings.muteEnable),
+            muteDisable: pickI18nValue(raw.settings && raw.settings.muteDisable, defaults.settings.muteDisable),
+            blockEnable: pickI18nValue(raw.settings && raw.settings.blockEnable, defaults.settings.blockEnable),
+            blockDisable: pickI18nValue(raw.settings && raw.settings.blockDisable, defaults.settings.blockDisable),
+            reportAction: pickI18nValue(raw.settings && raw.settings.reportAction, defaults.settings.reportAction),
+            reportDone: pickI18nValue(raw.settings && raw.settings.reportDone, defaults.settings.reportDone),
+            updateError: pickI18nValue(raw.settings && raw.settings.updateError, defaults.settings.updateError),
+            selectConversation: pickI18nValue(raw.settings && raw.settings.selectConversation, defaults.settings.selectConversation)
+        },
+        toast: {
+            mutedOn: pickI18nValue(raw.toast && raw.toast.mutedOn, defaults.toast.mutedOn),
+            mutedOff: pickI18nValue(raw.toast && raw.toast.mutedOff, defaults.toast.mutedOff),
+            blockedOn: pickI18nValue(raw.toast && raw.toast.blockedOn, defaults.toast.blockedOn),
+            blockedOff: pickI18nValue(raw.toast && raw.toast.blockedOff, defaults.toast.blockedOff),
+            reportedAlready: pickI18nValue(raw.toast && raw.toast.reportedAlready, defaults.toast.reportedAlready),
+            reportedDone: pickI18nValue(raw.toast && raw.toast.reportedDone, defaults.toast.reportedDone)
+        },
+        video: {
+            selectConversation: pickI18nValue(raw.video && raw.video.selectConversation, defaults.video.selectConversation),
+            blocked: pickI18nValue(raw.video && raw.video.blocked, defaults.video.blocked),
+            startFailed: pickI18nValue(raw.video && raw.video.startFailed, defaults.video.startFailed),
+            missingUrl: pickI18nValue(raw.video && raw.video.missingUrl, defaults.video.missingUrl),
+            popupBlocked: pickI18nValue(raw.video && raw.video.popupBlocked, defaults.video.popupBlocked),
+            errorStart: pickI18nValue(raw.video && raw.video.errorStart, defaults.video.errorStart)
+        },
+        proposal: {
+            updateError: pickI18nValue(raw.proposal && raw.proposal.updateError, defaults.proposal.updateError),
+            updated: pickI18nValue(raw.proposal && raw.proposal.updated, defaults.proposal.updated)
+        }
+    };
+}
+
 function getProposalI18nDefaults() {
     return {
         prefix: 'Schimb',
@@ -83,7 +208,8 @@ function formatConversationTime(timestamp) {
         return `${hours}:${minutes}`;
     }
 
-    return date.toLocaleDateString('ro-RO', { day: '2-digit', month: '2-digit' });
+    const locale = getChatHistoryI18n().common.locale || 'en';
+    return date.toLocaleDateString(locale, { day: '2-digit', month: '2-digit' });
 }
 
 function renderEmptyConversationsState() {
@@ -92,13 +218,14 @@ function renderEmptyConversationsState() {
         return;
     }
 
+    const i18n = getChatHistoryI18n();
     conversationsList.innerHTML = `
         <div class="conversation-item">
             <div class="conversation-content">
                 <div class="conversation-header">
-                    <span class="conversation-name">Nu ai conversatii inca</span>
+                    <span class="conversation-name">${escapeHtmlForSidebar(i18n.empty.title)}</span>
                 </div>
-                <div class="conversation-preview">Incepe un chat dintr-un anunt pentru a vedea istoricul aici.</div>
+                <div class="conversation-preview">${escapeHtmlForSidebar(i18n.empty.subtitle)}</div>
             </div>
         </div>
     `;
@@ -140,6 +267,7 @@ function showChatToast(message, tone = 'info') {
 window.showChatToast = showChatToast;
 
 function buildConversationItem(conversation) {
+    const i18n = getChatHistoryI18n();
     const unreadBadge = conversation.unreadCount > 0
         ? `<span class="unread-badge">${conversation.unreadCount}</span>`
         : '';
@@ -149,9 +277,9 @@ function buildConversationItem(conversation) {
     const blocked = conversation.blockedByCurrentUser === true;
     const reported = conversation.reportedByCurrentUser === true;
     const stateBadges = [
-        muted ? '<span class="conversation-state-badge">Mute</span>' : '',
-        blocked ? '<span class="conversation-state-badge conversation-state-badge-blocked">Blocat</span>' : '',
-        reported ? '<span class="conversation-state-badge conversation-state-badge-reported">Raportat</span>' : ''
+        muted ? `<span class="conversation-state-badge">${escapeHtmlForSidebar(i18n.state.muted)}</span>` : '',
+        blocked ? `<span class="conversation-state-badge conversation-state-badge-blocked">${escapeHtmlForSidebar(i18n.state.blocked)}</span>` : '',
+        reported ? `<span class="conversation-state-badge conversation-state-badge-reported">${escapeHtmlForSidebar(i18n.state.reported)}</span>` : ''
     ].join('');
 
     return `
@@ -211,11 +339,12 @@ function renderConversationStateBadges(item) {
         }
     }
 
+    const i18n = getChatHistoryI18n();
     const state = getConversationSettingsState(item);
     badgesContainer.innerHTML = [
-        state.muted ? '<span class="conversation-state-badge">Mute</span>' : '',
-        state.blocked ? '<span class="conversation-state-badge conversation-state-badge-blocked">Blocat</span>' : '',
-        state.reported ? '<span class="conversation-state-badge conversation-state-badge-reported">Raportat</span>' : ''
+        state.muted ? `<span class="conversation-state-badge">${escapeHtmlForSidebar(i18n.state.muted)}</span>` : '',
+        state.blocked ? `<span class="conversation-state-badge conversation-state-badge-blocked">${escapeHtmlForSidebar(i18n.state.blocked)}</span>` : '',
+        state.reported ? `<span class="conversation-state-badge conversation-state-badge-reported">${escapeHtmlForSidebar(i18n.state.reported)}</span>` : ''
     ].join('');
 
     item.classList.toggle('is-muted', state.muted);
@@ -230,7 +359,8 @@ function applyConversationSettingsToActiveView(item) {
     const messageInput = document.getElementById('messageInput');
     const messageSendButton = document.querySelector('#messageForm .message-send-btn');
     const messageInputArea = document.querySelector('.message-input-area');
-    const blockedPlaceholder = 'Conversația este blocată. Deblochează pentru a trimite mesaje.';
+    const i18n = getChatHistoryI18n();
+    const blockedPlaceholder = i18n.settings.blockedPlaceholder;
 
     if (messageInput) {
         if (!messageInput.dataset.defaultPlaceholder) {
@@ -254,15 +384,15 @@ function applyConversationSettingsToActiveView(item) {
     });
 
     document.querySelectorAll('.chat-settings-item[data-chat-action="mute"]').forEach(button => {
-        button.textContent = state.muted ? 'Activează sunetul' : 'Dezactivează sunetul';
+        button.textContent = state.muted ? i18n.settings.muteEnable : i18n.settings.muteDisable;
     });
 
     document.querySelectorAll('.chat-settings-item[data-chat-action="block"]').forEach(button => {
-        button.textContent = state.blocked ? 'Deblochează' : 'Blochează';
+        button.textContent = state.blocked ? i18n.settings.blockEnable : i18n.settings.blockDisable;
     });
 
     document.querySelectorAll('.chat-settings-item[data-chat-action="report"]').forEach(button => {
-        button.textContent = state.reported ? 'Raportată' : 'Raportează';
+        button.textContent = state.reported ? i18n.settings.reportDone : i18n.settings.reportAction;
         button.disabled = state.reported;
     });
 }
@@ -324,9 +454,12 @@ function setProposalHeaderState(options = {}) {
 
         if (triggerLabel) {
             const i18n = getProposalI18n();
-            const prefix = i18n.prefix || 'Schimb';
+            const prefix = i18n.prefix || 'Swap';
             const defaultLabel = i18n.defaultLabel || 'Status';
-            triggerLabel.textContent = hasStatus ? `${prefix}: ${statusLabel}` : defaultLabel;
+            const resolvedStatusLabel = hasStatus
+                ? (statusLabel && statusLabel !== status ? statusLabel : mapProposalStatusLabel(status))
+                : '';
+            triggerLabel.textContent = hasStatus ? `${prefix}: ${resolvedStatusLabel}` : defaultLabel;
         }
 
         if (triggerIcon) {
@@ -386,10 +519,10 @@ function renderProposalActions(menuElement, proposalId, actions, isBusy) {
 
     const i18n = getProposalI18n();
     const labels = {
-        accept: i18n.actions?.accept || 'Accepta (Acceptat)',
-        start: i18n.actions?.start || 'Porneste (In progres)',
-        complete: i18n.actions?.complete || 'Finalizeaza (Completat)',
-        cancel: i18n.actions?.cancel || 'Anuleaza (Anulat)'
+        accept: i18n.actions?.accept || 'Accept',
+        start: i18n.actions?.start || 'Start',
+        complete: i18n.actions?.complete || 'Complete',
+        cancel: i18n.actions?.cancel || 'Cancel'
     };
 
     const actionToStatusClass = {
@@ -510,7 +643,7 @@ function updateConversationLastMessage(conversationId, messageContent, timestamp
 }
 
 function updateChatHeaderFromConversation(item) {
-    const userName = item.dataset.userName || 'Conversa?ie';
+    const userName = item.dataset.userName || getChatHistoryI18n().unknownUser;
     const avatarUrl = item.dataset.userAvatar || '/img/default-avatar.png';
     const status = item.dataset.userStatus || 'offline';
     const timeZoneId = item.dataset.userTimezone || '';
@@ -589,14 +722,15 @@ function formatUserLocalTime(timeZoneId) {
 }
 
 function buildChatPresenceText(status, timeZoneId) {
-    const statusLabel = status === 'online' ? 'Online' : 'Offline';
+    const i18n = getChatHistoryI18n();
+    const statusLabel = status === 'online' ? i18n.presence.online : i18n.presence.offline;
     const localTime = formatUserLocalTime(timeZoneId);
 
     if (!localTime) {
         return statusLabel;
     }
 
-    return `${statusLabel} \u2022 ${localTime} local time`;
+    return `${statusLabel} \u2022 ${localTime} ${i18n.presence.localTimeSuffix}`;
 }
 
 function refreshActiveChatHeaderLocalTime() {
@@ -814,7 +948,7 @@ async function updateConversationSettingsOnServer(chatRoomId, payload) {
     });
 
     if (!response.ok) {
-        throw new Error('Nu am putut actualiza setările conversației.');
+        throw new Error(getChatHistoryI18n().settings.updateError);
     }
 
     return response.json();
@@ -823,21 +957,25 @@ async function updateConversationSettingsOnServer(chatRoomId, payload) {
 async function handleChatSettingsAction(action) {
     const activeConversation = document.querySelector('#conversationsList .conversation-item.active[data-conversation-id]');
     if (!activeConversation) {
-        showChatToast('Selectează mai întâi o conversație.', 'warning');
+        showChatToast(getChatHistoryI18n().settings.selectConversation, 'warning');
         return;
     }
 
     const chatRoomId = activeConversation.dataset.conversationId;
-    const chatPartnerName = activeConversation.dataset.userName || 'utilizator';
+    const chatPartnerName = activeConversation.dataset.userName || getChatHistoryI18n().unknownUser;
     const state = getConversationSettingsState(activeConversation);
+    const i18n = getChatHistoryI18n();
 
     try {
         if (action === 'mute') {
             const settings = await updateConversationSettingsOnServer(chatRoomId, { muted: !state.muted });
             updateConversationSettingsState(chatRoomId, settings);
-            showChatToast(settings.muted
-                ? `Conversația cu ${chatPartnerName} este acum pe mute.`
-                : `Sunetul pentru conversația cu ${chatPartnerName} a fost reactivat.`, settings.muted ? 'info' : 'success');
+            showChatToast(
+                settings.muted
+                    ? formatI18nTemplate(i18n.toast.mutedOn, { name: chatPartnerName })
+                    : formatI18nTemplate(i18n.toast.mutedOff, { name: chatPartnerName }),
+                settings.muted ? 'info' : 'success'
+            );
             return;
         }
 
@@ -845,24 +983,27 @@ async function handleChatSettingsAction(action) {
             const willBlock = !state.blocked;
             const settings = await updateConversationSettingsOnServer(chatRoomId, { blocked: willBlock });
             updateConversationSettingsState(chatRoomId, settings);
-            showChatToast(settings.blocked
-                ? `${chatPartnerName} a fost blocat pentru această conversație.`
-                : `Conversația cu ${chatPartnerName} a fost deblocată.`, settings.blocked ? 'warning' : 'success');
+            showChatToast(
+                settings.blocked
+                    ? formatI18nTemplate(i18n.toast.blockedOn, { name: chatPartnerName })
+                    : formatI18nTemplate(i18n.toast.blockedOff, { name: chatPartnerName }),
+                settings.blocked ? 'warning' : 'success'
+            );
             return;
         }
 
         if (action === 'report') {
             if (state.reported) {
-                showChatToast('Conversația a fost deja raportată.', 'warning');
+                showChatToast(i18n.toast.reportedAlready, 'warning');
                 return;
             }
 
             const settings = await updateConversationSettingsOnServer(chatRoomId, { reported: true });
             updateConversationSettingsState(chatRoomId, settings);
-            showChatToast(`Conversația cu ${chatPartnerName} a fost raportată.`, 'success');
+            showChatToast(formatI18nTemplate(i18n.toast.reportedDone, { name: chatPartnerName }), 'success');
         }
     } catch (error) {
-        showChatToast(error.message || 'Nu am putut actualiza setările conversației.', 'error');
+        showChatToast(error.message || i18n.settings.updateError, 'error');
     }
 }
 
@@ -932,12 +1073,12 @@ async function startConversationVideoCall() {
     }
 
     if (!currentChatRoomId) {
-        showChatToast('Selectează mai întâi o conversație.', 'warning');
+        showChatToast(getChatHistoryI18n().video.selectConversation, 'warning');
         return;
     }
 
     if (window.currentConversationSettings?.blocked === true) {
-        showChatToast('Conversația este blocată. Deblochează pentru a porni un apel video.', 'warning');
+        showChatToast(getChatHistoryI18n().video.blocked, 'warning');
         return;
     }
 
@@ -965,24 +1106,24 @@ async function startConversationVideoCall() {
                 return;
             }
 
-            const message = payload?.message || 'Nu am putut porni apelul video acum. Incearca din nou.';
+            const message = payload?.message || getChatHistoryI18n().video.startFailed;
             window.alert(message);
             return;
         }
 
         const meetingUrl = payload?.meetingUrl;
         if (!meetingUrl) {
-            showChatToast('Serverul nu a returnat un link valid pentru apel.', 'error');
+            showChatToast(getChatHistoryI18n().video.missingUrl, 'error');
             return;
         }
 
         const newWindow = window.open(meetingUrl, '_blank', 'noopener,noreferrer');
         if (!newWindow) {
-            showChatToast('Browserul a blocat pop-up-ul. Permite pop-up-uri pentru acest site și încearcă din nou.', 'warning');
+            showChatToast(getChatHistoryI18n().video.popupBlocked, 'warning');
         }
     } catch (error) {
         console.error('Error starting video call:', error);
-        showChatToast('A apărut o eroare la pornirea apelului video.', 'error');
+        showChatToast(getChatHistoryI18n().video.errorStart, 'error');
     } finally {
         videoCallInProgress = false;
         setVideoCallButtonsBusy(false);
@@ -1045,7 +1186,7 @@ async function runProposalAction(action) {
         }
 
         if (!response.ok || payload.success === false) {
-            throw new Error(payload.message || 'Nu am putut actualiza starea schimbului.');
+            throw new Error(payload.message || getChatHistoryI18n().proposal.updateError);
         }
 
         const nextStatus = payload.status || activeItem.dataset.proposalStatus || '';
@@ -1056,9 +1197,9 @@ async function runProposalAction(action) {
             isOwner: activeItem.dataset.proposalOwner === 'true',
             canAccept: false
         });
-        showChatToast(payload.message || 'Starea schimbului a fost actualizata.', 'success');
+        showChatToast(payload.message || getChatHistoryI18n().proposal.updated, 'success');
     } catch (error) {
-        window.alert(error.message || 'Nu am putut actualiza starea schimbului.');
+        window.alert(error.message || getChatHistoryI18n().proposal.updateError);
     } finally {
         proposalActionInProgress = false;
         const refreshedActiveItem = document.querySelector('#conversationsList .conversation-item.active[data-conversation-id]');
