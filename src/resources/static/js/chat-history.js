@@ -142,6 +142,27 @@ function getChatHistoryI18n() {
     };
 }
 
+function getCurrentLocaleTag() {
+    const fromI18n = getChatHistoryI18n().common.locale;
+    if (fromI18n && typeof fromI18n === 'string') {
+        return fromI18n;
+    }
+
+    if (document && document.documentElement && document.documentElement.lang) {
+        return document.documentElement.lang;
+    }
+
+    return 'ro';
+}
+
+function buildLocalizedJsonHeaders(extraHeaders = {}) {
+    return {
+        'Accept': 'application/json',
+        'Accept-Language': getCurrentLocaleTag(),
+        ...extraHeaders
+    };
+}
+
 function getProposalI18nDefaults() {
     return {
         prefix: 'Schimb',
@@ -940,10 +961,9 @@ function closeAllChatSettingsDropdowns(exceptWrapper = null) {
 async function updateConversationSettingsOnServer(chatRoomId, payload) {
     const response = await fetch(`/api/chat/rooms/${chatRoomId}/settings`, {
         method: 'PATCH',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        },
+        headers: buildLocalizedJsonHeaders({
+            'Content-Type': 'application/json'
+        }),
         body: JSON.stringify(payload)
     });
 
@@ -1088,9 +1108,7 @@ async function startConversationVideoCall() {
     try {
         const response = await fetch(`/api/conversations/${currentChatRoomId}/video-room`, {
             method: 'POST',
-            headers: {
-                'Accept': 'application/json'
-            }
+            headers: buildLocalizedJsonHeaders()
         });
 
         let payload = null;
@@ -1173,9 +1191,7 @@ async function runProposalAction(action) {
     try {
         const response = await fetch(`/api/skill-swap-proposals/${proposalId}/${action}`, {
             method: 'POST',
-            headers: {
-                'Accept': 'application/json'
-            }
+            headers: buildLocalizedJsonHeaders()
         });
 
         const payload = await response.json().catch(() => ({}));
@@ -1259,7 +1275,9 @@ function loadConversations() {
         return;
     }
 
-    fetch('/api/chat/rooms')
+    fetch('/api/chat/rooms', {
+        headers: buildLocalizedJsonHeaders()
+    })
         .then(response => {
             if (!response.ok) {
                 throw new Error('Failed to load conversations');

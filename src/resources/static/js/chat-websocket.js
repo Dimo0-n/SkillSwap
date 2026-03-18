@@ -444,6 +444,27 @@ function getRuntimeI18n() {
     };
 }
 
+function getCurrentLocaleTag() {
+    const fromI18n = window.chatI18n && window.chatI18n.common && window.chatI18n.common.locale;
+    if (fromI18n && typeof fromI18n === 'string') {
+        return fromI18n;
+    }
+
+    if (document && document.documentElement && document.documentElement.lang) {
+        return document.documentElement.lang;
+    }
+
+    return 'ro';
+}
+
+function buildLocalizedJsonHeaders(extraHeaders = {}) {
+    return {
+        'Accept': 'application/json',
+        'Accept-Language': getCurrentLocaleTag(),
+        ...extraHeaders
+    };
+}
+
 function refreshOwnMessageStatusVisibility() {
     const ownStatusLines = document.querySelectorAll('.message-outgoing .message-status-line');
     if (!ownStatusLines.length) {
@@ -850,7 +871,9 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Get current user ID from backend API
-    fetch('/api/chat/current-user')
+    fetch('/api/chat/current-user', {
+        headers: buildLocalizedJsonHeaders()
+    })
         .then(response => response.json())
         .then(data => {
             currentUserId = data.userId;
@@ -1008,7 +1031,9 @@ function loadChatRoom(chatRoomId) {
     }
 
     // Load chat history from API
-    fetch(`/api/chat/history/${chatRoomId}`)
+    fetch(`/api/chat/history/${chatRoomId}`, {
+        headers: buildLocalizedJsonHeaders()
+    })
         .then(response => response.json())
         .then(messages => {
             messages.reverse().forEach(message => displayMessage(message));
