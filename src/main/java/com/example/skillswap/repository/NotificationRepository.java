@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +22,8 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     List<Notification> findByRecipientIdAndReadAtIsNull(Long recipientId);
 
     List<Notification> findByRecipientIdAndSkillSwapProposalIdAndReadAtIsNull(Long recipientId, Long skillSwapProposalId);
+
+    void deleteBySkillSwapProposalIdIn(Collection<Long> proposalIds);
 
     List<Notification> findTop12ByTypeOrderByCreatedAtDesc(NotificationType type);
 }

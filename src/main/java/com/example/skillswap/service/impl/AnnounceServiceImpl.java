@@ -3,9 +3,13 @@ package com.example.skillswap.service.impl;
 import com.example.skillswap.config.CacheConfig;
 import com.example.skillswap.dto.AnnounceDto;
 import com.example.skillswap.entity.Announce;
+import com.example.skillswap.entity.SkillSwapProposal;
 import com.example.skillswap.entity.User;
 import com.example.skillswap.enums.AnnounceStatus;
 import com.example.skillswap.repository.AnnounceRepository;
+import com.example.skillswap.repository.NotificationRepository;
+import com.example.skillswap.repository.SkillSwapProposalRepository;
+import com.example.skillswap.repository.SwapReviewRepository;
 import com.example.skillswap.repository.UserRepository;
 import com.example.skillswap.service.AnnounceImageService;
 import com.example.skillswap.service.AnnounceService;
@@ -15,6 +19,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,6 +36,15 @@ public class AnnounceServiceImpl implements AnnounceService {
 
     @Autowired
     private AnnounceImageService announceImageService;
+
+    @Autowired
+    private SkillSwapProposalRepository skillSwapProposalRepository;
+
+    @Autowired
+    private NotificationRepository notificationRepository;
+
+    @Autowired
+    private SwapReviewRepository swapReviewRepository;
 
     //5 anunturi care sunt afisate pentru pagina de index
     @Override
@@ -99,7 +113,25 @@ public class AnnounceServiceImpl implements AnnounceService {
             @CacheEvict(cacheNames = CacheConfig.ANNOUNCE_LIST_CACHE, allEntries = true),
             @CacheEvict(cacheNames = CacheConfig.ANNOUNCE_BY_AUTHOR_CACHE, allEntries = true)
     })
+    @Transactional
     public void deleteAnnounceById(Long id) {
+        Announce announce = announceRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Announce not found"));
+
+        // Break the announce -> proposal relation first to avoid FK issues during proposal cleanup.
+        announce.setLockedBySwap(null);
+        announceRepository.saveAndFlush(announce);
+
+        List<Long> proposalIds = skillSwapProposalRepository.findByAnnounceId(id).stream()
+                .map(SkillSwapProposal::getId)
+                .toList();
+
+        if (!proposalIds.isEmpty()) {
+            notificationRepository.deleteBySkillSwapProposalIdIn(proposalIds);
+            swapReviewRepository.deleteByProposalIdIn(proposalIds);
+        }
+
+        skillSwapProposalRepository.deleteByAnnounceId(id);
         announceRepository.deleteById(id);
     }
 
